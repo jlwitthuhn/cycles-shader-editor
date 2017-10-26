@@ -1,0 +1,150 @@
+#include "node_inputs.h"
+
+CyclesShaderEditor::LightPathNode::LightPathNode(Point2 position)
+{
+	world_pos = position;
+
+	title = "Light Path";
+
+	NodeSocket* camera_ray_output = new NodeSocket(this, SocketInOut::Output, SocketType::Float, "Is Camera Ray", "is_camera_ray");
+	NodeSocket* shadow_ray_output = new NodeSocket(this, SocketInOut::Output, SocketType::Float, "Is Shadow Ray", "is_shadow_ray");
+	NodeSocket* diffuse_ray_output = new NodeSocket(this, SocketInOut::Output, SocketType::Float, "Is Diffuse Ray", "is_diffuse_ray");
+	NodeSocket* glossy_ray_output = new NodeSocket(this, SocketInOut::Output, SocketType::Float, "Is Glossy Ray", "is_glossy_ray");
+	NodeSocket* singular_ray_output = new NodeSocket(this, SocketInOut::Output, SocketType::Float, "Is Singular Ray", "is_singular_ray");
+	NodeSocket* reflection_ray_output = new NodeSocket(this, SocketInOut::Output, SocketType::Float, "Is Reflection Ray", "is_reflection_ray");
+	NodeSocket* transmission_ray_output = new NodeSocket(this, SocketInOut::Output, SocketType::Float, "Is Transmission Ray", "is_transmission_ray");
+	NodeSocket* vol_scatter_ray_output = new NodeSocket(this, SocketInOut::Output, SocketType::Float, "Is Volume Scatter Ray", "is_volume_scatter_ray");
+	NodeSocket* ray_length_output = new NodeSocket(this, SocketInOut::Output, SocketType::Float, "Ray Length", "ray_length");
+	NodeSocket* ray_depth_output = new NodeSocket(this, SocketInOut::Output, SocketType::Float, "Ray Depth", "ray_depth");
+	NodeSocket* transparent_depth_output = new NodeSocket(this, SocketInOut::Output, SocketType::Float, "Transparent Depth", "transparent_depth");
+	NodeSocket* transmission_depth_output = new NodeSocket(this, SocketInOut::Output, SocketType::Float, "Transmission Depth", "transmission_depth");
+
+	sockets.push_back(camera_ray_output);
+	sockets.push_back(shadow_ray_output);
+	sockets.push_back(diffuse_ray_output);
+	sockets.push_back(glossy_ray_output);
+	sockets.push_back(singular_ray_output);
+	sockets.push_back(reflection_ray_output);
+	sockets.push_back(transmission_ray_output);
+	sockets.push_back(vol_scatter_ray_output);
+	sockets.push_back(ray_length_output);
+	sockets.push_back(ray_depth_output);
+	sockets.push_back(transparent_depth_output);
+	sockets.push_back(transmission_depth_output);
+
+	type = CyclesNodeType::LightPath;
+}
+
+CyclesShaderEditor::FresnelNode::FresnelNode(Point2 position)
+{
+	world_pos = position;
+
+	title = "Fresnel";
+
+	NodeSocket* fac_output = new NodeSocket(this, SocketInOut::Output, SocketType::Float, "Fac", "fac");
+
+	sockets.push_back(fac_output);
+
+	NodeSocket* ior_input = new NodeSocket(this, SocketInOut::Input, SocketType::Float, "IOR", "IOR");
+	ior_input->value = new FloatSocketValue(1.45f, 0.0f, 1000.0f);
+	NodeSocket* normal_input = new NodeSocket(this, SocketInOut::Input, SocketType::Normal, "Normal", "normal");
+
+	sockets.push_back(ior_input);
+	sockets.push_back(normal_input);
+
+	type = CyclesNodeType::Fresnel;
+}
+
+CyclesShaderEditor::LayerWeightNode::LayerWeightNode(Point2 position)
+{
+	world_pos = position;
+
+	title = "Layer Weight";
+
+	NodeSocket* fresnel_output = new NodeSocket(this, SocketInOut::Output, SocketType::Float, "Fresnel", "fresnel");
+	NodeSocket* facing_output = new NodeSocket(this, SocketInOut::Output, SocketType::Float, "Facing", "facing");
+
+	sockets.push_back(fresnel_output);
+	sockets.push_back(facing_output);
+
+	NodeSocket* blend_input = new NodeSocket(this, SocketInOut::Input, SocketType::Float, "Blend", "blend");
+	blend_input->value = new FloatSocketValue(0.5f, 0.0f, 1.0f);
+	NodeSocket* normal_input = new NodeSocket(this, SocketInOut::Input, SocketType::Normal, "Normal", "normal");
+
+	sockets.push_back(blend_input);
+	sockets.push_back(normal_input);
+
+	type = CyclesNodeType::LayerWeight;
+}
+
+CyclesShaderEditor::CameraDataNode::CameraDataNode(Point2 position)
+{
+	world_pos = position;
+
+	title = "Camera Data";
+
+	NodeSocket* vector_output = new NodeSocket(this, SocketInOut::Output, SocketType::Vector, "View Vector", "view_vector");
+	NodeSocket* z_depth_output = new NodeSocket(this, SocketInOut::Output, SocketType::Float, "View Z Depth", "view_z_depth");
+	NodeSocket* distance_output = new NodeSocket(this, SocketInOut::Output, SocketType::Float, "View Distance", "view_distance");
+
+	sockets.push_back(vector_output);
+	sockets.push_back(z_depth_output);
+	sockets.push_back(distance_output);
+
+	type = CyclesNodeType::CameraData;
+}
+
+CyclesShaderEditor::TangentNode::TangentNode(Point2 position)
+{
+	world_pos = position;
+
+	title = "Tangent";
+
+	NodeSocket* tangent_output = new NodeSocket(this, SocketInOut::Output, SocketType::Vector, "Tangent", "tangent");
+
+	sockets.push_back(tangent_output);
+
+	NodeSocket* direction_input = new NodeSocket(this, SocketInOut::Input, SocketType::StringEnum, "Direction", "direction");
+	StringEnumSocketValue* direction_value = new StringEnumSocketValue();
+	direction_value->enum_values.push_back(StringEnumPair("Radial", "radial"));
+	direction_value->enum_values.push_back(StringEnumPair("UV Map", "uv_map"));
+	direction_value->set_from_internal_name("radial");
+	direction_input->value = direction_value;
+	NodeSocket* axis_input = new NodeSocket(this, SocketInOut::Input, SocketType::StringEnum, "Radial Axis", "axis");
+	StringEnumSocketValue* axis_value = new StringEnumSocketValue();
+	axis_value->enum_values.push_back(StringEnumPair("X", "x"));
+	axis_value->enum_values.push_back(StringEnumPair("Y", "y"));
+	axis_value->enum_values.push_back(StringEnumPair("Z", "z"));
+	axis_value->set_from_internal_name("z");
+	axis_input->value = axis_value;
+
+	sockets.push_back(direction_input);
+	sockets.push_back(axis_input);
+
+	type = CyclesNodeType::Tangent;
+}
+
+CyclesShaderEditor::TextureCoordinateNode::TextureCoordinateNode(Point2 position)
+{
+	world_pos = position;
+
+	title = "Texture Coordinate";
+
+	NodeSocket* generated_output = new NodeSocket(this, SocketInOut::Output, SocketType::Vector, "Generated", "generated");
+	NodeSocket* normal_output = new NodeSocket(this, SocketInOut::Output, SocketType::Vector, "Normal", "normal");
+	NodeSocket* uv_output = new NodeSocket(this, SocketInOut::Output, SocketType::Vector, "UV", "UV");
+	NodeSocket* object_output = new NodeSocket(this, SocketInOut::Output, SocketType::Vector, "Object", "object");
+	NodeSocket* camera_output = new NodeSocket(this, SocketInOut::Output, SocketType::Vector, "Camera", "camera");
+	NodeSocket* window_output = new NodeSocket(this, SocketInOut::Output, SocketType::Vector, "Window", "window");
+	NodeSocket* reflection_output = new NodeSocket(this, SocketInOut::Output, SocketType::Vector, "Reflection", "reflection");
+
+	sockets.push_back(generated_output);
+	sockets.push_back(normal_output);
+	sockets.push_back(uv_output);
+	sockets.push_back(object_output);
+	sockets.push_back(camera_output);
+	sockets.push_back(window_output);
+	sockets.push_back(reflection_output);
+
+	type = CyclesNodeType::TextureCoordinate;
+}
