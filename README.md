@@ -4,11 +4,11 @@ Cycles Shader Editor is a cross-platform C++ library that provides a graphical e
 
 ## Running the Example Program
 
-Included in this repository is a very simple program that creates a node graph editor window and, when the user saves, writes the serialized node graph to stdout.
+Included in this repository is a simple program that creates a node graph editor window and, when the user saves, writes the serialized node graph to stdout.
 
 ### Prerequisites
 
-This should build on any plaform that GLFW builds on, but I have only tested it with Visual Studio 2015 for Windows 7+, GCC 7.2.1 on Fedora 26, and Clang 4.0.1 on Fedora 26.
+This should build on any plaform that GLFW builds on, but I have only tested it with Visual Studio 2015, GCC 7.2.1 on Fedora 26, and Clang 4.0.1 on Fedora 26.
 
 Libraries you will need are:
 - GLFW 3.x
@@ -23,27 +23,28 @@ This project does not depend on any Cycles code or headers.
 
 ### Building
 
-On unixy systems, you can simply run 'make' to build the example program. It will produce a binary named 'shader_editor' in the top-level directory. It will also produce a 'lib/libshadereditor.a' static library.
+On unixy systems, you can simply run `make` to build the example program. It will produce a binary named `shader_editor` in the top-level directory. It will also produce a `lib/libshadereditor.a` static library.
 
-On Windows I haven't provided a visual studio project, but it should build fine if you put all the source files together in a project with default settings. You will also need to define the preprocessor symbol NANOVG_GL2_IMPLEMENTATION so NanoVG knows what OpenGL implementation to use.
+On Windows I haven't provided a visual studio project, but it should build fine if you put all the source files together in a C++ project with default settings. You will also need to define the preprocessor symbol `NANOVG_GL2_IMPLEMENTATION` so NanoVG knows what OpenGL implementation to use.
 
 ### Using the Editor
 
-* To create nodes, drag and drop a button from the node list onto the grid.
-* To create connections, drag from the output of one node to the input of another.
-* To pan the view, you can use the arrow keys on your keyboard or middle-click and drag anywhere on the grid.
+* To create a node, drag and drop from a button in the 'Nodes' window onto the grid.
+* To create a connection, click and drag from the output circle of one node to the input of another.
+* To change a parameter, click the parameter's name on the node.
+* To pan the view, use the arrow keys on your keyboard or middle-click and drag anywhere on the grid.
 * To write the serialized version of your graph to stdout, click the save button or press ctrl+s.
 
 ## Calling the Shader Editor from Your Code
 
-You will need some headers to be able to use this library's functionality. With the makefile included here, these will automatically get copied to the 'include' top-level directory. For those not using the makefile, these headers are:
+You will need just a few headers to be able to use this library's functionality. With the makefile included here, these headers will automatically get copied to the `include` top-level directory during the build. For those not using the makefile, these headers are:
 
 * graph_decoder.h
 * graph_editor.h
 * output.h
 * util_platform.h
 
-All types defined in these headers are a part of the CyclesShaderEditor namespace.
+All types defined in these headers are a part of the CyclesShaderEditor namespace. `graph_decoder.h` and `graph_editor.h` are the only two you will need to #include directly, the others define types used by graph_decoder and graph_editor. 
 
 ### Creating a Window
 
@@ -72,18 +73,18 @@ You will use largely the same basic flow when using this library. The key points
 * CyclesShaderEditor::GraphEditor is the main class used to represent a Node Graph Editor window.
 * Calling GraphEditor::create_window() will cause the window to appear.
 * Once a window exists, loop calling GraphEditor::run_window_loop_iteration() until it returns false.
-  * This method is responsible for handling user input and drawing
-  * It will return false once the window has been closed
+  * This method is responsible for handling user input and drawing.
+  * It will return false once the window has been closed.
 * If GraphEditor::output_updated is true, serialized_output will contain a serialized node graph string.
-  * When this string is copied from the window object, output_updated should be set to false. It will be set to true when the user saves again.
+  * When this string is read from the window object, output_updated should be set to false. It will be set to true when the user saves again.
 
 ### Decoding the Graph String
 
-Now you can create a window and get a serialized graph from it, but you don't have any way to produce a Cycles ccl::ShaderGraph from that serialized form.
+Now you can create a window and get a serialized graph from it, but that string is not very useful on its own.
 
-To help with this, you will need to use the CyclesShaderEditor::CyclesNodeGraph class defined in "graph_decoder.h". This class has a single constructor that takes a serialized graph string as an argument. Once the object construction is complete, the 'nodes' and 'connections' members will be populated with relevant information.
+To help with this, you can use the CyclesShaderEditor::CyclesNodeGraph class defined in `graph_decoder.h`. This class has a single constructor that takes a serialized graph string as an argument. Once the object construction is complete, the 'nodes' and 'connections' members will be populated with relevant information.
 
-### Construction a ccl::ShaderGraph
+### Constructing a ccl::ShaderGraph
 
 The file [extra/shader_graph_converter.cpp](extra/shader_graph_converter.cpp) contains some functions that can be used to create a ccl::ShaderGraph from a serialized graph string. These are not included in the main project to avoid requiring Cycles as a dependency for building the editor.
 
