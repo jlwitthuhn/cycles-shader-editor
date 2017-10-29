@@ -8,14 +8,13 @@ Included in this repository is a simple program that creates a node graph editor
 
 ### Prerequisites
 
-This should build on any plaform that GLFW builds on, but I have only tested it with Visual Studio 2015, GCC 7.2.1 on Fedora 26, and Clang 4.0.1 on Fedora 26.
+This should build on any plaform that GLFW builds on, but I have only tested it with Visual Studio 2015, GCC 7.2.1 on Fedora 26, Clang 4.0.1 on Fedora 26, and Clang 9.0.0 on macOS 10.13
 
 Libraries you will need are:
 - GLFW 3.x
+- GLEW
 - NanoVG
   - A compatible version is bundled in this repository, but any moderately recent version should work.
-- Recent-ish GLEW
-  - This is not needed on Windows.
 
 OpenGL 2.0 support is required to run the editor.
 

@@ -20,10 +20,23 @@ GCC_MAKEFILES := $(OBJ_PATHS:.o=.d)
 DEFINES := NANOVG_GL2_IMPLEMENTATION
 DEFINES_FLAGS := $(addprefix -D,$(DEFINES))
 
+# Uncomment these and point them to your libraries if
+# their includes and libs are not on the default paths
+#DEP_CXXFLAGS := -I../lib/glfw-3.2.1/dist/include/ -I../lib/glew-2.1.0/dist/include/
+#DEP_LDFLAGS := -L../lib/glfw-3.2.1/dist/lib/ -L../lib/glew-2.1.0/dist/lib/
+
+OS := $(shell uname)
+ifeq ($(OS),Darwin)
+GL_LDFLAGS = -framework OpenGL
+MORE_LDFLAGS = -framework Cocoa -framework CoreVideo -framework IOKit
+else
+GL_LDFLAGS = -lGL
+endif
+
 CPPFLAGS_NVG := -MMD -MP $(DEFINES_FLAGS)
 CPPFLAGS := -MMD -MP $(DEFINES_FLAGS) -Inanovg/src/
-CXXFLAGS = -Wall -std=c++11
-LDFLAGS = -lstdc++ -lm -lGL -lGLEW -lglfw
+CXXFLAGS := -Wall -std=c++11 $(DEP_CXXFLAGS)
+LDFLAGS := -lstdc++ -lm -lGLEW -lglfw $(GL_LDFLAGS) $(DEP_LDFLAGS) $(MORE_LDFLAGS)
 
 MKDIR_P = mkdir -p
 
@@ -56,4 +69,3 @@ clean:
 	rm -rf $(OBJ_DIR)
 	rm -rf $(INC_DIR)
 	rm -rf $(LIB_DIR)
-

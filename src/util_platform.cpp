@@ -6,7 +6,7 @@ void CyclesShaderEditor::thread_usleep(int us)
 {
 	Sleep(static_cast<DWORD>(us / 1000));
 }
-#elif __linux__
+#else
 #include <unistd.h>
 void CyclesShaderEditor::thread_usleep(int us)
 {

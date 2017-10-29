@@ -358,7 +358,12 @@ void CyclesShaderEditor::EditorMainWindow::handle_key(int key, int scancode, int
 		param_editor_window->handle_key(key, scancode, action, mods);
 	}
 	else {
-		if (key == GLFW_KEY_DELETE && action == GLFW_PRESS) {
+		#ifdef __APPLE__
+		const int delete_key = GLFW_KEY_BACKSPACE;
+		#else
+		const int delete_key = GLFW_KEY_DELETE;
+		#endif
+		if (key == delete_key && action == GLFW_PRESS) {
 			view->delete_selected_nodes();
 			push_undo_state();
 		}
