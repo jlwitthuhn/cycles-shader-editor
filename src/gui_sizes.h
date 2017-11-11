@@ -21,7 +21,7 @@ static constexpr float UI_SUBWIN_CORNER_RADIUS = 4.0f;
 
 static constexpr float UI_SUBWIN_NODE_LIST_WIDTH = 180.0f;
 static constexpr float UI_SUBWIN_NODE_LIST_BUTTON_VPADDING = 2.0f;
-static constexpr float UI_SUBWIN_NODE_LIST_CAT_BUTTON_WIDTH = 72.0f;
+static constexpr float UI_SUBWIN_NODE_LIST_CAT_BUTTON_WIDTH = 74.0f;
 static constexpr float UI_SUBWIN_NODE_LIST_CAT_BUTTON_HEIGHT = 20.0f;
 static constexpr float UI_SUBWIN_NODE_LIST_CAT_BUTTON_HGAP = 6.0f;
 static constexpr float UI_SUBWIN_NODE_LIST_NODE_BUTTON_HPADDING = 6.0f;

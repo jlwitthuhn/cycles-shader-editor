@@ -14,7 +14,7 @@ namespace CyclesShaderEditor {
 	public:
 		virtual ~NodeCreationButton() {}
 
-		virtual float draw_button(NVGcontext* draw_context, Point2 draw_origin, Point2 parent_local_mouse_pos, float content_width);
+		virtual float draw(NVGcontext* draw_context, Point2 draw_origin, Point2 parent_local_mouse_pos, float parent_width);
 		virtual bool is_mouse_over_button();
 
 		// Caller is responsible for deleting the pointer after use

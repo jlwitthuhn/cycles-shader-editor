@@ -5,6 +5,7 @@
 #include <nanovg.h>
 
 #include "buttons_nodes.h"
+#include "drawing.h"
 #include "gui_sizes.h"
 
 CyclesShaderEditor::NodeCategoryButtonPlacer::NodeCategoryButtonPlacer(Point2 draw_origin, float parent_width, float vertical_padding)
@@ -64,52 +65,7 @@ CyclesShaderEditor::NodeCategoryButton::~NodeCategoryButton()
 
 void CyclesShaderEditor::NodeCategoryButton::draw(Point2 draw_position, NVGcontext* draw_context)
 {
-	nvgSave(draw_context);
-
-	nvgTranslate(draw_context, draw_position.get_pos_x(), draw_position.get_pos_y());
-
-	NVGpaint button_bg;
-	if (pressed) {
-		button_bg = nvgLinearGradient(draw_context,
-			0.0f,
-			0.0f,
-			0.0f,
-			get_button_height(),
-			nvgRGBA(0, 0, 0, 32),
-			nvgRGBA(255, 255, 255, 32));
-	}
-	else {
-		button_bg = nvgLinearGradient(draw_context,
-			0.0f,
-			0.0f,
-			0.0f,
-			get_button_height(),
-			nvgRGBA(255, 255, 255, 32),
-			nvgRGBA(0, 0, 0, 32));
-	}
-
-	// Button shape
-	nvgBeginPath(draw_context);
-	nvgRoundedRect(draw_context, 0.0f, 0.0f, get_button_width(), get_button_height(), UI_BUTTON_CORNER_RADIUS);
-
-	// Fill in gradient
-	nvgFillPaint(draw_context, button_bg);
-	nvgFill(draw_context);
-
-	// Outline
-	nvgStrokeWidth(draw_context, 1.0f);
-	nvgStrokeColor(draw_context, nvgRGBAf(0.0f, 0.0f, 0.0f, 0.5f));
-	nvgStroke(draw_context);
-
-	// Label
-	nvgFontSize(draw_context, UI_FONT_SIZE_NORMAL);
-	nvgFontFace(draw_context, "sans");
-	nvgTextAlign(draw_context, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-	nvgFontBlur(draw_context, 0.0f);
-	nvgFillColor(draw_context, nvgRGBA(0, 0, 0, 255));
-	nvgText(draw_context, get_button_width() / 2, get_button_height() / 2, label.c_str(), NULL);
-
-	nvgRestore(draw_context);
+	Drawing::draw_button(draw_context, draw_position.get_pos_x(), draw_position.get_pos_y(), get_button_width(), get_button_height(), label, true, pressed);
 }
 
 void CyclesShaderEditor::NodeCategoryButton::update_mouse_position(Point2 local_position)

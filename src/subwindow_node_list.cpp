@@ -213,7 +213,7 @@ void CyclesShaderEditor::NodeListSubwindow::draw(NVGcontext* draw_context)
 	if (active_category != nullptr) {
 		for (NodeCreationButton* node_button : active_category->node_buttons) {
 			Point2 button_location(0.0f, height_drawn);
-			height_drawn += node_button->draw_button(draw_context, button_location, mouse_local_pos, subwindow_width);
+			height_drawn += node_button->draw(draw_context, button_location, mouse_local_pos, subwindow_width);
 		}
 	}
 

@@ -25,6 +25,8 @@ namespace CyclesShaderEditor {
 	public:
 		ToolbarButton(ToolbarButtonType type);
 
+		std::string get_label();
+
 		ToolbarButtonType type = ToolbarButtonType::SPACER;
 		bool pressed = false;
 		bool enabled = true;
