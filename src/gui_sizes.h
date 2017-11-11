@@ -32,3 +32,9 @@ static constexpr float UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT = 20.0f;
 static constexpr float UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH_SMALL = 80.0f;
 static constexpr float UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH_BIG = 110.0f;
 static constexpr float UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT = 16.0f;
+
+static constexpr float UI_NODE_HEADER_HEIGHT = 24.0f;
+static constexpr float UI_NODE_CORNER_RADIUS = 6.0f;
+static constexpr float UI_NODE_SOCKET_ROW_HEIGHT = 22.0f;
+static constexpr float UI_NODE_SOCKET_RADIUS = 5.5f;
+static constexpr float UI_NODE_BOTTOM_PADDING = 6.0f;

@@ -9,8 +9,6 @@
 
 struct NVGcontext;
 
-const float NODE_HEADER_HEIGHT = 24.0f;
-
 namespace CyclesShaderEditor {
 
 	struct OutputNode;

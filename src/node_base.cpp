@@ -10,10 +10,6 @@
 #include "gui_sizes.h"
 #include "sockets.h"
 
-const float INOUT_HEIGHT = 22.0f;
-const float NODE_CORNER_RADIUS = 3.0f;
-const float SOCKET_RADIUS = 5.5f;
-
 CyclesShaderEditor::NodeConnection::NodeConnection(NodeSocket* begin_socket, NodeSocket* end_socket)
 {
 	this->begin_socket = begin_socket;
@@ -47,26 +43,32 @@ void CyclesShaderEditor::EditorNode::draw_node(NVGcontext* draw_context)
 	float draw_pos_x = 0.0f;
 	float draw_pos_y = 0.0f;
 
+	content_height = sockets.size() * UI_NODE_SOCKET_ROW_HEIGHT + UI_NODE_BOTTOM_PADDING;
+
 	// Draw window
 	nvgBeginPath(draw_context);
-	nvgRoundedRect(draw_context, draw_pos_x, draw_pos_y, content_width, content_height + NODE_HEADER_HEIGHT, NODE_CORNER_RADIUS);
+	nvgRoundedRect(draw_context, draw_pos_x, draw_pos_y, content_width, content_height + UI_NODE_HEADER_HEIGHT, UI_NODE_CORNER_RADIUS);
 	nvgFillColor(draw_context, nvgRGBA(180, 180, 180, 255));
 	nvgFill(draw_context);
 
 	// Draw header
-	nvgBeginPath(draw_context);
-	nvgRoundedRect(draw_context, draw_pos_x, draw_pos_y, content_width, NODE_HEADER_HEIGHT, NODE_CORNER_RADIUS);
-	if (is_mouse_over_header()) {
-		nvgFillColor(draw_context, nvgRGBA(225, 225, 225, 255));
+	{
+		const float rect_pos_y = draw_pos_y + UI_NODE_HEADER_HEIGHT - UI_NODE_CORNER_RADIUS;
+		nvgBeginPath(draw_context);
+		nvgRoundedRect(draw_context, draw_pos_x, draw_pos_y, content_width, UI_NODE_HEADER_HEIGHT, UI_NODE_CORNER_RADIUS);
+		nvgRect(draw_context, draw_pos_x, rect_pos_y, content_width, UI_NODE_CORNER_RADIUS);
+		if (is_mouse_over_header()) {
+			nvgFillColor(draw_context, nvgRGBA(225, 225, 225, 255));
+		}
+		else {
+			nvgFillColor(draw_context, nvgRGBA(210, 210, 210, 255));
+		}
+		nvgFill(draw_context);
 	}
-	else {
-		nvgFillColor(draw_context, nvgRGBA(210, 210, 210, 255));
-	}
-	nvgFill(draw_context);
 
 	// Draw border
 	nvgBeginPath(draw_context);
-	nvgRoundedRect(draw_context, draw_pos_x, draw_pos_y, content_width, content_height + NODE_HEADER_HEIGHT, NODE_CORNER_RADIUS);
+	nvgRoundedRect(draw_context, draw_pos_x, draw_pos_y, content_width, content_height + UI_NODE_HEADER_HEIGHT, UI_NODE_CORNER_RADIUS);
 	if (selected) {
 		nvgStrokeColor(draw_context, nvgRGBA(255, 255, 255, 225));
 	}
@@ -82,9 +84,9 @@ void CyclesShaderEditor::EditorNode::draw_node(NVGcontext* draw_context)
 	nvgTextAlign(draw_context, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
 	nvgFontBlur(draw_context, 0.0f);
 	nvgFillColor(draw_context, nvgRGBA(0, 0, 0, 255));
-	nvgText(draw_context, draw_pos_x + content_width / 2, draw_pos_y + NODE_HEADER_HEIGHT / 2, title.c_str(), NULL);
+	nvgText(draw_context, draw_pos_x + content_width / 2, draw_pos_y + UI_NODE_HEADER_HEIGHT / 2, title.c_str(), NULL);
 
-	float next_draw_y = draw_pos_y + NODE_HEADER_HEIGHT + 2.0f;
+	float next_draw_y = draw_pos_y + UI_NODE_HEADER_HEIGHT + 2.0f;
 	// Sockets
 	label_targets.clear();
 	socket_targets.clear();
@@ -143,7 +145,7 @@ void CyclesShaderEditor::EditorNode::draw_node(NVGcontext* draw_context)
 		// Draw highlight if this node is selected
 		if (this_socket->selected) {
 			nvgBeginPath(draw_context);
-			nvgRoundedRect(draw_context, 4.0f, next_draw_y, content_width - 8.0f, INOUT_HEIGHT, 0.0f);
+			nvgRoundedRect(draw_context, 4.0f, next_draw_y, content_width - 8.0f, UI_NODE_SOCKET_ROW_HEIGHT, 0.0f);
 			nvgFillColor(draw_context, nvgRGBA(210, 210, 210, 255));
 			nvgFill(draw_context);
 		}
@@ -165,13 +167,13 @@ void CyclesShaderEditor::EditorNode::draw_node(NVGcontext* draw_context)
 			float label_width = bounds[2] - bounds[0];
 
 			const float text_pos_x = draw_pos_x + content_width / 2 - SWATCH_WIDTH / 2;
-			const float text_pos_y = next_draw_y + INOUT_HEIGHT / 2;
+			const float text_pos_y = next_draw_y + UI_NODE_SOCKET_ROW_HEIGHT / 2;
 			nvgText(draw_context, text_pos_x, text_pos_y, label_text.c_str(), nullptr);
 
 			FloatRGBColor swatch_color = dynamic_cast<ColorSocketValue*>(this_socket->value)->get_value();
 
 			const float swatch_pos_x = text_pos_x + label_width / 2 + 1.0f;
-			const float swatch_pos_y = next_draw_y + (INOUT_HEIGHT - SWATCH_HEIGHT) / 2;
+			const float swatch_pos_y = next_draw_y + (UI_NODE_SOCKET_ROW_HEIGHT - SWATCH_HEIGHT) / 2;
 
 			nvgBeginPath(draw_context);
 			nvgRoundedRect(draw_context, swatch_pos_x, swatch_pos_y, SWATCH_WIDTH, SWATCH_HEIGHT, SWATCH_CORNER_RADIUS);
@@ -195,7 +197,7 @@ void CyclesShaderEditor::EditorNode::draw_node(NVGcontext* draw_context)
 		}
 		else {
 			const float text_pos_x = draw_pos_x + content_width / 2;
-			const float text_pos_y = next_draw_y + INOUT_HEIGHT / 2;
+			const float text_pos_y = next_draw_y + UI_NODE_SOCKET_ROW_HEIGHT / 2;
 			nvgText(draw_context, text_pos_x, text_pos_y, label_text.c_str(), nullptr);
 			if (this_socket->input_connected_this_frame && this_socket->value != nullptr) {
 				// Output is [xmin, ymin, xmax, ymax]
@@ -218,7 +220,7 @@ void CyclesShaderEditor::EditorNode::draw_node(NVGcontext* draw_context)
 		if (this_socket->selectable) {
 			// Add label click target
 			CyclesShaderEditor::Point2 click_target_begin(0, next_draw_y - draw_pos_y);
-			CyclesShaderEditor::Point2 click_target_end(content_width, next_draw_y - draw_pos_y + INOUT_HEIGHT);
+			CyclesShaderEditor::Point2 click_target_end(content_width, next_draw_y - draw_pos_y + UI_NODE_SOCKET_ROW_HEIGHT);
 			SocketClickTarget label_target(click_target_begin, click_target_end, this_socket);
 			label_targets.push_back(label_target);
 		}
@@ -226,13 +228,13 @@ void CyclesShaderEditor::EditorNode::draw_node(NVGcontext* draw_context)
 		if (this_socket->draw_socket) {
 			CyclesShaderEditor::Point2 socket_position;
 			if (this_socket->socket_in_out == SocketInOut::Input) {
-				socket_position = CyclesShaderEditor::Point2(draw_pos_x, next_draw_y + INOUT_HEIGHT / 2);
+				socket_position = CyclesShaderEditor::Point2(draw_pos_x, next_draw_y + UI_NODE_SOCKET_ROW_HEIGHT / 2);
 			}
 			else {
-				socket_position = CyclesShaderEditor::Point2(draw_pos_x + content_width, next_draw_y + INOUT_HEIGHT / 2);
+				socket_position = CyclesShaderEditor::Point2(draw_pos_x + content_width, next_draw_y + UI_NODE_SOCKET_ROW_HEIGHT / 2);
 			}
 			nvgBeginPath(draw_context);
-			nvgCircle(draw_context, socket_position.get_pos_x(), socket_position.get_pos_y(), SOCKET_RADIUS);
+			nvgCircle(draw_context, socket_position.get_pos_x(), socket_position.get_pos_y(), UI_NODE_SOCKET_RADIUS);
 
 			this_socket->world_draw_position = world_pos + socket_position;
 
@@ -269,10 +271,8 @@ void CyclesShaderEditor::EditorNode::draw_node(NVGcontext* draw_context)
 			nvgStroke(draw_context);
 		}
 
-		next_draw_y += INOUT_HEIGHT;
+		next_draw_y += UI_NODE_SOCKET_ROW_HEIGHT;
 	}
-
-	content_height = next_draw_y - (draw_pos_y + NODE_HEADER_HEIGHT) + 4.0f;
 }
 
 void CyclesShaderEditor::EditorNode::set_mouse_position(CyclesShaderEditor::Point2 node_local_position)
@@ -298,7 +298,7 @@ bool CyclesShaderEditor::EditorNode::is_mouse_over_node()
 	return (mouse_local_pos.get_pos_x() >= 0.0f &&
 		mouse_local_pos.get_pos_x() <= content_width &&
 		mouse_local_pos.get_pos_y() >= 0.0f &&
-		mouse_local_pos.get_pos_y() <= NODE_HEADER_HEIGHT + content_height);
+		mouse_local_pos.get_pos_y() <= UI_NODE_HEADER_HEIGHT + content_height);
 }
 
 bool CyclesShaderEditor::EditorNode::is_mouse_over_header()
@@ -309,7 +309,7 @@ bool CyclesShaderEditor::EditorNode::is_mouse_over_header()
 	return (mouse_local_pos.get_pos_x() >= 0.0f &&
 		mouse_local_pos.get_pos_x() <= content_width &&
 		mouse_local_pos.get_pos_y() >= 0.0f &&
-		mouse_local_pos.get_pos_y() <= NODE_HEADER_HEIGHT);
+		mouse_local_pos.get_pos_y() <= UI_NODE_HEADER_HEIGHT);
 }
 
 void CyclesShaderEditor::EditorNode::handle_mouse_button(int /*button*/, int /*action*/, int /*mods*/)
@@ -378,7 +378,7 @@ CyclesShaderEditor::NodeSocket* CyclesShaderEditor::EditorNode::get_socket_by_in
 
 CyclesShaderEditor::Point2 CyclesShaderEditor::EditorNode::get_dimensions()
 {
-	return CyclesShaderEditor::Point2(content_width, content_height + NODE_HEADER_HEIGHT);
+	return CyclesShaderEditor::Point2(content_width, content_height + UI_NODE_HEADER_HEIGHT);
 }
 
 bool CyclesShaderEditor::EditorNode::can_be_deleted()

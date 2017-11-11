@@ -13,10 +13,7 @@ CyclesShaderEditor::MaterialOutputNode::MaterialOutputNode(Point2 position)
 	sockets.push_back(volume_input);
 
 	type = CyclesNodeType::MaterialOutput;
-
 	content_width = 140.0f;
-	content_height = 100.0f;
-
 	node_moving = false;
 
 	// This node being added should not trigger an update to undo state
