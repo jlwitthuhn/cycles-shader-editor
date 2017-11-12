@@ -429,11 +429,12 @@ void CyclesShaderEditor::EditorMainWindow::draw_interface()
 	}
 
 	// Draw subwindows
+	const float max_safe_pos_y = window_height - UI_STATUSBAR_HEIGHT;
 	std::list<NodeEditorSubwindow*>::reverse_iterator window_iter;
 	for (window_iter = subwindows.rbegin(); window_iter != subwindows.rend(); ++window_iter) {
 		const CyclesShaderEditor::Point2 subwindow_pos = (*window_iter)->get_screen_pos();
 		const CyclesShaderEditor::Point2 local_mouse_pos = mouse_screen_pos - subwindow_pos;
-		(*window_iter)->set_mouse_position(local_mouse_pos);
+		(*window_iter)->set_mouse_position(local_mouse_pos, max_safe_pos_y);
 		nvgSave(nvg_context);
 		nvgTranslate(nvg_context, subwindow_pos.get_pos_x(), subwindow_pos.get_pos_y());
 		(*window_iter)->draw(nvg_context);

@@ -16,7 +16,7 @@ namespace CyclesShaderEditor {
 		// Draws the window at (0, 0). Can freely modify nanovg state without nvgSave/nvgRestore.
 		virtual void draw(NVGcontext* draw_context) = 0;
 		virtual bool is_mouse_over();
-		virtual void set_mouse_position(Point2 screen_position);
+		virtual void set_mouse_position(Point2 screen_position, float max_pos_y);
 
 		virtual void handle_mouse_button(int button, int action, int mods);
 		virtual void handle_key(int key, int scancode, int action, int mods);

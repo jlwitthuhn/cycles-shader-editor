@@ -1,5 +1,7 @@
 #include "subwindow.h"
 
+#include "gui_sizes.h"
+
 CyclesShaderEditor::NodeEditorSubwindow::NodeEditorSubwindow(Point2 screen_position)
 {
 	subwindow_screen_pos = screen_position;
@@ -27,10 +29,13 @@ bool CyclesShaderEditor::NodeEditorSubwindow::is_mouse_over()
 		mouse_local_pos.get_pos_y() < subwindow_height );
 }
 
-void CyclesShaderEditor::NodeEditorSubwindow::set_mouse_position(Point2 local_position)
+void CyclesShaderEditor::NodeEditorSubwindow::set_mouse_position(Point2 local_position, float max_safe_pos_y)
 {
 	if (subwindow_moving) {
 		subwindow_screen_pos = subwindow_screen_pos + (local_position - mouse_local_begin_move_pos);
+		if (subwindow_screen_pos.get_pos_y() + UI_SUBWIN_HEADER_HEIGHT > max_safe_pos_y) {
+			subwindow_screen_pos = Point2(subwindow_screen_pos.get_pos_x(), max_safe_pos_y - UI_SUBWIN_HEADER_HEIGHT);
+		}
 		mouse_local_pos = mouse_local_begin_move_pos;
 	}
 	else {
