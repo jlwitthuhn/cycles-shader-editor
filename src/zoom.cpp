@@ -18,6 +18,8 @@ CyclesShaderEditor::ZoomManager::ZoomManager()
 	zooms.push_back(2.333333f);
 	zooms.push_back(2.666667f);
 	zooms.push_back(3.00f);
+	zooms.push_back(3.50f);
+	zooms.push_back(4.00f);
 
 	for (size_t i = 0; i < zooms.size(); i++) {
 		if (zooms[i] == 1.0f) {
