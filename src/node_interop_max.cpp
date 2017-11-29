@@ -12,6 +12,8 @@ CyclesShaderEditor::MaxTexmapShaderNode::MaxTexmapShaderNode(Point2 position)
 
 	NodeSocket* slot_input = new NodeSocket(this, SocketInOut::Input, SocketType::Int, "Slot", "slot");
 	slot_input->value = new IntSocketValue(1, 1, 16);
+	NodeSocket* autosize_input = new NodeSocket(this, SocketInOut::Input, SocketType::Boolean, "Auto-size", "autosize");
+	autosize_input->value = new BoolSocketValue(true);
 	NodeSocket* width_input = new NodeSocket(this, SocketInOut::Input, SocketType::Int, "Width", "width");
 	width_input->value = new IntSocketValue(512, 1, 32768);
 	NodeSocket* height_input = new NodeSocket(this, SocketInOut::Input, SocketType::Int, "Height", "height");
@@ -24,6 +26,7 @@ CyclesShaderEditor::MaxTexmapShaderNode::MaxTexmapShaderNode(Point2 position)
 	precision_input->value = precision_value;
 
 	sockets.push_back(slot_input);
+	sockets.push_back(autosize_input);
 	sockets.push_back(width_input);
 	sockets.push_back(height_input);
 	sockets.push_back(precision_input);
