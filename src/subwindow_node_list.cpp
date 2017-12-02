@@ -38,17 +38,27 @@ CyclesShaderEditor::NodeListSubwindow::NodeListSubwindow(Point2 screen_position)
 	// Input buttons -- cleaned up in ~NodeCategoryButton
 	NodeCreationButton* camera_data_button = new GenericNodeButton<CameraDataNode>();
 	NodeCreationButton* fresnel_button = new GenericNodeButton<FresnelNode>();
-	NodeCreationButton* light_path_button = new GenericNodeButton<LightPathNode>();
+	NodeCreationButton* geometry_button = new GenericNodeButton<GeometryNode>();
 	NodeCreationButton* layer_weight_button = new GenericNodeButton<LayerWeightNode>();
+	NodeCreationButton* light_path_button = new GenericNodeButton<LightPathNode>();
+	NodeCreationButton* object_info_button = new GenericNodeButton<ObjectInfoNode>();
+	NodeCreationButton* rgb_button = new GenericNodeButton<RGBNode>();
 	NodeCreationButton* tangent_button = new GenericNodeButton<TangentNode>();
 	NodeCreationButton* tex_coord_button = new GenericNodeButton<TextureCoordinateNode>();
+	NodeCreationButton* value_button = new GenericNodeButton<ValueNode>();
+	NodeCreationButton* wireframe_button = new GenericNodeButton<WireframeNode>();
 
 	cat_input_button->node_buttons.push_back(camera_data_button);
 	cat_input_button->node_buttons.push_back(fresnel_button);
-	cat_input_button->node_buttons.push_back(light_path_button);
+	cat_input_button->node_buttons.push_back(geometry_button);
 	cat_input_button->node_buttons.push_back(layer_weight_button);
+	cat_input_button->node_buttons.push_back(light_path_button);
+	cat_input_button->node_buttons.push_back(object_info_button);
+	cat_input_button->node_buttons.push_back(rgb_button);
 	cat_input_button->node_buttons.push_back(tangent_button);
 	cat_input_button->node_buttons.push_back(tex_coord_button);
+	cat_input_button->node_buttons.push_back(value_button);
+	cat_input_button->node_buttons.push_back(wireframe_button);
 
 	// Shaders buttons -- same ownership as input buttons
 	NodeCreationButton* add_button = new GenericNodeButton<AddShaderNode>();

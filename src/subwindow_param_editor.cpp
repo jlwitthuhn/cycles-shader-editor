@@ -113,9 +113,6 @@ void CyclesShaderEditor::ParamEditorSubwindow::draw(NVGcontext* draw_context)
 		case SocketType::Vector:
 			parameter_type_text = "Type: Vector";
 			break;
-		case SocketType::Point:
-			parameter_type_text = "Type: Point";
-			break;
 		case SocketType::Normal:
 			parameter_type_text = "Type: Normal";
 			break;

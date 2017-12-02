@@ -41,6 +41,11 @@ namespace CyclesShaderEditor {
 		CameraData,
 		Tangent,
 		TextureCoordinate,
+		Geometry,
+		ObjectInfo,
+		RGB,
+		Wireframe,
+		Value,
 		// Color
 		MixRGB,
 		Invert,

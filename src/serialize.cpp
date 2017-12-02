@@ -76,6 +76,11 @@ static void initialize_maps()
 	type_to_code[CyclesNodeType::CameraData] = std::string("camera_data");
 	type_to_code[CyclesNodeType::Tangent] = std::string("tangent");
 	type_to_code[CyclesNodeType::TextureCoordinate] = std::string("texture_coordinate");
+	type_to_code[CyclesNodeType::Geometry] = std::string("geometry");
+	type_to_code[CyclesNodeType::ObjectInfo] = std::string("object_info");
+	type_to_code[CyclesNodeType::RGB] = std::string("rgb");
+	type_to_code[CyclesNodeType::Value] = std::string("value");
+	type_to_code[CyclesNodeType::Wireframe] = std::string("wireframe");
 
 	type_to_code[CyclesNodeType::MixRGB] = std::string("mix_rgb");
 	type_to_code[CyclesNodeType::Invert] = std::string("invert");
@@ -206,6 +211,198 @@ static std::list<std::string> tokenize_string(std::string input, char delim)
 	return output;
 }
 
+static CyclesShaderEditor::EditorNode* create_node_from_type(CyclesShaderEditor::CyclesNodeType type, CyclesShaderEditor::Point2 pos) {
+	using namespace CyclesShaderEditor;
+	switch (type) {
+		case CyclesNodeType::PrincipledBSDF:
+		{
+			return new PrincipledBSDFNode(pos);
+		}
+		case CyclesNodeType::MixShader:
+		{
+			return new MixShaderNode(pos);
+		}
+		case CyclesNodeType::AddShader:
+		{
+			return new AddShaderNode(pos);
+		}
+		case CyclesNodeType::DiffuseBSDF:
+		{
+			return new DiffuseBSDFNode(pos);
+		}
+		case CyclesNodeType::GlossyBSDF:
+		{
+			return new GlossyBSDFNode(pos);
+		}
+		case CyclesNodeType::TransparentBSDF:
+		{
+			return new TransparentBSDFNode(pos);
+		}
+		case CyclesNodeType::RefractionBSDF:
+		{
+			return new RefractionBSDFNode(pos);
+		}
+		case CyclesNodeType::GlassBSDF:
+		{
+			return new GlassBSDFNode(pos);
+		}
+		case CyclesNodeType::TranslucentBSDF:
+		{
+			return new TranslucentBSDFNode(pos);
+		}
+		case CyclesNodeType::AnisotropicBSDF:
+		{
+			return new AnisotropicBSDFNode(pos);
+		}
+		case CyclesNodeType::VelvetBSDF:
+		{
+			return new VelvetBSDFNode(pos);
+		}
+		case CyclesNodeType::ToonBSDF:
+		{
+			return new ToonBSDFNode(pos);
+		}
+		case CyclesNodeType::SubsurfaceScattering:
+		{
+			return new SubsurfaceScatteringNode(pos);
+		}
+		case CyclesNodeType::Emission:
+		{
+			return new EmissionNode(pos);
+		}
+		case CyclesNodeType::HairBSDF:
+		{
+			return new HairBSDFNode(pos);
+		}
+		case CyclesNodeType::Holdout:
+		{
+			return new HoldoutNode(pos);
+		}
+		case CyclesNodeType::VolAbsorption:
+		{
+			return new VolumeAbsorptionNode(pos);
+		}
+		case CyclesNodeType::VolScatter:
+		{
+			return new VolumeScatterNode(pos);
+		}
+		case CyclesNodeType::NoiseTex:
+		{
+			return new NoiseTextureNode(pos);
+		}
+		case CyclesNodeType::WaveTex:
+		{
+			return new WaveTextureNode(pos);
+		}
+		case CyclesNodeType::VoronoiTex:
+		{
+			return new VoronoiTextureNode(pos);
+		}
+		case CyclesNodeType::MusgraveTex:
+		{
+			return new MusgraveTextureNode(pos);
+		}
+		case CyclesNodeType::GradientTex:
+		{
+			return new GradientTextureNode(pos);
+		}
+		case CyclesNodeType::MagicTex:
+		{
+			return new MagicTextureNode(pos);
+		}
+		case CyclesNodeType::CheckerTex:
+		{
+			return new CheckerTextureNode(pos);
+		}
+		case CyclesNodeType::MaxTex:
+		{
+			return new MaxTexmapShaderNode(pos);
+		}
+		case CyclesNodeType::LightPath:
+		{
+			return new LightPathNode(pos);
+		}
+		case CyclesNodeType::Fresnel:
+		{
+			return new FresnelNode(pos);
+		}
+		case CyclesNodeType::LayerWeight:
+		{
+			return new LayerWeightNode(pos);
+		}
+		case CyclesNodeType::CameraData:
+		{
+			return new CameraDataNode(pos);
+		}
+		case CyclesNodeType::Tangent:
+		{
+			return new TangentNode(pos);
+		}
+		case CyclesNodeType::TextureCoordinate:
+		{
+			return new TextureCoordinateNode(pos);
+		}
+		case CyclesNodeType::Geometry:
+		{
+			return new GeometryNode(pos);
+		}
+		case CyclesNodeType::ObjectInfo:
+		{
+			return new ObjectInfoNode(pos);
+		}
+		case CyclesNodeType::RGB:
+		{
+			return new RGBNode(pos);
+		}
+		case CyclesNodeType::Wireframe:
+		{
+			return new WireframeNode(pos);
+		}
+		case CyclesNodeType::Value:
+		{
+			return new ValueNode(pos);
+		}
+		case CyclesNodeType::MixRGB:
+		{
+			return new MixRGBNode(pos);
+		}
+		case CyclesNodeType::Invert:
+		{
+			return new InvertNode(pos);
+		}
+		case CyclesNodeType::LightFalloff:
+		{
+			return new LightFalloffNode(pos);
+		}
+		case CyclesNodeType::HSV:
+		{
+			return new HSVNode(pos);
+		}
+		case CyclesNodeType::Gamma:
+		{
+			return new GammaNode(pos);
+		}
+		case CyclesNodeType::BrightnessContrast:
+		{
+			return new BrightnessContrastNode(pos);
+		}
+		case CyclesNodeType::Bump:
+		{
+			return new BumpNode(pos);
+		}
+		case CyclesNodeType::NormalMap:
+		{
+			return new NormalMapNode(pos);
+		}
+		case CyclesNodeType::MaterialOutput:
+		{
+			return new MaterialOutputNode(pos);
+		}
+	}
+
+	return nullptr;
+}
+
 static CyclesShaderEditor::EditorNode* deserialize_node(std::list<std::string>& tokens, std::map<std::string, CyclesShaderEditor::EditorNode*>& nodes_by_name)
 {
 	using namespace CyclesShaderEditor;
@@ -240,257 +437,7 @@ static CyclesShaderEditor::EditorNode* deserialize_node(std::list<std::string>& 
 
 	CyclesNodeType type = code_to_type[type_code];
 
-	EditorNode* result = nullptr;
-	switch (type) {
-	case CyclesNodeType::PrincipledBSDF:
-	{
-		PrincipledBSDFNode* node = new PrincipledBSDFNode(CyclesShaderEditor::Point2(x_position, y_position));
-		result = node;
-		break;
-	}
-	case CyclesNodeType::MixShader:
-	{
-		MixShaderNode* node = new MixShaderNode(CyclesShaderEditor::Point2(x_position, y_position));
-		result = node;
-		break;
-	}
-	case CyclesNodeType::AddShader:
-	{
-		AddShaderNode* node = new AddShaderNode(CyclesShaderEditor::Point2(x_position, y_position));
-		result = node;
-		break;
-	}
-	case CyclesNodeType::DiffuseBSDF:
-	{
-		DiffuseBSDFNode* node = new DiffuseBSDFNode(CyclesShaderEditor::Point2(x_position, y_position));
-		result = node;
-		break;
-	}
-	case CyclesNodeType::GlossyBSDF:
-	{
-		GlossyBSDFNode* node = new GlossyBSDFNode(CyclesShaderEditor::Point2(x_position, y_position));
-		result = node;
-		break;
-	}
-	case CyclesNodeType::TransparentBSDF:
-	{
-		TransparentBSDFNode* node = new TransparentBSDFNode(CyclesShaderEditor::Point2(x_position, y_position));
-		result = node;
-		break;
-	}
-	case CyclesNodeType::RefractionBSDF:
-	{
-		RefractionBSDFNode* node = new RefractionBSDFNode(CyclesShaderEditor::Point2(x_position, y_position));
-		result = node;
-		break;
-	}
-	case CyclesNodeType::GlassBSDF:
-	{
-		GlassBSDFNode* node = new GlassBSDFNode(CyclesShaderEditor::Point2(x_position, y_position));
-		result = node;
-		break;
-	}
-	case CyclesNodeType::TranslucentBSDF:
-	{
-		TranslucentBSDFNode* node = new TranslucentBSDFNode(CyclesShaderEditor::Point2(x_position, y_position));
-		result = node;
-		break;
-	}
-	case CyclesNodeType::AnisotropicBSDF:
-	{
-		AnisotropicBSDFNode* node = new AnisotropicBSDFNode(CyclesShaderEditor::Point2(x_position, y_position));
-		result = node;
-		break;
-	}
-	case CyclesNodeType::VelvetBSDF:
-	{
-		VelvetBSDFNode* node = new VelvetBSDFNode(CyclesShaderEditor::Point2(x_position, y_position));
-		result = node;
-		break;
-	}
-	case CyclesNodeType::ToonBSDF:
-	{
-		ToonBSDFNode* node = new ToonBSDFNode(CyclesShaderEditor::Point2(x_position, y_position));
-		result = node;
-		break;
-	}
-	case CyclesNodeType::SubsurfaceScattering:
-	{
-		SubsurfaceScatteringNode* node = new SubsurfaceScatteringNode(CyclesShaderEditor::Point2(x_position, y_position));
-		result = node;
-		break;
-	}
-	case CyclesNodeType::Emission:
-	{
-		EmissionNode* node = new EmissionNode(CyclesShaderEditor::Point2(x_position, y_position));
-		result = node;
-		break;
-	}
-	case CyclesNodeType::HairBSDF:
-	{
-		HairBSDFNode* node = new HairBSDFNode(CyclesShaderEditor::Point2(x_position, y_position));
-		result = node;
-		break;
-	}
-	case CyclesNodeType::Holdout:
-	{
-		HoldoutNode* node = new HoldoutNode(CyclesShaderEditor::Point2(x_position, y_position));
-		result = node;
-		break;
-	}
-	case CyclesNodeType::VolAbsorption:
-	{
-		VolumeAbsorptionNode* node = new VolumeAbsorptionNode(CyclesShaderEditor::Point2(x_position, y_position));
-		result = node;
-		break;
-	}
-	case CyclesNodeType::VolScatter:
-	{
-		VolumeScatterNode* node = new VolumeScatterNode(CyclesShaderEditor::Point2(x_position, y_position));
-		result = node;
-		break;
-	}
-	case CyclesNodeType::NoiseTex:
-	{
-		NoiseTextureNode* node = new NoiseTextureNode(CyclesShaderEditor::Point2(x_position, y_position));
-		result = node;
-		break;
-	}
-	case CyclesNodeType::WaveTex:
-	{
-		WaveTextureNode* node = new WaveTextureNode(CyclesShaderEditor::Point2(x_position, y_position));
-		result = node;
-		break;
-	}
-	case CyclesNodeType::VoronoiTex:
-	{
-		VoronoiTextureNode* node = new VoronoiTextureNode(CyclesShaderEditor::Point2(x_position, y_position));
-		result = node;
-		break;
-	}
-	case CyclesNodeType::MusgraveTex:
-	{
-		MusgraveTextureNode* node = new MusgraveTextureNode(CyclesShaderEditor::Point2(x_position, y_position));
-		result = node;
-		break;
-	}
-	case CyclesNodeType::GradientTex:
-	{
-		GradientTextureNode* node = new GradientTextureNode(CyclesShaderEditor::Point2(x_position, y_position));
-		result = node;
-		break;
-	}
-	case CyclesNodeType::MagicTex:
-	{
-		MagicTextureNode* node = new MagicTextureNode(CyclesShaderEditor::Point2(x_position, y_position));
-		result = node;
-		break;
-	}
-	case CyclesNodeType::CheckerTex:
-	{
-		CheckerTextureNode* node = new CheckerTextureNode(CyclesShaderEditor::Point2(x_position, y_position));
-		result = node;
-		break;
-	}
-	case CyclesNodeType::MaxTex:
-	{
-		MaxTexmapShaderNode* node = new MaxTexmapShaderNode(CyclesShaderEditor::Point2(x_position, y_position));
-		result = node;
-		break;
-	}
-	case CyclesNodeType::LightPath:
-	{
-		LightPathNode* node = new LightPathNode(CyclesShaderEditor::Point2(x_position, y_position));
-		result = node;
-		break;
-	}
-	case CyclesNodeType::Fresnel:
-	{
-		FresnelNode* node = new FresnelNode(CyclesShaderEditor::Point2(x_position, y_position));
-		result = node;
-		break;
-	}
-	case CyclesNodeType::LayerWeight:
-	{
-		LayerWeightNode* node = new LayerWeightNode(CyclesShaderEditor::Point2(x_position, y_position));
-		result = node;
-		break;
-	}
-	case CyclesNodeType::CameraData:
-	{
-		CameraDataNode* node = new CameraDataNode(CyclesShaderEditor::Point2(x_position, y_position));
-		result = node;
-		break;
-	}
-	case CyclesNodeType::Tangent:
-	{
-		TangentNode* node = new TangentNode(CyclesShaderEditor::Point2(x_position, y_position));
-		result = node;
-		break;
-	}
-	case CyclesNodeType::TextureCoordinate:
-	{
-		TextureCoordinateNode* node = new TextureCoordinateNode(CyclesShaderEditor::Point2(x_position, y_position));
-		result = node;
-		break;
-	}
-	case CyclesNodeType::MixRGB:
-	{
-		MixRGBNode* node = new MixRGBNode(CyclesShaderEditor::Point2(x_position, y_position));
-		result = node;
-		break;
-	}
-	case CyclesNodeType::Invert:
-	{
-		InvertNode* node = new InvertNode(CyclesShaderEditor::Point2(x_position, y_position));
-		result = node;
-		break;
-	}
-	case CyclesNodeType::LightFalloff:
-	{
-		LightFalloffNode* node = new LightFalloffNode(CyclesShaderEditor::Point2(x_position, y_position));
-		result = node;
-		break;
-	}
-	case CyclesNodeType::HSV:
-	{
-		HSVNode* node = new HSVNode(CyclesShaderEditor::Point2(x_position, y_position));
-		result = node;
-		break;
-	}
-	case CyclesNodeType::Gamma:
-	{
-		GammaNode* node = new GammaNode(CyclesShaderEditor::Point2(x_position, y_position));
-		result = node;
-		break;
-	}
-	case CyclesNodeType::BrightnessContrast:
-	{
-		BrightnessContrastNode* node = new BrightnessContrastNode(CyclesShaderEditor::Point2(x_position, y_position));
-		result = node;
-		break;
-	}
-	case CyclesNodeType::Bump:
-	{
-		BumpNode* node = new BumpNode(CyclesShaderEditor::Point2(x_position, y_position));
-		result = node;
-		break;
-	}
-	case CyclesNodeType::NormalMap:
-	{
-		NormalMapNode* node = new NormalMapNode(CyclesShaderEditor::Point2(x_position, y_position));
-		result = node;
-		break;
-	}
-	case CyclesNodeType::MaterialOutput:
-	{
-		MaterialOutputNode* node = new MaterialOutputNode(CyclesShaderEditor::Point2(x_position, y_position));
-		result = node;
-		break;
-	}
-	default:
-		return nullptr;
-	}
+	EditorNode* result = create_node_from_type(type, Point2(x_position, y_position));
 	
 	if (result == nullptr) {
 		return nullptr;

@@ -34,4 +34,28 @@ namespace CyclesShaderEditor {
 		TextureCoordinateNode(Point2 position);
 	};
 
+	class GeometryNode : public EditorNode {
+	public:
+		GeometryNode(Point2 position);
+	};
+
+	class ObjectInfoNode : public EditorNode {
+	public:
+		ObjectInfoNode(Point2 position);
+	};
+
+	class RGBNode : public EditorNode {
+	public:
+		RGBNode(Point2 position);
+	};
+
+	class ValueNode : public EditorNode {
+	public:
+		ValueNode(Point2 position);
+	};
+
+	class WireframeNode : public EditorNode {
+	public:
+		WireframeNode(Point2 position);
+	};
 }

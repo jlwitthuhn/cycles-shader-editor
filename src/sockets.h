@@ -15,7 +15,6 @@ namespace CyclesShaderEditor {
 		Int,
 		Color,
 		Vector,
-		Point,
 		Normal,
 		Closure,
 		String,

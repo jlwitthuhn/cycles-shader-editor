@@ -148,3 +148,108 @@ CyclesShaderEditor::TextureCoordinateNode::TextureCoordinateNode(Point2 position
 
 	type = CyclesNodeType::TextureCoordinate;
 }
+
+CyclesShaderEditor::GeometryNode::GeometryNode(Point2 position)
+{
+	world_pos = position;
+
+	title = "Geometry";
+
+	NodeSocket* position_output = new NodeSocket(this, SocketInOut::Output, SocketType::Vector, "Position", "position");
+	NodeSocket* normal_output = new NodeSocket(this, SocketInOut::Output, SocketType::Normal, "Normal", "normal");
+	NodeSocket* tangent_output = new NodeSocket(this, SocketInOut::Output, SocketType::Vector, "Tangent", "tangent");
+	NodeSocket* true_normal_output = new NodeSocket(this, SocketInOut::Output, SocketType::Normal, "True Normal", "true_normal");
+	NodeSocket* incoming_output = new NodeSocket(this, SocketInOut::Output, SocketType::Vector, "Incoming", "incoming");
+	NodeSocket* parametric_output = new NodeSocket(this, SocketInOut::Output, SocketType::Vector, "Parametric", "parametric");
+	NodeSocket* backfacing_output = new NodeSocket(this, SocketInOut::Output, SocketType::Float, "Backfacing", "backfacing");
+	NodeSocket* pointiness_output = new NodeSocket(this, SocketInOut::Output, SocketType::Float, "Pointiness", "pointiness");
+
+	sockets.push_back(position_output);
+	sockets.push_back(normal_output);
+	sockets.push_back(tangent_output);
+	sockets.push_back(true_normal_output);
+	sockets.push_back(incoming_output);
+	sockets.push_back(parametric_output);
+	sockets.push_back(backfacing_output);
+	sockets.push_back(pointiness_output);
+
+	type = CyclesNodeType::Geometry;
+}
+
+CyclesShaderEditor::ObjectInfoNode::ObjectInfoNode(Point2 position)
+{
+	world_pos = position;
+
+	title = "Object Info";
+
+	NodeSocket* location_output = new NodeSocket(this, SocketInOut::Output, SocketType::Vector, "Location", "location");
+	NodeSocket* object_index_output = new NodeSocket(this, SocketInOut::Output, SocketType::Float, "Object Index", "object_index");
+	NodeSocket* material_index_output = new NodeSocket(this, SocketInOut::Output, SocketType::Float, "Material Index", "material_index");
+	NodeSocket* random_output = new NodeSocket(this, SocketInOut::Output, SocketType::Float, "Random", "random");
+
+	sockets.push_back(location_output);
+	sockets.push_back(object_index_output);
+	sockets.push_back(material_index_output);
+	sockets.push_back(random_output);
+
+	type = CyclesNodeType::ObjectInfo;
+}
+
+CyclesShaderEditor::RGBNode::RGBNode(Point2 position)
+{
+	world_pos = position;
+
+	title = "RGB";
+
+	NodeSocket* color_output = new NodeSocket(this, SocketInOut::Output, SocketType::Color, "Color", "color");
+
+	sockets.push_back(color_output);
+
+	NodeSocket* color_input = new NodeSocket(this, SocketInOut::Input, SocketType::Color, "RGB", "rgb");
+	color_input->value = new ColorSocketValue(1.0f, 1.0f, 1.0f);
+	color_input->draw_socket = false;
+
+	sockets.push_back(color_input);
+
+	type = CyclesNodeType::RGB;
+}
+
+CyclesShaderEditor::ValueNode::ValueNode(Point2 position)
+{
+	world_pos = position;
+
+	title = "Value";
+
+	NodeSocket* value_output = new NodeSocket(this, SocketInOut::Output, SocketType::Float, "Value", "value");
+
+	sockets.push_back(value_output);
+
+	NodeSocket* value_input = new NodeSocket(this, SocketInOut::Input, SocketType::Float, "Value", "value");
+	value_input->value = new FloatSocketValue(0.0f, -10000.0f, 10000.0f);
+	value_input->draw_socket = false;
+
+	sockets.push_back(value_input);
+
+	type = CyclesNodeType::Value;
+}
+
+CyclesShaderEditor::WireframeNode::WireframeNode(Point2 position)
+{
+	world_pos = position;
+
+	title = "Wireframe";
+
+	NodeSocket* fac_output = new NodeSocket(this, SocketInOut::Output, SocketType::Float, "Fac", "fac");
+
+	sockets.push_back(fac_output);
+
+	NodeSocket* pixel_size_input = new NodeSocket(this, SocketInOut::Input, SocketType::Boolean, "Use Pixel Size", "use_pixel_size");
+	pixel_size_input->value = new BoolSocketValue(false);
+	NodeSocket* size_input = new NodeSocket(this, SocketInOut::Input, SocketType::Float, "Size", "size");
+	size_input->value = new FloatSocketValue(0.04f, 0.0f, 10000.0f);
+
+	sockets.push_back(pixel_size_input);
+	sockets.push_back(size_input);
+
+	type = CyclesNodeType::Wireframe;
+}
