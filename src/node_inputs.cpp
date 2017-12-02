@@ -205,11 +205,11 @@ CyclesShaderEditor::RGBNode::RGBNode(Point2 position)
 
 	sockets.push_back(color_output);
 
-	NodeSocket* color_input = new NodeSocket(this, SocketInOut::Input, SocketType::Color, "RGB", "rgb");
-	color_input->value = new ColorSocketValue(1.0f, 1.0f, 1.0f);
-	color_input->draw_socket = false;
+	NodeSocket* value_input = new NodeSocket(this, SocketInOut::Input, SocketType::Color, "Value", "value");
+	value_input->value = new ColorSocketValue(1.0f, 1.0f, 1.0f);
+	value_input->draw_socket = false;
 
-	sockets.push_back(color_input);
+	sockets.push_back(value_input);
 
 	type = CyclesNodeType::RGB;
 }
