@@ -17,9 +17,7 @@ CyclesShaderEditor::ParamEditorSubwindow::ParamEditorSubwindow(Point2 screen_pos
 	vector_x_input_box(UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH_BIG, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT),
 	vector_y_input_box(UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH_BIG, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT),
 	vector_z_input_box(UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH_BIG, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT),
-	color_r_input_box(UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH_BIG, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT),
-	color_g_input_box(UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH_BIG, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT),
-	color_b_input_box(UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH_BIG, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT)
+	panel_color(UI_SUBWIN_PARAM_EDIT_WIDTH)
 {
 	subwindow_width = UI_SUBWIN_PARAM_EDIT_WIDTH;
 	subwindow_height = UI_SUBWIN_HEADER_HEIGHT;
@@ -82,9 +80,7 @@ void CyclesShaderEditor::ParamEditorSubwindow::draw(NVGcontext* draw_context)
 		vector_x_input_box.displayed = false;
 		vector_y_input_box.displayed = false;
 		vector_z_input_box.displayed = false;
-		color_r_input_box.displayed = false;
-		color_g_input_box.displayed = false;
-		color_b_input_box.displayed = false;
+		panel_color.set_active(false);
 		enum_targets.clear();
 		bool_targets.clear();
 
@@ -147,6 +143,7 @@ void CyclesShaderEditor::ParamEditorSubwindow::draw(NVGcontext* draw_context)
 		nvgStroke(draw_context);
 
 		height_drawn += 4.0f;
+		panel_start_y = height_drawn;
 
 		if (selected_param->socket_type == SocketType::Int) {
 			int_input_box.displayed = true;
@@ -238,51 +235,12 @@ void CyclesShaderEditor::ParamEditorSubwindow::draw(NVGcontext* draw_context)
 			height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
 		}
 		else if (selected_param->socket_type == SocketType::Color) {
-			color_r_input_box.displayed = true;
-			color_g_input_box.displayed = true;
-			color_b_input_box.displayed = true;
-
+			nvgSave(draw_context);
+			nvgTranslate(draw_context, 0.0f, panel_start_y);
+			panel_color.set_active(true);
 			ColorSocketValue* color_socket_val = dynamic_cast<ColorSocketValue*>(selected_param->value);
-
-			nvgFontSize(draw_context, UI_FONT_SIZE_NORMAL);
-			nvgFontFace(draw_context, "sans");
-			nvgTextAlign(draw_context, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-			nvgFontBlur(draw_context, 0.0f);
-			nvgFillColor(draw_context, nvgRGBA(0, 0, 0, 255));
-
-			std::string red_label_text = "R:";
-			nvgText(draw_context, subwindow_width / 3, height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT / 2, red_label_text.c_str(), nullptr);
-
-			float input_x_draw = (2.0f * subwindow_width / 3) - (color_r_input_box.width / 2);
-			float input_y_draw = height_drawn + (UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT - color_r_input_box.height) / 2;
-
-			color_r_input_box.set_position(Point2(input_x_draw, input_y_draw));
-			color_r_input_box.set_float_value(&(color_socket_val->red_socket_val));
-			color_r_input_box.draw(draw_context, mouse_local_pos);
-
-			height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
-
-			std::string green_label_text = "G:";
-			nvgText(draw_context, subwindow_width / 3, height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT / 2, green_label_text.c_str(), nullptr);
-
-			input_y_draw = height_drawn + (UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT - color_g_input_box.height) / 2;
-
-			color_g_input_box.set_position(Point2(input_x_draw, input_y_draw));
-			color_g_input_box.set_float_value(&(color_socket_val->green_socket_val));
-			color_g_input_box.draw(draw_context, mouse_local_pos);
-
-			height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
-
-			std::string blue_label_text = "B:";
-			nvgText(draw_context, subwindow_width / 3, height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT / 2, blue_label_text.c_str(), nullptr);
-
-			input_y_draw = height_drawn + (UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT - color_b_input_box.height) / 2;
-
-			color_b_input_box.set_position(Point2(input_x_draw, input_y_draw));
-			color_b_input_box.set_float_value(&(color_socket_val->blue_socket_val));
-			color_b_input_box.draw(draw_context, mouse_local_pos);
-
-			height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
+			height_drawn += panel_color.draw(draw_context, color_socket_val);
+			nvgRestore(draw_context);
 		}
 		else if (selected_param->socket_type == SocketType::StringEnum) {
 			StringEnumSocketValue* str_enum_value = dynamic_cast<StringEnumSocketValue*>(selected_param->value);
@@ -426,7 +384,15 @@ void CyclesShaderEditor::ParamEditorSubwindow::draw(NVGcontext* draw_context)
 	subwindow_height = height_drawn + 4.0f;
 }
 
-void CyclesShaderEditor::ParamEditorSubwindow::handle_mouse_button(int button, int action, int /*mods*/)
+void CyclesShaderEditor::ParamEditorSubwindow::set_mouse_position(Point2 screen_position, float max_pos_y)
+{
+	NodeEditorSubwindow::set_mouse_position(screen_position, max_pos_y);
+	if (panel_color.is_active()) {
+		panel_color.set_mouse_local_position(screen_position - Point2(0.0f, panel_start_y));
+	}
+}
+
+void CyclesShaderEditor::ParamEditorSubwindow::handle_mouse_button(int button, int action, int mods)
 {
 	if (is_mouse_over_header()) {
 		if (button == GLFW_MOUSE_BUTTON_LEFT) {
@@ -436,6 +402,17 @@ void CyclesShaderEditor::ParamEditorSubwindow::handle_mouse_button(int button, i
 			else if (action == GLFW_RELEASE) {
 				move_window_end();
 			}
+		}
+	}
+	else if (panel_color.is_mouse_over()) {
+		if (panel_color.get_input_bux_under_mouse() != nullptr) {
+			if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+				select_input(panel_color.get_input_bux_under_mouse());
+			}
+		}
+		else {
+			// Panel will handle the mouse event internally
+			panel_color.handle_mouse_button(button, action, mods);
 		}
 	}
 	else if (int_input_box.is_mouse_over()) {
@@ -461,21 +438,6 @@ void CyclesShaderEditor::ParamEditorSubwindow::handle_mouse_button(int button, i
 	else if (vector_z_input_box.is_mouse_over()) {
 		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
 			select_input(&vector_z_input_box);
-		}
-	}
-	else if (color_r_input_box.is_mouse_over()) {
-		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-			select_input(&color_r_input_box);
-		}
-	}
-	else if (color_g_input_box.is_mouse_over()) {
-		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-			select_input(&color_g_input_box);
-		}
-	}
-	else if (color_b_input_box.is_mouse_over()) {
-		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-			select_input(&color_b_input_box);
 		}
 	}
 	else if (is_enum_target_under_mouse()) {
@@ -548,6 +510,22 @@ bool CyclesShaderEditor::ParamEditorSubwindow::should_capture_keys()
 void CyclesShaderEditor::ParamEditorSubwindow::complete_input()
 {
 	select_input(nullptr);
+}
+
+void CyclesShaderEditor::ParamEditorSubwindow::mouse_button_release()
+{
+	panel_color.mouse_button_release();
+}
+
+bool CyclesShaderEditor::ParamEditorSubwindow::should_push_undo_state() {
+	if (param_changed) {
+		param_changed = false;
+		return true;
+	}
+	if (panel_color.should_push_undo_state()) {
+		return true;
+	}
+	return false;
 }
 
 bool CyclesShaderEditor::ParamEditorSubwindow::is_mouse_over_header()

@@ -66,6 +66,8 @@ namespace CyclesShaderEditor {
 		FloatInputBox(float width, float height);
 
 		void set_float_value(FloatSocketValue* socket_value);
+		void set_float_value(float value);
+		float get_float_value();
 
 	private:
 		virtual std::string get_value_as_string();

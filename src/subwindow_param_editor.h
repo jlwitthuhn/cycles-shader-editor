@@ -3,8 +3,8 @@
 #include <vector>
 
 #include "input_box.h"
+#include "panel_edit_color.h"
 #include "subwindow.h"
-
 
 namespace CyclesShaderEditor {
 
@@ -17,6 +17,7 @@ namespace CyclesShaderEditor {
 		ParamEditorSubwindow(Point2 screen_position);
 
 		virtual void draw(NVGcontext* draw_context) override;
+		virtual void set_mouse_position(Point2 screen_position, float max_pos_y) override;
 
 		virtual void handle_mouse_button(int button, int action, int mods) override;
 		virtual void handle_key(int key, int scancode, int action, int mods) override;
@@ -28,8 +29,9 @@ namespace CyclesShaderEditor {
 
 		bool should_capture_keys();
 		void complete_input();
+		void mouse_button_release();
 
-		bool param_changed = false;
+		bool should_push_undo_state();
 
 	private:
 		bool is_mouse_over_header();
@@ -45,6 +47,11 @@ namespace CyclesShaderEditor {
 
 		BaseInputBox* selected_input = nullptr;
 
+		float panel_start_y = 0;
+
+		// Color panel
+		EditColorPanel panel_color;
+
 		// Int stuff
 		IntInputBox int_input_box;
 
@@ -56,16 +63,14 @@ namespace CyclesShaderEditor {
 		FloatInputBox vector_y_input_box;
 		FloatInputBox vector_z_input_box;
 
-		// Color stuff
-		FloatInputBox color_r_input_box;
-		FloatInputBox color_g_input_box;
-		FloatInputBox color_b_input_box;
-
 		// Enum stuff
 		std::vector<StringEnumClickTarget> enum_targets;
 
 		// Bool stuff
 		std::vector<BoolValueClickTarget> bool_targets;
+
+		// Undo state stuff
+		bool param_changed = false;
 	};
 
 }

@@ -130,9 +130,8 @@ bool CyclesShaderEditor::EditorMainWindow::run_window_loop_iteration()
 			node->changed = false;
 		}
 	}
-	if (param_editor_window->param_changed) {
+	if (param_editor_window->should_push_undo_state()) {
 		should_push_undo_state = true;
-		param_editor_window->param_changed = false;
 	}
 	if (should_push_undo_state) {
 		push_undo_state();
@@ -282,7 +281,7 @@ void CyclesShaderEditor::EditorMainWindow::handle_mouse_button(int button, int a
 		view->mouse_move_end();
 	}
 
-	// Same for left mouse release, this will cancel a connection or end a node move in progress
+	// Same for left mouse release, this will cancel/end any action that is currently happening
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
 		// Connection creation
 		view->cancel_connection();
@@ -291,6 +290,11 @@ void CyclesShaderEditor::EditorMainWindow::handle_mouse_button(int button, int a
 		if (node_list_window != nullptr && node_list_window->active_button != nullptr) {
 			node_list_window->active_button->pressed = false;
 			node_list_window->active_button = nullptr;
+		}
+
+		// Param window
+		if (param_editor_window != nullptr) {
+			param_editor_window->mouse_button_release();
 		}
 
 		// Node moving

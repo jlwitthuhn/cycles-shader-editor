@@ -10,6 +10,7 @@ namespace CyclesShaderEditor {
 		GenericClickTarget(Point2 begin_pos, Point2 end_pos);
 
 		bool is_mouse_over_target(Point2 mouse_pos);
+		Point2 get_normalized_mouse_pos(Point2 mouse_pos);
 
 	protected:
 		Point2 begin;

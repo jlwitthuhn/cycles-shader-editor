@@ -177,6 +177,23 @@ void CyclesShaderEditor::FloatInputBox::set_float_value(FloatSocketValue* socket
 	this->socket_value = socket_value;
 }
 
+void CyclesShaderEditor::FloatInputBox::set_float_value(float value)
+{
+	if (socket_value == nullptr) {
+		return;
+	}
+	socket_value->set_value(value);
+}
+
+float CyclesShaderEditor::FloatInputBox::get_float_value()
+{
+	if (socket_value == nullptr) {
+		return 0.0f;
+	}
+
+	return socket_value->get_value();
+}
+
 std::string CyclesShaderEditor::FloatInputBox::get_value_as_string()
 {
 	if (socket_value == nullptr) {

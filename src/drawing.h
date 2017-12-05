@@ -10,6 +10,7 @@ namespace CyclesShaderEditor {
 	namespace Drawing {
 
 		void draw_button(NVGcontext* draw_context, float x_pos, float y_pos, float width, float height, std::string label, bool enabled, bool pressed);
+		void draw_color_pick_cursor(NVGcontext* draw_context, float x_pos, float y_pos);
 
 	}
 }
