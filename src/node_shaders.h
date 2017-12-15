@@ -4,6 +4,11 @@
 
 namespace CyclesShaderEditor {
 
+	class AmbientOcculsionNode : public EditorNode {
+	public:
+		AmbientOcculsionNode(Point2 position);
+	};
+
 	class PrincipledBSDFNode : public EditorNode {
 	public:
 		PrincipledBSDFNode(Point2 position);

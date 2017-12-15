@@ -4,6 +4,11 @@
 
 namespace CyclesShaderEditor {
 
+	class BrickTextureNode : public EditorNode {
+	public:
+		BrickTextureNode(Point2 position);
+	};
+
 	class NoiseTextureNode : public EditorNode {
 	public:
 		NoiseTextureNode(Point2 position);

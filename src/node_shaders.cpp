@@ -1,5 +1,23 @@
 #include "node_shaders.h"
 
+CyclesShaderEditor::AmbientOcculsionNode::AmbientOcculsionNode(Point2 position)
+{
+	world_pos = position;
+
+	title = "Ambient Occlusion";
+
+	NodeSocket* ao_output = new NodeSocket(this, SocketInOut::Output, SocketType::Closure, "AO", "AO");
+
+	sockets.push_back(ao_output);
+
+	NodeSocket* color_input = new NodeSocket(this, SocketInOut::Input, SocketType::Color, "Color", "color");
+	color_input->value = new ColorSocketValue(1.0f, 1.0f, 1.0f);
+
+	sockets.push_back(color_input);
+
+	type = CyclesNodeType::AmbientOcclusion;
+}
+
 CyclesShaderEditor::PrincipledBSDFNode::PrincipledBSDFNode(Point2 position)
 {
 	world_pos = position;

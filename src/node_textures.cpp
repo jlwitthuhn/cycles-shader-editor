@@ -1,5 +1,69 @@
 #include "node_textures.h"
 
+CyclesShaderEditor::BrickTextureNode::BrickTextureNode(Point2 position)
+{
+	world_pos = position;
+
+	title = "Brick Texture";
+
+	NodeSocket* color_output = new NodeSocket(this, SocketInOut::Output, SocketType::Color, "Color", "color");
+	NodeSocket* fac_output = new NodeSocket(this, SocketInOut::Output, SocketType::Float, "Fac", "fac");
+
+	sockets.push_back(color_output);
+	sockets.push_back(fac_output);
+
+	NodeSocket* offset_input = new NodeSocket(this, SocketInOut::Input, SocketType::Float, "Offset", "offset");
+	offset_input->value = new FloatSocketValue(0.5f, 0.0f, 1.0f);
+	offset_input->draw_socket = false;
+	NodeSocket* offset_freq_input = new NodeSocket(this, SocketInOut::Input, SocketType::Int, "Offset Freq", "offset_frequency");
+	offset_freq_input->value = new IntSocketValue(2, 1, 99);
+	offset_freq_input->draw_socket = false;
+	NodeSocket* squash_input = new NodeSocket(this, SocketInOut::Input, SocketType::Float, "Squash", "squash");
+	squash_input->value = new FloatSocketValue(1.0f, 0.0f, 99.0f);
+	squash_input->draw_socket = false;
+	NodeSocket* squash_freq_input = new NodeSocket(this, SocketInOut::Input, SocketType::Int, "Squash Freq", "squash_frequency");
+	squash_freq_input->value = new IntSocketValue(2, 1, 99);
+	squash_freq_input->draw_socket = false;
+
+	NodeSocket* vector_input = new NodeSocket(this, SocketInOut::Input, SocketType::Vector, "Vector", "vector");
+	NodeSocket* color1_input = new NodeSocket(this, SocketInOut::Input, SocketType::Color, "Color1", "color1");
+	color1_input->value = new ColorSocketValue(1.0f, 1.0f, 1.0f);
+	NodeSocket* color2_input = new NodeSocket(this, SocketInOut::Input, SocketType::Color, "Color2", "color2");
+	color2_input->value = new ColorSocketValue(0.5f, 0.5f, 0.5f);
+	NodeSocket* mortar_input = new NodeSocket(this, SocketInOut::Input, SocketType::Color, "Mortar", "mortar");
+	mortar_input->value = new ColorSocketValue(0.0f, 0.0f, 0.0f);
+	NodeSocket* scale_input = new NodeSocket(this, SocketInOut::Input, SocketType::Float, "Scale", "scale");
+	scale_input->value = new FloatSocketValue(5.0f, -1000.0f, 1000.0f);
+	NodeSocket* mortar_size_input = new NodeSocket(this, SocketInOut::Input, SocketType::Float, "Mortar Size", "mortar_size");
+	mortar_size_input->value = new FloatSocketValue(0.02f, 0.0f, 0.25f);
+	NodeSocket* mortar_smooth_input = new NodeSocket(this, SocketInOut::Input, SocketType::Float, "Mortar Smooth", "mortar_smooth");
+	mortar_smooth_input->value = new FloatSocketValue(0.1f, 0.0f, 1.0f);
+	NodeSocket* bias_input = new NodeSocket(this, SocketInOut::Input, SocketType::Float, "Bias", "bias");
+	bias_input->value = new FloatSocketValue(0.0f, -1.0f, 1.0f);
+	NodeSocket* brick_width_input = new NodeSocket(this, SocketInOut::Input, SocketType::Float, "Brick Width", "brick_width");
+	brick_width_input->value = new FloatSocketValue(0.5f, 0.01f, 100.0f);
+	NodeSocket* row_height_input = new NodeSocket(this, SocketInOut::Input, SocketType::Float, "Row Height", "row_height");
+	row_height_input->value = new FloatSocketValue(0.25f, 0.01f, 100.0f);
+
+	sockets.push_back(offset_input);
+	sockets.push_back(offset_freq_input);
+	sockets.push_back(squash_input);
+	sockets.push_back(squash_freq_input);
+
+	sockets.push_back(vector_input);
+	sockets.push_back(color1_input);
+	sockets.push_back(color2_input);
+	sockets.push_back(mortar_input);
+	sockets.push_back(scale_input);
+	sockets.push_back(mortar_size_input);
+	sockets.push_back(mortar_smooth_input);
+	sockets.push_back(bias_input);
+	sockets.push_back(brick_width_input);
+	sockets.push_back(row_height_input);
+
+	type = CyclesNodeType::BrickTex;
+}
+
 CyclesShaderEditor::NoiseTextureNode::NoiseTextureNode(Point2 position)
 {
 	world_pos = position;

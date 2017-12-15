@@ -7,6 +7,7 @@ namespace CyclesShaderEditor {
 
 	enum class CyclesNodeType {
 		// Shader
+		AmbientOcclusion,
 		PrincipledBSDF,
 		MixShader,
 		AddShader,
@@ -26,14 +27,15 @@ namespace CyclesShaderEditor {
 		VolAbsorption,
 		VolScatter,
 		// Texture
-		NoiseTex,
-		WaveTex,
-		VoronoiTex,
-		MusgraveTex,
+		MaxTex,
+		BrickTex,
+		CheckerTex,
 		GradientTex,
 		MagicTex,
-		CheckerTex,
-		MaxTex,
+		MusgraveTex,
+		NoiseTex,
+		VoronoiTex,
+		WaveTex,
 		// Input
 		LightPath,
 		Fresnel,

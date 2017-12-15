@@ -42,6 +42,7 @@ static void initialize_maps()
 		return;
 	}
 
+	type_to_code[CyclesNodeType::AmbientOcclusion] = std::string("ambient_occlusion");
 	type_to_code[CyclesNodeType::PrincipledBSDF] = std::string("principled_bsdf");
 	type_to_code[CyclesNodeType::MixShader] = std::string("mix_shader");
 	type_to_code[CyclesNodeType::AddShader] = std::string("add_shader");
@@ -61,14 +62,15 @@ static void initialize_maps()
 	type_to_code[CyclesNodeType::VolAbsorption] = std::string("vol_absorb");
 	type_to_code[CyclesNodeType::VolScatter] = std::string("vol_scatter");
 
-	type_to_code[CyclesNodeType::NoiseTex] = std::string("noise_tex");
-	type_to_code[CyclesNodeType::WaveTex] = std::string("wave_tex");
-	type_to_code[CyclesNodeType::VoronoiTex] = std::string("voronoi_tex");
-	type_to_code[CyclesNodeType::MusgraveTex] = std::string("musgrave_tex");
-	type_to_code[CyclesNodeType::GradientTex] = std::string("gradient_tex");
-	type_to_code[CyclesNodeType::MagicTex] = std::string("magix_tex");
-	type_to_code[CyclesNodeType::CheckerTex] = std::string("checker_tex");
 	type_to_code[CyclesNodeType::MaxTex] = std::string("max_tex");
+	type_to_code[CyclesNodeType::BrickTex] = std::string("brick_tex");
+	type_to_code[CyclesNodeType::CheckerTex] = std::string("checker_tex");
+	type_to_code[CyclesNodeType::GradientTex] = std::string("gradient_tex");
+	type_to_code[CyclesNodeType::MagicTex] = std::string("magic_tex");
+	type_to_code[CyclesNodeType::MusgraveTex] = std::string("musgrave_tex");
+	type_to_code[CyclesNodeType::NoiseTex] = std::string("noise_tex");
+	type_to_code[CyclesNodeType::VoronoiTex] = std::string("voronoi_tex");
+	type_to_code[CyclesNodeType::WaveTex] = std::string("wave_tex");
 
 	type_to_code[CyclesNodeType::LightPath] = std::string("light_path");
 	type_to_code[CyclesNodeType::Fresnel] = std::string("fresnel");
@@ -214,6 +216,10 @@ static std::list<std::string> tokenize_string(std::string input, char delim)
 static CyclesShaderEditor::EditorNode* create_node_from_type(CyclesShaderEditor::CyclesNodeType type, CyclesShaderEditor::Point2 pos) {
 	using namespace CyclesShaderEditor;
 	switch (type) {
+		case CyclesNodeType::AmbientOcclusion:
+		{
+			return new AmbientOcculsionNode(pos);
+		}
 		case CyclesNodeType::PrincipledBSDF:
 		{
 			return new PrincipledBSDFNode(pos);
@@ -285,6 +291,10 @@ static CyclesShaderEditor::EditorNode* create_node_from_type(CyclesShaderEditor:
 		case CyclesNodeType::VolScatter:
 		{
 			return new VolumeScatterNode(pos);
+		}
+		case CyclesNodeType::BrickTex:
+		{
+			return new BrickTextureNode(pos);
 		}
 		case CyclesNodeType::NoiseTex:
 		{

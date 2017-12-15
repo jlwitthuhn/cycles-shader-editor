@@ -62,6 +62,7 @@ CyclesShaderEditor::NodeListSubwindow::NodeListSubwindow(Point2 screen_position)
 
 	// Shaders buttons -- same ownership as input buttons
 	NodeCreationButton* add_button = new GenericNodeButton<AddShaderNode>();
+	NodeCreationButton* ao_button = new GenericNodeButton<AmbientOcculsionNode>();
 	NodeCreationButton* anisotropic_button = new GenericNodeButton<AnisotropicBSDFNode>();
 	NodeCreationButton* diffuse_button = new GenericNodeButton<DiffuseBSDFNode>();
 	NodeCreationButton* emission_button = new GenericNodeButton<EmissionNode>();
@@ -81,6 +82,7 @@ CyclesShaderEditor::NodeListSubwindow::NodeListSubwindow(Point2 screen_position)
 	NodeCreationButton* vol_scatter_button = new GenericNodeButton<VolumeScatterNode>();
 
 	cat_shader_button->node_buttons.push_back(add_button);
+	cat_shader_button->node_buttons.push_back(ao_button);
 	cat_shader_button->node_buttons.push_back(anisotropic_button);
 	cat_shader_button->node_buttons.push_back(diffuse_button);
 	cat_shader_button->node_buttons.push_back(emission_button);
@@ -103,6 +105,7 @@ CyclesShaderEditor::NodeListSubwindow::NodeListSubwindow(Point2 screen_position)
 #ifdef INCLUDE_MAX_INTEGRATION
 	NodeCreationButton* max_tex_button = new GenericNodeButton<MaxTexmapShaderNode>();
 #endif
+	NodeCreationButton* brick_tex_button = new GenericNodeButton<BrickTextureNode>();
 	NodeCreationButton* checker_tex_button = new GenericNodeButton<CheckerTextureNode>();
 	NodeCreationButton* gradient_tex_button = new GenericNodeButton<GradientTextureNode>();
 	NodeCreationButton* magic_tex_button = new GenericNodeButton<MagicTextureNode>();
@@ -111,7 +114,10 @@ CyclesShaderEditor::NodeListSubwindow::NodeListSubwindow(Point2 screen_position)
 	NodeCreationButton* voronoi_tex_button = new GenericNodeButton<VoronoiTextureNode>();
 	NodeCreationButton* wave_tex_button = new GenericNodeButton<WaveTextureNode>();
 
+#ifdef INCLUDE_MAX_INTEGRATION
 	cat_texture_button->node_buttons.push_back(max_tex_button);
+#endif
+	cat_texture_button->node_buttons.push_back(brick_tex_button);
 	cat_texture_button->node_buttons.push_back(checker_tex_button);
 	cat_texture_button->node_buttons.push_back(gradient_tex_button);
 	cat_texture_button->node_buttons.push_back(magic_tex_button);
