@@ -592,6 +592,7 @@ void CyclesShaderEditor::EditorMainWindow::do_output()
 
 	// Re-create graph from saved state so serialization errors are more apparent
 	deserialize_graph(public_window->serialized_output, nodes, connections);
+	update_serialized_state();
 
 	public_window->output_updated = true;
 	status_bar->set_status_text("Saved");
