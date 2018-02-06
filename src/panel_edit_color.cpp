@@ -53,10 +53,10 @@ float CyclesShaderEditor::EditColorPanel::draw(NVGcontext* draw_context, ColorSo
 	// Draw color rectangle
 	{
 		// Background
-		const float draw_x = UI_SUBWIN_PARAM_EDIT_COLOR_SQUARE_HPAD;
-		const float draw_y = height_drawn + UI_SUBWIN_PARAM_EDIT_COLOR_SQUARE_VPAD;
-		const float rect_width = panel_width - 2 * UI_SUBWIN_PARAM_EDIT_COLOR_SQUARE_HPAD;
-		const float rect_height = UI_SUBWIN_PARAM_EDIT_COLOR_SQUARE_HEIGHT;
+		const float draw_x = UI_SUBWIN_PARAM_EDIT_RECT_HPAD;
+		const float draw_y = height_drawn + UI_SUBWIN_PARAM_EDIT_RECT_VPAD;
+		const float rect_width = panel_width - 2 * UI_SUBWIN_PARAM_EDIT_RECT_HPAD;
+		const float rect_height = UI_SUBWIN_PARAM_EDIT_RECT_HEIGHT;
 
 		NVGcolor white_color = nvgRGBAf(1.0f, 1.0f, 1.0f, 1.0f);
 		NVGcolor black_color = nvgRGBAf(0.0f, 0.0f, 0.0f, 1.0f);
@@ -83,7 +83,7 @@ float CyclesShaderEditor::EditColorPanel::draw(NVGcontext* draw_context, ColorSo
 		Point2 color_rect_end = Point2(draw_x + rect_width, draw_y + rect_height);
 		color_rect_click_target = GenericClickTarget(color_rect_begin, color_rect_end);
 
-		height_drawn += 2 * UI_SUBWIN_PARAM_EDIT_COLOR_SQUARE_VPAD + UI_SUBWIN_PARAM_EDIT_COLOR_SQUARE_HEIGHT;
+		height_drawn += 2 * UI_SUBWIN_PARAM_EDIT_RECT_VPAD + UI_SUBWIN_PARAM_EDIT_RECT_HEIGHT;
 	}
 
 	// Draw hue slider

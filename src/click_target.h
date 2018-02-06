@@ -1,5 +1,6 @@
 #pragma once
 
+#include "common_enums.h"
 #include "point2.h"
 #include "sockets.h"
 
@@ -35,6 +36,28 @@ namespace CyclesShaderEditor {
 
 		StringEnumPair str_pair_value;
 		StringEnumSocketValue* enum_value;
+	};
+
+	class CurveEditModeClickTarget : public GenericClickTarget {
+	public:
+		CurveEditModeClickTarget(Point2 begin_pos, Point2 end_pos, EditCurveMode this_mode, EditCurveMode* mode_enum);
+
+		void click();
+
+	private:
+		EditCurveMode this_mode;
+		EditCurveMode* mode_enum;
+	};
+
+	class CurveInterpClickTarget : public GenericClickTarget {
+	public:
+		CurveInterpClickTarget(Point2 begin_pos, Point2 end_pos, CurveInterpolation this_interp, CurveInterpolation* interp_enum);
+
+		void click();
+
+	private:
+		CurveInterpolation this_interp;
+		CurveInterpolation* interp_enum;
 	};
 
 	class SocketClickTarget : public GenericClickTarget {

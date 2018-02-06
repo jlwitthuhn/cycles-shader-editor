@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <map>
+#include <string>
 #include <sstream>
 
 #include "node_colors.h"
@@ -90,6 +91,7 @@ static void initialize_maps()
 	type_to_code[CyclesNodeType::HSV] = std::string("hsv");
 	type_to_code[CyclesNodeType::Gamma] = std::string("gamma");
 	type_to_code[CyclesNodeType::BrightnessContrast] = std::string("bright_contrast");
+	type_to_code[CyclesNodeType::RGBCurves] = std::string("rgb_curves");
 
 	type_to_code[CyclesNodeType::Bump] = std::string("bump");
 	type_to_code[CyclesNodeType::NormalMap] = std::string("normal_map");
@@ -101,6 +103,90 @@ static void initialize_maps()
 	}
 
 	assert(code_to_type.size() == type_to_code.size());
+}
+
+static std::list<std::string> tokenize_string(std::string input, char delim)
+{
+	std::list<std::string> output;
+
+	std::string::size_type index = 0;
+	std::string::size_type next_delim = input.find(delim);
+	while (next_delim != std::string::npos) {
+		output.push_back(input.substr(index, next_delim - index));
+		index = next_delim + 1;
+		next_delim = input.find(delim, index);
+
+		if (next_delim == std::string::npos) {
+			output.push_back(input.substr(index, input.length()));
+		}
+	}
+
+	return output;
+}
+
+static std::string serialize_curve(const CyclesShaderEditor::OutputCurve& curve)
+{
+	constexpr char CURVE_SEPARATOR = ',';
+	std::stringstream curve_stream;
+	curve_stream << "curve00" << CURVE_SEPARATOR;
+	if (curve.enum_curve_interp == static_cast<int>(CyclesShaderEditor::CurveInterpolation::CUBIC_HERMITE)) {
+		curve_stream << "cubic_hermite" << CURVE_SEPARATOR;
+	}
+	else {
+		curve_stream << "linear" << CURVE_SEPARATOR;
+	}
+	curve_stream << curve.control_points.size();
+
+	curve_stream.precision(6);
+	for (const CyclesShaderEditor::Float2& this_point : curve.control_points) {
+		curve_stream << CURVE_SEPARATOR << this_point.x << CURVE_SEPARATOR << this_point.y ;
+	}
+
+	return curve_stream.str();
+}
+
+static void deserialize_curve(std::string serialized_curve, CyclesShaderEditor::CurveSocketValue* curve_value)
+{
+	curve_value->reset_value();
+	constexpr char CURVE_SEPARATOR = ',';
+	std::list<std::string> tokenized_input = tokenize_string(serialized_curve, CURVE_SEPARATOR);
+
+	// The input must have at least 5 entries to be valid
+	if (tokenized_input.size() < 5) {
+		return;
+	}
+
+	std::list<std::string>::iterator input_iter = tokenized_input.begin();
+	std::string identifier = *(input_iter++);
+	std::string interpolation_str = *(input_iter++);
+	std::string control_point_count_str = *(input_iter++);
+
+	// Make sure we understand this curve format
+	if (identifier != "curve00") {
+		return;
+	}
+
+	// Make sure the number of points and total number of tokens match
+	const int control_point_count = std::stoi(control_point_count_str);
+	if (control_point_count < 1 || tokenized_input.size() != 3 + 2 * control_point_count) {
+		return;
+	}
+
+	curve_value->curve_points.clear();
+	for (int points_copied = 0; points_copied < control_point_count; points_copied++) {
+		const float x = std::stof(*(input_iter++));
+		const float y = std::stof(*(input_iter++));
+		CyclesShaderEditor::Point2 this_point(x, y);
+		curve_value->curve_points.push_back(this_point);
+	}
+	curve_value->sort_curve_points();
+
+	if (interpolation_str == "cubic_hermite") {
+		curve_value->curve_interp = CyclesShaderEditor::CurveInterpolation::CUBIC_HERMITE;
+	}
+	else {
+		curve_value->curve_interp = CyclesShaderEditor::CurveInterpolation::LINEAR;
+	}
 }
 
 static std::string serialize_node(const CyclesShaderEditor::OutputNode& node)
@@ -130,6 +216,9 @@ static std::string serialize_node(const CyclesShaderEditor::OutputNode& node)
 	}
 	for (std::pair<std::string, bool> this_pair : node.bool_values) {
 		node_stream << this_pair.first << SEPARATOR << static_cast<int>(this_pair.second) << SEPARATOR;
+	}
+	for (std::pair<std::string, OutputCurve> this_pair : node.curve_values) {
+		node_stream << this_pair.first << SEPARATOR << serialize_curve(this_pair.second) << SEPARATOR;
 	}
 
 	node_stream << NODE_END << SEPARATOR;
@@ -192,25 +281,6 @@ std::string CyclesShaderEditor::serialize_graph(std::vector<OutputNode> &nodes, 
 	}
 
 	return output_stream.str();
-}
-
-static std::list<std::string> tokenize_string(std::string input, char delim)
-{
-	std::list<std::string> output;
-
-	std::string::size_type index = 0;
-	std::string::size_type next_delim = input.find(delim);
-	while (next_delim != std::string::npos) {
-		output.push_back(input.substr(index, next_delim - index));
-		index = next_delim + 1;
-		next_delim = input.find(delim, index);
-
-		if (next_delim == std::string::npos) {
-			output.push_back(input.substr(index, input.length()));
-		}
-	}
-
-	return output;
 }
 
 static CyclesShaderEditor::EditorNode* create_node_from_type(CyclesShaderEditor::CyclesNodeType type, CyclesShaderEditor::Point2 pos) {
@@ -396,6 +466,10 @@ static CyclesShaderEditor::EditorNode* create_node_from_type(CyclesShaderEditor:
 		{
 			return new BrightnessContrastNode(pos);
 		}
+		case CyclesNodeType::RGBCurves:
+		{
+			return new RGBCurvesNode(pos);
+		}
 		case CyclesNodeType::Bump:
 		{
 			return new BumpNode(pos);
@@ -455,6 +529,11 @@ static CyclesShaderEditor::EditorNode* deserialize_node(std::list<std::string>& 
 
 	for (std::pair<std::string, std::string> this_param : params) {
 		NodeSocket* this_socket = result->get_socket_by_internal_name(SocketInOut::Input, this_param.first);
+
+		if (this_socket == nullptr) {
+			continue;
+		}
+
 		switch (this_socket->socket_type) {
 
 		case SocketType::Float:
@@ -495,6 +574,12 @@ static CyclesShaderEditor::EditorNode* deserialize_node(std::list<std::string>& 
 				bool_val->value = std::stoi(this_param.second) != 0;
 			}
 			break;
+
+		case SocketType::Curve:
+			if (this_socket->value != nullptr) {
+				CurveSocketValue* curve_val = dynamic_cast<CurveSocketValue*>(this_socket->value);
+				deserialize_curve(this_param.second, curve_val);
+			}
 
 		default:
 			break;
@@ -583,7 +668,7 @@ void CyclesShaderEditor::deserialize_graph(std::string graph, std::list<EditorNo
 		NodeSocket* source = nodes_by_name[source_node]->get_socket_by_display_name(SocketInOut::Output, source_socket);
 		NodeSocket* dest = nodes_by_name[dest_node]->get_socket_by_display_name(SocketInOut::Input, dest_socket);
 
-		if (source == nullptr && dest == nullptr) {
+		if (source == nullptr || dest == nullptr) {
 			continue;
 		}
 

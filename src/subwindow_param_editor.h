@@ -4,6 +4,7 @@
 
 #include "input_box.h"
 #include "panel_edit_color.h"
+#include "panel_edit_curve.h"
 #include "subwindow.h"
 
 namespace CyclesShaderEditor {
@@ -52,6 +53,9 @@ namespace CyclesShaderEditor {
 		// Color panel
 		EditColorPanel panel_color;
 
+		// Curve panel
+		EditCurvePanel panel_curve;
+
 		// Int stuff
 		IntInputBox int_input_box;
 
@@ -70,7 +74,7 @@ namespace CyclesShaderEditor {
 		std::vector<BoolValueClickTarget> bool_targets;
 
 		// Undo state stuff
-		bool param_changed = false;
+		bool request_undo_stack_push = false;
 	};
 
 }

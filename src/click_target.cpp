@@ -48,6 +48,32 @@ void CyclesShaderEditor::StringEnumClickTarget::click()
 	enum_value->value = str_pair_value;
 }
 
+CyclesShaderEditor::CurveEditModeClickTarget::CurveEditModeClickTarget(Point2 begin_pos, Point2 end_pos, EditCurveMode this_mode, EditCurveMode* mode_enum) :
+	GenericClickTarget(begin_pos, end_pos),
+	this_mode(this_mode),
+	mode_enum(mode_enum)
+{
+
+}
+
+void CyclesShaderEditor::CurveEditModeClickTarget::click()
+{
+	*mode_enum = this_mode;
+}
+
+CyclesShaderEditor::CurveInterpClickTarget::CurveInterpClickTarget(Point2 begin_pos, Point2 end_pos, CurveInterpolation this_interp, CurveInterpolation* interp_enum) :
+	GenericClickTarget(begin_pos, end_pos),
+	this_interp(this_interp),
+	interp_enum(interp_enum)
+{
+
+}
+
+void CyclesShaderEditor::CurveInterpClickTarget::click()
+{
+	*interp_enum = this_interp;
+}
+
 CyclesShaderEditor::SocketClickTarget::SocketClickTarget(Point2 begin_pos, Point2 end_pos, NodeSocket* socket) : GenericClickTarget(begin_pos, end_pos)
 {
 	this->socket = socket;

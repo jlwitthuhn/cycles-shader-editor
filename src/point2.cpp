@@ -44,6 +44,11 @@ int CyclesShaderEditor::Point2::get_pos_y_int() const
 	return static_cast<int>(floor(pos_y));
 }
 
+float CyclesShaderEditor::Point2::get_magnitude_squared() const
+{
+	return pos_x * pos_x + pos_y * pos_y;
+}
+
 void CyclesShaderEditor::Point2::clamp_to(const Point2& begin, const Point2& end)
 {
 	if (pos_x < begin.get_pos_x()) {
@@ -77,4 +82,9 @@ CyclesShaderEditor::Point2 CyclesShaderEditor::Point2::operator-(const Point2& o
 CyclesShaderEditor::Point2 CyclesShaderEditor::Point2::operator/(const float& other) const
 {
 	return Point2(pos_x / other, pos_y / other);
+}
+
+bool CyclesShaderEditor::Point2::operator==(const Point2& other) const
+{
+	return (pos_x == other.pos_x && pos_y == other.pos_y);
 }

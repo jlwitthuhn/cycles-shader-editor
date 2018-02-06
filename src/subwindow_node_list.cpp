@@ -133,6 +133,7 @@ CyclesShaderEditor::NodeListSubwindow::NodeListSubwindow(Point2 screen_position)
 	NodeCreationButton* invert_button = new GenericNodeButton<InvertNode>();
 	NodeCreationButton* light_falloff_button = new GenericNodeButton<LightFalloffNode>();
 	NodeCreationButton* mix_rgb_button = new GenericNodeButton<MixRGBNode>();
+	NodeCreationButton* rgb_curves_button = new GenericNodeButton<RGBCurvesNode>();
 
 	cat_color_button->node_buttons.push_back(bright_contrast_button);
 	cat_color_button->node_buttons.push_back(gamma_button);
@@ -140,6 +141,7 @@ CyclesShaderEditor::NodeListSubwindow::NodeListSubwindow(Point2 screen_position)
 	cat_color_button->node_buttons.push_back(invert_button);
 	cat_color_button->node_buttons.push_back(light_falloff_button);
 	cat_color_button->node_buttons.push_back(mix_rgb_button);
+	cat_color_button->node_buttons.push_back(rgb_curves_button);
 
 	// Vector buttons -- same ownership as input buttons
 	NodeCreationButton* bump_button = new GenericNodeButton<BumpNode>();

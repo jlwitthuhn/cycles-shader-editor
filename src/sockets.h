@@ -3,8 +3,8 @@
 #include <string>
 #include <vector>
 
+#include "common_enums.h"
 #include "point2.h"
-
 
 namespace CyclesShaderEditor {
 
@@ -19,7 +19,8 @@ namespace CyclesShaderEditor {
 		Closure,
 		String,
 		StringEnum,
-		Boolean
+		Boolean,
+		Curve,
 	};
 
 	enum class SocketInOut {
@@ -125,6 +126,24 @@ namespace CyclesShaderEditor {
 
 		bool value;
 		bool default_value;
+	};
+
+	class CurveSocketValue : public SocketValue {
+	public:
+		CurveSocketValue();
+
+		void reset_value();
+		void create_point(float x);
+		void delete_point(const Point2& target);
+		// Gets the index, if any, of the closest point within selection range
+		bool get_target_index(const Point2& target, size_t& index);
+		// Move a point and return its new index
+		size_t move_point(const size_t index, const Point2& new_point);
+
+		void sort_curve_points();
+
+		std::vector<Point2> curve_points;
+		CurveInterpolation curve_interp = CurveInterpolation::CUBIC_HERMITE;
 	};
 
 	class NodeSocket {

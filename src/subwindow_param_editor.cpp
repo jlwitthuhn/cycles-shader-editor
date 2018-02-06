@@ -17,7 +17,8 @@ CyclesShaderEditor::ParamEditorSubwindow::ParamEditorSubwindow(Point2 screen_pos
 	vector_x_input_box(UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH_BIG, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT),
 	vector_y_input_box(UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH_BIG, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT),
 	vector_z_input_box(UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH_BIG, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT),
-	panel_color(UI_SUBWIN_PARAM_EDIT_WIDTH)
+	panel_color(UI_SUBWIN_PARAM_EDIT_WIDTH),
+	panel_curve(UI_SUBWIN_PARAM_EDIT_WIDTH)
 {
 	subwindow_width = UI_SUBWIN_PARAM_EDIT_WIDTH;
 	subwindow_height = UI_SUBWIN_HEADER_HEIGHT;
@@ -30,6 +31,10 @@ void CyclesShaderEditor::ParamEditorSubwindow::draw(NVGcontext* draw_context)
 	}
 
 	float height_drawn = 0.0f;
+
+	// Set all attached values to nullptr for panels
+	// These will be set to their appropriate values later in draw()
+	panel_curve.set_attached_curve_value(nullptr);
 
 	// Draw window
 	nvgBeginPath(draw_context);
@@ -124,6 +129,9 @@ void CyclesShaderEditor::ParamEditorSubwindow::draw(NVGcontext* draw_context)
 		case SocketType::Boolean:
 			parameter_type_text = "Type: Boolean";
 			break;
+		case SocketType::Curve:
+			parameter_type_text = "Type: Curve";
+			break;
 		default:
 			parameter_type_text = "Error";
 			break;
@@ -131,18 +139,17 @@ void CyclesShaderEditor::ParamEditorSubwindow::draw(NVGcontext* draw_context)
 		nvgText(draw_context, subwindow_width / 2, height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT / 2, parameter_type_text.c_str(), nullptr);
 		height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
 
+
+		// Draw separator
+		height_drawn += UI_SUBWIN_PARAM_EDIT_SEPARATOR_VPAD;
+		nvgBeginPath(draw_context);
+		nvgMoveTo(draw_context, UI_SUBWIN_PARAM_EDIT_SEPARATOR_HPAD, height_drawn);
+		nvgLineTo(draw_context, subwindow_width - UI_SUBWIN_PARAM_EDIT_SEPARATOR_HPAD, height_drawn);
 		nvgStrokeColor(draw_context, nvgRGBAf(0.0f, 0.0f, 0.0f, 1.0f));
 		nvgStrokeWidth(draw_context, 0.8f);
-
-		height_drawn += 2.0f;
-
-		const float SEPARATOR_PADDING = 8.0f;
-		nvgBeginPath(draw_context);
-		nvgMoveTo(draw_context, SEPARATOR_PADDING, height_drawn);
-		nvgLineTo(draw_context, subwindow_width - SEPARATOR_PADDING, height_drawn);
 		nvgStroke(draw_context);
+		height_drawn += UI_SUBWIN_PARAM_EDIT_SEPARATOR_VPAD;
 
-		height_drawn += 4.0f;
 		panel_start_y = height_drawn;
 
 		if (selected_param->socket_type == SocketType::Int) {
@@ -245,18 +252,13 @@ void CyclesShaderEditor::ParamEditorSubwindow::draw(NVGcontext* draw_context)
 		else if (selected_param->socket_type == SocketType::StringEnum) {
 			StringEnumSocketValue* str_enum_value = dynamic_cast<StringEnumSocketValue*>(selected_param->value);
 
-			const float CHECKBOX_RADIUS = 6.0f;
-			const float CHECKBOX_SPACING = 4.0f;
-
 			nvgFontSize(draw_context, UI_FONT_SIZE_NORMAL);
 			nvgFontFace(draw_context, "sans");
 			nvgFontBlur(draw_context, 0.0f);
 			nvgFillColor(draw_context, nvgRGBA(0, 0, 0, 255));
-
 			nvgTextAlign(draw_context, NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE);
 
 			float max_label_width = 0;
-
 			for (StringEnumPair this_enum_value : str_enum_value->enum_values) {
 				float bounds[4];
 				nvgTextBounds(draw_context, 0, 0, this_enum_value.display_value.c_str(), nullptr, bounds);
@@ -265,26 +267,25 @@ void CyclesShaderEditor::ParamEditorSubwindow::draw(NVGcontext* draw_context)
 					max_label_width = this_width;
 				}
 			}
-
-			float max_draw_width = max_label_width + CHECKBOX_SPACING + CHECKBOX_RADIUS * 2;
+			float max_draw_width = max_label_width + UI_CHECKBOX_SPACING + UI_CHECKBOX_RADIUS * 2;
 
 			for (StringEnumPair this_enum_value : str_enum_value->enum_values) {
 				bool this_value_selected = (str_enum_value->value.internal_value == this_enum_value.internal_value);
 
-				float circle_pos_x = subwindow_width / 2.0f - max_draw_width / 2 + CHECKBOX_RADIUS;
+				float circle_pos_x = subwindow_width / 2.0f - max_draw_width / 2 + UI_CHECKBOX_RADIUS;
 				float circle_pos_y = height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT * 0.5f;
 				nvgBeginPath(draw_context);
-				nvgCircle(draw_context, circle_pos_x, circle_pos_y, CHECKBOX_RADIUS);
+				nvgCircle(draw_context, circle_pos_x, circle_pos_y, UI_CHECKBOX_RADIUS);
 				nvgFillColor(draw_context, nvgRGBAf(0.1f, 0.1f, 0.1f, 1.0f));
 				nvgFill(draw_context);
 				if (this_value_selected) {
 					nvgBeginPath(draw_context);
-					nvgCircle(draw_context, circle_pos_x, circle_pos_y, CHECKBOX_RADIUS * 0.666f);
+					nvgCircle(draw_context, circle_pos_x, circle_pos_y, UI_CHECKBOX_RADIUS * 0.666f);
 					nvgFillColor(draw_context, nvgRGBAf(0.9f, 0.9f, 0.9f, 1.0f));
 					nvgFill(draw_context);
 				}
 
-				float text_pos_x = subwindow_width / 2.0f - max_draw_width / 2 + CHECKBOX_SPACING + CHECKBOX_RADIUS * 2;
+				float text_pos_x = subwindow_width / 2.0f - max_draw_width / 2 + UI_CHECKBOX_SPACING + UI_CHECKBOX_RADIUS * 2;
 				float text_pos_y = height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT * 0.7f;
 				nvgFillColor(draw_context, nvgRGBA(0, 0, 0, 255));
 				nvgText(draw_context, text_pos_x, text_pos_y, this_enum_value.display_value.c_str(), nullptr);
@@ -300,9 +301,6 @@ void CyclesShaderEditor::ParamEditorSubwindow::draw(NVGcontext* draw_context)
 		}
 		else if (selected_param->socket_type == SocketType::Boolean) {
 			BoolSocketValue* bool_value = dynamic_cast<BoolSocketValue*>(selected_param->value);
-
-			const float CHECKBOX_RADIUS = 6.0f;
-			const float CHECKBOX_SPACING = 4.0f;
 
 			const std::string true_label = "True";
 			const std::string false_label = "False";
@@ -325,7 +323,7 @@ void CyclesShaderEditor::ParamEditorSubwindow::draw(NVGcontext* draw_context)
 			false_label_width = bounds[2];
 
 			float max_label_width = std::max(true_label_width, false_label_width);
-			float max_draw_width = max_label_width + CHECKBOX_SPACING + CHECKBOX_RADIUS * 2;
+			float max_draw_width = max_label_width + UI_CHECKBOX_SPACING + UI_CHECKBOX_RADIUS * 2;
 
 			for (int i = 0; i < 2; ++i) {
 				std::string label;
@@ -342,20 +340,20 @@ void CyclesShaderEditor::ParamEditorSubwindow::draw(NVGcontext* draw_context)
 					current_label = false;
 				}
 
-				float circle_pos_x = subwindow_width / 2.0f - max_draw_width / 2 + CHECKBOX_RADIUS;
+				float circle_pos_x = subwindow_width / 2.0f - max_draw_width / 2 + UI_CHECKBOX_RADIUS;
 				float circle_pos_y = height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT * 0.5f;
 				nvgBeginPath(draw_context);
-				nvgCircle(draw_context, circle_pos_x, circle_pos_y, CHECKBOX_RADIUS);
+				nvgCircle(draw_context, circle_pos_x, circle_pos_y, UI_CHECKBOX_RADIUS);
 				nvgFillColor(draw_context, nvgRGBAf(0.1f, 0.1f, 0.1f, 1.0f));
 				nvgFill(draw_context);
 				if (this_value_selected) {
 					nvgBeginPath(draw_context);
-					nvgCircle(draw_context, circle_pos_x, circle_pos_y, CHECKBOX_RADIUS * 0.666f);
+					nvgCircle(draw_context, circle_pos_x, circle_pos_y, UI_CHECKBOX_RADIUS * 0.666f);
 					nvgFillColor(draw_context, nvgRGBAf(0.9f, 0.9f, 0.9f, 1.0f));
 					nvgFill(draw_context);
 				}
 
-				float text_pos_x = subwindow_width / 2.0f - max_draw_width / 2 + CHECKBOX_SPACING + CHECKBOX_RADIUS * 2;
+				float text_pos_x = subwindow_width / 2.0f - max_draw_width / 2 + UI_CHECKBOX_SPACING + UI_CHECKBOX_RADIUS * 2;
 				float text_pos_y = height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT * 0.7f;
 				nvgFillColor(draw_context, nvgRGBA(0, 0, 0, 255));
 				nvgText(draw_context, text_pos_x, text_pos_y, label.c_str(), nullptr);
@@ -368,6 +366,14 @@ void CyclesShaderEditor::ParamEditorSubwindow::draw(NVGcontext* draw_context)
 
 				height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
 			}
+		}
+		else if (selected_param->socket_type == SocketType::Curve) {
+			nvgSave(draw_context);
+			nvgTranslate(draw_context, 0.0f, panel_start_y);
+			CurveSocketValue* curve_socket_val = dynamic_cast<CurveSocketValue*>(selected_param->value);
+			panel_curve.set_attached_curve_value(curve_socket_val);
+			height_drawn += panel_curve.draw(draw_context);
+			nvgRestore(draw_context);
 		}
 		else { // Unsupported type
 			nvgFontSize(draw_context, UI_FONT_SIZE_NORMAL);
@@ -389,6 +395,9 @@ void CyclesShaderEditor::ParamEditorSubwindow::set_mouse_position(Point2 screen_
 	NodeEditorSubwindow::set_mouse_position(screen_position, max_pos_y);
 	if (panel_color.is_active()) {
 		panel_color.set_mouse_local_position(screen_position - Point2(0.0f, panel_start_y));
+	}
+	if (panel_curve.is_active()) {
+		panel_curve.set_mouse_local_position(screen_position - Point2(0.0f, panel_start_y));
 	}
 }
 
@@ -414,6 +423,9 @@ void CyclesShaderEditor::ParamEditorSubwindow::handle_mouse_button(int button, i
 			// Panel will handle the mouse event internally
 			panel_color.handle_mouse_button(button, action, mods);
 		}
+	}
+	else if (panel_curve.is_mouse_over()) {
+		panel_curve.handle_mouse_button(button, action, mods);
 	}
 	else if (int_input_box.is_mouse_over()) {
 		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
@@ -467,7 +479,7 @@ void CyclesShaderEditor::ParamEditorSubwindow::handle_key(int key, int /*scancod
 	else if (key == GLFW_KEY_ENTER && action == GLFW_PRESS) {
 		if (selected_input != nullptr) {
 			selected_input->complete_edit();
-			param_changed = true;
+			request_undo_stack_push = true;
 		}
 	}
 	else if (key == GLFW_KEY_BACKSPACE && action == GLFW_PRESS) {
@@ -495,6 +507,7 @@ void CyclesShaderEditor::ParamEditorSubwindow::set_selected_param(NodeSocket* se
 		return;
 	}
 	complete_input();
+	panel_curve.reset_panel_state();
 	this->selected_param = selected_param;
 }
 
@@ -515,17 +528,22 @@ void CyclesShaderEditor::ParamEditorSubwindow::complete_input()
 void CyclesShaderEditor::ParamEditorSubwindow::mouse_button_release()
 {
 	panel_color.mouse_button_release();
+	panel_curve.mouse_button_release();
 }
 
 bool CyclesShaderEditor::ParamEditorSubwindow::should_push_undo_state() {
-	if (param_changed) {
-		param_changed = false;
-		return true;
+	bool result = false;
+	if (request_undo_stack_push) {
+		request_undo_stack_push = false;
+		result = true;
 	}
 	if (panel_color.should_push_undo_state()) {
-		return true;
+		result = true;
 	}
-	return false;
+	if (panel_curve.should_push_undo_state()) {
+		result = true;
+	}
+	return result;
 }
 
 bool CyclesShaderEditor::ParamEditorSubwindow::is_mouse_over_header()

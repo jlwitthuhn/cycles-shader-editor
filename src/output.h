@@ -2,6 +2,7 @@
 
 #include <map>
 #include <string>
+#include <vector>
 
 namespace CyclesShaderEditor {
 
@@ -55,6 +56,7 @@ namespace CyclesShaderEditor {
 		HSV,
 		Gamma,
 		BrightnessContrast,
+		RGBCurves,
 		// Vector
 		Bump,
 		NormalMap,
@@ -65,8 +67,26 @@ namespace CyclesShaderEditor {
 		Count,
 	};
 
-	struct Float3 {
+	class Float2 {
+	public:
+		Float2();
+		Float2(float x, float y);
+
+		float x, y;
+	};
+
+	class Float3 {
+	public:
+		Float3();
+		Float3(float x, float y, float z);
+
 		float x, y, z;
+	};
+
+	struct OutputCurve {
+		std::vector<Float2> control_points;
+		int enum_curve_interp = 0;
+		std::vector<float> samples;
 	};
 
 	struct OutputNode {
@@ -82,6 +102,7 @@ namespace CyclesShaderEditor {
 		std::map<std::string, std::string> string_values;
 		std::map<std::string, int> int_values;
 		std::map<std::string, bool> bool_values;
+		std::map<std::string, OutputCurve> curve_values;
 	};
 
 	struct OutputConnection {

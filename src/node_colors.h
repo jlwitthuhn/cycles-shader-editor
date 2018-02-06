@@ -34,4 +34,11 @@ namespace CyclesShaderEditor {
 		BrightnessContrastNode(Point2 position);
 	};
 
+	class RGBCurvesNode : public EditorNode {
+	public:
+		RGBCurvesNode(Point2 position);
+
+		virtual void update_output_node(OutputNode& output) override;
+	};
+
 }

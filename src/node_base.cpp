@@ -7,6 +7,8 @@
 #include <GLFW/glfw3.h>
 #include <nanovg.h>
 
+#include "config.h"
+#include "curve.h"
 #include "gui_sizes.h"
 #include "sockets.h"
 
@@ -133,6 +135,9 @@ void CyclesShaderEditor::EditorNode::draw_node(NVGcontext* draw_context)
 				else {
 					label_text = this_socket->display_name + ": False";
 				}
+			}
+			else if (this_socket->socket_type == SocketType::Curve) {
+				label_text = this_socket->display_name + ": [Curve]";
 			}
 			else {
 				label_text = this_socket->display_name;
@@ -408,19 +413,16 @@ void CyclesShaderEditor::EditorNode::update_output_node(OutputNode& output)
 		}
 		else if (this_socket->socket_type == SocketType::Color) {
 			ColorSocketValue* color_val = dynamic_cast<ColorSocketValue*>(this_socket->value);
-			Float3 float3_val;
-			float3_val.x = color_val->red_socket_val.get_value();
-			float3_val.y = color_val->green_socket_val.get_value();
-			float3_val.z = color_val->blue_socket_val.get_value();
+			const float x = color_val->red_socket_val.get_value();
+			const float y = color_val->green_socket_val.get_value();
+			const float z = color_val->blue_socket_val.get_value();
+			Float3 float3_val(x, y, z);
 			output.float3_values[this_socket->internal_name] = float3_val;
 		}
 		else if (this_socket->socket_type == SocketType::Vector && this_socket->value != nullptr) {
 			Float3SocketValue* float3_socket_val = dynamic_cast<Float3SocketValue*>(this_socket->value);
 			Float3Holder temp_value = float3_socket_val->get_value();
-			Float3 float3_val;
-			float3_val.x = temp_value.x;
-			float3_val.y = temp_value.y;
-			float3_val.z = temp_value.z;
+			Float3 float3_val(temp_value.x, temp_value.y, temp_value.z);
 			output.float3_values[this_socket->internal_name] = float3_val;
 		}
 		else if (this_socket->socket_type == SocketType::StringEnum) {
@@ -437,6 +439,23 @@ void CyclesShaderEditor::EditorNode::update_output_node(OutputNode& output)
 			BoolSocketValue* bool_val = dynamic_cast<BoolSocketValue*>(this_socket->value);
 			if (bool_val != nullptr) {
 				output.bool_values[this_socket->internal_name] = bool_val->value;
+			}
+		}
+		else if (this_socket->socket_type == SocketType::Curve) {
+			CurveSocketValue* curve_val = dynamic_cast<CurveSocketValue*>(this_socket->value);
+			if (curve_val != nullptr) {
+				OutputCurve out_curve;
+				for (size_t i = 0; i < curve_val->curve_points.size(); i++) {
+					const Point2 this_point = curve_val->curve_points[i];
+					out_curve.control_points.push_back(Float2(this_point.get_pos_x(), this_point.get_pos_y()));
+				}
+				out_curve.enum_curve_interp = static_cast<int>(curve_val->curve_interp);
+				CurveEvaluator curve(curve_val);
+				for (size_t i = 0; i < CURVE_TABLE_SIZE; i++) {
+					const float x = static_cast<float>(i) / (CURVE_TABLE_SIZE - 1.0f);
+					out_curve.samples.push_back(curve.eval(x));
+				}
+				output.curve_values[this_socket->internal_name] = out_curve;
 			}
 		}
 	}

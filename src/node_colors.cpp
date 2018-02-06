@@ -1,5 +1,8 @@
 #include "node_colors.h"
 
+#include "config.h"
+#include "curve.h"
+
 CyclesShaderEditor::MixRGBNode::MixRGBNode(Point2 position)
 {
 	world_pos = position;
@@ -169,4 +172,76 @@ CyclesShaderEditor::BrightnessContrastNode::BrightnessContrastNode(Point2 positi
 	sockets.push_back(cont_input);
 
 	type = CyclesNodeType::BrightnessContrast;
+}
+
+CyclesShaderEditor::RGBCurvesNode::RGBCurvesNode(Point2 position)
+{
+	world_pos = position;
+
+	title = "RGB Curves";
+
+	NodeSocket* color_output = new NodeSocket(this, SocketInOut::Output, SocketType::Color, "Color", "color");
+
+	sockets.push_back(color_output);
+
+	NodeSocket* rgb_curve_input = new NodeSocket(this, SocketInOut::Input, SocketType::Curve, "RGB Curve", "rgb_curve");
+	rgb_curve_input->value = new CurveSocketValue();
+	NodeSocket* r_curve_input = new NodeSocket(this, SocketInOut::Input, SocketType::Curve, "Red Curve", "r_curve");
+	r_curve_input->value = new CurveSocketValue();
+	NodeSocket* g_curve_input = new NodeSocket(this, SocketInOut::Input, SocketType::Curve, "Green Curve", "g_curve");
+	g_curve_input->value = new CurveSocketValue();
+	NodeSocket* b_curve_input = new NodeSocket(this, SocketInOut::Input, SocketType::Curve, "Blue Curve", "b_curve");
+	b_curve_input->value = new CurveSocketValue();
+	NodeSocket* fac_input = new NodeSocket(this, SocketInOut::Input, SocketType::Float, "Fac", "fac");
+	fac_input->value = new FloatSocketValue(1.0f, -1.0f, 1.0f);
+	NodeSocket* color_input = new NodeSocket(this, SocketInOut::Input, SocketType::Color, "Color", "color");
+	color_input->value = new ColorSocketValue(1.0f, 1.0f, 1.0f);
+
+	sockets.push_back(rgb_curve_input);
+	sockets.push_back(r_curve_input);
+	sockets.push_back(g_curve_input);
+	sockets.push_back(b_curve_input);
+	sockets.push_back(fac_input);
+	sockets.push_back(color_input);
+
+	type = CyclesNodeType::RGBCurves;
+}
+
+void CyclesShaderEditor::RGBCurvesNode::update_output_node(OutputNode& output)
+{
+	EditorNode::update_output_node(output);
+
+	// Special case for RGB curves, we need to calculate the final output for the red, green, and blue channels
+	// This is a combination of the channel-specific curves and the RGB curve which applies to all channels
+	// Channel-specific curves are applied before the rgb curve
+
+	NodeSocket* const rgb_curve_socket = get_socket_by_internal_name(SocketInOut::Input, "rgb_curve");
+	NodeSocket* const r_curve_socket = get_socket_by_internal_name(SocketInOut::Input, "r_curve");
+	NodeSocket* const g_curve_socket = get_socket_by_internal_name(SocketInOut::Input, "g_curve");
+	NodeSocket* const b_curve_socket = get_socket_by_internal_name(SocketInOut::Input, "b_curve");
+
+	CurveSocketValue* const rgb_curve_val = dynamic_cast<CurveSocketValue*>(rgb_curve_socket->value);
+	CurveSocketValue* const r_curve_val = dynamic_cast<CurveSocketValue*>(r_curve_socket->value);
+	CurveSocketValue* const g_curve_val = dynamic_cast<CurveSocketValue*>(g_curve_socket->value);
+	CurveSocketValue* const b_curve_val = dynamic_cast<CurveSocketValue*>(b_curve_socket->value);
+
+	CurveEvaluator rgb_curve(rgb_curve_val);
+	CurveEvaluator r_curve(r_curve_val);
+	CurveEvaluator g_curve(g_curve_val);
+	CurveEvaluator b_curve(b_curve_val);
+
+	OutputCurve out_r_curve;
+	OutputCurve out_g_curve;
+	OutputCurve out_b_curve;
+
+	for (size_t i = 0; i < CURVE_TABLE_SIZE; i++) {
+		const float x = static_cast<float>(i) / (CURVE_TABLE_SIZE - 1.0f);
+		out_r_curve.samples.push_back(rgb_curve.eval(r_curve.eval(x)));
+		out_g_curve.samples.push_back(rgb_curve.eval(g_curve.eval(x)));
+		out_b_curve.samples.push_back(rgb_curve.eval(b_curve.eval(x)));
+	}
+
+	output.curve_values["final_r_curve"] = out_r_curve;
+	output.curve_values["final_g_curve"] = out_g_curve;
+	output.curve_values["final_b_curve"] = out_b_curve;
 }

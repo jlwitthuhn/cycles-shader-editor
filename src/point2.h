@@ -18,12 +18,16 @@ namespace CyclesShaderEditor {
 		int get_pos_x_int() const;
 		int get_pos_y_int() const;
 
+		float get_magnitude_squared() const;
+
 		void clamp_to(const Point2& begin, const Point2& end);
 
 		Point2 operator+(const Point2& other) const;
 		Point2 operator-(const Point2& other) const;
 
 		Point2 operator/(const float& other) const;
+
+		bool operator==(const Point2& other) const;
 
 	private:
 		float pos_x;
