@@ -45,7 +45,9 @@ namespace CyclesShaderEditor {
 		void load_serialized_graph(std::string graph);
 
 	private:
-		void draw_interface();
+		void pre_draw();
+		void draw();
+
 		void service_requests();
 
 		void update_mouse_position(Point2 screen_position);

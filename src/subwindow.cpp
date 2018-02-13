@@ -1,10 +1,13 @@
 #include "subwindow.h"
 
+#include <nanovg.h>
+
 #include "gui_sizes.h"
 
-CyclesShaderEditor::NodeEditorSubwindow::NodeEditorSubwindow(Point2 screen_position)
+CyclesShaderEditor::NodeEditorSubwindow::NodeEditorSubwindow(Point2 screen_position, std::string title)
 {
 	subwindow_screen_pos = screen_position;
+	this->title = title;
 }
 
 CyclesShaderEditor::Point2 CyclesShaderEditor::NodeEditorSubwindow::get_screen_pos() const
@@ -12,21 +15,101 @@ CyclesShaderEditor::Point2 CyclesShaderEditor::NodeEditorSubwindow::get_screen_p
 	return subwindow_screen_pos;
 }
 
-bool CyclesShaderEditor::NodeEditorSubwindow::is_mouse_over()
+float CyclesShaderEditor::NodeEditorSubwindow::get_width() const
+{
+	return subwindow_width;
+}
+
+float CyclesShaderEditor::NodeEditorSubwindow::get_height() const
+{
+	return content_height + UI_SUBWIN_HEADER_HEIGHT + 3.0f;
+}
+
+void CyclesShaderEditor::NodeEditorSubwindow::pre_draw()
+{
+	// Do nothing by default
+}
+
+void CyclesShaderEditor::NodeEditorSubwindow::draw(NVGcontext* draw_context)
+{
+	if (is_active() == false) {
+		return;
+	}
+
+	// Draw window
+	nvgBeginPath(draw_context);
+	nvgRoundedRect(draw_context, 0.0f, 0.0f, get_width(), get_height(), UI_SUBWIN_CORNER_RADIUS);
+	nvgFillColor(draw_context, nvgRGBA(180, 180, 180, 255));
+	nvgFill(draw_context);
+
+	// Header
+	nvgBeginPath(draw_context);
+	nvgRoundedRect(draw_context, 0.0f, 0.0f, subwindow_width, UI_SUBWIN_HEADER_HEIGHT, UI_SUBWIN_CORNER_RADIUS);
+	nvgRect(draw_context, 0.0f, UI_SUBWIN_HEADER_HEIGHT / 2, subwindow_width, UI_SUBWIN_HEADER_HEIGHT / 2);
+	if (is_mouse_over_header()) {
+		nvgFillColor(draw_context, nvgRGBA(225, 225, 225, 255));
+	}
+	else {
+		nvgFillColor(draw_context, nvgRGBA(210, 210, 210, 255));
+	}
+	nvgFill(draw_context);
+
+	nvgStrokeColor(draw_context, nvgRGBA(0, 0, 0, 255));
+	nvgStrokeWidth(draw_context, 0.8f);
+
+	nvgBeginPath(draw_context);
+	nvgMoveTo(draw_context, 0.0f, UI_SUBWIN_HEADER_HEIGHT);
+	nvgLineTo(draw_context, subwindow_width, UI_SUBWIN_HEADER_HEIGHT);
+	nvgStroke(draw_context);
+
+	// Outline
+	nvgBeginPath(draw_context);
+	nvgRoundedRect(draw_context, 0.0f, 0.0f, subwindow_width, get_height(), UI_SUBWIN_CORNER_RADIUS);
+	nvgStroke(draw_context);
+
+	// Title
+	nvgFontSize(draw_context, UI_FONT_SIZE_NORMAL);
+	nvgFontFace(draw_context, "sans");
+	nvgTextAlign(draw_context, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
+	nvgFontBlur(draw_context, 0.0f);
+	nvgFillColor(draw_context, nvgRGBA(0, 0, 0, 255));
+	nvgText(draw_context, subwindow_width / 2, UI_SUBWIN_HEADER_HEIGHT / 2, title.c_str(), nullptr);
+
+	nvgSave(draw_context);
+	nvgTranslate(draw_context, 0.0f, UI_SUBWIN_HEADER_HEIGHT + 3.0f);
+	nvgScissor(draw_context, 0.0f, 0.0f, get_width(), content_height);
+	draw_content(draw_context);
+	nvgRestore(draw_context);
+}
+
+bool CyclesShaderEditor::NodeEditorSubwindow::is_mouse_over() const
 {
 	if (subwindow_moving) {
 		return true;
 	}
-
-	if (is_subwindow_active() == false) {
+	if (is_active() == false) {
 		return false;
 	}
-
 	return (
 		mouse_local_pos.get_pos_x() > 0.0f &&
 		mouse_local_pos.get_pos_y() > 0.0f &&
+		mouse_local_pos.get_pos_x() < get_width() &&
+		mouse_local_pos.get_pos_y() < get_height()
+		);
+}
+
+bool CyclesShaderEditor::NodeEditorSubwindow::is_mouse_over_header() const
+{
+	if (subwindow_moving) {
+		return true;
+	}
+	if (is_active() == false) {
+		return false;
+	}
+	return (mouse_local_pos.get_pos_x() > 0 &&
 		mouse_local_pos.get_pos_x() < subwindow_width &&
-		mouse_local_pos.get_pos_y() < subwindow_height );
+		mouse_local_pos.get_pos_y() > 0 &&
+		mouse_local_pos.get_pos_y() < UI_SUBWIN_HEADER_HEIGHT);
 }
 
 void CyclesShaderEditor::NodeEditorSubwindow::set_mouse_position(Point2 local_position, float max_safe_pos_y)
@@ -41,7 +124,7 @@ void CyclesShaderEditor::NodeEditorSubwindow::set_mouse_position(Point2 local_po
 	else {
 		mouse_local_pos = local_position;
 	}
-
+	mouse_panel_pos = mouse_local_pos - Point2(0.0f, UI_SUBWIN_HEADER_HEIGHT + 3.0f);
 }
 
 void CyclesShaderEditor::NodeEditorSubwindow::handle_mouse_button(int /*button*/, int /*action*/, int /*mods*/)

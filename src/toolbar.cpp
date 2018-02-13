@@ -3,8 +3,6 @@
 #include <GLFW/glfw3.h>
 #include <nanovg.h>
 
-#include <iostream>
-
 #include "drawing.h"
 #include "gui_sizes.h"
 #include "ui_requests.h"

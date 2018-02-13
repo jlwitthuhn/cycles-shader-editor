@@ -14,8 +14,6 @@
 #include "node_vector.h"
 #include "output.h"
 
-#include <iostream>
-
 static const char SEPARATOR = '|';
 
 static const char* MAGIC_WORD = "cycles_shader";

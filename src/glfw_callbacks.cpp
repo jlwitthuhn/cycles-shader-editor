@@ -4,8 +4,6 @@
 
 #include "main_window.h"
 
-#include <iostream>
-
 std::map<GLFWwindow*, CyclesShaderEditor::EditorMainWindow*>* CyclesShaderEditor::get_callback_window_map()
 {
 	static std::map<GLFWwindow*, EditorMainWindow*> window_map;

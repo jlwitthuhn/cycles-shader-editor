@@ -5,8 +5,6 @@
 #include <algorithm>
 #include <cassert>
 
-#include <iostream>
-
 static constexpr float CURVE_CREATE_POINT_IGNORE_MARGIN = 0.012f;
 static constexpr float CURVE_POINT_SELECT_MARGIN = 0.05f;
 

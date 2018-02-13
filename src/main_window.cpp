@@ -25,8 +25,6 @@
 #include "util_rectangle.h"
 #include "view.h"
 
-#include <iostream>
-
 CyclesShaderEditor::EditorMainWindow::EditorMainWindow(GraphEditor* public_window) : public_window(public_window)
 {
 	window_width = UI_WINDOW_WIDTH;
@@ -122,50 +120,12 @@ bool CyclesShaderEditor::EditorMainWindow::run_window_loop_iteration()
 		return false;
 	}
 
-	// Check nodes to see if we should save current state
-	bool should_push_undo_state = false;
-	for (EditorNode* node : nodes) {
-		if (node->changed) {
-			should_push_undo_state = true;
-			node->changed = false;
-		}
-	}
-	if (param_editor_window->should_push_undo_state()) {
-		should_push_undo_state = true;
-	}
-	if (should_push_undo_state) {
-		push_undo_state();
-	}
-
-	// Update mouse position
-	double mx, my;
-	int fb_width, fb_height;
-	glfwGetCursorPos(window, &mx, &my);
-	glfwGetWindowSize(window, &window_width, &window_height);
-	glfwGetFramebufferSize(window, &fb_width, &fb_height);
-
-	update_mouse_position(CyclesShaderEditor::Point2(static_cast<float>(mx), static_cast<float>(my)));
-	screen_to_world = CyclesShaderEditor::Point2(view_center.get_pos_x() - window_width / 2, view_center.get_pos_y() - window_height / 2 - UI_TOOLBAR_HEIGHT / 2.0f);
-
-	// Handle window events
-	glfwPollEvents();
-
-	// Handle internal requests
-	service_requests();
-
-	// Update any other state we need
-	if (param_editor_window != nullptr) {
-		param_editor_window->set_selected_param(view->get_selected_socket_label());
-	}
-	view->update(mouse_screen_pos, window_width, window_height);
-	status_bar->set_zoom_text(view->get_zoom_string());
-
-	// Mark all connected input sockets
-	for (NodeConnection& connection : connections) {
-		connection.end_socket->input_connected_this_frame = true;
-	}
+	// Pre-draw
+	pre_draw();
 
 	// Draw frame
+	int fb_width, fb_height;
+	glfwGetFramebufferSize(window, &fb_width, &fb_height);
 	const float px_ratio = static_cast<float>(fb_width) / window_width;
 
 	glViewport(0, 0, fb_width, fb_height);
@@ -173,7 +133,7 @@ bool CyclesShaderEditor::EditorMainWindow::run_window_loop_iteration()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 	nvgBeginFrame(nvg_context, window_width, window_height, px_ratio);
-	draw_interface();
+	draw();
 	nvgEndFrame(nvg_context);
 	glfwSwapBuffers(window);
 
@@ -398,7 +358,55 @@ void CyclesShaderEditor::EditorMainWindow::load_serialized_graph(std::string gra
 	update_serialized_state();
 }
 
-void CyclesShaderEditor::EditorMainWindow::draw_interface()
+void CyclesShaderEditor::EditorMainWindow::pre_draw()
+{
+	// Check nodes to see if we should save current state
+	bool should_push_undo_state = false;
+	for (EditorNode* node : nodes) {
+		if (node->changed) {
+			should_push_undo_state = true;
+			node->changed = false;
+		}
+	}
+	if (param_editor_window->should_push_undo_state()) {
+		should_push_undo_state = true;
+	}
+	if (should_push_undo_state) {
+		push_undo_state();
+	}
+
+	// Update mouse position
+	double mx, my;
+	glfwGetCursorPos(window, &mx, &my);
+	glfwGetWindowSize(window, &window_width, &window_height);
+
+	update_mouse_position(CyclesShaderEditor::Point2(static_cast<float>(mx), static_cast<float>(my)));
+	screen_to_world = CyclesShaderEditor::Point2(view_center.get_pos_x() - window_width / 2, view_center.get_pos_y() - window_height / 2 - UI_TOOLBAR_HEIGHT / 2.0f);
+
+	// Handle window events
+	glfwPollEvents();
+
+	// Handle internal requests
+	service_requests();
+
+	// Update any other state we need
+	if (param_editor_window != nullptr) {
+		param_editor_window->set_selected_param(view->get_selected_socket_label());
+	}
+	view->update(mouse_screen_pos, window_width, window_height);
+	status_bar->set_zoom_text(view->get_zoom_string());
+
+	// Mark all connected input sockets
+	for (NodeConnection& connection : connections) {
+		connection.end_socket->input_connected_this_frame = true;
+	}
+
+	for (NodeEditorSubwindow* this_subwindow : subwindows) {
+		this_subwindow->pre_draw();
+	}
+}
+
+void CyclesShaderEditor::EditorMainWindow::draw()
 {
 	//////
 	// Update state here
@@ -503,13 +511,11 @@ void CyclesShaderEditor::EditorMainWindow::update_mouse_position(CyclesShaderEdi
 
 CyclesShaderEditor::NodeEditorSubwindow* CyclesShaderEditor::EditorMainWindow::get_subwindow_under_mouse()
 {
-	std::list<NodeEditorSubwindow*>::iterator window_iter;
-	for (window_iter = subwindows.begin(); window_iter != subwindows.end(); ++window_iter) {
-		if ((*window_iter)->is_mouse_over()) {
-			return *window_iter;
+	for (NodeEditorSubwindow* this_subwindow : subwindows) {
+		if (this_subwindow->is_mouse_over()) {
+			return this_subwindow;
 		}
 	}
-
 	return nullptr;
 }
 

@@ -2,8 +2,6 @@
 
 #include "serialize.h"
 
-#include <iostream>
-
 CyclesShaderEditor::CyclesNodeGraph::CyclesNodeGraph(std::string encoded_graph)
 {
 	std::list<EditorNode*> tmp_nodes;

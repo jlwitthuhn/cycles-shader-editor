@@ -17,10 +17,9 @@
 #include "node_textures.h"
 #include "node_vector.h"
 
-CyclesShaderEditor::NodeListSubwindow::NodeListSubwindow(Point2 screen_position) : NodeEditorSubwindow(screen_position)
+CyclesShaderEditor::NodeListSubwindow::NodeListSubwindow(Point2 screen_position) : NodeEditorSubwindow(screen_position, "Create Node")
 {
 	subwindow_width = UI_SUBWIN_NODE_LIST_WIDTH;
-	subwindow_height = UI_SUBWIN_HEADER_HEIGHT;
 
 	// Category buttons -- cleaned up in ~NodeListSubwindow
 	NodeCategoryButton* cat_input_button = new NodeCategoryButton(std::string("Input"));
@@ -162,10 +161,8 @@ CyclesShaderEditor::NodeListSubwindow::~NodeListSubwindow()
 	}
 }
 
-void CyclesShaderEditor::NodeListSubwindow::draw(NVGcontext* draw_context)
+void CyclesShaderEditor::NodeListSubwindow::pre_draw()
 {
-	float height_drawn = 0.0f;
-
 	for (NodeCategoryButton* category_button : category_buttons) {
 		if (category_button == active_category) {
 			category_button->pressed = true;
@@ -174,68 +171,6 @@ void CyclesShaderEditor::NodeListSubwindow::draw(NVGcontext* draw_context)
 			category_button->pressed = false;
 		}
 	}
-
-	// Draw window
-	nvgBeginPath(draw_context);
-	nvgRoundedRect(draw_context, 0.0f, 0.0f, subwindow_width, subwindow_height, UI_SUBWIN_CORNER_RADIUS);
-	nvgFillColor(draw_context, nvgRGBA(180, 180, 180, 255));
-	nvgFill(draw_context);
-
-	// Header
-	nvgBeginPath(draw_context);
-	nvgRoundedRect(draw_context, 0.0f, 0.0f, subwindow_width, UI_SUBWIN_HEADER_HEIGHT, UI_SUBWIN_CORNER_RADIUS);
-	nvgRect(draw_context, 0.0f, UI_SUBWIN_HEADER_HEIGHT / 2, subwindow_width, UI_SUBWIN_HEADER_HEIGHT / 2);
-	if (is_mouse_over_header()) {
-		nvgFillColor(draw_context, nvgRGBA(225, 225, 225, 255));
-	}
-	else {
-		nvgFillColor(draw_context, nvgRGBA(210, 210, 210, 255));
-	}
-	nvgFill(draw_context);
-
-	nvgStrokeColor(draw_context, nvgRGBA(0, 0, 0, 255));
-	nvgStrokeWidth(draw_context, 0.8f);
-
-	nvgBeginPath(draw_context);
-	nvgMoveTo(draw_context, 0.0f, UI_SUBWIN_HEADER_HEIGHT);
-	nvgLineTo(draw_context, subwindow_width, UI_SUBWIN_HEADER_HEIGHT);
-	nvgStroke(draw_context);
-
-	// Outline
-	nvgBeginPath(draw_context);
-	nvgRoundedRect(draw_context, 0.0f, 0.0f, subwindow_width, subwindow_height, UI_SUBWIN_CORNER_RADIUS);
-	nvgStroke(draw_context);
-
-	// Title
-	nvgFontSize(draw_context, UI_FONT_SIZE_NORMAL);
-	nvgFontFace(draw_context, "sans");
-	nvgTextAlign(draw_context, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-	nvgFontBlur(draw_context, 0.0f);
-	nvgFillColor(draw_context, nvgRGBA(0, 0, 0, 255));
-	nvgText(draw_context, subwindow_width / 2, UI_SUBWIN_HEADER_HEIGHT / 2, "Nodes", nullptr);
-
-	height_drawn += (UI_SUBWIN_HEADER_HEIGHT + 3.0f);
-
-	// Node category buttons
-	NodeCategoryButtonPlacer placer(Point2(0.0f, height_drawn), subwindow_width, UI_SUBWIN_NODE_LIST_BUTTON_VPADDING);
-
-	for (NodeCategoryButton* category_button : category_buttons) {
-		Point2 button_position = placer.next_button_position();
-		category_button->update_mouse_position(mouse_local_pos - button_position);
-		category_button->draw(button_position, draw_context);
-	}
-
-	height_drawn += placer.get_draw_height();
-
-	// Buttons
-	if (active_category != nullptr) {
-		for (NodeCreationButton* node_button : active_category->node_buttons) {
-			Point2 button_location(0.0f, height_drawn);
-			height_drawn += node_button->draw(draw_context, button_location, mouse_local_pos, subwindow_width);
-		}
-	}
-
-	subwindow_height = height_drawn + 6.0f;
 }
 
 void CyclesShaderEditor::NodeListSubwindow::handle_mouse_button(int button, int action, int /*mods*/) {
@@ -295,13 +230,28 @@ CyclesShaderEditor::NodeCreationButton* CyclesShaderEditor::NodeListSubwindow::g
 	return nullptr;
 }
 
-bool CyclesShaderEditor::NodeListSubwindow::is_mouse_over_header()
+void CyclesShaderEditor::NodeListSubwindow::draw_content(NVGcontext* draw_context)
 {
-	if (subwindow_moving) {
-		return true;
+	float height_drawn = 0.0f;
+
+	// Node category buttons
+	NodeCategoryButtonPlacer placer(Point2(0.0f, height_drawn), subwindow_width, UI_SUBWIN_NODE_LIST_BUTTON_VPADDING);
+
+	for (NodeCategoryButton* category_button : category_buttons) {
+		Point2 button_position = placer.next_button_position();
+		category_button->update_mouse_position(mouse_panel_pos - button_position);
+		category_button->draw(button_position, draw_context);
 	}
-	return (mouse_local_pos.get_pos_x() > 0 &&
-		mouse_local_pos.get_pos_x() < subwindow_width &&
-		mouse_local_pos.get_pos_y() > 0 &&
-		mouse_local_pos.get_pos_y() < UI_SUBWIN_HEADER_HEIGHT);
+
+	height_drawn += placer.get_draw_height();
+
+	// Buttons
+	if (active_category != nullptr) {
+		for (NodeCreationButton* node_button : active_category->node_buttons) {
+			Point2 button_location(0.0f, height_drawn);
+			height_drawn += node_button->draw(draw_context, button_location, mouse_panel_pos, subwindow_width);
+		}
+	}
+
+	content_height = height_drawn + UI_SUBWIN_NODE_LIST_BUTTON_VPADDING;
 }

@@ -4,7 +4,6 @@
 
 #include "subwindow.h"
 
-
 namespace CyclesShaderEditor {
 
 	class NodeCategoryButton;
@@ -15,7 +14,7 @@ namespace CyclesShaderEditor {
 		NodeListSubwindow(Point2 screen_position);
 		virtual ~NodeListSubwindow();
 
-		virtual void draw(NVGcontext* draw_context) override;
+		virtual void pre_draw() override;
 
 		virtual void handle_mouse_button(int button, int action, int mods) override;
 
@@ -24,8 +23,8 @@ namespace CyclesShaderEditor {
 
 		NodeCreationButton* active_button;
 
-	private:
-		bool is_mouse_over_header();
+	protected:
+		virtual void draw_content(NVGcontext* draw_context) override;
 
 		std::list<NodeCategoryButton*> category_buttons;
 

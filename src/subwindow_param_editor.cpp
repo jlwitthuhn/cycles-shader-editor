@@ -11,7 +11,7 @@
 #include "node_base.h"
 
 CyclesShaderEditor::ParamEditorSubwindow::ParamEditorSubwindow(Point2 screen_position) :
-	NodeEditorSubwindow(screen_position),
+	NodeEditorSubwindow(screen_position, "Parameter Editor"),
 	int_input_box(UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH_SMALL, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT),
 	float_input_box(UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH_SMALL, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT),
 	vector_x_input_box(UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH_BIG, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT),
@@ -21,63 +21,180 @@ CyclesShaderEditor::ParamEditorSubwindow::ParamEditorSubwindow(Point2 screen_pos
 	panel_curve(UI_SUBWIN_PARAM_EDIT_WIDTH)
 {
 	subwindow_width = UI_SUBWIN_PARAM_EDIT_WIDTH;
-	subwindow_height = UI_SUBWIN_HEADER_HEIGHT;
 }
 
-void CyclesShaderEditor::ParamEditorSubwindow::draw(NVGcontext* draw_context)
+void CyclesShaderEditor::ParamEditorSubwindow::pre_draw()
 {
-	if (is_subwindow_active() == false) {
-		return;
+	if (selected_param != nullptr && selected_param->socket_type == SocketType::Curve && selected_param->value != nullptr) {
+		CurveSocketValue* curve = dynamic_cast<CurveSocketValue*>(selected_param->value);
+		if (curve != nullptr) {
+			panel_curve.set_attached_curve_value(curve);
+			return;
+		}
 	}
-
-	float height_drawn = 0.0f;
-
-	// Set all attached values to nullptr for panels
-	// These will be set to their appropriate values later in draw()
 	panel_curve.set_attached_curve_value(nullptr);
+}
 
-	// Draw window
-	nvgBeginPath(draw_context);
-	nvgRoundedRect(draw_context, 0.0f, 0.0f, subwindow_width, subwindow_height, UI_SUBWIN_CORNER_RADIUS);
-	nvgFillColor(draw_context, nvgRGBA(180, 180, 180, 255));
-	nvgFill(draw_context);
+void CyclesShaderEditor::ParamEditorSubwindow::set_mouse_position(Point2 local_position, float max_pos_y)
+{
+	NodeEditorSubwindow::set_mouse_position(local_position, max_pos_y);
+	if (panel_color.is_active()) {
+		panel_color.set_mouse_local_position(mouse_panel_pos - Point2(0.0f, panel_start_y));
+	}
+	if (panel_curve.is_active()) {
+		panel_curve.set_mouse_local_position(mouse_panel_pos - Point2(0.0f, panel_start_y));
+	}
+}
 
-	// Header
-	nvgBeginPath(draw_context);
-	nvgRoundedRect(draw_context, 0.0f, 0.0f, subwindow_width, UI_SUBWIN_HEADER_HEIGHT, UI_SUBWIN_CORNER_RADIUS);
-	nvgRect(draw_context, 0.0f, UI_SUBWIN_HEADER_HEIGHT / 2, subwindow_width, UI_SUBWIN_HEADER_HEIGHT / 2);
+void CyclesShaderEditor::ParamEditorSubwindow::handle_mouse_button(int button, int action, int mods)
+{
 	if (is_mouse_over_header()) {
-		nvgFillColor(draw_context, nvgRGBA(225, 225, 225, 255));
+		if (button == GLFW_MOUSE_BUTTON_LEFT) {
+			if (action == GLFW_PRESS) {
+				move_window_begin();
+			}
+			else if (action == GLFW_RELEASE) {
+				move_window_end();
+			}
+		}
+	}
+	else if (panel_color.is_mouse_over()) {
+		if (panel_color.get_input_bux_under_mouse() != nullptr) {
+			if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+				select_input(panel_color.get_input_bux_under_mouse());
+			}
+		}
+		else {
+			// Panel will handle the mouse event internally
+			panel_color.handle_mouse_button(button, action, mods);
+		}
+	}
+	else if (panel_curve.is_mouse_over()) {
+		panel_curve.handle_mouse_button(button, action, mods);
+	}
+	else if (int_input_box.is_mouse_over()) {
+		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+			select_input(&int_input_box);
+		}
+	}
+	else if (float_input_box.is_mouse_over()) {
+		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+			select_input(&float_input_box);
+		}
+	}
+	else if (vector_x_input_box.is_mouse_over()) {
+		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+			select_input(&vector_x_input_box);
+		}
+	}
+	else if (vector_y_input_box.is_mouse_over()) {
+		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+			select_input(&vector_y_input_box);
+		}
+	}
+	else if (vector_z_input_box.is_mouse_over()) {
+		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+			select_input(&vector_z_input_box);
+		}
+	}
+	else if (is_enum_target_under_mouse()) {
+		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+			click_enum_target_under_mouse();
+		}
+	}
+	else if (is_bool_target_under_mouse()) {
+		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+			click_bool_target_under_mouse();
+		}
 	}
 	else {
-		nvgFillColor(draw_context, nvgRGBA(210, 210, 210, 255));
+		if (action == GLFW_PRESS) {
+			complete_input();
+		}
 	}
-	nvgFill(draw_context);
+}
 
-	nvgStrokeColor(draw_context, nvgRGBAf(0.0f, 0.0f, 0.0f, 1.0f));
-	nvgStrokeWidth(draw_context, 0.8f);
+void CyclesShaderEditor::ParamEditorSubwindow::handle_key(int key, int /*scancode*/, int action, int /*mods*/)
+{
+	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+		if (selected_input != nullptr) {
+			selected_input->cancel_edit();
+		}
+	}
+	else if (key == GLFW_KEY_ENTER && action == GLFW_PRESS) {
+		if (selected_input != nullptr) {
+			selected_input->complete_edit();
+			request_undo_stack_push = true;
+		}
+	}
+	else if (key == GLFW_KEY_BACKSPACE && action == GLFW_PRESS) {
+		if (selected_input != nullptr) {
+			selected_input->backspace();
+		}
+	}
+}
 
-	nvgBeginPath(draw_context);
-	nvgMoveTo(draw_context, 0.0f, UI_SUBWIN_HEADER_HEIGHT);
-	nvgLineTo(draw_context, subwindow_width, UI_SUBWIN_HEADER_HEIGHT);
-	nvgStroke(draw_context);
+void CyclesShaderEditor::ParamEditorSubwindow::handle_character(unsigned int codepoint)
+{
+	if (selected_input != nullptr && selected_input->should_capture_keys()) {
+		selected_input->handle_character(codepoint);
+	}
+}
 
-	// Outline
-	nvgBeginPath(draw_context);
-	nvgRoundedRect(draw_context, 0.0f, 0.0f, subwindow_width, subwindow_height, UI_SUBWIN_CORNER_RADIUS);
-	nvgStroke(draw_context);
+bool CyclesShaderEditor::ParamEditorSubwindow::is_active() const
+{
+	return (selected_param != nullptr);
+}
 
-	// Title
-	nvgFontSize(draw_context, UI_FONT_SIZE_NORMAL);
-	nvgFontFace(draw_context, "sans");
-	nvgTextAlign(draw_context, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-	nvgFontBlur(draw_context, 0.0f);
-	nvgFillColor(draw_context, nvgRGBA(0, 0, 0, 255));
-	nvgText(draw_context, subwindow_width / 2, UI_SUBWIN_HEADER_HEIGHT / 2, "Parameter Editor", nullptr);
+void CyclesShaderEditor::ParamEditorSubwindow::set_selected_param(NodeSocket* selected_param)
+{
+	if (this->selected_param == selected_param) {
+		return;
+	}
+	complete_input();
+	panel_curve.reset_panel_state();
+	this->selected_param = selected_param;
+}
 
-	height_drawn += UI_SUBWIN_HEADER_HEIGHT + 1.0f;
+bool CyclesShaderEditor::ParamEditorSubwindow::should_capture_keys()
+{
+	if (selected_input != nullptr) {
+		return selected_input->should_capture_keys();
+	}
 
-	// Draw content here
+	return false;
+}
+
+void CyclesShaderEditor::ParamEditorSubwindow::complete_input()
+{
+	select_input(nullptr);
+}
+
+void CyclesShaderEditor::ParamEditorSubwindow::mouse_button_release()
+{
+	panel_color.mouse_button_release();
+	panel_curve.mouse_button_release();
+}
+
+bool CyclesShaderEditor::ParamEditorSubwindow::should_push_undo_state() {
+	bool result = false;
+	if (request_undo_stack_push) {
+		request_undo_stack_push = false;
+		result = true;
+	}
+	if (panel_color.should_push_undo_state()) {
+		result = true;
+	}
+	if (panel_curve.should_push_undo_state()) {
+		result = true;
+	}
+	return result;
+}
+
+void CyclesShaderEditor::ParamEditorSubwindow::draw_content(NVGcontext* draw_context)
+{
+	float height_drawn = 0.0f;
+
 	if (selected_param != nullptr && selected_param->socket_in_out == SocketInOut::Input)
 	{
 		int_input_box.displayed = false;
@@ -169,7 +286,7 @@ void CyclesShaderEditor::ParamEditorSubwindow::draw(NVGcontext* draw_context)
 
 			int_input_box.set_position(Point2(input_x_draw, input_y_draw));
 			int_input_box.set_int_value(dynamic_cast<IntSocketValue*>(selected_param->value));
-			int_input_box.draw(draw_context, mouse_local_pos);
+			int_input_box.draw(draw_context, mouse_panel_pos);
 
 			height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
 		}
@@ -190,7 +307,7 @@ void CyclesShaderEditor::ParamEditorSubwindow::draw(NVGcontext* draw_context)
 
 			float_input_box.set_position(Point2(input_x_draw, input_y_draw));
 			float_input_box.set_float_value(dynamic_cast<FloatSocketValue*>(selected_param->value));
-			float_input_box.draw(draw_context, mouse_local_pos);
+			float_input_box.draw(draw_context, mouse_panel_pos);
 
 			height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
 		}
@@ -215,7 +332,7 @@ void CyclesShaderEditor::ParamEditorSubwindow::draw(NVGcontext* draw_context)
 
 			vector_x_input_box.set_position(Point2(input_x_draw, input_y_draw));
 			vector_x_input_box.set_float_value(&(float3_socket_val->x_socket_val));
-			vector_x_input_box.draw(draw_context, mouse_local_pos);
+			vector_x_input_box.draw(draw_context, mouse_panel_pos);
 
 			height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
 
@@ -226,7 +343,7 @@ void CyclesShaderEditor::ParamEditorSubwindow::draw(NVGcontext* draw_context)
 
 			vector_y_input_box.set_position(Point2(input_x_draw, input_y_draw));
 			vector_y_input_box.set_float_value(&(float3_socket_val->y_socket_val));
-			vector_y_input_box.draw(draw_context, mouse_local_pos);
+			vector_y_input_box.draw(draw_context, mouse_panel_pos);
 
 			height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
 
@@ -237,7 +354,7 @@ void CyclesShaderEditor::ParamEditorSubwindow::draw(NVGcontext* draw_context)
 
 			vector_z_input_box.set_position(Point2(input_x_draw, input_y_draw));
 			vector_z_input_box.set_float_value(&(float3_socket_val->z_socket_val));
-			vector_z_input_box.draw(draw_context, mouse_local_pos);
+			vector_z_input_box.draw(draw_context, mouse_panel_pos);
 
 			height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
 		}
@@ -387,174 +504,7 @@ void CyclesShaderEditor::ParamEditorSubwindow::draw(NVGcontext* draw_context)
 		}
 	}
 
-	subwindow_height = height_drawn + 4.0f;
-}
-
-void CyclesShaderEditor::ParamEditorSubwindow::set_mouse_position(Point2 screen_position, float max_pos_y)
-{
-	NodeEditorSubwindow::set_mouse_position(screen_position, max_pos_y);
-	if (panel_color.is_active()) {
-		panel_color.set_mouse_local_position(screen_position - Point2(0.0f, panel_start_y));
-	}
-	if (panel_curve.is_active()) {
-		panel_curve.set_mouse_local_position(screen_position - Point2(0.0f, panel_start_y));
-	}
-}
-
-void CyclesShaderEditor::ParamEditorSubwindow::handle_mouse_button(int button, int action, int mods)
-{
-	if (is_mouse_over_header()) {
-		if (button == GLFW_MOUSE_BUTTON_LEFT) {
-			if (action == GLFW_PRESS) {
-				move_window_begin();
-			}
-			else if (action == GLFW_RELEASE) {
-				move_window_end();
-			}
-		}
-	}
-	else if (panel_color.is_mouse_over()) {
-		if (panel_color.get_input_bux_under_mouse() != nullptr) {
-			if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-				select_input(panel_color.get_input_bux_under_mouse());
-			}
-		}
-		else {
-			// Panel will handle the mouse event internally
-			panel_color.handle_mouse_button(button, action, mods);
-		}
-	}
-	else if (panel_curve.is_mouse_over()) {
-		panel_curve.handle_mouse_button(button, action, mods);
-	}
-	else if (int_input_box.is_mouse_over()) {
-		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-			select_input(&int_input_box);
-		}
-	}
-	else if (float_input_box.is_mouse_over()) {
-		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-			select_input(&float_input_box);
-		}
-	}
-	else if (vector_x_input_box.is_mouse_over()) {
-		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-			select_input(&vector_x_input_box);
-		}
-	}
-	else if (vector_y_input_box.is_mouse_over()) {
-		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-			select_input(&vector_y_input_box);
-		}
-	}
-	else if (vector_z_input_box.is_mouse_over()) {
-		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-			select_input(&vector_z_input_box);
-		}
-	}
-	else if (is_enum_target_under_mouse()) {
-		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-			click_enum_target_under_mouse();
-		}
-	}
-	else if (is_bool_target_under_mouse()) {
-		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-			click_bool_target_under_mouse();
-		}
-	}
-	else {
-		if (action == GLFW_PRESS) {
-			complete_input();
-		}
-	}
-}
-
-void CyclesShaderEditor::ParamEditorSubwindow::handle_key(int key, int /*scancode*/, int action, int /*mods*/)
-{
-	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-		if (selected_input != nullptr) {
-			selected_input->cancel_edit();
-		}
-	}
-	else if (key == GLFW_KEY_ENTER && action == GLFW_PRESS) {
-		if (selected_input != nullptr) {
-			selected_input->complete_edit();
-			request_undo_stack_push = true;
-		}
-	}
-	else if (key == GLFW_KEY_BACKSPACE && action == GLFW_PRESS) {
-		if (selected_input != nullptr) {
-			selected_input->backspace();
-		}
-	}
-}
-
-void CyclesShaderEditor::ParamEditorSubwindow::handle_character(unsigned int codepoint)
-{
-	if (selected_input != nullptr && selected_input->should_capture_keys()) {
-		selected_input->handle_character(codepoint);
-	}
-}
-
-bool CyclesShaderEditor::ParamEditorSubwindow::is_subwindow_active()
-{
-	return (selected_param != nullptr);
-}
-
-void CyclesShaderEditor::ParamEditorSubwindow::set_selected_param(NodeSocket* selected_param)
-{
-	if (this->selected_param == selected_param) {
-		return;
-	}
-	complete_input();
-	panel_curve.reset_panel_state();
-	this->selected_param = selected_param;
-}
-
-bool CyclesShaderEditor::ParamEditorSubwindow::should_capture_keys()
-{
-	if (selected_input != nullptr) {
-		return selected_input->should_capture_keys();
-	}
-
-	return false;
-}
-
-void CyclesShaderEditor::ParamEditorSubwindow::complete_input()
-{
-	select_input(nullptr);
-}
-
-void CyclesShaderEditor::ParamEditorSubwindow::mouse_button_release()
-{
-	panel_color.mouse_button_release();
-	panel_curve.mouse_button_release();
-}
-
-bool CyclesShaderEditor::ParamEditorSubwindow::should_push_undo_state() {
-	bool result = false;
-	if (request_undo_stack_push) {
-		request_undo_stack_push = false;
-		result = true;
-	}
-	if (panel_color.should_push_undo_state()) {
-		result = true;
-	}
-	if (panel_curve.should_push_undo_state()) {
-		result = true;
-	}
-	return result;
-}
-
-bool CyclesShaderEditor::ParamEditorSubwindow::is_mouse_over_header()
-{
-	if (subwindow_moving) {
-		return true;
-	}
-	return (mouse_local_pos.get_pos_x() > 0 &&
-		mouse_local_pos.get_pos_x() < subwindow_width &&
-		mouse_local_pos.get_pos_y() > 0 &&
-		mouse_local_pos.get_pos_y() < UI_SUBWIN_HEADER_HEIGHT);
+	content_height = height_drawn + 4.0f;
 }
 
 void CyclesShaderEditor::ParamEditorSubwindow::select_input(BaseInputBox* input)
@@ -573,7 +523,7 @@ void CyclesShaderEditor::ParamEditorSubwindow::select_input(BaseInputBox* input)
 bool CyclesShaderEditor::ParamEditorSubwindow::is_bool_target_under_mouse()
 {
 	for (BoolValueClickTarget& this_target : bool_targets) {
-		if (this_target.is_mouse_over_target(mouse_local_pos)) {
+		if (this_target.is_mouse_over_target(mouse_panel_pos)) {
 			return true;
 		}
 	}
@@ -584,7 +534,7 @@ bool CyclesShaderEditor::ParamEditorSubwindow::is_bool_target_under_mouse()
 bool CyclesShaderEditor::ParamEditorSubwindow::is_enum_target_under_mouse()
 {
 	for (StringEnumClickTarget& this_target : enum_targets) {
-		if (this_target.is_mouse_over_target(mouse_local_pos)) {
+		if (this_target.is_mouse_over_target(mouse_panel_pos)) {
 			return true;
 		}
 	}
@@ -595,7 +545,7 @@ bool CyclesShaderEditor::ParamEditorSubwindow::is_enum_target_under_mouse()
 void CyclesShaderEditor::ParamEditorSubwindow::click_bool_target_under_mouse()
 {
 	for (BoolValueClickTarget& this_target : bool_targets) {
-		if (this_target.is_mouse_over_target(mouse_local_pos)) {
+		if (this_target.is_mouse_over_target(mouse_panel_pos)) {
 			this_target.click();
 			return;
 		}
@@ -605,7 +555,7 @@ void CyclesShaderEditor::ParamEditorSubwindow::click_bool_target_under_mouse()
 void CyclesShaderEditor::ParamEditorSubwindow::click_enum_target_under_mouse()
 {
 	for (StringEnumClickTarget& this_target : enum_targets) {
-		if (this_target.is_mouse_over_target(mouse_local_pos)) {
+		if (this_target.is_mouse_over_target(mouse_panel_pos)) {
 			this_target.click();
 			return;
 		}

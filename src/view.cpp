@@ -8,8 +8,6 @@
 
 #include "util_rectangle.h"
 
-#include <iostream>
-
 static constexpr int GRID_SIZE_INT = 32;
 static constexpr float GRID_SIZE_FL = static_cast<float>(GRID_SIZE_INT);
 
