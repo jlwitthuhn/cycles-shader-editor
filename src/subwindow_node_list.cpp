@@ -10,6 +10,7 @@
 #include "gui_sizes.h"
 #include "input_box.h"
 #include "node_colors.h"
+#include "node_converter.h"
 #include "node_inputs.h"
 #include "node_interop_max.h"
 #include "node_outputs.h"
@@ -27,12 +28,14 @@ CyclesShaderEditor::NodeListSubwindow::NodeListSubwindow(Point2 screen_position)
 	NodeCategoryButton* cat_texture_button = new NodeCategoryButton(std::string("Texture"));
 	NodeCategoryButton* cat_color_button = new NodeCategoryButton(std::string("Color"));
 	NodeCategoryButton* cat_vector_button = new NodeCategoryButton(std::string("Vector"));
+	NodeCategoryButton* cat_converter_button = new NodeCategoryButton(std::string("Converter"));
 
 	category_buttons.push_back(cat_input_button);
 	category_buttons.push_back(cat_shader_button);
 	category_buttons.push_back(cat_texture_button);
 	category_buttons.push_back(cat_color_button);
 	category_buttons.push_back(cat_vector_button);
+	category_buttons.push_back(cat_converter_button);
 
 	// Input buttons -- cleaned up in ~NodeCategoryButton
 	NodeCreationButton* camera_data_button = new GenericNodeButton<CameraDataNode>();
@@ -148,6 +151,31 @@ CyclesShaderEditor::NodeListSubwindow::NodeListSubwindow(Point2 screen_position)
 
 	cat_vector_button->node_buttons.push_back(bump_button);
 	cat_vector_button->node_buttons.push_back(normal_map_button);
+
+	// Converter buttons
+	NodeCreationButton* blackbody_button = new GenericNodeButton<BlackbodyNode>();
+	NodeCreationButton* combine_hsv_button = new GenericNodeButton<CombineHSVNode>();
+	NodeCreationButton* combine_rgb_button = new GenericNodeButton<CombineRGBNode>();
+	NodeCreationButton* combine_xyz_button = new GenericNodeButton<CombineXYZNode>();
+	NodeCreationButton* math_button = new GenericNodeButton<MathNode>();
+	NodeCreationButton* rgb_to_bw_button = new GenericNodeButton<RGBToBWNode>();
+	NodeCreationButton* separate_hsv_button = new GenericNodeButton<SeparateHSVNode>();
+	NodeCreationButton* separate_rgb_button = new GenericNodeButton<SeparateRGBNode>();
+	NodeCreationButton* separate_xyz_button = new GenericNodeButton<SeparateXYZNode>();
+	NodeCreationButton* vector_math_button = new GenericNodeButton<VectorMathNode>();
+	NodeCreationButton* wavelength_button = new GenericNodeButton<WavelengthNode>();
+
+	cat_converter_button->node_buttons.push_back(blackbody_button);
+	cat_converter_button->node_buttons.push_back(combine_hsv_button);
+	cat_converter_button->node_buttons.push_back(combine_rgb_button);
+	cat_converter_button->node_buttons.push_back(combine_xyz_button);
+	cat_converter_button->node_buttons.push_back(math_button);
+	cat_converter_button->node_buttons.push_back(rgb_to_bw_button);
+	cat_converter_button->node_buttons.push_back(separate_hsv_button);
+	cat_converter_button->node_buttons.push_back(separate_rgb_button);
+	cat_converter_button->node_buttons.push_back(separate_xyz_button);
+	cat_converter_button->node_buttons.push_back(vector_math_button);
+	cat_converter_button->node_buttons.push_back(wavelength_button);
 
 	active_button = nullptr;
 

@@ -68,7 +68,7 @@ namespace CyclesShaderEditor {
 		bool node_moving = false;
 		bool has_moved;
 
-		float content_width = 146.0f;
+		float content_width = 150.0f;
 		float content_height = 0.0f;
 
 		std::vector<NodeSocket*> sockets;

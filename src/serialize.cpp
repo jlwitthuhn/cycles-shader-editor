@@ -6,6 +6,7 @@
 #include <sstream>
 
 #include "node_colors.h"
+#include "node_converter.h"
 #include "node_inputs.h"
 #include "node_interop_max.h"
 #include "node_outputs.h"
@@ -93,6 +94,18 @@ static void initialize_maps()
 
 	type_to_code[CyclesNodeType::Bump] = std::string("bump");
 	type_to_code[CyclesNodeType::NormalMap] = std::string("normal_map");
+
+	type_to_code[CyclesNodeType::Blackbody] = std::string("blackbody");
+	type_to_code[CyclesNodeType::CombineHSV] = std::string("combine_hsv");
+	type_to_code[CyclesNodeType::CombineRGB] = std::string("combine_rgb");
+	type_to_code[CyclesNodeType::CombineXYZ] = std::string("combine_xyz");
+	type_to_code[CyclesNodeType::Math] = std::string("math");
+	type_to_code[CyclesNodeType::RGBtoBW] = std::string("rgb_to_bw");
+	type_to_code[CyclesNodeType::SeparateHSV] = std::string("separate_hsv");
+	type_to_code[CyclesNodeType::SeparateRGB] = std::string("separate_rgb");
+	type_to_code[CyclesNodeType::SeparateXYZ] = std::string("separate_xyz");
+	type_to_code[CyclesNodeType::VectorMath] = std::string("vector_math");
+	type_to_code[CyclesNodeType::Wavelength] = std::string("wavelength");
 
 	type_to_code[CyclesNodeType::MaterialOutput] = std::string("out_material");
 
@@ -475,6 +488,50 @@ static CyclesShaderEditor::EditorNode* create_node_from_type(CyclesShaderEditor:
 		case CyclesNodeType::NormalMap:
 		{
 			return new NormalMapNode(pos);
+		}
+		case CyclesNodeType::Blackbody:
+		{
+			return new BlackbodyNode(pos);
+		}
+		case CyclesNodeType::CombineHSV:
+		{
+			return new CombineHSVNode(pos);
+		}
+		case CyclesNodeType::CombineRGB:
+		{
+			return new CombineRGBNode(pos);
+		}
+		case CyclesNodeType::CombineXYZ:
+		{
+			return new CombineXYZNode(pos);
+		}
+		case CyclesNodeType::Math:
+		{
+			return new MathNode(pos);
+		}
+		case CyclesNodeType::RGBtoBW:
+		{
+			return new RGBToBWNode(pos);
+		}
+		case CyclesNodeType::SeparateHSV:
+		{
+			return new SeparateHSVNode(pos);
+		}
+		case CyclesNodeType::SeparateRGB:
+		{
+			return new SeparateRGBNode(pos);
+		}
+		case CyclesNodeType::SeparateXYZ:
+		{
+			return new SeparateXYZNode(pos);
+		}
+		case CyclesNodeType::VectorMath:
+		{
+			return new VectorMathNode(pos);
+		}
+		case CyclesNodeType::Wavelength:
+		{
+			return new WavelengthNode(pos);
 		}
 		case CyclesNodeType::MaterialOutput:
 		{

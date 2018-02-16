@@ -60,6 +60,18 @@ namespace CyclesShaderEditor {
 		// Vector
 		Bump,
 		NormalMap,
+		// Converter
+		Blackbody,
+		CombineHSV,
+		CombineRGB,
+		CombineXYZ,
+		Math,
+		RGBtoBW,
+		SeparateHSV,
+		SeparateRGB,
+		SeparateXYZ,
+		VectorMath,
+		Wavelength,
 		// Output
 		MaterialOutput,
 		Unknown,
