@@ -63,7 +63,7 @@ CyclesShaderEditor::PrincipledBSDFNode::PrincipledBSDFNode(Point2 position)
 	sheen_tint_input->value = new FloatSocketValue(0.5f, 0.0f, 1.0f);
 	NodeSocket* cc_input = new NodeSocket(this, SocketInOut::Input, SocketType::Float, "Clearcoat", "clearcoat");
 	cc_input->value = new FloatSocketValue(0.0f, 0.0f, 1.0f);
-	NodeSocket* cc_roughness_input = new NodeSocket(this, SocketInOut::Input, SocketType::Float, "Clearcoat Rough", "clearcoat_roughness");
+	NodeSocket* cc_roughness_input = new NodeSocket(this, SocketInOut::Input, SocketType::Float, "Clearcoat Roughness", "clearcoat_roughness");
 	cc_roughness_input->value = new FloatSocketValue(0.0f, 0.0f, 1.0f);
 	NodeSocket* ior_input = new NodeSocket(this, SocketInOut::Input, SocketType::Float, "IOR", "ior");
 	ior_input->value = new FloatSocketValue(1.45f, 0.0f, 100.0f);
@@ -96,7 +96,7 @@ CyclesShaderEditor::PrincipledBSDFNode::PrincipledBSDFNode(Point2 position)
 
 	type = CyclesNodeType::PrincipledBSDF;
 
-	content_width += 20.0f;
+	content_width += 34.0f;
 }
 
 CyclesShaderEditor::MixShaderNode::MixShaderNode(Point2 position)
