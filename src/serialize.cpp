@@ -94,6 +94,7 @@ static void initialize_maps()
 
 	type_to_code[CyclesNodeType::Bump] = std::string("bump");
 	type_to_code[CyclesNodeType::NormalMap] = std::string("normal_map");
+	type_to_code[CyclesNodeType::VectorTransform] = std::string("vector_transform");
 
 	type_to_code[CyclesNodeType::Blackbody] = std::string("blackbody");
 	type_to_code[CyclesNodeType::CombineHSV] = std::string("combine_hsv");
@@ -488,6 +489,10 @@ static CyclesShaderEditor::EditorNode* create_node_from_type(CyclesShaderEditor:
 		case CyclesNodeType::NormalMap:
 		{
 			return new NormalMapNode(pos);
+		}
+		case CyclesNodeType::VectorTransform:
+		{
+			return new VectorTransformNode(pos);
 		}
 		case CyclesNodeType::Blackbody:
 		{

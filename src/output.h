@@ -60,6 +60,7 @@ namespace CyclesShaderEditor {
 		// Vector
 		Bump,
 		NormalMap,
+		VectorTransform,
 		// Converter
 		Blackbody,
 		CombineHSV,

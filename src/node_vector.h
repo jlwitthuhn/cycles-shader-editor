@@ -14,4 +14,9 @@ namespace CyclesShaderEditor {
 		NormalMapNode(Point2 position);
 	};
 
+	class VectorTransformNode : public EditorNode {
+	public:
+		VectorTransformNode(Point2 position);
+	};
+
 }

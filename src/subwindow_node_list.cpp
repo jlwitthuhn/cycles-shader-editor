@@ -148,9 +148,11 @@ CyclesShaderEditor::NodeListSubwindow::NodeListSubwindow(Point2 screen_position)
 	// Vector buttons -- same ownership as input buttons
 	NodeCreationButton* bump_button = new GenericNodeButton<BumpNode>();
 	NodeCreationButton* normal_map_button = new GenericNodeButton<NormalMapNode>();
+	NodeCreationButton* vector_transform_button = new GenericNodeButton<VectorTransformNode>();
 
 	cat_vector_button->node_buttons.push_back(bump_button);
 	cat_vector_button->node_buttons.push_back(normal_map_button);
+	cat_vector_button->node_buttons.push_back(vector_transform_button);
 
 	// Converter buttons
 	NodeCreationButton* blackbody_button = new GenericNodeButton<BlackbodyNode>();

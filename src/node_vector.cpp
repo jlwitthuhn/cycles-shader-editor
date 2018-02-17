@@ -57,3 +57,49 @@ CyclesShaderEditor::NormalMapNode::NormalMapNode(Point2 position)
 
 	type = CyclesNodeType::NormalMap;
 }
+
+CyclesShaderEditor::VectorTransformNode::VectorTransformNode(Point2 position)
+{
+	world_pos = position;
+
+	title = "Vector Transform";
+
+	NodeSocket* vector_output = new NodeSocket(this, SocketInOut::Output, SocketType::Vector, "Vector", "vector");
+
+	sockets.push_back(vector_output);
+
+	NodeSocket* type_input = new NodeSocket(this, SocketInOut::Input, SocketType::StringEnum, "Type", "type");
+	StringEnumSocketValue* type_value = new StringEnumSocketValue();
+	type_value->enum_values.push_back(StringEnumPair("Vector", "vector"));
+	type_value->enum_values.push_back(StringEnumPair("Point", "point"));
+	type_value->enum_values.push_back(StringEnumPair("Normal", "normal"));
+	type_value->set_from_internal_name("vector");
+	type_input->value = type_value;
+
+	NodeSocket* convert_from_input = new NodeSocket(this, SocketInOut::Input, SocketType::StringEnum, "Convert From", "convert_from");
+	StringEnumSocketValue* convert_from_value = new StringEnumSocketValue();
+	convert_from_value->enum_values.push_back(StringEnumPair("Camera", "camera"));
+	convert_from_value->enum_values.push_back(StringEnumPair("Object", "object"));
+	convert_from_value->enum_values.push_back(StringEnumPair("World", "world"));
+	convert_from_value->set_from_internal_name("world");
+	convert_from_input->value = convert_from_value;
+
+	NodeSocket* convert_to_input = new NodeSocket(this, SocketInOut::Input, SocketType::StringEnum, "Convert To", "convert_to");
+	StringEnumSocketValue* convert_to_value = new StringEnumSocketValue();
+	convert_to_value->enum_values.push_back(StringEnumPair("Camera", "camera"));
+	convert_to_value->enum_values.push_back(StringEnumPair("Object", "object"));
+	convert_to_value->enum_values.push_back(StringEnumPair("World", "world"));
+	convert_to_value->set_from_internal_name("object");
+	convert_to_input->value = convert_to_value;
+
+	NodeSocket* vector_input = new NodeSocket(this, SocketInOut::Input, SocketType::Vector, "Vector", "vector");
+	vector_input->value = new Float3SocketValue(0.0f, -100000.0f, 100000.0f, 0.0f, -100000.0f, 100000.0f, 0.0f, -100000.0f, 100000.0f);
+	vector_input->selectable = true;
+
+	sockets.push_back(type_input);
+	sockets.push_back(convert_from_input);
+	sockets.push_back(convert_to_input);
+	sockets.push_back(vector_input);
+
+	type = CyclesNodeType::VectorTransform;
+}
