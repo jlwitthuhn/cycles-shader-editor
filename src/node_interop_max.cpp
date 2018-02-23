@@ -7,8 +7,10 @@ CyclesShaderEditor::MaxTexmapShaderNode::MaxTexmapShaderNode(Point2 position)
 	title = "3ds Max Texmap";
 
 	NodeSocket* color_output = new NodeSocket(this, SocketInOut::Output, SocketType::Color, "Color", "color");
-	
+	NodeSocket* alpha_output = new NodeSocket(this, SocketInOut::Output, SocketType::Color, "Alpha", "alpha");
+
 	sockets.push_back(color_output);
+	sockets.push_back(alpha_output);
 
 	NodeSocket* slot_input = new NodeSocket(this, SocketInOut::Input, SocketType::Int, "Slot", "slot");
 	slot_input->value = new IntSocketValue(1, 1, 16);
