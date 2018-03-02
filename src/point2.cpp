@@ -88,3 +88,8 @@ bool CyclesShaderEditor::Point2::operator==(const Point2& other) const
 {
 	return (pos_x == other.pos_x && pos_y == other.pos_y);
 }
+
+bool CyclesShaderEditor::Point2::operator!=(const Point2& other) const
+{
+	return !(operator==(other));
+}

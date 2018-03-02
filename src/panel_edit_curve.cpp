@@ -1,5 +1,7 @@
 #include "panel_edit_curve.h"
 
+#include <cassert>
+
 #include <GLFW/glfw3.h>
 #include <nanovg.h>
 
@@ -41,6 +43,22 @@ void CyclesShaderEditor::EditCurvePanel::reset_panel_state()
 {
 	edit_mode = EditCurveMode::MOVE;
 	selected_point_valid = false;
+}
+
+void CyclesShaderEditor::EditCurvePanel::pre_draw()
+{
+	assert(attached_curve != nullptr);
+
+	if (move_selected_point && mouse_local_pos != move_selected_point_begin_mouse_pos) {
+		mouse_has_moved = true;
+	}
+
+	if (selected_point_valid && move_selected_point && mouse_has_moved) {
+		Point2 normalized_pos = target_view.get_normalized_mouse_pos(mouse_local_pos);
+		normalized_pos.clamp_to(Point2(0.0f, 0.0f), Point2(1.0f, 1.0f));
+		Point2 xy_pos = Point2(normalized_pos.get_pos_x(), 1.0f - normalized_pos.get_pos_y());
+		selected_point_index = attached_curve->move_point(selected_point_index, xy_pos);
+	}
 }
 
 float CyclesShaderEditor::EditCurvePanel::draw(NVGcontext* draw_context)
@@ -362,12 +380,11 @@ void CyclesShaderEditor::EditCurvePanel::handle_mouse_button(int button, int act
 					selected_point_index = target_index;
 					selected_point_valid = true;
 				}
-				else {
-					// Move selected point
-					if (selected_point_valid) {
-						selected_point_index = attached_curve->move_point(selected_point_index, xy_pos);
-						request_undo_push = true;
-					}
+				// Move selected point
+				if (selected_point_valid) {
+					move_selected_point = true;
+					mouse_has_moved = false;
+					move_selected_point_begin_mouse_pos = mouse_local_pos;
 				}
 			}
 			else if (edit_mode == EditCurveMode::CREATE) {
@@ -404,7 +421,11 @@ void CyclesShaderEditor::EditCurvePanel::handle_mouse_button(int button, int act
 
 void CyclesShaderEditor::EditCurvePanel::mouse_button_release()
 {
-
+	if (move_selected_point && mouse_has_moved) {
+		request_undo_push = true;
+		mouse_has_moved = false;
+	}
+	move_selected_point = false;
 }
 
 bool CyclesShaderEditor::EditCurvePanel::should_push_undo_state()

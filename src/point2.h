@@ -28,6 +28,7 @@ namespace CyclesShaderEditor {
 		Point2 operator/(const float& other) const;
 
 		bool operator==(const Point2& other) const;
+		bool operator!=(const Point2& other) const;
 
 	private:
 		float pos_x;

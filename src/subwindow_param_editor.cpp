@@ -29,6 +29,7 @@ void CyclesShaderEditor::ParamEditorSubwindow::pre_draw()
 		CurveSocketValue* curve = dynamic_cast<CurveSocketValue*>(selected_param->value);
 		if (curve != nullptr) {
 			panel_curve.set_attached_curve_value(curve);
+			panel_curve.pre_draw();
 			return;
 		}
 	}

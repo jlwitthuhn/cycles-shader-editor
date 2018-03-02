@@ -17,6 +17,7 @@ namespace CyclesShaderEditor {
 
 		void reset_panel_state();
 
+		void pre_draw();
 		float draw(NVGcontext* draw_context);
 		void set_mouse_local_position(Point2 local_pos);
 		bool is_mouse_over();
@@ -41,6 +42,10 @@ namespace CyclesShaderEditor {
 
 		size_t selected_point_index = 0;
 		bool selected_point_valid = false;
+
+		bool move_selected_point = false;
+		bool mouse_has_moved = false;
+		Point2 move_selected_point_begin_mouse_pos;
 
 		float panel_width = 1.0f;
 		float panel_height = 1.0f;
