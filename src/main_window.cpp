@@ -39,9 +39,9 @@ CyclesShaderEditor::EditorMainWindow::~EditorMainWindow()
 	release_resources();
 }
 
-void CyclesShaderEditor::EditorMainWindow::set_file_search_path(PathString path)
+void CyclesShaderEditor::EditorMainWindow::set_font_search_path(PathString path)
 {
-	file_search_path = path;
+	font_search_path = path;
 }
 
 bool CyclesShaderEditor::EditorMainWindow::create_window()
@@ -77,10 +77,10 @@ bool CyclesShaderEditor::EditorMainWindow::create_window()
 	glClearColor(0.35f, 0.35f, 0.35f, 0.0f);
 
 #ifdef _WIN32
-	std::wstring sans_font_path = file_search_path + L"cycles_fonts\\SourceSansPro-Regular.ttf";
+	std::wstring sans_font_path = font_search_path + L"\\SourceSansPro-Regular.ttf";
 	nvgCreateFontW(nvg_context, "sans", sans_font_path.c_str());
 #else
-	std::string sans_font_path = file_search_path + "cycles_fonts/SourceSansPro-Regular.ttf";
+	std::string sans_font_path = font_search_path + "/SourceSansPro-Regular.ttf";
 	nvgCreateFont(nvg_context, "sans", sans_font_path.c_str());
 #endif
 

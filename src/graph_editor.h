@@ -13,7 +13,7 @@ namespace CyclesShaderEditor {
 		GraphEditor();
 		~GraphEditor();
 
-		void set_file_search_path(PathString font_path);
+		void set_font_search_path(PathString font_path);
 
 		bool create_window();
 		bool run_window_loop_iteration();

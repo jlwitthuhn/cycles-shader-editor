@@ -30,7 +30,7 @@ namespace CyclesShaderEditor {
 		EditorMainWindow(GraphEditor* public_window);
 		~EditorMainWindow();
 
-		void set_file_search_path(PathString font_path);
+		void set_font_search_path(PathString font_path);
 
 		bool create_window();
 		bool run_window_loop_iteration();
@@ -99,7 +99,7 @@ namespace CyclesShaderEditor {
 
 		double target_frame_rate = 60.0;
 
-		PathString file_search_path;
+		PathString font_search_path;
 	};
 
 }

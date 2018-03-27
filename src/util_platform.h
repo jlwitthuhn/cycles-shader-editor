@@ -9,6 +9,7 @@ namespace CyclesShaderEditor {
 #else
 	typedef std::string PathString;
 #endif
+	PathString get_pathstring(const std::string& input);
 
 	void thread_usleep(int us);
 }

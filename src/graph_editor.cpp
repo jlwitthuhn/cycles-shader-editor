@@ -5,6 +5,8 @@
 CyclesShaderEditor::GraphEditor::GraphEditor()
 {
 	main_window = new EditorMainWindow(this);
+	PathString default_font_path = get_pathstring("font");
+	set_font_search_path(default_font_path);
 }
 
 CyclesShaderEditor::GraphEditor::~GraphEditor()
@@ -12,9 +14,9 @@ CyclesShaderEditor::GraphEditor::~GraphEditor()
 	delete main_window;
 }
 
-void CyclesShaderEditor::GraphEditor::set_file_search_path(PathString font_path)
+void CyclesShaderEditor::GraphEditor::set_font_search_path(PathString font_path)
 {
-	main_window->set_file_search_path(font_path);
+	main_window->set_font_search_path(font_path);
 }
 
 bool CyclesShaderEditor::GraphEditor::create_window()
