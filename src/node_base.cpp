@@ -12,13 +12,13 @@
 #include "gui_sizes.h"
 #include "sockets.h"
 
-CyclesShaderEditor::NodeConnection::NodeConnection(NodeSocket* begin_socket, NodeSocket* end_socket)
+CyclesShaderEditor::NodeConnection::NodeConnection(NodeSocket* const begin_socket, NodeSocket* const end_socket)
 {
 	this->begin_socket = begin_socket;
 	this->end_socket = end_socket;
 }
 
-bool CyclesShaderEditor::NodeConnection::includes_node(EditorNode* node)
+bool CyclesShaderEditor::NodeConnection::includes_node(EditorNode* const  node)
 {
 	if (begin_socket->parent == node || end_socket->parent == node) {
 		return true;
@@ -30,7 +30,7 @@ bool CyclesShaderEditor::NodeConnection::includes_node(EditorNode* node)
 
 CyclesShaderEditor::EditorNode::~EditorNode()
 {
-	for (NodeSocket* socket : sockets) {
+	for (NodeSocket* const socket : sockets) {
 		delete socket;
 	}
 }
@@ -40,7 +40,7 @@ std::string CyclesShaderEditor::EditorNode::get_title()
 	return title;
 }
 
-void CyclesShaderEditor::EditorNode::draw_node(NVGcontext* draw_context)
+void CyclesShaderEditor::EditorNode::draw_node(NVGcontext* const draw_context)
 {
 	float draw_pos_x = 0.0f;
 	float draw_pos_y = 0.0f;
@@ -92,14 +92,14 @@ void CyclesShaderEditor::EditorNode::draw_node(NVGcontext* draw_context)
 	// Sockets
 	label_targets.clear();
 	socket_targets.clear();
-	for (NodeSocket* this_socket: sockets) {
+	for (NodeSocket* const this_socket: sockets) {
 		// Generate the text that will be used on this socket's label
 		std::string label_text;
 		std::string text_before_crossout; // For measuring text size later
 		if (this_socket->value != nullptr) {
 			text_before_crossout = this_socket->display_name + ":";
 			if (this_socket->socket_type == SocketType::Float) {
-				FloatSocketValue* float_val = dynamic_cast<FloatSocketValue*>(this_socket->value);
+				FloatSocketValue* const float_val = dynamic_cast<FloatSocketValue*>(this_socket->value);
 				std::stringstream label_string_stream;
 				label_string_stream << this_socket->display_name << ": "  << std::fixed << std::setprecision(3) << float_val->get_value();
 				label_text = label_string_stream.str();
@@ -121,14 +121,14 @@ void CyclesShaderEditor::EditorNode::draw_node(NVGcontext* draw_context)
 				label_text = this_socket->display_name + ": [Enum]";
 			}
 			else if (this_socket->socket_type == SocketType::Int) {
-				IntSocketValue* int_val = dynamic_cast<IntSocketValue*>(this_socket->value);
+				IntSocketValue* const int_val = dynamic_cast<IntSocketValue*>(this_socket->value);
 				std::stringstream label_string_stream;
 				label_string_stream << this_socket->display_name << ": " << std::fixed << std::setprecision(3) << int_val->get_value();
 				label_text = label_string_stream.str();
 			}
 
 			else if (this_socket->socket_type == SocketType::Boolean) {
-				BoolSocketValue* bool_val = dynamic_cast<BoolSocketValue*>(this_socket->value);
+				BoolSocketValue* const bool_val = dynamic_cast<BoolSocketValue*>(this_socket->value);
 				if (bool_val->value) {
 					label_text = this_socket->display_name + ": True";
 				}
@@ -169,13 +169,13 @@ void CyclesShaderEditor::EditorNode::draw_node(NVGcontext* draw_context)
 
 			float bounds[4];
 			nvgTextBounds(draw_context, 0.0f, 0.0f, label_text.c_str(), nullptr, bounds);
-			float label_width = bounds[2] - bounds[0];
+			const float label_width = bounds[2] - bounds[0];
 
 			const float text_pos_x = draw_pos_x + content_width / 2 - SWATCH_WIDTH / 2;
 			const float text_pos_y = next_draw_y + UI_NODE_SOCKET_ROW_HEIGHT / 2;
 			nvgText(draw_context, text_pos_x, text_pos_y, label_text.c_str(), nullptr);
 
-			FloatRGBColor swatch_color = dynamic_cast<ColorSocketValue*>(this_socket->value)->get_value();
+			const FloatRGBColor swatch_color = dynamic_cast<ColorSocketValue*>(this_socket->value)->get_value();
 
 			const float swatch_pos_x = text_pos_x + label_width / 2 + 1.0f;
 			const float swatch_pos_y = next_draw_y + (UI_NODE_SOCKET_ROW_HEIGHT - SWATCH_HEIGHT) / 2;
@@ -224,9 +224,9 @@ void CyclesShaderEditor::EditorNode::draw_node(NVGcontext* draw_context)
 
 		if (this_socket->selectable) {
 			// Add label click target
-			CyclesShaderEditor::Point2 click_target_begin(0, next_draw_y - draw_pos_y);
-			CyclesShaderEditor::Point2 click_target_end(content_width, next_draw_y - draw_pos_y + UI_NODE_SOCKET_ROW_HEIGHT);
-			SocketClickTarget label_target(click_target_begin, click_target_end, this_socket);
+			const CyclesShaderEditor::Point2 click_target_begin(0, next_draw_y - draw_pos_y);
+			const CyclesShaderEditor::Point2 click_target_end(content_width, next_draw_y - draw_pos_y + UI_NODE_SOCKET_ROW_HEIGHT);
+			const SocketClickTarget label_target(click_target_begin, click_target_end, this_socket);
 			label_targets.push_back(label_target);
 		}
 
@@ -280,7 +280,7 @@ void CyclesShaderEditor::EditorNode::draw_node(NVGcontext* draw_context)
 	}
 }
 
-void CyclesShaderEditor::EditorNode::set_mouse_position(CyclesShaderEditor::Point2 node_local_position)
+void CyclesShaderEditor::EditorNode::set_mouse_position(const CyclesShaderEditor::Point2 node_local_position)
 {
 	if (node_moving) {
 		const CyclesShaderEditor::Point2 mouse_movement = (node_local_position - mouse_local_begin_move_pos);
@@ -359,7 +359,7 @@ CyclesShaderEditor::NodeSocket* CyclesShaderEditor::EditorNode::get_socket_label
 	return nullptr;
 }
 
-CyclesShaderEditor::NodeSocket* CyclesShaderEditor::EditorNode::get_socket_by_display_name(SocketInOut in_out, std::string socket_name)
+CyclesShaderEditor::NodeSocket* CyclesShaderEditor::EditorNode::get_socket_by_display_name(const SocketInOut in_out, const std::string& socket_name)
 {
 	for (NodeSocket* socket : sockets) {
 		if (socket->display_name == socket_name && socket->socket_in_out == in_out) {
@@ -370,7 +370,7 @@ CyclesShaderEditor::NodeSocket* CyclesShaderEditor::EditorNode::get_socket_by_di
 	return nullptr;
 }
 
-CyclesShaderEditor::NodeSocket* CyclesShaderEditor::EditorNode::get_socket_by_internal_name(SocketInOut in_out, std::string socket_name)
+CyclesShaderEditor::NodeSocket* CyclesShaderEditor::EditorNode::get_socket_by_internal_name(const SocketInOut in_out, const std::string& socket_name)
 {
 	for (NodeSocket* socket : sockets) {
 		if (socket->internal_name == socket_name && socket->socket_in_out == in_out) {
@@ -408,11 +408,11 @@ void CyclesShaderEditor::EditorNode::update_output_node(OutputNode& output)
 		}
 
 		if (this_socket->socket_type == SocketType::Float && this_socket->value != nullptr) {
-			FloatSocketValue* float_val = dynamic_cast<FloatSocketValue*>(this_socket->value);
+			FloatSocketValue* const float_val = dynamic_cast<FloatSocketValue*>(this_socket->value);
 			output.float_values[this_socket->internal_name] = float_val->get_value();
 		}
 		else if (this_socket->socket_type == SocketType::Color) {
-			ColorSocketValue* color_val = dynamic_cast<ColorSocketValue*>(this_socket->value);
+			ColorSocketValue* const color_val = dynamic_cast<ColorSocketValue*>(this_socket->value);
 			const float x = color_val->red_socket_val.get_value();
 			const float y = color_val->green_socket_val.get_value();
 			const float z = color_val->blue_socket_val.get_value();
@@ -420,29 +420,29 @@ void CyclesShaderEditor::EditorNode::update_output_node(OutputNode& output)
 			output.float3_values[this_socket->internal_name] = float3_val;
 		}
 		else if (this_socket->socket_type == SocketType::Vector && this_socket->value != nullptr) {
-			Float3SocketValue* float3_socket_val = dynamic_cast<Float3SocketValue*>(this_socket->value);
+			Float3SocketValue* const float3_socket_val = dynamic_cast<Float3SocketValue*>(this_socket->value);
 			Float3Holder temp_value = float3_socket_val->get_value();
 			Float3 float3_val(temp_value.x, temp_value.y, temp_value.z);
 			output.float3_values[this_socket->internal_name] = float3_val;
 		}
 		else if (this_socket->socket_type == SocketType::StringEnum) {
-			StringEnumSocketValue* string_val = dynamic_cast<StringEnumSocketValue*>(this_socket->value);
+			StringEnumSocketValue* const string_val = dynamic_cast<StringEnumSocketValue*>(this_socket->value);
 			output.string_values[this_socket->internal_name] = string_val->value.internal_value;
 		}
 		else if (this_socket->socket_type == SocketType::Int) {
-			IntSocketValue* int_val = dynamic_cast<IntSocketValue*>(this_socket->value);
+			IntSocketValue* const int_val = dynamic_cast<IntSocketValue*>(this_socket->value);
 			if (int_val != nullptr) {
 				output.int_values[this_socket->internal_name] = int_val->get_value();
 			}
 		}
 		else if (this_socket->socket_type == SocketType::Boolean) {
-			BoolSocketValue* bool_val = dynamic_cast<BoolSocketValue*>(this_socket->value);
+			BoolSocketValue* const bool_val = dynamic_cast<BoolSocketValue*>(this_socket->value);
 			if (bool_val != nullptr) {
 				output.bool_values[this_socket->internal_name] = bool_val->value;
 			}
 		}
 		else if (this_socket->socket_type == SocketType::Curve) {
-			CurveSocketValue* curve_val = dynamic_cast<CurveSocketValue*>(this_socket->value);
+			CurveSocketValue* const curve_val = dynamic_cast<CurveSocketValue*>(this_socket->value);
 			if (curve_val != nullptr) {
 				OutputCurve out_curve;
 				for (size_t i = 0; i < curve_val->curve_points.size(); i++) {
@@ -450,7 +450,7 @@ void CyclesShaderEditor::EditorNode::update_output_node(OutputNode& output)
 					out_curve.control_points.push_back(Float2(this_point.get_pos_x(), this_point.get_pos_y()));
 				}
 				out_curve.enum_curve_interp = static_cast<int>(curve_val->curve_interp);
-				CurveEvaluator curve(curve_val);
+				const CurveEvaluator curve(curve_val);
 				for (size_t i = 0; i < CURVE_TABLE_SIZE; i++) {
 					const float x = static_cast<float>(i) / (CURVE_TABLE_SIZE - 1.0f);
 					out_curve.samples.push_back(curve.eval(x));

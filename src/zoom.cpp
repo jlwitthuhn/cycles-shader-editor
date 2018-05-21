@@ -4,6 +4,7 @@
 
 CyclesShaderEditor::ZoomManager::ZoomManager()
 {
+	zooms.push_back(0.20f);
 	zooms.push_back(0.25f);
 	zooms.push_back(0.325f);
 	zooms.push_back(0.40f);
@@ -20,7 +21,9 @@ CyclesShaderEditor::ZoomManager::ZoomManager()
 	zooms.push_back(3.00f);
 	zooms.push_back(3.50f);
 	zooms.push_back(4.00f);
+	zooms.push_back(5.00f);
 
+	zoom_level = -1;
 	for (size_t i = 0; i < zooms.size(); i++) {
 		if (zooms[i] == 1.0f) {
 			zoom_level = static_cast<int>(i);

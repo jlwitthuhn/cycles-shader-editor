@@ -43,8 +43,8 @@ namespace CyclesShaderEditor {
 
 		virtual NodeSocket* get_socket_under_mouse();
 		virtual NodeSocket* get_socket_label_under_mouse();
-		virtual NodeSocket* get_socket_by_display_name(SocketInOut in_out, std::string socket_name);
-		virtual NodeSocket* get_socket_by_internal_name(SocketInOut in_out, std::string socket_name);
+		virtual NodeSocket* get_socket_by_display_name(SocketInOut in_out, const std::string& socket_name);
+		virtual NodeSocket* get_socket_by_internal_name(SocketInOut in_out, const std::string& socket_name);
 
 		virtual Point2 get_dimensions();
 
@@ -66,7 +66,7 @@ namespace CyclesShaderEditor {
 		Point2 mouse_local_begin_move_pos;
 
 		bool node_moving = false;
-		bool has_moved;
+		bool has_moved = false;
 
 		float content_width = 150.0f;
 		float content_height = 0.0f;

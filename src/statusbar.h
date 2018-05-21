@@ -15,8 +15,8 @@ namespace CyclesShaderEditor {
 
 		void draw(NVGcontext* draw_context, float width);
 
-		void set_status_text(std::string text);
-		void set_zoom_text(std::string text);
+		void set_status_text(const std::string& text);
+		void set_zoom_text(const std::string& text);
 
 	private:
 		std::string status_text;

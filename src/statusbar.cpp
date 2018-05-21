@@ -8,7 +8,7 @@ CyclesShaderEditor::NodeEditorStatusBar::NodeEditorStatusBar()
 	status_text = "Node graph editor loaded";
 }
 
-void CyclesShaderEditor::NodeEditorStatusBar::draw(NVGcontext* draw_context, float width)
+void CyclesShaderEditor::NodeEditorStatusBar::draw(NVGcontext* const draw_context, const float width)
 {
 	// Panel
 	nvgBeginPath(draw_context);
@@ -33,12 +33,12 @@ void CyclesShaderEditor::NodeEditorStatusBar::draw(NVGcontext* draw_context, flo
 	nvgText(draw_context, width - 4.0f, get_status_bar_height() / 2.0f, zoom_text.c_str(), NULL);
 }
 
-void CyclesShaderEditor::NodeEditorStatusBar::set_status_text(std::string text)
+void CyclesShaderEditor::NodeEditorStatusBar::set_status_text(const std::string& text)
 {
 	status_text = text;
 }
 
-void CyclesShaderEditor::NodeEditorStatusBar::set_zoom_text(std::string text)
+void CyclesShaderEditor::NodeEditorStatusBar::set_zoom_text(const std::string& text)
 {
 	zoom_text = text;
 }

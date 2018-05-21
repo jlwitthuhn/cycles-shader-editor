@@ -3,7 +3,7 @@
 #include "sockets.h"
 #include "util_hermite_spline.h"
 
-CyclesShaderEditor::CurveEvaluator::CurveEvaluator(CurveSocketValue* curve_socket_val, int segments)
+CyclesShaderEditor::CurveEvaluator::CurveEvaluator(CurveSocketValue* const curve_socket_val, const int segments)
 {
 	const std::vector<Point2>& curve_control_points = curve_socket_val->curve_points;
 
@@ -83,7 +83,7 @@ CyclesShaderEditor::CurveEvaluator::CurveEvaluator(CurveSocketValue* curve_socke
 	}
 }
 
-CyclesShaderEditor::CurveEvaluator::CurveEvaluator(Point2 a, Point2 b, Point2 c, Point2 d, int segments)
+CyclesShaderEditor::CurveEvaluator::CurveEvaluator(const Point2 a, const Point2 b, const Point2 c, const Point2 d, const int segments)
 {
 	const CubicHermiteSplineInterpolator x_solver(a.get_pos_x(), b.get_pos_x(), c.get_pos_x(), d.get_pos_x());
 	const CubicHermiteSplineInterpolator y_solver(a.get_pos_y(), b.get_pos_y(), c.get_pos_y(), d.get_pos_y());
@@ -98,7 +98,7 @@ CyclesShaderEditor::CurveEvaluator::CurveEvaluator(Point2 a, Point2 b, Point2 c,
 	}
 }
 
-int CyclesShaderEditor::CurveEvaluator::compare_to_range(float in_value) const
+int CyclesShaderEditor::CurveEvaluator::compare_to_range(const float in_value) const
 {
 	if (sampled_points.size() < 1) {
 		return 0;
@@ -117,7 +117,7 @@ int CyclesShaderEditor::CurveEvaluator::compare_to_range(float in_value) const
 	return 0;
 }
 
-float CyclesShaderEditor::CurveEvaluator::eval(float in_value) const
+float CyclesShaderEditor::CurveEvaluator::eval(const float in_value) const
 {
 	if (sampled_points.size() < 2) {
 		return in_value;

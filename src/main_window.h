@@ -31,7 +31,7 @@ namespace CyclesShaderEditor {
 		EditorMainWindow(GraphEditor* public_window);
 		~EditorMainWindow();
 
-		void set_font_search_path(PathString font_path);
+		void set_font_search_path(const PathString& font_path);
 
 		bool create_window();
 		bool run_window_loop_iteration();
@@ -43,7 +43,7 @@ namespace CyclesShaderEditor {
 		void handle_character(unsigned int codepoint);
 		void handle_scroll(double xoffset, double yoffset);
 
-		void load_serialized_graph(std::string graph);
+		void load_serialized_graph(const std::string& graph);
 
 	private:
 		void pre_draw();
@@ -70,15 +70,14 @@ namespace CyclesShaderEditor {
 
 		void release_resources();
 
+		std::list<EditorNode*> nodes;
+		std::list<NodeConnection> connections;
+
 		Point2 mouse_screen_pos;
 		int window_width, window_height;
 
 		std::string serialized_state;
 		UndoStack undo_stack;
-
-		// View state to be moved into view class
-		Point2 view_center;
-		Point2 screen_to_world;
 
 		std::list<NodeEditorSubwindow*> subwindows;
 		NodeListSubwindow* node_list_window = nullptr;
@@ -86,10 +85,6 @@ namespace CyclesShaderEditor {
 
 		NodeEditorToolbar* toolbar = nullptr;
 		NodeEditorStatusBar* status_bar = nullptr;
-
-		// Graph state
-		std::list<EditorNode*> nodes;
-		std::list<NodeConnection> connections;
 
 		EditGraphView* view = nullptr;
 

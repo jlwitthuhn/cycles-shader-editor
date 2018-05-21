@@ -5,7 +5,7 @@
 CyclesShaderEditor::GraphEditor::GraphEditor()
 {
 	main_window = new EditorMainWindow(this);
-	PathString default_font_path = get_pathstring("font");
+	const PathString default_font_path = get_pathstring("font");
 	set_font_search_path(default_font_path);
 }
 
@@ -14,7 +14,7 @@ CyclesShaderEditor::GraphEditor::~GraphEditor()
 	delete main_window;
 }
 
-void CyclesShaderEditor::GraphEditor::set_font_search_path(PathString font_path)
+void CyclesShaderEditor::GraphEditor::set_font_search_path(const PathString& font_path)
 {
 	main_window->set_font_search_path(font_path);
 }
@@ -29,12 +29,12 @@ bool CyclesShaderEditor::GraphEditor::run_window_loop_iteration()
 	return main_window->run_window_loop_iteration();
 }
 
-void CyclesShaderEditor::GraphEditor::set_target_frame_rate(double fps)
+void CyclesShaderEditor::GraphEditor::set_target_frame_rate(const double fps)
 {
 	main_window->set_target_frame_rate(fps);
 }
 
-void CyclesShaderEditor::GraphEditor::load_serialized_graph(std::string graph)
+void CyclesShaderEditor::GraphEditor::load_serialized_graph(const std::string& graph)
 {
 	main_window->load_serialized_graph(graph);
 }

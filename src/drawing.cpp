@@ -4,7 +4,16 @@
 
 #include "gui_sizes.h"
 
-void CyclesShaderEditor::Drawing::draw_button(NVGcontext* draw_context, float x_pos, float y_pos, float width, float height, std::string label, bool enabled, bool pressed)
+void CyclesShaderEditor::Drawing::draw_button(
+	NVGcontext* const draw_context,
+	const float x_pos,
+	const float y_pos,
+	const float width,
+	const float height,
+	const std::string& label,
+	const bool enabled,
+	const bool pressed
+	)
 {
 	const int gradient_alpha = enabled ? 31 : 15;
 	const int button_alpha = enabled ? 127 : 63;
@@ -46,7 +55,7 @@ void CyclesShaderEditor::Drawing::draw_button(NVGcontext* draw_context, float x_
 	nvgText(draw_context, x_pos + width / 2, y_pos + height / 2, label.c_str(), NULL);
 }
 
-void CyclesShaderEditor::Drawing::draw_color_pick_cursor(NVGcontext* draw_context, float x_pos, float y_pos)
+void CyclesShaderEditor::Drawing::draw_color_pick_cursor(NVGcontext* const draw_context, const float x_pos, const float y_pos)
 {
 	const float CURSOR_LENGTH_SHORT = 3.0f;
 	const float CURSOR_LENGTH_LONG = 8.0f;

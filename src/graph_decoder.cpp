@@ -2,7 +2,7 @@
 
 #include "serialize.h"
 
-CyclesShaderEditor::CyclesNodeGraph::CyclesNodeGraph(std::string encoded_graph)
+CyclesShaderEditor::CyclesNodeGraph::CyclesNodeGraph(const std::string& encoded_graph)
 {
 	std::list<EditorNode*> tmp_nodes;
 	std::list<NodeConnection> tmp_connections;

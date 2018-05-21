@@ -33,7 +33,7 @@ namespace CyclesShaderEditor {
 		static float get_button_width() { return UI_SUBWIN_NODE_LIST_CAT_BUTTON_WIDTH; }
 		static float get_button_height() { return UI_SUBWIN_NODE_LIST_CAT_BUTTON_HEIGHT; }
 
-		NodeCategoryButton(std::string label);
+		NodeCategoryButton(const std::string& label);
 		~NodeCategoryButton();
 
 		void draw(Point2 draw_position, NVGcontext* draw_context);

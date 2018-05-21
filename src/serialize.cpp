@@ -118,7 +118,7 @@ static void initialize_maps()
 	assert(code_to_type.size() == type_to_code.size());
 }
 
-static std::list<std::string> tokenize_string(std::string input, char delim)
+static std::list<std::string> tokenize_string(const std::string& input, const char delim)
 {
 	std::list<std::string> output;
 
@@ -657,7 +657,7 @@ static CyclesShaderEditor::EditorNode* deserialize_node(std::list<std::string>& 
 	return result;
 }
 
-void CyclesShaderEditor::deserialize_graph(std::string graph, std::list<EditorNode*>& nodes, std::list<NodeConnection>& connections)
+void CyclesShaderEditor::deserialize_graph(const std::string& graph, std::list<EditorNode*>& nodes, std::list<NodeConnection>& connections)
 {
 	std::map<std::string, EditorNode*> nodes_by_name;
 

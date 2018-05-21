@@ -11,13 +11,13 @@
 
 const float INPUT_CORNER_RADIUS = 3.0f;
 
-CyclesShaderEditor::BaseInputBox::BaseInputBox(float width, float height)
+CyclesShaderEditor::BaseInputBox::BaseInputBox(const float width, const float height)
 {
 	this->width = width;
 	this->height = height;
 }
 
-void CyclesShaderEditor::BaseInputBox::draw(NVGcontext* draw_context, Point2 parent_mouse_pos)
+void CyclesShaderEditor::BaseInputBox::draw(NVGcontext* const draw_context, const Point2 parent_mouse_pos)
 {
 	this->parent_mouse_pos = parent_mouse_pos;
 
@@ -59,7 +59,7 @@ void CyclesShaderEditor::BaseInputBox::draw(NVGcontext* draw_context, Point2 par
 	}
 }
 
-void CyclesShaderEditor::BaseInputBox::set_position(Point2 parent_position)
+void CyclesShaderEditor::BaseInputBox::set_position(const Point2 parent_position)
 {
 	this->position = parent_position;
 }
@@ -76,11 +76,11 @@ bool CyclesShaderEditor::BaseInputBox::is_mouse_over()
 		parent_mouse_pos.get_pos_y() < position.get_pos_y() + height);
 }
 
-void CyclesShaderEditor::BaseInputBox::handle_character(unsigned int codepoint)
+void CyclesShaderEditor::BaseInputBox::handle_character(const unsigned int codepoint)
 {
-	char as_char = static_cast<char>(codepoint);
-	int is_num = isdigit(as_char);
-	int is_punctuation = (as_char == '-' || as_char == '.');
+	const char as_char = static_cast<char>(codepoint);
+	const int is_num = isdigit(as_char);
+	const int is_punctuation = (as_char == '-' || as_char == '.');
 
 	if (is_num || is_punctuation) {
 		input_stream << static_cast<char>(codepoint);
@@ -106,7 +106,7 @@ void CyclesShaderEditor::BaseInputBox::begin_edit()
 
 void CyclesShaderEditor::BaseInputBox::complete_edit()
 {
-	std::string user_input = input_stream.str();
+	const std::string user_input = input_stream.str();
 	selected = false;
 	if (user_input == "") {
 		return;
@@ -126,12 +126,12 @@ bool CyclesShaderEditor::BaseInputBox::should_capture_keys()
 	return selected;
 }
 
-CyclesShaderEditor::IntInputBox::IntInputBox(float width, float height) : BaseInputBox(width, height)
+CyclesShaderEditor::IntInputBox::IntInputBox(const float width, const float height) : BaseInputBox(width, height)
 {
 
 }
 
-void CyclesShaderEditor::IntInputBox::set_int_value(IntSocketValue* socket_value)
+void CyclesShaderEditor::IntInputBox::set_int_value(IntSocketValue* const socket_value)
 {
 	this->socket_value = socket_value;
 }
@@ -153,7 +153,7 @@ void CyclesShaderEditor::IntInputBox::set_value_from_input_stream()
 		return;
 	}
 
-	std::string user_input = input_stream.str();
+	const std::string user_input = input_stream.str();
 
 	try {
 		int val = std::stoi(user_input);
@@ -207,7 +207,7 @@ void CyclesShaderEditor::FloatInputBox::set_value_from_input_stream()
 		return;
 	}
 
-	std::string user_input = input_stream.str();
+	const std::string user_input = input_stream.str();
 
 	try {
 		float val = std::stof(user_input);

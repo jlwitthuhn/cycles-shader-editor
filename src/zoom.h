@@ -14,7 +14,7 @@ namespace CyclesShaderEditor {
 		void zoom_out();
 
 	private:
-		int zoom_level = -1;
+		int zoom_level;
 		std::vector<float> zooms;
 	};
 

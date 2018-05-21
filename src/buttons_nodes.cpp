@@ -9,7 +9,7 @@
 #include "node_textures.h"
 #include "node_vector.h"
 
-float CyclesShaderEditor::NodeCreationButton::draw(NVGcontext* draw_context, Point2 draw_origin, Point2 parent_local_mouse_pos, float parent_width)
+float CyclesShaderEditor::NodeCreationButton::draw(NVGcontext* const draw_context, const Point2 draw_origin, const Point2 parent_local_mouse_pos, const float parent_width)
 {
 	// Coordinates to draw the actual button at
 	// This is the input draw_origin adjusted to account for padding

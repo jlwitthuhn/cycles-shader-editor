@@ -37,13 +37,13 @@ namespace CyclesShaderEditor {
 	class GenericNodeButton : public NodeCreationButton {
 	public:
 		GenericNodeButton() {
-			Point2 fake_position(0.0f, 0.0f);
-			T* tmp_node = new T(fake_position);
+			const Point2 irrelevant_position(0.0f, 0.0f);
+			T* const tmp_node = new T(irrelevant_position);
 			this->label = tmp_node->get_title();
 			delete tmp_node;
 		}
 
-		virtual EditorNode* create_node(Point2 world_position) override {
+		virtual EditorNode* create_node(const Point2 world_position) override {
 			return new T(world_position);
 		}
 	};

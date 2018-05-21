@@ -8,7 +8,7 @@
 #include "drawing.h"
 #include "gui_sizes.h"
 
-CyclesShaderEditor::NodeCategoryButtonPlacer::NodeCategoryButtonPlacer(Point2 draw_origin, float parent_width, float vertical_padding)
+CyclesShaderEditor::NodeCategoryButtonPlacer::NodeCategoryButtonPlacer(const Point2 draw_origin, const float parent_width, const float vertical_padding)
 {
 	this->draw_origin = draw_origin;
 	this->parent_width = parent_width;
@@ -35,40 +35,40 @@ CyclesShaderEditor::Point2 CyclesShaderEditor::NodeCategoryButtonPlacer::next_bu
 		x = parent_width - hpadding - button_width;
 	}
 
-	int rows_complete = positions_made / 2;
-	float y = rows_complete * (2 * vertical_padding + button_height) + vertical_padding;
+	const int rows_complete = positions_made / 2;
+	const float y = rows_complete * (2 * vertical_padding + button_height) + vertical_padding;
 
 	++positions_made;
 
-	Point2 result(x, y);
+	const Point2 result(x, y);
 	return draw_origin + result;
 }
 
 float CyclesShaderEditor::NodeCategoryButtonPlacer::get_draw_height()
 {
-	int row_count = (positions_made + 1) / 2;
+	const int row_count = (positions_made + 1) / 2;
 
 	return row_count * (2 * vertical_padding + button_height);
 }
 
-CyclesShaderEditor::NodeCategoryButton::NodeCategoryButton(std::string label)
+CyclesShaderEditor::NodeCategoryButton::NodeCategoryButton(const std::string& label)
 {
 	this->label = label;
 }
 
 CyclesShaderEditor::NodeCategoryButton::~NodeCategoryButton()
 {
-	for (NodeCreationButton* node_button : node_buttons) {
+	for (NodeCreationButton* const node_button : node_buttons) {
 		delete node_button;
 	}
 }
 
-void CyclesShaderEditor::NodeCategoryButton::draw(Point2 draw_position, NVGcontext* draw_context)
+void CyclesShaderEditor::NodeCategoryButton::draw(const Point2 draw_position, NVGcontext* const draw_context)
 {
 	Drawing::draw_button(draw_context, draw_position.get_pos_x(), draw_position.get_pos_y(), get_button_width(), get_button_height(), label, true, pressed);
 }
 
-void CyclesShaderEditor::NodeCategoryButton::update_mouse_position(Point2 local_position)
+void CyclesShaderEditor::NodeCategoryButton::update_mouse_position(const Point2 local_position)
 {
 	mouse_local_pos = local_position;
 }
@@ -79,5 +79,6 @@ bool CyclesShaderEditor::NodeCategoryButton::is_mouse_over_button()
 		mouse_local_pos.get_pos_x() > 0.0f &&
 		mouse_local_pos.get_pos_x() < get_button_width() &&
 		mouse_local_pos.get_pos_y() > 0.0f &&
-		mouse_local_pos.get_pos_y() < get_button_height());
+		mouse_local_pos.get_pos_y() < get_button_height()
+		);
 }

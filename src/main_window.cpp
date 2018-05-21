@@ -40,7 +40,7 @@ CyclesShaderEditor::EditorMainWindow::~EditorMainWindow()
 	release_resources();
 }
 
-void CyclesShaderEditor::EditorMainWindow::set_font_search_path(PathString path)
+void CyclesShaderEditor::EditorMainWindow::set_font_search_path(const PathString& path)
 {
 	font_search_path = path;
 }
@@ -77,13 +77,8 @@ bool CyclesShaderEditor::EditorMainWindow::create_window()
 
 	glClearColor(0.35f, 0.35f, 0.35f, 0.0f);
 
-#ifdef _WIN32
-	std::wstring sans_font_path = font_search_path + L"\\SourceSansPro-Regular.ttf";
-	nvgCreateFontW(nvg_context, "sans", sans_font_path.c_str());
-#else
-	std::string sans_font_path = font_search_path + "/SourceSansPro-Regular.ttf";
-	nvgCreateFont(nvg_context, "sans", sans_font_path.c_str());
-#endif
+	const PathString sans_font_path = get_font_path(font_search_path, "SourceSansPro-Regular.ttf");
+	nvg_create_font(sans_font_path, "sans", nvg_context);
 
 	(*get_callback_window_map())[window] = this;
 	
@@ -100,7 +95,7 @@ bool CyclesShaderEditor::EditorMainWindow::create_window()
 	subwindows.push_back(node_list_window);
 	subwindows.push_back(param_editor_window);
 
-	EditorNode* output_node = new MaterialOutputNode(CyclesShaderEditor::Point2(0.0f, 0.0f));
+	EditorNode* const output_node = new MaterialOutputNode(CyclesShaderEditor::Point2(0.0f, 0.0f));
 	nodes.push_back(output_node);
 
 	view = new EditGraphView(
@@ -119,38 +114,36 @@ bool CyclesShaderEditor::EditorMainWindow::run_window_loop_iteration()
 		return false;
 	}
 
-	// Pre-draw
 	pre_draw();
 
-	// Draw frame
 	int fb_width, fb_height;
 	glfwGetFramebufferSize(window, &fb_width, &fb_height);
 	const float px_ratio = static_cast<float>(fb_width) / window_width;
 
 	glViewport(0, 0, fb_width, fb_height);
-
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 	nvgBeginFrame(nvg_context, window_width, window_height, px_ratio);
 	draw();
 	nvgEndFrame(nvg_context);
+
 	swap_buffers();
 
 	return true;
 }
 
-void CyclesShaderEditor::EditorMainWindow::set_target_frame_rate(double fps)
+void CyclesShaderEditor::EditorMainWindow::set_target_frame_rate(const double fps)
 {
 	target_frame_rate = fps;
 }
 
-void CyclesShaderEditor::EditorMainWindow::handle_mouse_button(int button, int action, int mods)
+void CyclesShaderEditor::EditorMainWindow::handle_mouse_button(const int button, const int action, const int mods)
 {
-	bool subwindow_has_focus = (get_subwindow_under_mouse() != nullptr);
-	bool toolbar_has_focus = (toolbar != nullptr && toolbar->is_mouse_over());
-	bool node_has_focus = (view->get_node_under_mouse() != nullptr);
-	bool label_has_focus = (view->get_socket_label_under_mouse() != nullptr);
-	bool socket_has_focus = (view->get_socket_under_mouse() != nullptr);
+	const bool subwindow_has_focus = (get_subwindow_under_mouse() != nullptr);
+	const bool toolbar_has_focus = (toolbar != nullptr && toolbar->is_mouse_over());
+	const bool node_has_focus = (view->get_node_under_mouse() != nullptr);
+	const bool label_has_focus = (view->get_socket_label_under_mouse() != nullptr);
+	const bool socket_has_focus = (view->get_socket_under_mouse() != nullptr);
 
 	if (subwindow_has_focus) {
 		raise_subwindow(get_subwindow_under_mouse());
@@ -210,8 +203,8 @@ void CyclesShaderEditor::EditorMainWindow::handle_mouse_button(int button, int a
 		}
 		else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
 			if (node_list_window->active_button != nullptr) {
-				CyclesShaderEditor::Point2 creation_pos(0.0f, 0.0f);
-				EditorNode* new_node = node_list_window->active_button->create_node(creation_pos);
+				const CyclesShaderEditor::Point2 creation_pos(0.0f, 0.0f);
+				EditorNode* const new_node = node_list_window->active_button->create_node(creation_pos);
 				view->add_node_at_mouse(new_node);
 				node_list_window->active_button->pressed = false;
 				node_list_window->active_button = nullptr;
@@ -246,7 +239,7 @@ void CyclesShaderEditor::EditorMainWindow::handle_mouse_button(int button, int a
 		}
 
 		// Node moving
-		for (EditorNode* node : nodes) {
+		for (EditorNode* const node : nodes) {
 			node->move_end();
 		}
 
@@ -267,7 +260,7 @@ void CyclesShaderEditor::EditorMainWindow::handle_mouse_button(int button, int a
 	}
 }
 
-void CyclesShaderEditor::EditorMainWindow::handle_key(int key, int scancode, int action, int mods)
+void CyclesShaderEditor::EditorMainWindow::handle_key(const int key, const int scancode, const int action, const int mods)
 {
 	// System inputs that should be handled with greater priority than anything else
 	if (mods == GLFW_MOD_CONTROL && action == GLFW_PRESS) {
@@ -322,14 +315,14 @@ void CyclesShaderEditor::EditorMainWindow::handle_key(int key, int scancode, int
 	}
 }
 
-void CyclesShaderEditor::EditorMainWindow::handle_character(unsigned int codepoint)
+void CyclesShaderEditor::EditorMainWindow::handle_character(const unsigned int codepoint)
 {
 	if (param_editor_window->should_capture_keys()) {
 		param_editor_window->handle_character(codepoint);
 	}
 }
 
-void CyclesShaderEditor::EditorMainWindow::handle_scroll(double /*xoffset*/, double yoffset)
+void CyclesShaderEditor::EditorMainWindow::handle_scroll(const double /*xoffset*/, const double yoffset)
 {
 	if (yoffset > 0.1) {
 		requests.zoom_in = true;
@@ -339,7 +332,7 @@ void CyclesShaderEditor::EditorMainWindow::handle_scroll(double /*xoffset*/, dou
 	}
 }
 
-void CyclesShaderEditor::EditorMainWindow::load_serialized_graph(std::string graph)
+void CyclesShaderEditor::EditorMainWindow::load_serialized_graph(const std::string& graph)
 {
 	clear_graph(true);
 	deserialize_graph(graph, nodes, connections);
@@ -350,7 +343,7 @@ void CyclesShaderEditor::EditorMainWindow::pre_draw()
 {
 	// Check nodes to see if we should save current state
 	bool should_push_undo_state = false;
-	for (EditorNode* node : nodes) {
+	for (EditorNode* const node : nodes) {
 		if (node->changed) {
 			should_push_undo_state = true;
 			node->changed = false;
@@ -369,7 +362,6 @@ void CyclesShaderEditor::EditorMainWindow::pre_draw()
 	glfwGetWindowSize(window, &window_width, &window_height);
 
 	update_mouse_position(CyclesShaderEditor::Point2(static_cast<float>(mx), static_cast<float>(my)));
-	screen_to_world = CyclesShaderEditor::Point2(view_center.get_pos_x() - window_width / 2, view_center.get_pos_y() - window_height / 2 - UI_TOOLBAR_HEIGHT / 2.0f);
 
 	// Handle window events
 	glfwPollEvents();
@@ -383,22 +375,6 @@ void CyclesShaderEditor::EditorMainWindow::pre_draw()
 	}
 	view->update(mouse_screen_pos, window_width, window_height);
 	status_bar->set_zoom_text(view->get_zoom_string());
-
-	// Mark all connected input sockets
-	for (NodeConnection& connection : connections) {
-		connection.end_socket->input_connected_this_frame = true;
-	}
-
-	for (NodeEditorSubwindow* this_subwindow : subwindows) {
-		this_subwindow->pre_draw();
-	}
-}
-
-void CyclesShaderEditor::EditorMainWindow::draw()
-{
-	//////
-	// Update state here
-	//////
 
 	// Update toolbar button state
 	if (undo_stack.undo_available()) {
@@ -414,10 +390,18 @@ void CyclesShaderEditor::EditorMainWindow::draw()
 		toolbar->disable_button(CyclesShaderEditor::ToolbarButtonType::REDO);
 	}
 
-	//////
-	// Draw here
-	//////
+	// Mark all connected input sockets
+	for (NodeConnection& connection : connections) {
+		connection.end_socket->input_connected_this_frame = true;
+	}
 
+	for (NodeEditorSubwindow* const this_subwindow : subwindows) {
+		this_subwindow->pre_draw();
+	}
+}
+
+void CyclesShaderEditor::EditorMainWindow::draw()
+{
 	nvgSave(nvg_context);
 	view->draw(nvg_context);
 	nvgRestore(nvg_context);
@@ -518,7 +502,7 @@ void CyclesShaderEditor::EditorMainWindow::update_mouse_position(CyclesShaderEdi
 
 CyclesShaderEditor::NodeEditorSubwindow* CyclesShaderEditor::EditorMainWindow::get_subwindow_under_mouse()
 {
-	for (NodeEditorSubwindow* this_subwindow : subwindows) {
+	for (NodeEditorSubwindow* const this_subwindow : subwindows) {
 		if (this_subwindow->is_mouse_over()) {
 			return this_subwindow;
 		}
@@ -526,11 +510,11 @@ CyclesShaderEditor::NodeEditorSubwindow* CyclesShaderEditor::EditorMainWindow::g
 	return nullptr;
 }
 
-void CyclesShaderEditor::EditorMainWindow::raise_subwindow(NodeEditorSubwindow* subwindow)
+void CyclesShaderEditor::EditorMainWindow::raise_subwindow(NodeEditorSubwindow* const subwindow)
 {
 	std::list<NodeEditorSubwindow*>::iterator subwindow_iter;
 	for (subwindow_iter = subwindows.begin(); subwindow_iter != subwindows.end(); ++subwindow_iter) {
-		NodeEditorSubwindow* this_window = *subwindow_iter;
+		NodeEditorSubwindow* const this_window = *subwindow_iter;
 		if (this_window == subwindow) {
 			subwindows.erase(subwindow_iter);
 			subwindows.push_front(this_window);
@@ -560,7 +544,7 @@ void CyclesShaderEditor::EditorMainWindow::undo()
 		return;
 	}
 	update_serialized_state();
-	std::string new_state = undo_stack.pop_undo_state(serialized_state);
+	const std::string new_state = undo_stack.pop_undo_state(serialized_state);
 	clear_graph(false);
 	deserialize_graph(new_state, nodes, connections);
 	update_serialized_state();
@@ -573,14 +557,14 @@ void CyclesShaderEditor::EditorMainWindow::redo()
 		return;
 	}
 	update_serialized_state();
-	std::string new_state = undo_stack.pop_redo_state(serialized_state);
+	const std::string new_state = undo_stack.pop_redo_state(serialized_state);
 	clear_graph(false);
 	deserialize_graph(new_state, nodes, connections);
 	update_serialized_state();
 	status_bar->set_status_text("Graph contains unsaved changes");
 }
 
-void CyclesShaderEditor::EditorMainWindow::clear_graph(bool reset_undo)
+void CyclesShaderEditor::EditorMainWindow::clear_graph(const bool reset_undo)
 {
 	if (reset_undo) {
 		undo_stack.clear();
@@ -613,7 +597,7 @@ void CyclesShaderEditor::EditorMainWindow::do_output()
 
 void CyclesShaderEditor::EditorMainWindow::release_resources()
 {
-	for (NodeEditorSubwindow* this_subwindow : subwindows) {
+	for (NodeEditorSubwindow* const this_subwindow : subwindows) {
 		delete this_subwindow;
 	}
 	subwindows.clear();
@@ -621,7 +605,7 @@ void CyclesShaderEditor::EditorMainWindow::release_resources()
 	param_editor_window = nullptr;
 
 	connections.clear();
-	for (EditorNode* this_node : nodes) {
+	for (EditorNode* const this_node : nodes) {
 		delete this_node;
 	}
 	nodes.clear();

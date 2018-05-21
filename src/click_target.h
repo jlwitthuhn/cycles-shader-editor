@@ -30,7 +30,7 @@ namespace CyclesShaderEditor {
 
 	class StringEnumClickTarget : public GenericClickTarget {
 	public:
-		StringEnumClickTarget(Point2 begin_pos, Point2 end_pos, StringEnumPair str_pair, StringEnumSocketValue* enum_value);
+		StringEnumClickTarget(Point2 begin_pos, Point2 end_pos, const StringEnumPair& str_pair, StringEnumSocketValue* enum_value);
 
 		void click();
 

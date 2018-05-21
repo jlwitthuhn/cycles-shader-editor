@@ -9,7 +9,7 @@ namespace CyclesShaderEditor {
 
 	// This class is used to store the output of some curve in a format that allows for quick evaluation
 	// It will linearly interpolate between sampled values
-	// The curve must have only one y value for each x value
+	// The curve may not have multiple points with equal X values
 	class CurveEvaluator {
 	public:
 		CurveEvaluator(CurveSocketValue* curve_socket_val, int segments = 512);
