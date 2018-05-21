@@ -1,5 +1,6 @@
  #pragma once
 
+#include <chrono>
 #include <list>
 #include <set>
 #include <string>
@@ -47,6 +48,8 @@ namespace CyclesShaderEditor {
 	private:
 		void pre_draw();
 		void draw();
+
+		void swap_buffers();
 
 		void service_requests();
 
@@ -98,6 +101,7 @@ namespace CyclesShaderEditor {
 		GraphEditor* public_window = nullptr;
 
 		double target_frame_rate = 60.0;
+		std::chrono::time_point<std::chrono::steady_clock> last_buffer_swap_time;
 
 		PathString font_search_path;
 	};

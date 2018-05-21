@@ -1,7 +1,6 @@
 #include "main_window.h"
 
 #include <cassert>
-#include <chrono>
 #include <cmath>
 #include <vector>
 
@@ -25,6 +24,8 @@
 #include "util_rectangle.h"
 #include "view.h"
 
+#include <iostream>
+
 CyclesShaderEditor::EditorMainWindow::EditorMainWindow(GraphEditor* public_window) : public_window(public_window)
 {
 	window_width = UI_WINDOW_WIDTH;
@@ -32,6 +33,8 @@ CyclesShaderEditor::EditorMainWindow::EditorMainWindow(GraphEditor* public_windo
 
 	window = nullptr;
 	nvg_context = nullptr;
+
+	last_buffer_swap_time = std::chrono::steady_clock::now();
 }
 
 CyclesShaderEditor::EditorMainWindow::~EditorMainWindow()
@@ -114,8 +117,6 @@ bool CyclesShaderEditor::EditorMainWindow::create_window()
 
 bool CyclesShaderEditor::EditorMainWindow::run_window_loop_iteration()
 {
-	const long long iteration_begin_nano = std::chrono::steady_clock::now().time_since_epoch().count();
-
 	if (glfwWindowShouldClose(window)) {
 		return false;
 	}
@@ -135,18 +136,7 @@ bool CyclesShaderEditor::EditorMainWindow::run_window_loop_iteration()
 	nvgBeginFrame(nvg_context, window_width, window_height, px_ratio);
 	draw();
 	nvgEndFrame(nvg_context);
-	glfwSwapBuffers(window);
-
-	if (target_frame_rate > 0.0) {
-		const long long iteration_end_nano = std::chrono::steady_clock::now().time_since_epoch().count();
-		const long long iteration_duration_usecond = (iteration_end_nano - iteration_begin_nano) / 1000;
-		const double frames_per_usecond = target_frame_rate / (1000.0 * 1000.0);
-		const long long useconds_per_frame = static_cast<long long>(1.0 / frames_per_usecond);
-		const int useconds_remaining = static_cast<int>(useconds_per_frame - iteration_duration_usecond);
-		if (useconds_remaining > 0) {
-			thread_usleep(useconds_remaining);
-		}
-	}
+	swap_buffers();
 
 	return true;
 }
@@ -461,6 +451,25 @@ void CyclesShaderEditor::EditorMainWindow::draw()
 		status_bar->draw(nvg_context, static_cast<float>(window_width));
 		nvgRestore(nvg_context);
 	}
+}
+
+void CyclesShaderEditor::EditorMainWindow::swap_buffers()
+{
+	if (target_frame_rate > 0.0) {
+		const auto current_time = std::chrono::steady_clock::now();
+		if (current_time.time_since_epoch().count() > last_buffer_swap_time.time_since_epoch().count()) {
+			const std::chrono::duration<double> this_frame_duration = static_cast<std::chrono::duration<double> >(current_time - last_buffer_swap_time);
+			const double desired_frame_duration = 1.0 / target_frame_rate;
+			const double sleep_time_sec = (desired_frame_duration - this_frame_duration.count());
+			const int sleep_time_us = static_cast<int>(sleep_time_sec * 1000 * 1000);
+			const int max_sleep_time_us = static_cast<int>(desired_frame_duration * 1000 * 1000);
+			if (sleep_time_us > 0 && sleep_time_us < max_sleep_time_us) {
+				thread_usleep(sleep_time_us);
+			}
+		}
+	}
+	last_buffer_swap_time = std::chrono::steady_clock::now();
+	glfwSwapBuffers(window);
 }
 
 void CyclesShaderEditor::EditorMainWindow::service_requests()
