@@ -51,10 +51,8 @@ namespace CyclesShaderEditor {
 
 		float panel_start_y = 0;
 
-		// Color panel
+		// Panels
 		EditColorPanel panel_color;
-
-		// Curve panel
 		EditCurvePanel panel_curve;
 
 		// Int stuff

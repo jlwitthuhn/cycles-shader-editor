@@ -39,6 +39,7 @@ static void initialize_maps()
 	using namespace CyclesShaderEditor;
 
 	if (!type_to_code.empty()) {
+		// Map is already inialized
 		return;
 	}
 
@@ -179,13 +180,13 @@ static void deserialize_curve(std::string serialized_curve, CyclesShaderEditor::
 	}
 
 	// Make sure the number of points and total number of tokens match
-	const int control_point_count = std::stoi(control_point_count_str);
+	const size_t control_point_count = static_cast<size_t>(std::stoi(control_point_count_str));
 	if (control_point_count < 1 || tokenized_input.size() != 3 + 2 * control_point_count) {
 		return;
 	}
 
 	curve_value->curve_points.clear();
-	for (int points_copied = 0; points_copied < control_point_count; points_copied++) {
+	for (size_t points_copied = 0; points_copied < control_point_count; points_copied++) {
 		const float x = std::stof(*(input_iter++));
 		const float y = std::stof(*(input_iter++));
 		CyclesShaderEditor::Point2 this_point(x, y);
@@ -542,6 +543,11 @@ static CyclesShaderEditor::EditorNode* create_node_from_type(CyclesShaderEditor:
 		{
 			return new MaterialOutputNode(pos);
 		}
+		case CyclesNodeType::Unknown:
+		case CyclesNodeType::Count:
+		{
+			return nullptr;
+		}
 	}
 
 	return nullptr;
@@ -582,7 +588,7 @@ static CyclesShaderEditor::EditorNode* deserialize_node(std::list<std::string>& 
 	CyclesNodeType type = code_to_type[type_code];
 
 	EditorNode* result = create_node_from_type(type, Point2(x_position, y_position));
-	
+
 	if (result == nullptr) {
 		return nullptr;
 	}

@@ -159,12 +159,8 @@ void CyclesShaderEditor::IntInputBox::set_value_from_input_stream()
 		int val = std::stoi(user_input);
 		socket_value->set_value(val);
 	}
-	catch (std::invalid_argument ex) {
-
-	}
-	catch (std::out_of_range ex) {
-
-	}
+	catch (std::invalid_argument& ex) { }
+	catch (std::out_of_range& ex) { }
 }
 
 CyclesShaderEditor::FloatInputBox::FloatInputBox(float width, float height) : BaseInputBox(width, height)
@@ -217,10 +213,6 @@ void CyclesShaderEditor::FloatInputBox::set_value_from_input_stream()
 		float val = std::stof(user_input);
 		socket_value->set_value(val);
 	}
-	catch (std::invalid_argument ex) {
-
-	}
-	catch (std::out_of_range ex) {
-
-	}
+	catch (std::invalid_argument& ex) { }
+	catch (std::out_of_range& ex) { }
 }

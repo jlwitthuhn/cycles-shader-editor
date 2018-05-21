@@ -169,15 +169,13 @@ void CyclesShaderEditor::CurveSocketValue::create_point(float x)
 	// Find the current value at x
 	CurveEvaluator curve(this);
 	const float y = curve.eval(x);
-	
+
 	curve_points.push_back(Point2(x, y));
 	sort_curve_points();
 }
 
 void CyclesShaderEditor::CurveSocketValue::delete_point(const Point2& target)
 {
-	constexpr float MAX_DISTANCE_SQUARED = CURVE_POINT_SELECT_MARGIN * CURVE_POINT_SELECT_MARGIN;
-
 	if (curve_points.size() <= 1) {
 		return;
 	}

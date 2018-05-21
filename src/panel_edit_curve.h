@@ -33,6 +33,9 @@ namespace CyclesShaderEditor {
 
 		Point2 mouse_local_pos;
 
+		float panel_width = 1.0f;
+		float panel_height = 1.0f;
+
 		GenericClickTarget target_view;
 		CurveEditModeClickTarget target_edit_mode_move;
 		CurveEditModeClickTarget target_edit_mode_create;
@@ -46,9 +49,6 @@ namespace CyclesShaderEditor {
 		bool move_selected_point = false;
 		bool mouse_has_moved = false;
 		Point2 move_selected_point_begin_mouse_pos;
-
-		float panel_width = 1.0f;
-		float panel_height = 1.0f;
 
 		bool request_undo_push = false;
 	};

@@ -36,14 +36,6 @@ namespace CyclesShaderEditor {
 		float panel_height = 1.0f;
 		bool active = false;
 
-		bool mouse_sat_val_selection_active = false;
-		bool mouse_hue_selection_active = false;
-
-		Point2 mouse_local_pos;
-
-		GenericClickTarget color_rect_click_target;
-		GenericClickTarget hue_bar_click_target;
-
 		float last_hue = 0.0f;
 
 		FloatInputBox color_r_input_box;
@@ -51,5 +43,13 @@ namespace CyclesShaderEditor {
 		FloatInputBox color_b_input_box;
 
 		bool value_has_changed = false;
+
+		bool mouse_sat_val_selection_active = false;
+		bool mouse_hue_selection_active = false;
+
+		Point2 mouse_local_pos;
+
+		GenericClickTarget color_rect_click_target;
+		GenericClickTarget hue_bar_click_target;
 	};
 }
