@@ -24,8 +24,6 @@
 #include "util_rectangle.h"
 #include "view.h"
 
-#include <iostream>
-
 CyclesShaderEditor::EditorMainWindow::EditorMainWindow(GraphEditor* public_window) : public_window(public_window)
 {
 	window_width = UI_WINDOW_WIDTH;
