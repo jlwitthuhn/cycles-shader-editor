@@ -83,7 +83,11 @@ bool CyclesShaderEditor::EditGraphView::is_node_under_mouse_selected()
 std::string CyclesShaderEditor::EditGraphView::get_zoom_string()
 {
 	char buf[20];
-	snprintf(buf, 20, "Zoom: %3.1f%%", zoom.get_world_scale() * 100.0f);
+	const int result = snprintf(buf, 20, "Zoom: %3.1f%%", zoom.get_world_scale() * 100.0f);
+	if (result <= 0) {
+		// This should never happen
+		return "ZOOM ERROR";
+	}
 	return std::string(buf);
 }
 

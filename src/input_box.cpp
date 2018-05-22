@@ -79,7 +79,8 @@ bool CyclesShaderEditor::BaseInputBox::is_mouse_over()
 void CyclesShaderEditor::BaseInputBox::handle_character(const unsigned int codepoint)
 {
 	const char as_char = static_cast<char>(codepoint);
-	const int is_num = isdigit(as_char);
+	const unsigned char as_uchar = static_cast<unsigned char>(as_char);
+	const int is_num = isdigit(as_uchar);
 	const int is_punctuation = (as_char == '-' || as_char == '.');
 
 	if (is_num || is_punctuation) {

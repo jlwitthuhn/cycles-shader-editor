@@ -572,12 +572,12 @@ static CyclesShaderEditor::EditorNode* deserialize_node(std::list<std::string>& 
 
 	std::map<std::string, std::string> params;
 	while (token_iter != tokens.end()) {
-		std::string name = *(token_iter++);
+		std::string param_name = *(token_iter++);
 		if (token_iter == tokens.end()) {
 			break;
 		}
 		std::string value = *(token_iter++);
-		params[name] = value;
+		params[param_name] = value;
 	}
 
 	if (code_to_type.count(type_code) == 0) {

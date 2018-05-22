@@ -127,18 +127,18 @@ void CyclesShaderEditor::NodeEditorToolbar::set_mouse_position(Point2 screen_pos
 void CyclesShaderEditor::NodeEditorToolbar::handle_mouse_button(int button, int action, int /*mods*/)
 {
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-		ToolbarButton* button = get_button_under_mouse();
-		if (button != nullptr) {
-			button->pressed = true;
+		ToolbarButton* toolbar_button = get_button_under_mouse();
+		if (toolbar_button != nullptr) {
+			toolbar_button->pressed = true;
 		}
 	}
 	else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
-		ToolbarButton* button = get_button_under_mouse();
-		if (button != nullptr) {
-			if (button->pressed) {
-				set_request(button->type);
+		ToolbarButton* toolbar_button = get_button_under_mouse();
+		if (toolbar_button != nullptr) {
+			if (toolbar_button->pressed) {
+				set_request(toolbar_button->type);
 			}
-			button->pressed = false;
+			toolbar_button->pressed = false;
 		}
 	}
 }

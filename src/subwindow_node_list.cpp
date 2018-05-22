@@ -216,9 +216,9 @@ void CyclesShaderEditor::NodeListSubwindow::handle_mouse_button(int button, int 
 				active_button->pressed = false;
 				active_button = nullptr;
 			}
-			NodeCreationButton* button = get_button_under_mouse();
-			button->pressed = true;
-			active_button = button;
+			NodeCreationButton* node_button = get_button_under_mouse();
+			node_button->pressed = true;
+			active_button = node_button;
 		}
 	}
 	else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
