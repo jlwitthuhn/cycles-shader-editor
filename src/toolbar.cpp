@@ -119,7 +119,7 @@ void CyclesShaderEditor::NodeEditorToolbar::enable_button(ToolbarButtonType type
 	}
 }
 
-void CyclesShaderEditor::NodeEditorToolbar::set_mouse_position(Point2 screen_position)
+void CyclesShaderEditor::NodeEditorToolbar::set_mouse_position(FloatPos screen_position)
 {
 	mouse_screen_pos = screen_position;
 }

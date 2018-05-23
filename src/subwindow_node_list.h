@@ -11,7 +11,7 @@ namespace CyclesShaderEditor {
 
 	class NodeListSubwindow : public NodeEditorSubwindow {
 	public:
-		NodeListSubwindow(Point2 screen_position);
+		NodeListSubwindow(FloatPos screen_position);
 		virtual ~NodeListSubwindow();
 
 		virtual void pre_draw() override;

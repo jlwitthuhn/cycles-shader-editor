@@ -90,12 +90,12 @@ bool CyclesShaderEditor::EditorMainWindow::create_window()
 	toolbar = new NodeEditorToolbar(&requests);
 	status_bar = new NodeEditorStatusBar();
 
-	node_list_window = new NodeListSubwindow(CyclesShaderEditor::Point2(15.0f, NodeEditorToolbar::get_toolbar_height() + 15.0f));
-	param_editor_window = new ParamEditorSubwindow(CyclesShaderEditor::Point2(15.0f * 2.0f + UI_SUBWIN_NODE_LIST_WIDTH, NodeEditorToolbar::get_toolbar_height() + 15.0f));
+	node_list_window = new NodeListSubwindow(CyclesShaderEditor::FloatPos(15.0f, NodeEditorToolbar::get_toolbar_height() + 15.0f));
+	param_editor_window = new ParamEditorSubwindow(CyclesShaderEditor::FloatPos(15.0f * 2.0f + UI_SUBWIN_NODE_LIST_WIDTH, NodeEditorToolbar::get_toolbar_height() + 15.0f));
 	subwindows.push_back(node_list_window);
 	subwindows.push_back(param_editor_window);
 
-	EditorNode* const output_node = new MaterialOutputNode(CyclesShaderEditor::Point2(0.0f, 0.0f));
+	EditorNode* const output_node = new MaterialOutputNode(CyclesShaderEditor::FloatPos(0.0f, 0.0f));
 	nodes.push_back(output_node);
 
 	view = new EditGraphView(
@@ -203,7 +203,7 @@ void CyclesShaderEditor::EditorMainWindow::handle_mouse_button(const int button,
 		}
 		else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
 			if (node_list_window->active_button != nullptr) {
-				const CyclesShaderEditor::Point2 creation_pos(0.0f, 0.0f);
+				const CyclesShaderEditor::FloatPos creation_pos(0.0f, 0.0f);
 				EditorNode* const new_node = node_list_window->active_button->create_node(creation_pos);
 				view->add_node_at_mouse(new_node);
 				node_list_window->active_button->pressed = false;
@@ -361,7 +361,7 @@ void CyclesShaderEditor::EditorMainWindow::pre_draw()
 	glfwGetCursorPos(window, &mx, &my);
 	glfwGetWindowSize(window, &window_width, &window_height);
 
-	update_mouse_position(CyclesShaderEditor::Point2(static_cast<float>(mx), static_cast<float>(my)));
+	update_mouse_position(CyclesShaderEditor::FloatPos(static_cast<float>(mx), static_cast<float>(my)));
 
 	// Handle window events
 	glfwPollEvents();
@@ -416,8 +416,8 @@ void CyclesShaderEditor::EditorMainWindow::draw()
 	const float max_safe_pos_y = window_height - UI_STATUSBAR_HEIGHT;
 	std::list<NodeEditorSubwindow*>::reverse_iterator window_iter;
 	for (window_iter = subwindows.rbegin(); window_iter != subwindows.rend(); ++window_iter) {
-		const CyclesShaderEditor::Point2 subwindow_pos = (*window_iter)->get_screen_pos();
-		const CyclesShaderEditor::Point2 local_mouse_pos = mouse_screen_pos - subwindow_pos;
+		const CyclesShaderEditor::FloatPos subwindow_pos = (*window_iter)->get_screen_pos();
+		const CyclesShaderEditor::FloatPos local_mouse_pos = mouse_screen_pos - subwindow_pos;
 		(*window_iter)->set_mouse_position(local_mouse_pos, max_safe_pos_y);
 		nvgSave(nvg_context);
 		nvgTranslate(nvg_context, subwindow_pos.get_pos_x(), subwindow_pos.get_pos_y());
@@ -494,9 +494,9 @@ void CyclesShaderEditor::EditorMainWindow::service_requests()
 	}
 }
 
-void CyclesShaderEditor::EditorMainWindow::update_mouse_position(CyclesShaderEditor::Point2 screen_position)
+void CyclesShaderEditor::EditorMainWindow::update_mouse_position(CyclesShaderEditor::FloatPos screen_position)
 {
-	screen_position.clamp_to(CyclesShaderEditor::Point2(0.0f, 0.0f), CyclesShaderEditor::Point2(window_width - 1.0f, window_height - 1.0f));
+	screen_position.clamp_to(CyclesShaderEditor::FloatPos(0.0f, 0.0f), CyclesShaderEditor::FloatPos(window_width - 1.0f, window_height - 1.0f));
 	mouse_screen_pos = screen_position;
 }
 

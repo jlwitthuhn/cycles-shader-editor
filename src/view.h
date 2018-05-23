@@ -3,8 +3,8 @@
 #include <list>
 #include <set>
 
+#include "float_pos.h"
 #include "node_base.h"
-#include "point2.h"
 #include "zoom.h"
 
 struct NVGcontext;
@@ -30,12 +30,12 @@ namespace CyclesShaderEditor {
 		NodeSocket* get_socket_label_under_mouse();
 		NodeSocket* get_selected_socket_label();
 		NodeSocket* get_socket_under_mouse();
-		Point2 get_mouse_world_position();
+		FloatPos get_mouse_world_position();
 		bool is_node_under_mouse_selected();
 		std::string get_zoom_string();
 
 		// Main 2 functions called from the main loop
-		void update(Point2 view_local_mouse_pos, int viewport_width, int viewport_height);
+		void update(FloatPos view_local_mouse_pos, int viewport_width, int viewport_height);
 		void draw(NVGcontext* draw_context);
 
 		// Functions to manipulate view state
@@ -88,16 +88,16 @@ namespace CyclesShaderEditor {
 		NodeSocket* connection_in_progress_start = nullptr;
 		NodeSocket* selected_label = nullptr;
 		bool box_select_active = false;
-		Point2 world_box_select_begin;
-		Point2 world_box_select_end;
+		FloatPos world_box_select_begin;
+		FloatPos world_box_select_end;
 
-		Point2 mouse_world_position;
+		FloatPos mouse_world_position;
 
 		bool mouse_move_active = false;
 
 		ZoomManager zoom;
 
-		Point2 view_center;
+		FloatPos view_center;
 
 		float border_left = 0.0f;
 		float border_right = 1.0f;

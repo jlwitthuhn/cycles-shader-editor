@@ -1,6 +1,6 @@
 #include "node_vector.h"
 
-CyclesShaderEditor::BumpNode::BumpNode(Point2 position)
+CyclesShaderEditor::BumpNode::BumpNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -29,7 +29,7 @@ CyclesShaderEditor::BumpNode::BumpNode(Point2 position)
 	type = CyclesNodeType::Bump;
 }
 
-CyclesShaderEditor::NormalMapNode::NormalMapNode(Point2 position)
+CyclesShaderEditor::NormalMapNode::NormalMapNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -58,7 +58,7 @@ CyclesShaderEditor::NormalMapNode::NormalMapNode(Point2 position)
 	type = CyclesNodeType::NormalMap;
 }
 
-CyclesShaderEditor::VectorTransformNode::VectorTransformNode(Point2 position)
+CyclesShaderEditor::VectorTransformNode::VectorTransformNode(FloatPos position)
 {
 	world_pos = position;
 

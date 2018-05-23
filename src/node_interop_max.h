@@ -6,7 +6,7 @@ namespace CyclesShaderEditor {
 
 	class MaxTexmapShaderNode : public EditorNode {
 	public:
-		MaxTexmapShaderNode(Point2 position);
+		MaxTexmapShaderNode(FloatPos position);
 	};
 
 }

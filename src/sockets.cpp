@@ -8,7 +8,7 @@
 static constexpr float CURVE_CREATE_POINT_IGNORE_MARGIN = 0.012f;
 static constexpr float CURVE_POINT_SELECT_MARGIN = 0.05f;
 
-static bool point2_x_lt(CyclesShaderEditor::Point2 a, CyclesShaderEditor::Point2 b)
+static bool FloatPos_x_lt(CyclesShaderEditor::FloatPos a, CyclesShaderEditor::FloatPos b)
 {
 	return a.get_pos_x() < b.get_pos_x();
 }
@@ -149,8 +149,8 @@ void CyclesShaderEditor::CurveSocketValue::reset_value()
 {
 	curve_points.clear();
 
-	Point2 default_0(0.0f, 0.0f);
-	Point2 default_1(1.0f, 1.0f);
+	FloatPos default_0(0.0f, 0.0f);
+	FloatPos default_1(1.0f, 1.0f);
 
 	curve_points.push_back(default_0);
 	curve_points.push_back(default_1);
@@ -158,7 +158,7 @@ void CyclesShaderEditor::CurveSocketValue::reset_value()
 
 void CyclesShaderEditor::CurveSocketValue::create_point(float x)
 {
-	for (const Point2& this_point : curve_points) {
+	for (const FloatPos& this_point : curve_points) {
 		const bool is_above_with_margin = x + CURVE_CREATE_POINT_IGNORE_MARGIN > this_point.get_pos_x();
 		const bool is_below_with_margin = x - CURVE_CREATE_POINT_IGNORE_MARGIN < this_point.get_pos_x();
 		if (is_above_with_margin && is_below_with_margin) {
@@ -170,11 +170,11 @@ void CyclesShaderEditor::CurveSocketValue::create_point(float x)
 	CurveEvaluator curve(this);
 	const float y = curve.eval(x);
 
-	curve_points.push_back(Point2(x, y));
+	curve_points.push_back(FloatPos(x, y));
 	sort_curve_points();
 }
 
-void CyclesShaderEditor::CurveSocketValue::delete_point(const Point2& target)
+void CyclesShaderEditor::CurveSocketValue::delete_point(const FloatPos& target)
 {
 	if (curve_points.size() <= 1) {
 		return;
@@ -188,7 +188,7 @@ void CyclesShaderEditor::CurveSocketValue::delete_point(const Point2& target)
 	}
 }
 
-bool CyclesShaderEditor::CurveSocketValue::get_target_index(const Point2& target, size_t& index)
+bool CyclesShaderEditor::CurveSocketValue::get_target_index(const FloatPos& target, size_t& index)
 {
 	constexpr float MAX_DISTANCE_SQUARED = CURVE_POINT_SELECT_MARGIN * CURVE_POINT_SELECT_MARGIN;
 
@@ -196,8 +196,8 @@ bool CyclesShaderEditor::CurveSocketValue::get_target_index(const Point2& target
 	size_t target_index;
 	float target_distance_squared = MAX_DISTANCE_SQUARED;
 	for (size_t i = 0; i < curve_points.size(); i++) {
-		const Point2& this_point = curve_points[i];
-		const Point2 delta = target - this_point;
+		const FloatPos& this_point = curve_points[i];
+		const FloatPos delta = target - this_point;
 		const float distance_squared = delta.get_magnitude_squared();
 		if (distance_squared < target_distance_squared) {
 			target_distance_squared = distance_squared;
@@ -214,7 +214,7 @@ bool CyclesShaderEditor::CurveSocketValue::get_target_index(const Point2& target
 	return false;
 }
 
-size_t CyclesShaderEditor::CurveSocketValue::move_point(const size_t index, const Point2& new_point)
+size_t CyclesShaderEditor::CurveSocketValue::move_point(const size_t index, const FloatPos& new_point)
 {
 	if (index >= curve_points.size()) {
 		// Index should always be valid
@@ -225,7 +225,7 @@ size_t CyclesShaderEditor::CurveSocketValue::move_point(const size_t index, cons
 	sort_curve_points();
 
 	for (size_t i = 0; i < curve_points.size(); i++) {
-		const Point2 this_point = curve_points[i];
+		const FloatPos this_point = curve_points[i];
 		if (this_point == new_point) {
 			return i;
 		}
@@ -238,7 +238,7 @@ size_t CyclesShaderEditor::CurveSocketValue::move_point(const size_t index, cons
 
 void CyclesShaderEditor::CurveSocketValue::sort_curve_points()
 {
-	std::sort(curve_points.begin(), curve_points.end(), point2_x_lt);
+	std::sort(curve_points.begin(), curve_points.end(), FloatPos_x_lt);
 }
 
 CyclesShaderEditor::FloatRGBColor CyclesShaderEditor::ColorSocketValue::get_value()

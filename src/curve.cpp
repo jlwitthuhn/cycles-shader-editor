@@ -5,12 +5,12 @@
 
 CyclesShaderEditor::CurveEvaluator::CurveEvaluator(CurveSocketValue* const curve_socket_val, const int segments)
 {
-	const std::vector<Point2>& curve_control_points = curve_socket_val->curve_points;
+	const std::vector<FloatPos>& curve_control_points = curve_socket_val->curve_points;
 
 	// No points, in this case treat as output = input
 	if (curve_control_points.size() == 0) {
-		const Point2 point_0(0.0f, 0.0f);
-		const Point2 point_1(1.0f, 1.0f);
+		const FloatPos point_0(0.0f, 0.0f);
+		const FloatPos point_1(1.0f, 1.0f);
 		sampled_points.push_back(point_0);
 		sampled_points.push_back(point_1);
 		return;
@@ -18,8 +18,8 @@ CyclesShaderEditor::CurveEvaluator::CurveEvaluator(CurveSocketValue* const curve
 	// One point, this represents constant output
 	else if (curve_control_points.size() == 1) {
 		const float const_output = curve_control_points[0].get_pos_y();
-		const Point2 point_0(0.0f, const_output);
-		const Point2 point_1(1.0f, const_output);
+		const FloatPos point_0(0.0f, const_output);
+		const FloatPos point_1(1.0f, const_output);
 		sampled_points.push_back(point_0);
 		sampled_points.push_back(point_1);
 		return;
@@ -34,9 +34,9 @@ CyclesShaderEditor::CurveEvaluator::CurveEvaluator(CurveSocketValue* const curve
 		float next_sample_x = FIRST_SAMPLE_X;
 		const size_t final_segment_begin_index = curve_control_points.size() - 2;
 		for (size_t segment_begin_index = 0; segment_begin_index <= final_segment_begin_index; segment_begin_index++) {
-			const Point2 point_b = curve_control_points[segment_begin_index];
-			const Point2 point_c = curve_control_points[segment_begin_index + 1];
-			Point2 point_a, point_d;
+			const FloatPos point_b = curve_control_points[segment_begin_index];
+			const FloatPos point_c = curve_control_points[segment_begin_index + 1];
+			FloatPos point_a, point_d;
 			if (segment_begin_index == 0) {
 				point_a = point_b + point_b - point_c;
 			}
@@ -53,7 +53,7 @@ CyclesShaderEditor::CurveEvaluator::CurveEvaluator(CurveSocketValue* const curve
 
 			// If the sample is before the first control point(b), use the value of the first control point
 			while (next_sample_x <= LAST_SAMPLE_X && hermite_spline.compare_to_range(next_sample_x) == -1) {
-				const Point2 new_point(next_sample_x, point_b.get_pos_y());
+				const FloatPos new_point(next_sample_x, point_b.get_pos_y());
 				sampled_points.push_back(new_point);
 				next_sample_x += x_increment;
 			}
@@ -61,14 +61,14 @@ CyclesShaderEditor::CurveEvaluator::CurveEvaluator(CurveSocketValue* const curve
 			// If the sample is in this range, evaluate normally
 			while (next_sample_x <= LAST_SAMPLE_X && hermite_spline.compare_to_range(next_sample_x) == 0) {
 				const float sampled_y = hermite_spline.eval(next_sample_x);
-				const Point2 new_point(next_sample_x, sampled_y);
+				const FloatPos new_point(next_sample_x, sampled_y);
 				sampled_points.push_back(new_point);
 				next_sample_x += x_increment;
 			}
 
 			// If the sample is past this range and we are in the last segment, use the value of the last control point
 			while (next_sample_x <= LAST_SAMPLE_X && hermite_spline.compare_to_range(next_sample_x) == 1 && segment_begin_index == final_segment_begin_index) {
-				const Point2 new_point(next_sample_x, point_c.get_pos_y());
+				const FloatPos new_point(next_sample_x, point_c.get_pos_y());
 				sampled_points.push_back(new_point);
 				next_sample_x += x_increment;
 			}
@@ -77,13 +77,13 @@ CyclesShaderEditor::CurveEvaluator::CurveEvaluator(CurveSocketValue* const curve
 	else {
 		// Default is linear
 		// In this case, copy points directly rather than sampling
-		for (const Point2 this_point : curve_control_points) {
+		for (const FloatPos this_point : curve_control_points) {
 			sampled_points.push_back(this_point);
 		}
 	}
 }
 
-CyclesShaderEditor::CurveEvaluator::CurveEvaluator(const Point2 a, const Point2 b, const Point2 c, const Point2 d, const int segments)
+CyclesShaderEditor::CurveEvaluator::CurveEvaluator(const FloatPos a, const FloatPos b, const FloatPos c, const FloatPos d, const int segments)
 {
 	const CubicHermiteSplineInterpolator x_solver(a.get_pos_x(), b.get_pos_x(), c.get_pos_x(), d.get_pos_x());
 	const CubicHermiteSplineInterpolator y_solver(a.get_pos_y(), b.get_pos_y(), c.get_pos_y(), d.get_pos_y());
@@ -93,7 +93,7 @@ CyclesShaderEditor::CurveEvaluator::CurveEvaluator(const Point2 a, const Point2 
 		const float this_t = segment_size * i;
 		const float this_x = x_solver.eval(this_t);
 		const float this_y = y_solver.eval(this_t);
-		const Point2 this_point(this_x, this_y);
+		const FloatPos this_point(this_x, this_y);
 		sampled_points.push_back(this_point);
 	}
 }
@@ -123,7 +123,7 @@ float CyclesShaderEditor::CurveEvaluator::eval(const float in_value) const
 		return in_value;
 	}
 
-	typedef std::vector<Point2>::size_type vec_size_t;
+	typedef std::vector<FloatPos>::size_type vec_size_t;
 
 	// sampled_points is ordered by x value
 	// do a binary search to find which two values surround the input value
@@ -141,8 +141,8 @@ float CyclesShaderEditor::CurveEvaluator::eval(const float in_value) const
 		}
 	}
 
-	const Point2 point_a = sampled_points[min_index];
-	const Point2 point_b = sampled_points[max_index];
+	const FloatPos point_a = sampled_points[min_index];
+	const FloatPos point_b = sampled_points[max_index];
 	const float x_min = point_a.get_pos_x();
 	const float x_max = point_b.get_pos_x();
 	const float x_delta = x_max - x_min;

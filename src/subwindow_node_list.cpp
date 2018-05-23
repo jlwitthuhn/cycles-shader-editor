@@ -18,7 +18,7 @@
 #include "node_textures.h"
 #include "node_vector.h"
 
-CyclesShaderEditor::NodeListSubwindow::NodeListSubwindow(Point2 screen_position) : NodeEditorSubwindow(screen_position, "Create Node")
+CyclesShaderEditor::NodeListSubwindow::NodeListSubwindow(FloatPos screen_position) : NodeEditorSubwindow(screen_position, "Create Node")
 {
 	subwindow_width = UI_SUBWIN_NODE_LIST_WIDTH;
 
@@ -265,10 +265,10 @@ void CyclesShaderEditor::NodeListSubwindow::draw_content(NVGcontext* draw_contex
 	float height_drawn = 0.0f;
 
 	// Node category buttons
-	NodeCategoryButtonPlacer placer(Point2(0.0f, height_drawn), subwindow_width, UI_SUBWIN_NODE_LIST_BUTTON_VPADDING);
+	NodeCategoryButtonPlacer placer(FloatPos(0.0f, height_drawn), subwindow_width, UI_SUBWIN_NODE_LIST_BUTTON_VPADDING);
 
 	for (NodeCategoryButton* category_button : category_buttons) {
-		Point2 button_position = placer.next_button_position();
+		FloatPos button_position = placer.next_button_position();
 		category_button->update_mouse_position(mouse_panel_pos - button_position);
 		category_button->draw(button_position, draw_context);
 	}
@@ -278,7 +278,7 @@ void CyclesShaderEditor::NodeListSubwindow::draw_content(NVGcontext* draw_contex
 	// Buttons
 	if (active_category != nullptr) {
 		for (NodeCreationButton* node_button : active_category->node_buttons) {
-			Point2 button_location(0.0f, height_drawn);
+			FloatPos button_location(0.0f, height_drawn);
 			height_drawn += node_button->draw(draw_context, button_location, mouse_panel_pos, subwindow_width);
 		}
 	}

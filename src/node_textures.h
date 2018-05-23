@@ -6,42 +6,42 @@ namespace CyclesShaderEditor {
 
 	class BrickTextureNode : public EditorNode {
 	public:
-		BrickTextureNode(Point2 position);
+		BrickTextureNode(FloatPos position);
 	};
 
 	class NoiseTextureNode : public EditorNode {
 	public:
-		NoiseTextureNode(Point2 position);
+		NoiseTextureNode(FloatPos position);
 	};
 
 	class WaveTextureNode : public EditorNode {
 	public:
-		WaveTextureNode(Point2 position);
+		WaveTextureNode(FloatPos position);
 	};
 
 	class VoronoiTextureNode : public EditorNode {
 	public:
-		VoronoiTextureNode(Point2 position);
+		VoronoiTextureNode(FloatPos position);
 	};
 
 	class MusgraveTextureNode : public EditorNode {
 	public:
-		MusgraveTextureNode(Point2 position);
+		MusgraveTextureNode(FloatPos position);
 	};
 
 	class GradientTextureNode : public EditorNode {
 	public:
-		GradientTextureNode(Point2 position);
+		GradientTextureNode(FloatPos position);
 	};
 
 	class MagicTextureNode : public EditorNode {
 	public:
-		MagicTextureNode(Point2 position);
+		MagicTextureNode(FloatPos position);
 	};
 
 	class CheckerTextureNode : public EditorNode {
 	public:
-		CheckerTextureNode(Point2 position);
+		CheckerTextureNode(FloatPos position);
 	};
 
 }

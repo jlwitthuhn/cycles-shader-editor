@@ -6,57 +6,57 @@ namespace CyclesShaderEditor {
 
 	class BlackbodyNode : public EditorNode {
 	public:
-		BlackbodyNode(Point2 position);
+		BlackbodyNode(FloatPos position);
 	};
 
 	class CombineHSVNode : public EditorNode {
 	public:
-		CombineHSVNode(Point2 position);
+		CombineHSVNode(FloatPos position);
 	};
 
 	class CombineRGBNode : public EditorNode {
 	public:
-		CombineRGBNode(Point2 position);
+		CombineRGBNode(FloatPos position);
 	};
 
 	class CombineXYZNode : public EditorNode {
 	public:
-		CombineXYZNode(Point2 position);
+		CombineXYZNode(FloatPos position);
 	};
 
 	class MathNode : public EditorNode {
 	public:
-		MathNode(Point2 position);
+		MathNode(FloatPos position);
 	};
 
 	class RGBToBWNode : public EditorNode {
 	public:
-		RGBToBWNode(Point2 position);
+		RGBToBWNode(FloatPos position);
 	};
 
 	class SeparateHSVNode : public EditorNode {
 	public:
-		SeparateHSVNode(Point2 position);
+		SeparateHSVNode(FloatPos position);
 	};
 
 	class SeparateRGBNode : public EditorNode {
 	public:
-		SeparateRGBNode(Point2 position);
+		SeparateRGBNode(FloatPos position);
 	};
 
 	class SeparateXYZNode : public EditorNode {
 	public:
-		SeparateXYZNode(Point2 position);
+		SeparateXYZNode(FloatPos position);
 	};
 
 	class VectorMathNode : public EditorNode {
 	public:
-		VectorMathNode(Point2 position);
+		VectorMathNode(FloatPos position);
 	};
 
 	class WavelengthNode : public EditorNode {
 	public:
-		WavelengthNode(Point2 position);
+		WavelengthNode(FloatPos position);
 	};
 
 }

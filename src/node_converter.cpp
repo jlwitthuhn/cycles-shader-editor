@@ -1,6 +1,6 @@
 #include "node_converter.h"
 
-CyclesShaderEditor::BlackbodyNode::BlackbodyNode(Point2 position)
+CyclesShaderEditor::BlackbodyNode::BlackbodyNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -20,7 +20,7 @@ CyclesShaderEditor::BlackbodyNode::BlackbodyNode(Point2 position)
 	content_width = 164.0f;
 }
 
-CyclesShaderEditor::CombineHSVNode::CombineHSVNode(Point2 position)
+CyclesShaderEditor::CombineHSVNode::CombineHSVNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -44,7 +44,7 @@ CyclesShaderEditor::CombineHSVNode::CombineHSVNode(Point2 position)
 	type = CyclesNodeType::CombineHSV;
 }
 
-CyclesShaderEditor::CombineRGBNode::CombineRGBNode(Point2 position)
+CyclesShaderEditor::CombineRGBNode::CombineRGBNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -68,7 +68,7 @@ CyclesShaderEditor::CombineRGBNode::CombineRGBNode(Point2 position)
 	type = CyclesNodeType::CombineRGB;
 }
 
-CyclesShaderEditor::CombineXYZNode::CombineXYZNode(Point2 position)
+CyclesShaderEditor::CombineXYZNode::CombineXYZNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -92,7 +92,7 @@ CyclesShaderEditor::CombineXYZNode::CombineXYZNode(Point2 position)
 	type = CyclesNodeType::CombineXYZ;
 }
 
-CyclesShaderEditor::MathNode::MathNode(Point2 position)
+CyclesShaderEditor::MathNode::MathNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -140,7 +140,7 @@ CyclesShaderEditor::MathNode::MathNode(Point2 position)
 	type = CyclesNodeType::Math;
 }
 
-CyclesShaderEditor::RGBToBWNode::RGBToBWNode(Point2 position)
+CyclesShaderEditor::RGBToBWNode::RGBToBWNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -158,7 +158,7 @@ CyclesShaderEditor::RGBToBWNode::RGBToBWNode(Point2 position)
 	type = CyclesNodeType::RGBtoBW;
 }
 
-CyclesShaderEditor::SeparateHSVNode::SeparateHSVNode(Point2 position)
+CyclesShaderEditor::SeparateHSVNode::SeparateHSVNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -180,7 +180,7 @@ CyclesShaderEditor::SeparateHSVNode::SeparateHSVNode(Point2 position)
 	type = CyclesNodeType::SeparateHSV;
 }
 
-CyclesShaderEditor::SeparateRGBNode::SeparateRGBNode(Point2 position)
+CyclesShaderEditor::SeparateRGBNode::SeparateRGBNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -202,7 +202,7 @@ CyclesShaderEditor::SeparateRGBNode::SeparateRGBNode(Point2 position)
 	type = CyclesNodeType::SeparateRGB;
 }
 
-CyclesShaderEditor::SeparateXYZNode::SeparateXYZNode(Point2 position)
+CyclesShaderEditor::SeparateXYZNode::SeparateXYZNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -225,7 +225,7 @@ CyclesShaderEditor::SeparateXYZNode::SeparateXYZNode(Point2 position)
 	type = CyclesNodeType::SeparateXYZ;
 }
 
-CyclesShaderEditor::VectorMathNode::VectorMathNode(Point2 position)
+CyclesShaderEditor::VectorMathNode::VectorMathNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -261,7 +261,7 @@ CyclesShaderEditor::VectorMathNode::VectorMathNode(Point2 position)
 	type = CyclesNodeType::VectorMath;
 }
 
-CyclesShaderEditor::WavelengthNode::WavelengthNode(Point2 position)
+CyclesShaderEditor::WavelengthNode::WavelengthNode(FloatPos position)
 {
 	world_pos = position;
 

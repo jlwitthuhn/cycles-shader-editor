@@ -19,7 +19,7 @@ namespace CyclesShaderEditor {
 
 		void pre_draw();
 		float draw(NVGcontext* draw_context);
-		void set_mouse_local_position(Point2 local_pos);
+		void set_mouse_local_position(FloatPos local_pos);
 		bool is_mouse_over();
 
 		void handle_mouse_button(int button, int action, int mods);
@@ -31,7 +31,7 @@ namespace CyclesShaderEditor {
 		CurveSocketValue* attached_curve = nullptr;
 		EditCurveMode edit_mode = EditCurveMode::MOVE;
 
-		Point2 mouse_local_pos;
+		FloatPos mouse_local_pos;
 
 		float panel_width = 1.0f;
 		float panel_height = 1.0f;
@@ -48,7 +48,7 @@ namespace CyclesShaderEditor {
 
 		bool move_selected_point = false;
 		bool mouse_has_moved = false;
-		Point2 move_selected_point_begin_mouse_pos;
+		FloatPos move_selected_point_begin_mouse_pos;
 
 		bool request_undo_push = false;
 	};

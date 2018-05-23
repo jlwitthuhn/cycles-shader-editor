@@ -4,8 +4,8 @@
 #include <vector>
 
 #include "click_target.h"
+#include "float_pos.h"
 #include "output.h"
-#include "point2.h"
 
 struct NVGcontext;
 
@@ -32,7 +32,7 @@ namespace CyclesShaderEditor {
 		virtual std::string get_title();
 
 		virtual void draw_node(NVGcontext* draw_context);
-		virtual void set_mouse_position(Point2 node_local_position);
+		virtual void set_mouse_position(FloatPos node_local_position);
 
 		virtual bool is_mouse_over_node();
 		virtual bool is_mouse_over_header();
@@ -46,7 +46,7 @@ namespace CyclesShaderEditor {
 		virtual NodeSocket* get_socket_by_display_name(SocketInOut in_out, const std::string& socket_name);
 		virtual NodeSocket* get_socket_by_internal_name(SocketInOut in_out, const std::string& socket_name);
 
-		virtual Point2 get_dimensions();
+		virtual FloatPos get_dimensions();
 
 		virtual bool can_be_deleted();
 
@@ -57,13 +57,13 @@ namespace CyclesShaderEditor {
 
 		CyclesNodeType type = CyclesNodeType::Unknown;
 
-		Point2 world_pos;
+		FloatPos world_pos;
 
 	protected:
 		std::string title;
 
-		Point2 mouse_local_pos;
-		Point2 mouse_local_begin_move_pos;
+		FloatPos mouse_local_pos;
+		FloatPos mouse_local_begin_move_pos;
 
 		bool node_moving = false;
 		bool has_moved = false;

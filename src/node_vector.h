@@ -6,17 +6,17 @@ namespace CyclesShaderEditor {
 
 	class BumpNode : public EditorNode {
 	public:
-		BumpNode(Point2 position);
+		BumpNode(FloatPos position);
 	};
 
 	class NormalMapNode : public EditorNode {
 	public:
-		NormalMapNode(Point2 position);
+		NormalMapNode(FloatPos position);
 	};
 
 	class VectorTransformNode : public EditorNode {
 	public:
-		VectorTransformNode(Point2 position);
+		VectorTransformNode(FloatPos position);
 	};
 
 }

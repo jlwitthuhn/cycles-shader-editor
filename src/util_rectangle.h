@@ -1,9 +1,9 @@
 #pragma once
 
-#include "point2.h"
+#include "float_pos.h"
 
 namespace CyclesShaderEditor {
 
-	bool do_rectangles_overlap(Point2 low1, Point2 high1, Point2 low2, Point2 high2);
+	bool do_rectangles_overlap(FloatPos low1, FloatPos high1, FloatPos low2, FloatPos high2);
 
 }

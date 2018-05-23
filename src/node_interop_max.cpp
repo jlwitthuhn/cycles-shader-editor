@@ -1,6 +1,6 @@
 #include "node_interop_max.h"
 
-CyclesShaderEditor::MaxTexmapShaderNode::MaxTexmapShaderNode(Point2 position)
+CyclesShaderEditor::MaxTexmapShaderNode::MaxTexmapShaderNode(FloatPos position)
 {
 	world_pos = position;
 

@@ -8,7 +8,7 @@
 #include "drawing.h"
 #include "gui_sizes.h"
 
-CyclesShaderEditor::NodeCategoryButtonPlacer::NodeCategoryButtonPlacer(const Point2 draw_origin, const float parent_width, const float vertical_padding)
+CyclesShaderEditor::NodeCategoryButtonPlacer::NodeCategoryButtonPlacer(const FloatPos draw_origin, const float parent_width, const float vertical_padding)
 {
 	this->draw_origin = draw_origin;
 	this->parent_width = parent_width;
@@ -20,7 +20,7 @@ CyclesShaderEditor::NodeCategoryButtonPlacer::NodeCategoryButtonPlacer(const Poi
 	positions_made = 0;
 }
 
-CyclesShaderEditor::Point2 CyclesShaderEditor::NodeCategoryButtonPlacer::next_button_position()
+CyclesShaderEditor::FloatPos CyclesShaderEditor::NodeCategoryButtonPlacer::next_button_position()
 {
 	// Find horizontal position
 	float x;
@@ -40,7 +40,7 @@ CyclesShaderEditor::Point2 CyclesShaderEditor::NodeCategoryButtonPlacer::next_bu
 
 	++positions_made;
 
-	const Point2 result(x, y);
+	const FloatPos result(x, y);
 	return draw_origin + result;
 }
 
@@ -63,12 +63,12 @@ CyclesShaderEditor::NodeCategoryButton::~NodeCategoryButton()
 	}
 }
 
-void CyclesShaderEditor::NodeCategoryButton::draw(const Point2 draw_position, NVGcontext* const draw_context)
+void CyclesShaderEditor::NodeCategoryButton::draw(const FloatPos draw_position, NVGcontext* const draw_context)
 {
 	Drawing::draw_button(draw_context, draw_position.get_pos_x(), draw_position.get_pos_y(), get_button_width(), get_button_height(), label, true, pressed);
 }
 
-void CyclesShaderEditor::NodeCategoryButton::update_mouse_position(const Point2 local_position)
+void CyclesShaderEditor::NodeCategoryButton::update_mouse_position(const FloatPos local_position)
 {
 	mouse_local_pos = local_position;
 }

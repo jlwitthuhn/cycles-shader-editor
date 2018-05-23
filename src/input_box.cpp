@@ -17,7 +17,7 @@ CyclesShaderEditor::BaseInputBox::BaseInputBox(const float width, const float he
 	this->height = height;
 }
 
-void CyclesShaderEditor::BaseInputBox::draw(NVGcontext* const draw_context, const Point2 parent_mouse_pos)
+void CyclesShaderEditor::BaseInputBox::draw(NVGcontext* const draw_context, const FloatPos parent_mouse_pos)
 {
 	this->parent_mouse_pos = parent_mouse_pos;
 
@@ -59,7 +59,7 @@ void CyclesShaderEditor::BaseInputBox::draw(NVGcontext* const draw_context, cons
 	}
 }
 
-void CyclesShaderEditor::BaseInputBox::set_position(const Point2 parent_position)
+void CyclesShaderEditor::BaseInputBox::set_position(const FloatPos parent_position)
 {
 	this->position = parent_position;
 }

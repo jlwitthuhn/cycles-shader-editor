@@ -3,8 +3,8 @@
 #include <string>
 #include <vector>
 
+#include "float_pos.h"
 #include "gui_sizes.h"
-#include "point2.h"
 
 struct NVGcontext;
 
@@ -45,14 +45,14 @@ namespace CyclesShaderEditor {
 		void disable_button(ToolbarButtonType type);
 		void enable_button(ToolbarButtonType type);
 
-		void set_mouse_position(Point2 screen_position);
+		void set_mouse_position(FloatPos screen_position);
 		void handle_mouse_button(int button, int action, int mods);
 
 	private:
 		ToolbarButton* get_button_under_mouse();
 		void set_request(ToolbarButtonType button_type);
 
-		Point2 mouse_screen_pos;
+		FloatPos mouse_screen_pos;
 
 		std::vector<ToolbarButton> buttons;
 

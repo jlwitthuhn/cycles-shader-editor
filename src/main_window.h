@@ -6,8 +6,8 @@
 #include <string>
 #include <vector>
 
+#include "float_pos.h"
 #include "node_base.h"
-#include "point2.h"
 #include "statusbar.h"
 #include "toolbar.h"
 #include "ui_requests.h"
@@ -53,7 +53,7 @@ namespace CyclesShaderEditor {
 
 		void service_requests();
 
-		void update_mouse_position(Point2 screen_position);
+		void update_mouse_position(FloatPos screen_position);
 
 		NodeEditorSubwindow* get_subwindow_under_mouse();
 		void raise_subwindow(NodeEditorSubwindow* subwindow);
@@ -73,7 +73,7 @@ namespace CyclesShaderEditor {
 		std::list<EditorNode*> nodes;
 		std::list<NodeConnection> connections;
 
-		Point2 mouse_screen_pos;
+		FloatPos mouse_screen_pos;
 		int window_width, window_height;
 
 		std::string serialized_state;

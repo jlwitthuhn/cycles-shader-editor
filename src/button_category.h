@@ -3,8 +3,8 @@
 #include <list>
 #include <string>
 
+#include "float_pos.h"
 #include "gui_sizes.h"
-#include "point2.h"
 
 struct NVGcontext;
 
@@ -14,12 +14,12 @@ namespace CyclesShaderEditor {
 
 	class NodeCategoryButtonPlacer {
 	public:
-		NodeCategoryButtonPlacer(Point2 draw_origin, float parent_width, float vertical_padding);
-		Point2 next_button_position();
+		NodeCategoryButtonPlacer(FloatPos draw_origin, float parent_width, float vertical_padding);
+		FloatPos next_button_position();
 		float get_draw_height();
 
 	private:
-		Point2 draw_origin;
+		FloatPos draw_origin;
 		float button_width;
 		float button_height;
 		float parent_width;
@@ -36,8 +36,8 @@ namespace CyclesShaderEditor {
 		NodeCategoryButton(const std::string& label);
 		~NodeCategoryButton();
 
-		void draw(Point2 draw_position, NVGcontext* draw_context);
-		void update_mouse_position(Point2 local_position);
+		void draw(FloatPos draw_position, NVGcontext* draw_context);
+		void update_mouse_position(FloatPos local_position);
 
 		bool is_mouse_over_button();
 
@@ -48,7 +48,7 @@ namespace CyclesShaderEditor {
 	private:
 		std::string label;
 
-		Point2 mouse_local_pos;
+		FloatPos mouse_local_pos;
 
 	};
 

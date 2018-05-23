@@ -1,6 +1,6 @@
 #include "node_outputs.h"
 
-CyclesShaderEditor::MaterialOutputNode::MaterialOutputNode(Point2 position)
+CyclesShaderEditor::MaterialOutputNode::MaterialOutputNode(FloatPos position)
 {
 	world_pos = position;
 

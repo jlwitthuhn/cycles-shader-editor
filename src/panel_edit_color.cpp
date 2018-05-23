@@ -12,8 +12,8 @@ CyclesShaderEditor::EditColorPanel::EditColorPanel(float width) :
 	color_r_input_box(UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH_BIG, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT),
 	color_g_input_box(UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH_BIG, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT),
 	color_b_input_box(UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH_BIG, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT),
-	color_rect_click_target(Point2(), Point2()),
-	hue_bar_click_target(Point2(), Point2())
+	color_rect_click_target(FloatPos(), FloatPos()),
+	hue_bar_click_target(FloatPos(), FloatPos())
 {
 	// These are always displayed within this panel
 	color_r_input_box.displayed = true;
@@ -79,8 +79,8 @@ float CyclesShaderEditor::EditColorPanel::draw(NVGcontext* draw_context, ColorSo
 		Drawing::draw_color_pick_cursor(draw_context, cursor_pos_x, cursor_pos_y);
 
 		// Click target
-		Point2 color_rect_begin = Point2(draw_x, draw_y);
-		Point2 color_rect_end = Point2(draw_x + rect_width, draw_y + rect_height);
+		FloatPos color_rect_begin = FloatPos(draw_x, draw_y);
+		FloatPos color_rect_end = FloatPos(draw_x + rect_width, draw_y + rect_height);
 		color_rect_click_target = GenericClickTarget(color_rect_begin, color_rect_end);
 
 		height_drawn += 2 * UI_SUBWIN_PARAM_EDIT_RECT_VPAD + UI_SUBWIN_PARAM_EDIT_RECT_HEIGHT;
@@ -141,8 +141,8 @@ float CyclesShaderEditor::EditColorPanel::draw(NVGcontext* draw_context, ColorSo
 		nvgStrokeWidth(draw_context, 2.0f);
 		nvgStroke(draw_context);
 
-		Point2 hue_bar_begin = Point2(draw_x, draw_y);
-		Point2 hue_bar_end = Point2(draw_x + hue_bar_width, draw_y + hue_bar_height);
+		FloatPos hue_bar_begin = FloatPos(draw_x, draw_y);
+		FloatPos hue_bar_end = FloatPos(draw_x + hue_bar_width, draw_y + hue_bar_height);
 		hue_bar_click_target = GenericClickTarget(hue_bar_begin, hue_bar_end);
 
 		height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
@@ -161,7 +161,7 @@ float CyclesShaderEditor::EditColorPanel::draw(NVGcontext* draw_context, ColorSo
 	float input_x_draw = (2.0f * panel_width / 3) - (color_r_input_box.width / 2);
 	float input_y_draw = height_drawn + (UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT - color_r_input_box.height) / 2;
 
-	color_r_input_box.set_position(Point2(input_x_draw, input_y_draw));
+	color_r_input_box.set_position(FloatPos(input_x_draw, input_y_draw));
 	color_r_input_box.set_float_value(&(socket_value->red_socket_val));
 	color_r_input_box.draw(draw_context, mouse_local_pos);
 
@@ -173,7 +173,7 @@ float CyclesShaderEditor::EditColorPanel::draw(NVGcontext* draw_context, ColorSo
 
 	input_y_draw = height_drawn + (UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT - color_g_input_box.height) / 2;
 
-	color_g_input_box.set_position(Point2(input_x_draw, input_y_draw));
+	color_g_input_box.set_position(FloatPos(input_x_draw, input_y_draw));
 	color_g_input_box.set_float_value(&(socket_value->green_socket_val));
 	color_g_input_box.draw(draw_context, mouse_local_pos);
 
@@ -185,7 +185,7 @@ float CyclesShaderEditor::EditColorPanel::draw(NVGcontext* draw_context, ColorSo
 
 	input_y_draw = height_drawn + (UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT - color_b_input_box.height) / 2;
 
-	color_b_input_box.set_position(Point2(input_x_draw, input_y_draw));
+	color_b_input_box.set_position(FloatPos(input_x_draw, input_y_draw));
 	color_b_input_box.set_float_value(&(socket_value->blue_socket_val));
 	color_b_input_box.draw(draw_context, mouse_local_pos);
 
@@ -203,7 +203,7 @@ float CyclesShaderEditor::EditColorPanel::draw(NVGcontext* draw_context, ColorSo
 	return height_drawn;
 }
 
-void CyclesShaderEditor::EditColorPanel::set_mouse_local_position(Point2 local_pos)
+void CyclesShaderEditor::EditColorPanel::set_mouse_local_position(FloatPos local_pos)
 {
 	mouse_local_pos = local_pos;
 }
@@ -327,7 +327,7 @@ void CyclesShaderEditor::EditColorPanel::set_hue_from_mouse()
 
 void CyclesShaderEditor::EditColorPanel::set_sat_val_from_mouse()
 {
-	Point2 mouse_pos_normalized = color_rect_click_target.get_normalized_mouse_pos(mouse_local_pos);
+	FloatPos mouse_pos_normalized = color_rect_click_target.get_normalized_mouse_pos(mouse_local_pos);
 	const float new_sat = mouse_pos_normalized.get_pos_x();
 	const float new_val = 1.0f - mouse_pos_normalized.get_pos_y();
 

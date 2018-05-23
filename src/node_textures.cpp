@@ -1,6 +1,6 @@
 #include "node_textures.h"
 
-CyclesShaderEditor::BrickTextureNode::BrickTextureNode(Point2 position)
+CyclesShaderEditor::BrickTextureNode::BrickTextureNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -64,7 +64,7 @@ CyclesShaderEditor::BrickTextureNode::BrickTextureNode(Point2 position)
 	type = CyclesNodeType::BrickTex;
 }
 
-CyclesShaderEditor::NoiseTextureNode::NoiseTextureNode(Point2 position)
+CyclesShaderEditor::NoiseTextureNode::NoiseTextureNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -92,7 +92,7 @@ CyclesShaderEditor::NoiseTextureNode::NoiseTextureNode(Point2 position)
 	type = CyclesNodeType::NoiseTex;
 }
 
-CyclesShaderEditor::WaveTextureNode::WaveTextureNode(Point2 position)
+CyclesShaderEditor::WaveTextureNode::WaveTextureNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -137,7 +137,7 @@ CyclesShaderEditor::WaveTextureNode::WaveTextureNode(Point2 position)
 	type = CyclesNodeType::WaveTex;
 }
 
-CyclesShaderEditor::VoronoiTextureNode::VoronoiTextureNode(Point2 position)
+CyclesShaderEditor::VoronoiTextureNode::VoronoiTextureNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -166,7 +166,7 @@ CyclesShaderEditor::VoronoiTextureNode::VoronoiTextureNode(Point2 position)
 	type = CyclesNodeType::VoronoiTex;
 }
 
-CyclesShaderEditor::MusgraveTextureNode::MusgraveTextureNode(Point2 position)
+CyclesShaderEditor::MusgraveTextureNode::MusgraveTextureNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -213,7 +213,7 @@ CyclesShaderEditor::MusgraveTextureNode::MusgraveTextureNode(Point2 position)
 	type = CyclesNodeType::MusgraveTex;
 }
 
-CyclesShaderEditor::GradientTextureNode::GradientTextureNode(Point2 position)
+CyclesShaderEditor::GradientTextureNode::GradientTextureNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -244,7 +244,7 @@ CyclesShaderEditor::GradientTextureNode::GradientTextureNode(Point2 position)
 	type = CyclesNodeType::GradientTex;
 }
 
-CyclesShaderEditor::MagicTextureNode::MagicTextureNode(Point2 position)
+CyclesShaderEditor::MagicTextureNode::MagicTextureNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -272,7 +272,7 @@ CyclesShaderEditor::MagicTextureNode::MagicTextureNode(Point2 position)
 	type = CyclesNodeType::MagicTex;
 }
 
-CyclesShaderEditor::CheckerTextureNode::CheckerTextureNode(Point2 position)
+CyclesShaderEditor::CheckerTextureNode::CheckerTextureNode(FloatPos position)
 {
 	world_pos = position;
 

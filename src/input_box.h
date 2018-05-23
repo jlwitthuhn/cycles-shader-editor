@@ -2,7 +2,7 @@
 
 #include <sstream>
 
-#include "point2.h"
+#include "float_pos.h"
 
 struct NVGcontext;
 
@@ -15,8 +15,8 @@ namespace CyclesShaderEditor {
 	public:
 		BaseInputBox(float width, float height);
 
-		void draw(NVGcontext* draw_context, Point2 parent_mouse_pos);
-		void set_position(Point2 parent_position);
+		void draw(NVGcontext* draw_context, FloatPos parent_mouse_pos);
+		void set_position(FloatPos parent_position);
 		bool is_mouse_over();
 
 		void handle_character(unsigned int codepoint);
@@ -38,10 +38,10 @@ namespace CyclesShaderEditor {
 		virtual void set_value_from_input_stream() = 0;
 
 		// Position of this UI element, relative to parent subwindow
-		Point2 position;
+		FloatPos position;
 
 		// Position of mouse, relative to parent
-		Point2 parent_mouse_pos;
+		FloatPos parent_mouse_pos;
 
 		bool selected = false;
 

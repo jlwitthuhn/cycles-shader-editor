@@ -15,7 +15,7 @@ namespace CyclesShaderEditor {
 		void set_active(bool active);
 
 		float draw(NVGcontext* draw_context, ColorSocketValue* socket_value);
-		void set_mouse_local_position(Point2 local_pos);
+		void set_mouse_local_position(FloatPos local_pos);
 		bool is_mouse_over();
 
 		void handle_mouse_button(int button, int action, int mods);
@@ -47,7 +47,7 @@ namespace CyclesShaderEditor {
 		bool mouse_sat_val_selection_active = false;
 		bool mouse_hue_selection_active = false;
 
-		Point2 mouse_local_pos;
+		FloatPos mouse_local_pos;
 
 		GenericClickTarget color_rect_click_target;
 		GenericClickTarget hue_bar_click_target;

@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "common_enums.h"
-#include "point2.h"
+#include "float_pos.h"
 
 namespace CyclesShaderEditor {
 
@@ -134,15 +134,15 @@ namespace CyclesShaderEditor {
 
 		void reset_value();
 		void create_point(float x);
-		void delete_point(const Point2& target);
+		void delete_point(const FloatPos& target);
 		// Gets the index, if any, of the closest point within selection range
-		bool get_target_index(const Point2& target, size_t& index);
+		bool get_target_index(const FloatPos& target, size_t& index);
 		// Move a point and return its new index
-		size_t move_point(const size_t index, const Point2& new_point);
+		size_t move_point(const size_t index, const FloatPos& new_point);
 
 		void sort_curve_points();
 
-		std::vector<Point2> curve_points;
+		std::vector<FloatPos> curve_points;
 		CurveInterpolation curve_interp = CurveInterpolation::CUBIC_HERMITE;
 	};
 
@@ -167,7 +167,7 @@ namespace CyclesShaderEditor {
 		bool selectable = false;
 		bool selected = false;
 
-		Point2 world_draw_position;
+		FloatPos world_draw_position;
 
 		SocketValue* value = nullptr;
 

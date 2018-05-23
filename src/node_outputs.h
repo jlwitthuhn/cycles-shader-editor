@@ -6,7 +6,7 @@ namespace CyclesShaderEditor {
 
 	class MaterialOutputNode : public EditorNode {
 	public:
-		MaterialOutputNode(Point2 position);
+		MaterialOutputNode(FloatPos position);
 
 		virtual bool can_be_deleted() override;
 	};

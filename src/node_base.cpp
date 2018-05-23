@@ -224,19 +224,19 @@ void CyclesShaderEditor::EditorNode::draw_node(NVGcontext* const draw_context)
 
 		if (this_socket->selectable) {
 			// Add label click target
-			const CyclesShaderEditor::Point2 click_target_begin(0, next_draw_y - draw_pos_y);
-			const CyclesShaderEditor::Point2 click_target_end(content_width, next_draw_y - draw_pos_y + UI_NODE_SOCKET_ROW_HEIGHT);
+			const CyclesShaderEditor::FloatPos click_target_begin(0, next_draw_y - draw_pos_y);
+			const CyclesShaderEditor::FloatPos click_target_end(content_width, next_draw_y - draw_pos_y + UI_NODE_SOCKET_ROW_HEIGHT);
 			const SocketClickTarget label_target(click_target_begin, click_target_end, this_socket);
 			label_targets.push_back(label_target);
 		}
 
 		if (this_socket->draw_socket) {
-			CyclesShaderEditor::Point2 socket_position;
+			CyclesShaderEditor::FloatPos socket_position;
 			if (this_socket->socket_in_out == SocketInOut::Input) {
-				socket_position = CyclesShaderEditor::Point2(draw_pos_x, next_draw_y + UI_NODE_SOCKET_ROW_HEIGHT / 2);
+				socket_position = CyclesShaderEditor::FloatPos(draw_pos_x, next_draw_y + UI_NODE_SOCKET_ROW_HEIGHT / 2);
 			}
 			else {
-				socket_position = CyclesShaderEditor::Point2(draw_pos_x + content_width, next_draw_y + UI_NODE_SOCKET_ROW_HEIGHT / 2);
+				socket_position = CyclesShaderEditor::FloatPos(draw_pos_x + content_width, next_draw_y + UI_NODE_SOCKET_ROW_HEIGHT / 2);
 			}
 			nvgBeginPath(draw_context);
 			nvgCircle(draw_context, socket_position.get_pos_x(), socket_position.get_pos_y(), UI_NODE_SOCKET_RADIUS);
@@ -244,9 +244,9 @@ void CyclesShaderEditor::EditorNode::draw_node(NVGcontext* const draw_context)
 			this_socket->world_draw_position = world_pos + socket_position;
 
 			// Add click target for this socket
-			CyclesShaderEditor::Point2 local_socket_position(socket_position.get_pos_x() - draw_pos_x, socket_position.get_pos_y() - draw_pos_y);
-			CyclesShaderEditor::Point2 click_target_begin(local_socket_position.get_pos_x() - 7.0f, local_socket_position.get_pos_y() - 7.0f);
-			CyclesShaderEditor::Point2 click_target_end(local_socket_position.get_pos_x() + 7.0f, local_socket_position.get_pos_y() + 7.0f);
+			CyclesShaderEditor::FloatPos local_socket_position(socket_position.get_pos_x() - draw_pos_x, socket_position.get_pos_y() - draw_pos_y);
+			CyclesShaderEditor::FloatPos click_target_begin(local_socket_position.get_pos_x() - 7.0f, local_socket_position.get_pos_y() - 7.0f);
+			CyclesShaderEditor::FloatPos click_target_end(local_socket_position.get_pos_x() + 7.0f, local_socket_position.get_pos_y() + 7.0f);
 			SocketClickTarget socket_target(click_target_begin, click_target_end, this_socket);
 			socket_targets.push_back(socket_target);
 
@@ -280,10 +280,10 @@ void CyclesShaderEditor::EditorNode::draw_node(NVGcontext* const draw_context)
 	}
 }
 
-void CyclesShaderEditor::EditorNode::set_mouse_position(const CyclesShaderEditor::Point2 node_local_position)
+void CyclesShaderEditor::EditorNode::set_mouse_position(const CyclesShaderEditor::FloatPos node_local_position)
 {
 	if (node_moving) {
-		const CyclesShaderEditor::Point2 mouse_movement = (node_local_position - mouse_local_begin_move_pos);
+		const CyclesShaderEditor::FloatPos mouse_movement = (node_local_position - mouse_local_begin_move_pos);
 		world_pos = world_pos + mouse_movement;
 		mouse_local_pos = mouse_local_begin_move_pos;
 		if (std::abs(mouse_movement.get_pos_x()) + std::abs(mouse_movement.get_pos_y()) > 0.1f) {
@@ -381,9 +381,9 @@ CyclesShaderEditor::NodeSocket* CyclesShaderEditor::EditorNode::get_socket_by_in
 	return nullptr;
 }
 
-CyclesShaderEditor::Point2 CyclesShaderEditor::EditorNode::get_dimensions()
+CyclesShaderEditor::FloatPos CyclesShaderEditor::EditorNode::get_dimensions()
 {
-	return CyclesShaderEditor::Point2(content_width, content_height + UI_NODE_HEADER_HEIGHT);
+	return CyclesShaderEditor::FloatPos(content_width, content_height + UI_NODE_HEADER_HEIGHT);
 }
 
 bool CyclesShaderEditor::EditorNode::can_be_deleted()
@@ -446,7 +446,7 @@ void CyclesShaderEditor::EditorNode::update_output_node(OutputNode& output)
 			if (curve_val != nullptr) {
 				OutputCurve out_curve;
 				for (size_t i = 0; i < curve_val->curve_points.size(); i++) {
-					const Point2 this_point = curve_val->curve_points[i];
+					const FloatPos this_point = curve_val->curve_points[i];
 					out_curve.control_points.push_back(Float2(this_point.get_pos_x(), this_point.get_pos_y()));
 				}
 				out_curve.enum_curve_interp = static_cast<int>(curve_val->curve_interp);

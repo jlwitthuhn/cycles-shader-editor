@@ -189,7 +189,7 @@ static void deserialize_curve(std::string serialized_curve, CyclesShaderEditor::
 	for (size_t points_copied = 0; points_copied < control_point_count; points_copied++) {
 		const float x = std::stof(*(input_iter++));
 		const float y = std::stof(*(input_iter++));
-		CyclesShaderEditor::Point2 this_point(x, y);
+		CyclesShaderEditor::FloatPos this_point(x, y);
 		curve_value->curve_points.push_back(this_point);
 	}
 	curve_value->sort_curve_points();
@@ -296,7 +296,7 @@ std::string CyclesShaderEditor::serialize_graph(std::vector<OutputNode> &nodes, 
 	return output_stream.str();
 }
 
-static CyclesShaderEditor::EditorNode* create_node_from_type(CyclesShaderEditor::CyclesNodeType type, CyclesShaderEditor::Point2 pos) {
+static CyclesShaderEditor::EditorNode* create_node_from_type(CyclesShaderEditor::CyclesNodeType type, CyclesShaderEditor::FloatPos pos) {
 	using namespace CyclesShaderEditor;
 	switch (type) {
 		case CyclesNodeType::AmbientOcclusion:
@@ -587,7 +587,7 @@ static CyclesShaderEditor::EditorNode* deserialize_node(std::list<std::string>& 
 
 	CyclesNodeType type = code_to_type[type_code];
 
-	EditorNode* result = create_node_from_type(type, Point2(x_position, y_position));
+	EditorNode* result = create_node_from_type(type, FloatPos(x_position, y_position));
 
 	if (result == nullptr) {
 		return nullptr;

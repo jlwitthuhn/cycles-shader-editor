@@ -3,7 +3,7 @@
 #include "config.h"
 #include "curve.h"
 
-CyclesShaderEditor::MixRGBNode::MixRGBNode(Point2 position)
+CyclesShaderEditor::MixRGBNode::MixRGBNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -53,7 +53,7 @@ CyclesShaderEditor::MixRGBNode::MixRGBNode(Point2 position)
 	type = CyclesNodeType::MixRGB;
 }
 
-CyclesShaderEditor::InvertNode::InvertNode(Point2 position)
+CyclesShaderEditor::InvertNode::InvertNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -74,7 +74,7 @@ CyclesShaderEditor::InvertNode::InvertNode(Point2 position)
 	type = CyclesNodeType::Invert;
 }
 
-CyclesShaderEditor::LightFalloffNode::LightFalloffNode(Point2 position)
+CyclesShaderEditor::LightFalloffNode::LightFalloffNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -99,7 +99,7 @@ CyclesShaderEditor::LightFalloffNode::LightFalloffNode(Point2 position)
 	type = CyclesNodeType::LightFalloff;
 }
 
-CyclesShaderEditor::HSVNode::HSVNode(Point2 position)
+CyclesShaderEditor::HSVNode::HSVNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -129,7 +129,7 @@ CyclesShaderEditor::HSVNode::HSVNode(Point2 position)
 	type = CyclesNodeType::HSV;
 }
 
-CyclesShaderEditor::GammaNode::GammaNode(Point2 position)
+CyclesShaderEditor::GammaNode::GammaNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -150,7 +150,7 @@ CyclesShaderEditor::GammaNode::GammaNode(Point2 position)
 	type = CyclesNodeType::Gamma;
 }
 
-CyclesShaderEditor::BrightnessContrastNode::BrightnessContrastNode(Point2 position)
+CyclesShaderEditor::BrightnessContrastNode::BrightnessContrastNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -174,7 +174,7 @@ CyclesShaderEditor::BrightnessContrastNode::BrightnessContrastNode(Point2 positi
 	type = CyclesNodeType::BrightnessContrast;
 }
 
-CyclesShaderEditor::RGBCurvesNode::RGBCurvesNode(Point2 position)
+CyclesShaderEditor::RGBCurvesNode::RGBCurvesNode(FloatPos position)
 {
 	world_pos = position;
 

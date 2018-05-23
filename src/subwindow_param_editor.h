@@ -15,11 +15,11 @@ namespace CyclesShaderEditor {
 
 	class ParamEditorSubwindow : public NodeEditorSubwindow {
 	public:
-		ParamEditorSubwindow(Point2 screen_position);
+		ParamEditorSubwindow(FloatPos screen_position);
 
 		virtual void pre_draw() override;
 
-		virtual void set_mouse_position(Point2 local_position, float max_pos_y) override;
+		virtual void set_mouse_position(FloatPos local_position, float max_pos_y) override;
 
 		virtual void handle_mouse_button(int button, int action, int mods) override;
 		virtual void handle_key(int key, int scancode, int action, int mods) override;

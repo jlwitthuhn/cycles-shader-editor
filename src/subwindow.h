@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "point2.h"
+#include "float_pos.h"
 
 struct NVGcontext;
 
@@ -10,10 +10,10 @@ namespace CyclesShaderEditor {
 
 	class NodeEditorSubwindow {
 	public:
-		NodeEditorSubwindow(Point2 screen_position, std::string title);
+		NodeEditorSubwindow(FloatPos screen_position, std::string title);
 		virtual ~NodeEditorSubwindow() {}
 
-		virtual Point2 get_screen_pos() const;
+		virtual FloatPos get_screen_pos() const;
 		virtual float get_width() const;
 		virtual float get_height() const;
 
@@ -22,7 +22,7 @@ namespace CyclesShaderEditor {
 		virtual void draw(NVGcontext* draw_context);
 		virtual bool is_mouse_over() const;
 		virtual bool is_mouse_over_header() const;
-		virtual void set_mouse_position(Point2 screen_position, float max_pos_y);
+		virtual void set_mouse_position(FloatPos screen_position, float max_pos_y);
 
 		virtual void handle_mouse_button(int button, int action, int mods);
 		virtual void handle_key(int key, int scancode, int action, int mods);
@@ -37,11 +37,11 @@ namespace CyclesShaderEditor {
 		virtual void draw_content(NVGcontext* draw_context) = 0;
 
 		std::string title = "Subwindow";
-		Point2 subwindow_screen_pos;
+		FloatPos subwindow_screen_pos;
 
-		Point2 mouse_local_pos;
-		Point2 mouse_local_begin_move_pos;
-		Point2 mouse_panel_pos;
+		FloatPos mouse_local_pos;
+		FloatPos mouse_local_begin_move_pos;
+		FloatPos mouse_panel_pos;
 
 		float subwindow_width = 100.0f;
 		float content_height = 1.0f;

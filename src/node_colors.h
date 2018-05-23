@@ -6,37 +6,37 @@ namespace CyclesShaderEditor {
 
 	class MixRGBNode : public EditorNode {
 	public:
-		MixRGBNode(Point2 position);
+		MixRGBNode(FloatPos position);
 	};
 
 	class InvertNode : public EditorNode {
 	public:
-		InvertNode(Point2 position);
+		InvertNode(FloatPos position);
 	};
 
 	class LightFalloffNode : public EditorNode {
 	public:
-		LightFalloffNode(Point2 position);
+		LightFalloffNode(FloatPos position);
 	};
 
 	class HSVNode : public EditorNode {
 	public:
-		HSVNode(Point2 position);
+		HSVNode(FloatPos position);
 	};
 
 	class GammaNode : public EditorNode {
 	public:
-		GammaNode(Point2 position);
+		GammaNode(FloatPos position);
 	};
 
 	class BrightnessContrastNode : public EditorNode {
 	public:
-		BrightnessContrastNode(Point2 position);
+		BrightnessContrastNode(FloatPos position);
 	};
 
 	class RGBCurvesNode : public EditorNode {
 	public:
-		RGBCurvesNode(Point2 position);
+		RGBCurvesNode(FloatPos position);
 
 		virtual void update_output_node(OutputNode& output) override;
 	};

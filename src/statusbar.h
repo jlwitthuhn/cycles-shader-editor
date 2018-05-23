@@ -1,7 +1,7 @@
 #pragma once
 
+#include "float_pos.h"
 #include "gui_sizes.h"
-#include "point2.h"
 
 struct NVGcontext;
 

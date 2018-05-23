@@ -4,13 +4,13 @@
 
 #include "gui_sizes.h"
 
-CyclesShaderEditor::NodeEditorSubwindow::NodeEditorSubwindow(Point2 screen_position, std::string title)
+CyclesShaderEditor::NodeEditorSubwindow::NodeEditorSubwindow(FloatPos screen_position, std::string title)
 {
 	subwindow_screen_pos = screen_position;
 	this->title = title;
 }
 
-CyclesShaderEditor::Point2 CyclesShaderEditor::NodeEditorSubwindow::get_screen_pos() const
+CyclesShaderEditor::FloatPos CyclesShaderEditor::NodeEditorSubwindow::get_screen_pos() const
 {
 	return subwindow_screen_pos;
 }
@@ -112,19 +112,19 @@ bool CyclesShaderEditor::NodeEditorSubwindow::is_mouse_over_header() const
 		mouse_local_pos.get_pos_y() < UI_SUBWIN_HEADER_HEIGHT);
 }
 
-void CyclesShaderEditor::NodeEditorSubwindow::set_mouse_position(Point2 local_position, float max_safe_pos_y)
+void CyclesShaderEditor::NodeEditorSubwindow::set_mouse_position(FloatPos local_position, float max_safe_pos_y)
 {
 	if (subwindow_moving) {
 		subwindow_screen_pos = subwindow_screen_pos + (local_position - mouse_local_begin_move_pos);
 		if (subwindow_screen_pos.get_pos_y() + UI_SUBWIN_HEADER_HEIGHT > max_safe_pos_y) {
-			subwindow_screen_pos = Point2(subwindow_screen_pos.get_pos_x(), max_safe_pos_y - UI_SUBWIN_HEADER_HEIGHT);
+			subwindow_screen_pos = FloatPos(subwindow_screen_pos.get_pos_x(), max_safe_pos_y - UI_SUBWIN_HEADER_HEIGHT);
 		}
 		mouse_local_pos = mouse_local_begin_move_pos;
 	}
 	else {
 		mouse_local_pos = local_position;
 	}
-	mouse_panel_pos = mouse_local_pos - Point2(0.0f, UI_SUBWIN_HEADER_HEIGHT + 3.0f);
+	mouse_panel_pos = mouse_local_pos - FloatPos(0.0f, UI_SUBWIN_HEADER_HEIGHT + 3.0f);
 }
 
 void CyclesShaderEditor::NodeEditorSubwindow::handle_mouse_button(int /*button*/, int /*action*/, int /*mods*/)

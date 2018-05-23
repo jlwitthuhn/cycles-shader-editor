@@ -10,7 +10,7 @@
 #include "input_box.h"
 #include "node_base.h"
 
-CyclesShaderEditor::ParamEditorSubwindow::ParamEditorSubwindow(Point2 screen_position) :
+CyclesShaderEditor::ParamEditorSubwindow::ParamEditorSubwindow(FloatPos screen_position) :
 	NodeEditorSubwindow(screen_position, "Parameter Editor"),
 	panel_color(UI_SUBWIN_PARAM_EDIT_WIDTH),
 	panel_curve(UI_SUBWIN_PARAM_EDIT_WIDTH),
@@ -36,14 +36,14 @@ void CyclesShaderEditor::ParamEditorSubwindow::pre_draw()
 	panel_curve.set_attached_curve_value(nullptr);
 }
 
-void CyclesShaderEditor::ParamEditorSubwindow::set_mouse_position(Point2 local_position, float max_pos_y)
+void CyclesShaderEditor::ParamEditorSubwindow::set_mouse_position(FloatPos local_position, float max_pos_y)
 {
 	NodeEditorSubwindow::set_mouse_position(local_position, max_pos_y);
 	if (panel_color.is_active()) {
-		panel_color.set_mouse_local_position(mouse_panel_pos - Point2(0.0f, panel_start_y));
+		panel_color.set_mouse_local_position(mouse_panel_pos - FloatPos(0.0f, panel_start_y));
 	}
 	if (panel_curve.is_active()) {
-		panel_curve.set_mouse_local_position(mouse_panel_pos - Point2(0.0f, panel_start_y));
+		panel_curve.set_mouse_local_position(mouse_panel_pos - FloatPos(0.0f, panel_start_y));
 	}
 }
 
@@ -285,7 +285,7 @@ void CyclesShaderEditor::ParamEditorSubwindow::draw_content(NVGcontext* draw_con
 			float input_x_draw = (2.0f * subwindow_width / 3) - (float_input_box.width / 2);
 			float input_y_draw = height_drawn + (UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT - float_input_box.height) / 2;
 
-			int_input_box.set_position(Point2(input_x_draw, input_y_draw));
+			int_input_box.set_position(FloatPos(input_x_draw, input_y_draw));
 			int_input_box.set_int_value(dynamic_cast<IntSocketValue*>(selected_param->value));
 			int_input_box.draw(draw_context, mouse_panel_pos);
 
@@ -306,7 +306,7 @@ void CyclesShaderEditor::ParamEditorSubwindow::draw_content(NVGcontext* draw_con
 			float input_x_draw = (2.0f * subwindow_width / 3) - (float_input_box.width / 2);
 			float input_y_draw = height_drawn + (UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT - float_input_box.height) / 2;
 
-			float_input_box.set_position(Point2(input_x_draw, input_y_draw));
+			float_input_box.set_position(FloatPos(input_x_draw, input_y_draw));
 			float_input_box.set_float_value(dynamic_cast<FloatSocketValue*>(selected_param->value));
 			float_input_box.draw(draw_context, mouse_panel_pos);
 
@@ -331,7 +331,7 @@ void CyclesShaderEditor::ParamEditorSubwindow::draw_content(NVGcontext* draw_con
 			float input_x_draw = (2.0f * subwindow_width / 3) - (vector_x_input_box.width / 2);
 			float input_y_draw = height_drawn + (UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT - vector_x_input_box.height) / 2;
 
-			vector_x_input_box.set_position(Point2(input_x_draw, input_y_draw));
+			vector_x_input_box.set_position(FloatPos(input_x_draw, input_y_draw));
 			vector_x_input_box.set_float_value(&(float3_socket_val->x_socket_val));
 			vector_x_input_box.draw(draw_context, mouse_panel_pos);
 
@@ -342,7 +342,7 @@ void CyclesShaderEditor::ParamEditorSubwindow::draw_content(NVGcontext* draw_con
 
 			input_y_draw = height_drawn + (UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT - vector_y_input_box.height) / 2;
 
-			vector_y_input_box.set_position(Point2(input_x_draw, input_y_draw));
+			vector_y_input_box.set_position(FloatPos(input_x_draw, input_y_draw));
 			vector_y_input_box.set_float_value(&(float3_socket_val->y_socket_val));
 			vector_y_input_box.draw(draw_context, mouse_panel_pos);
 
@@ -353,7 +353,7 @@ void CyclesShaderEditor::ParamEditorSubwindow::draw_content(NVGcontext* draw_con
 
 			input_y_draw = height_drawn + (UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT - vector_z_input_box.height) / 2;
 
-			vector_z_input_box.set_position(Point2(input_x_draw, input_y_draw));
+			vector_z_input_box.set_position(FloatPos(input_x_draw, input_y_draw));
 			vector_z_input_box.set_float_value(&(float3_socket_val->z_socket_val));
 			vector_z_input_box.draw(draw_context, mouse_panel_pos);
 
@@ -408,8 +408,8 @@ void CyclesShaderEditor::ParamEditorSubwindow::draw_content(NVGcontext* draw_con
 				nvgFillColor(draw_context, nvgRGBA(0, 0, 0, 255));
 				nvgText(draw_context, text_pos_x, text_pos_y, this_enum_value.display_value.c_str(), nullptr);
 
-				Point2 click_target_begin(0.0f, height_drawn);
-				Point2 click_target_end(subwindow_width, height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT);
+				FloatPos click_target_begin(0.0f, height_drawn);
+				FloatPos click_target_end(subwindow_width, height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT);
 				StringEnumClickTarget click_target(click_target_begin, click_target_end, this_enum_value, str_enum_value);
 
 				enum_targets.push_back(click_target);
@@ -476,8 +476,8 @@ void CyclesShaderEditor::ParamEditorSubwindow::draw_content(NVGcontext* draw_con
 				nvgFillColor(draw_context, nvgRGBA(0, 0, 0, 255));
 				nvgText(draw_context, text_pos_x, text_pos_y, label.c_str(), nullptr);
 
-				Point2 click_target_begin(0.0f, height_drawn);
-				Point2 click_target_end(subwindow_width, height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT);
+				FloatPos click_target_begin(0.0f, height_drawn);
+				FloatPos click_target_end(subwindow_width, height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT);
 				BoolValueClickTarget click_target(click_target_begin, click_target_end, current_label, bool_value);
 
 				bool_targets.push_back(click_target);

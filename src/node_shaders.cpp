@@ -1,6 +1,6 @@
 #include "node_shaders.h"
 
-CyclesShaderEditor::AmbientOcculsionNode::AmbientOcculsionNode(Point2 position)
+CyclesShaderEditor::AmbientOcculsionNode::AmbientOcculsionNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -18,7 +18,7 @@ CyclesShaderEditor::AmbientOcculsionNode::AmbientOcculsionNode(Point2 position)
 	type = CyclesNodeType::AmbientOcclusion;
 }
 
-CyclesShaderEditor::PrincipledBSDFNode::PrincipledBSDFNode(Point2 position)
+CyclesShaderEditor::PrincipledBSDFNode::PrincipledBSDFNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -99,7 +99,7 @@ CyclesShaderEditor::PrincipledBSDFNode::PrincipledBSDFNode(Point2 position)
 	content_width += 34.0f;
 }
 
-CyclesShaderEditor::MixShaderNode::MixShaderNode(Point2 position)
+CyclesShaderEditor::MixShaderNode::MixShaderNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -121,7 +121,7 @@ CyclesShaderEditor::MixShaderNode::MixShaderNode(Point2 position)
 	type = CyclesNodeType::MixShader;
 }
 
-CyclesShaderEditor::AddShaderNode::AddShaderNode(Point2 position)
+CyclesShaderEditor::AddShaderNode::AddShaderNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -140,7 +140,7 @@ CyclesShaderEditor::AddShaderNode::AddShaderNode(Point2 position)
 	type = CyclesNodeType::AddShader;
 }
 
-CyclesShaderEditor::DiffuseBSDFNode::DiffuseBSDFNode(Point2 position)
+CyclesShaderEditor::DiffuseBSDFNode::DiffuseBSDFNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -163,7 +163,7 @@ CyclesShaderEditor::DiffuseBSDFNode::DiffuseBSDFNode(Point2 position)
 	type = CyclesNodeType::DiffuseBSDF;
 }
 
-CyclesShaderEditor::GlossyBSDFNode::GlossyBSDFNode(Point2 position)
+CyclesShaderEditor::GlossyBSDFNode::GlossyBSDFNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -196,7 +196,7 @@ CyclesShaderEditor::GlossyBSDFNode::GlossyBSDFNode(Point2 position)
 	type = CyclesNodeType::GlossyBSDF;
 }
 
-CyclesShaderEditor::TransparentBSDFNode::TransparentBSDFNode(Point2 position)
+CyclesShaderEditor::TransparentBSDFNode::TransparentBSDFNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -215,7 +215,7 @@ CyclesShaderEditor::TransparentBSDFNode::TransparentBSDFNode(Point2 position)
 }
 
 
-CyclesShaderEditor::RefractionBSDFNode::RefractionBSDFNode(Point2 position)
+CyclesShaderEditor::RefractionBSDFNode::RefractionBSDFNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -249,7 +249,7 @@ CyclesShaderEditor::RefractionBSDFNode::RefractionBSDFNode(Point2 position)
 	type = CyclesNodeType::RefractionBSDF;
 }
 
-CyclesShaderEditor::GlassBSDFNode::GlassBSDFNode(Point2 position)
+CyclesShaderEditor::GlassBSDFNode::GlassBSDFNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -284,7 +284,7 @@ CyclesShaderEditor::GlassBSDFNode::GlassBSDFNode(Point2 position)
 	type = CyclesNodeType::GlassBSDF;
 }
 
-CyclesShaderEditor::TranslucentBSDFNode::TranslucentBSDFNode(Point2 position)
+CyclesShaderEditor::TranslucentBSDFNode::TranslucentBSDFNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -304,7 +304,7 @@ CyclesShaderEditor::TranslucentBSDFNode::TranslucentBSDFNode(Point2 position)
 	type = CyclesNodeType::TranslucentBSDF;
 }
 
-CyclesShaderEditor::AnisotropicBSDFNode::AnisotropicBSDFNode(Point2 position)
+CyclesShaderEditor::AnisotropicBSDFNode::AnisotropicBSDFNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -344,7 +344,7 @@ CyclesShaderEditor::AnisotropicBSDFNode::AnisotropicBSDFNode(Point2 position)
 	type = CyclesNodeType::AnisotropicBSDF;
 }
 
-CyclesShaderEditor::VelvetBSDFNode::VelvetBSDFNode(Point2 position)
+CyclesShaderEditor::VelvetBSDFNode::VelvetBSDFNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -367,7 +367,7 @@ CyclesShaderEditor::VelvetBSDFNode::VelvetBSDFNode(Point2 position)
 	type = CyclesNodeType::VelvetBSDF;
 }
 
-CyclesShaderEditor::ToonBSDFNode::ToonBSDFNode(Point2 position)
+CyclesShaderEditor::ToonBSDFNode::ToonBSDFNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -400,7 +400,7 @@ CyclesShaderEditor::ToonBSDFNode::ToonBSDFNode(Point2 position)
 	type = CyclesNodeType::ToonBSDF;
 }
 
-CyclesShaderEditor::SubsurfaceScatteringNode::SubsurfaceScatteringNode(Point2 position)
+CyclesShaderEditor::SubsurfaceScatteringNode::SubsurfaceScatteringNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -443,7 +443,7 @@ CyclesShaderEditor::SubsurfaceScatteringNode::SubsurfaceScatteringNode(Point2 po
 	content_width += 20.0f;
 }
 
-CyclesShaderEditor::EmissionNode::EmissionNode(Point2 position)
+CyclesShaderEditor::EmissionNode::EmissionNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -464,7 +464,7 @@ CyclesShaderEditor::EmissionNode::EmissionNode(Point2 position)
 	type = CyclesNodeType::Emission;
 }
 
-CyclesShaderEditor::HairBSDFNode::HairBSDFNode(Point2 position)
+CyclesShaderEditor::HairBSDFNode::HairBSDFNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -501,7 +501,7 @@ CyclesShaderEditor::HairBSDFNode::HairBSDFNode(Point2 position)
 	type = CyclesNodeType::HairBSDF;
 }
 
-CyclesShaderEditor::HoldoutNode::HoldoutNode(Point2 position)
+CyclesShaderEditor::HoldoutNode::HoldoutNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -514,7 +514,7 @@ CyclesShaderEditor::HoldoutNode::HoldoutNode(Point2 position)
 	type = CyclesNodeType::Holdout;
 }
 
-CyclesShaderEditor::VolumeAbsorptionNode::VolumeAbsorptionNode(Point2 position)
+CyclesShaderEditor::VolumeAbsorptionNode::VolumeAbsorptionNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -535,7 +535,7 @@ CyclesShaderEditor::VolumeAbsorptionNode::VolumeAbsorptionNode(Point2 position)
 	type = CyclesNodeType::VolAbsorption;
 }
 
-CyclesShaderEditor::VolumeScatterNode::VolumeScatterNode(Point2 position)
+CyclesShaderEditor::VolumeScatterNode::VolumeScatterNode(FloatPos position)
 {
 	world_pos = position;
 

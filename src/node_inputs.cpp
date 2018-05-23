@@ -1,6 +1,6 @@
 #include "node_inputs.h"
 
-CyclesShaderEditor::LightPathNode::LightPathNode(Point2 position)
+CyclesShaderEditor::LightPathNode::LightPathNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -35,7 +35,7 @@ CyclesShaderEditor::LightPathNode::LightPathNode(Point2 position)
 	type = CyclesNodeType::LightPath;
 }
 
-CyclesShaderEditor::FresnelNode::FresnelNode(Point2 position)
+CyclesShaderEditor::FresnelNode::FresnelNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -55,7 +55,7 @@ CyclesShaderEditor::FresnelNode::FresnelNode(Point2 position)
 	type = CyclesNodeType::Fresnel;
 }
 
-CyclesShaderEditor::LayerWeightNode::LayerWeightNode(Point2 position)
+CyclesShaderEditor::LayerWeightNode::LayerWeightNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -77,7 +77,7 @@ CyclesShaderEditor::LayerWeightNode::LayerWeightNode(Point2 position)
 	type = CyclesNodeType::LayerWeight;
 }
 
-CyclesShaderEditor::CameraDataNode::CameraDataNode(Point2 position)
+CyclesShaderEditor::CameraDataNode::CameraDataNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -94,7 +94,7 @@ CyclesShaderEditor::CameraDataNode::CameraDataNode(Point2 position)
 	type = CyclesNodeType::CameraData;
 }
 
-CyclesShaderEditor::TangentNode::TangentNode(Point2 position)
+CyclesShaderEditor::TangentNode::TangentNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -124,7 +124,7 @@ CyclesShaderEditor::TangentNode::TangentNode(Point2 position)
 	type = CyclesNodeType::Tangent;
 }
 
-CyclesShaderEditor::TextureCoordinateNode::TextureCoordinateNode(Point2 position)
+CyclesShaderEditor::TextureCoordinateNode::TextureCoordinateNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -149,7 +149,7 @@ CyclesShaderEditor::TextureCoordinateNode::TextureCoordinateNode(Point2 position
 	type = CyclesNodeType::TextureCoordinate;
 }
 
-CyclesShaderEditor::GeometryNode::GeometryNode(Point2 position)
+CyclesShaderEditor::GeometryNode::GeometryNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -176,7 +176,7 @@ CyclesShaderEditor::GeometryNode::GeometryNode(Point2 position)
 	type = CyclesNodeType::Geometry;
 }
 
-CyclesShaderEditor::ObjectInfoNode::ObjectInfoNode(Point2 position)
+CyclesShaderEditor::ObjectInfoNode::ObjectInfoNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -195,7 +195,7 @@ CyclesShaderEditor::ObjectInfoNode::ObjectInfoNode(Point2 position)
 	type = CyclesNodeType::ObjectInfo;
 }
 
-CyclesShaderEditor::RGBNode::RGBNode(Point2 position)
+CyclesShaderEditor::RGBNode::RGBNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -214,7 +214,7 @@ CyclesShaderEditor::RGBNode::RGBNode(Point2 position)
 	type = CyclesNodeType::RGB;
 }
 
-CyclesShaderEditor::ValueNode::ValueNode(Point2 position)
+CyclesShaderEditor::ValueNode::ValueNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -233,7 +233,7 @@ CyclesShaderEditor::ValueNode::ValueNode(Point2 position)
 	type = CyclesNodeType::Value;
 }
 
-CyclesShaderEditor::WireframeNode::WireframeNode(Point2 position)
+CyclesShaderEditor::WireframeNode::WireframeNode(FloatPos position)
 {
 	world_pos = position;
 

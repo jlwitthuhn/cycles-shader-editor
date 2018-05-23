@@ -18,7 +18,7 @@ CyclesShaderEditor::EditGraphView::EditGraphView(
 	nodes(nodes),
 	connections(connections)
 {
-	view_center = Point2(0.0f, 0.0f);
+	view_center = FloatPos(0.0f, 0.0f);
 }
 
 CyclesShaderEditor::EditorNode* CyclesShaderEditor::EditGraphView::get_node_under_mouse()
@@ -61,7 +61,7 @@ CyclesShaderEditor::NodeSocket* CyclesShaderEditor::EditGraphView::get_socket_un
 	return nullptr;
 }
 
-CyclesShaderEditor::Point2 CyclesShaderEditor::EditGraphView::get_mouse_world_position()
+CyclesShaderEditor::FloatPos CyclesShaderEditor::EditGraphView::get_mouse_world_position()
 {
 	return mouse_world_position;
 }
@@ -91,7 +91,7 @@ std::string CyclesShaderEditor::EditGraphView::get_zoom_string()
 	return std::string(buf);
 }
 
-void CyclesShaderEditor::EditGraphView::update(Point2 view_local_mouse_pos, int viewport_width, int viewport_height)
+void CyclesShaderEditor::EditGraphView::update(FloatPos view_local_mouse_pos, int viewport_width, int viewport_height)
 {
 	const float zoom_scale = zoom.get_world_scale();
 
@@ -109,8 +109,8 @@ void CyclesShaderEditor::EditGraphView::update(Point2 view_local_mouse_pos, int 
 		// Find the difference between where the mouse was last frame, and where it will be this frame
 		const float x_pos = view_local_mouse_pos.get_pos_x() / (viewport_width) * (view_width)+border_left;
 		const float y_pos = view_local_mouse_pos.get_pos_y() / (viewport_height) * (view_height)+border_top;
-		Point2 potential_world_position(x_pos, y_pos);
-		Point2 delta = potential_world_position - mouse_world_position;
+		FloatPos potential_world_position(x_pos, y_pos);
+		FloatPos delta = potential_world_position - mouse_world_position;
 		view_center = view_center - delta;
 		// Re-calculate screen limits with new center
 		border_left = view_center.get_floor_pos_x() - static_cast<int>(view_width) / 2;
@@ -121,7 +121,7 @@ void CyclesShaderEditor::EditGraphView::update(Point2 view_local_mouse_pos, int 
 	// Convert coordinate from window space to world space
 	const float x_pos = view_local_mouse_pos.get_pos_x() / (viewport_width) * (view_width) + border_left;
 	const float y_pos = view_local_mouse_pos.get_pos_y() / (viewport_height) * (view_height) + border_top;
-	mouse_world_position = Point2(x_pos, y_pos);
+	mouse_world_position = FloatPos(x_pos, y_pos);
 
 	if (box_select_active) {
 		world_box_select_end = mouse_world_position;
@@ -212,7 +212,7 @@ void CyclesShaderEditor::EditGraphView::draw(NVGcontext* draw_context)
 	// Nodes
 	std::list<EditorNode*>::reverse_iterator node_iterator;
 	for (node_iterator = nodes.rbegin(); node_iterator != nodes.rend(); ++node_iterator) {
-		CyclesShaderEditor::Point2 node_local_mouse_pos = mouse_world_position - (*node_iterator)->world_pos;
+		CyclesShaderEditor::FloatPos node_local_mouse_pos = mouse_world_position - (*node_iterator)->world_pos;
 		(*node_iterator)->set_mouse_position(node_local_mouse_pos);
 		nvgSave(draw_context);
 		nvgTranslate(draw_context, (*node_iterator)->world_pos.get_floor_pos_x(), (*node_iterator)->world_pos.get_floor_pos_y());
@@ -441,22 +441,22 @@ void CyclesShaderEditor::EditGraphView::node_move_end()
 
 void CyclesShaderEditor::EditGraphView::move_left()
 {
-	view_center = view_center - Point2(GRID_SIZE_FL, 0.0f);
+	view_center = view_center - FloatPos(GRID_SIZE_FL, 0.0f);
 }
 
 void CyclesShaderEditor::EditGraphView::move_right()
 {
-	view_center = view_center + Point2(GRID_SIZE_FL, 0.0f);
+	view_center = view_center + FloatPos(GRID_SIZE_FL, 0.0f);
 }
 
 void CyclesShaderEditor::EditGraphView::move_up()
 {
-	view_center = view_center - Point2(0.0f, GRID_SIZE_FL);
+	view_center = view_center - FloatPos(0.0f, GRID_SIZE_FL);
 }
 
 void CyclesShaderEditor::EditGraphView::move_down()
 {
-	view_center = view_center + Point2(0.0f, GRID_SIZE_FL);
+	view_center = view_center + FloatPos(0.0f, GRID_SIZE_FL);
 }
 
 void CyclesShaderEditor::EditGraphView::zoom_in()
@@ -616,8 +616,8 @@ std::set<CyclesShaderEditor::EditorNode*> CyclesShaderEditor::EditGraphView::get
 	}
 	assert(min_y_pos <= max_y_pos);
 
-	CyclesShaderEditor::Point2 min_position(min_x_pos, min_y_pos);
-	CyclesShaderEditor::Point2 max_position(max_x_pos, max_y_pos);
+	CyclesShaderEditor::FloatPos min_position(min_x_pos, min_y_pos);
+	CyclesShaderEditor::FloatPos max_position(max_x_pos, max_y_pos);
 
 	for (EditorNode* this_node : nodes) {
 		if (do_rectangles_overlap(min_position, max_position, this_node->world_pos, this_node->world_pos + this_node->get_dimensions())) {
