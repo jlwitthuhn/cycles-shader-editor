@@ -6,8 +6,7 @@
 
 void CyclesShaderEditor::Drawing::draw_button(
 	NVGcontext* const draw_context,
-	const float x_pos,
-	const float y_pos,
+	const FloatPos pos,
 	const float width,
 	const float height,
 	const std::string& label,
@@ -18,6 +17,9 @@ void CyclesShaderEditor::Drawing::draw_button(
 	const int gradient_alpha = enabled ? 31 : 15;
 	const int button_alpha = enabled ? 127 : 63;
 	const int label_alpha = enabled ? 255 : 127;
+
+	const float x_pos = pos.get_pos_x();
+	const float y_pos = pos.get_pos_y();
 
 	const unsigned char start_color = pressed ? 0 : 255;
 	const unsigned char end_color = pressed ? 127 : 15;
@@ -55,10 +57,13 @@ void CyclesShaderEditor::Drawing::draw_button(
 	nvgText(draw_context, x_pos + width / 2, y_pos + height / 2, label.c_str(), NULL);
 }
 
-void CyclesShaderEditor::Drawing::draw_color_pick_cursor(NVGcontext* const draw_context, const float x_pos, const float y_pos)
+void CyclesShaderEditor::Drawing::draw_color_pick_cursor(NVGcontext* const draw_context, const FloatPos pos)
 {
-	const float CURSOR_LENGTH_SHORT = 3.0f;
-	const float CURSOR_LENGTH_LONG = 8.0f;
+	constexpr float CURSOR_LENGTH_SHORT = 3.0f;
+	constexpr float CURSOR_LENGTH_LONG = 8.0f;
+
+	const float x_pos = pos.get_pos_x();
+	const float y_pos = pos.get_pos_y();
 
 	nvgBeginPath(draw_context);
 

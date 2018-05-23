@@ -73,10 +73,9 @@ void CyclesShaderEditor::NodeEditorToolbar::draw(NVGcontext* draw_context, float
 			continue;
 		}
 
-		const float x_pos = section_begin_x + UI_TOOLBAR_BUTTON_HPAD;
-		const float y_pos = UI_TOOLBAR_BUTTON_VPAD;
+		const FloatPos button_pos(section_begin_x + UI_TOOLBAR_BUTTON_HPAD, UI_TOOLBAR_BUTTON_VPAD);
 		const float button_height = get_toolbar_height() - 2 * UI_TOOLBAR_BUTTON_VPAD;
-		Drawing::draw_button(draw_context, x_pos, y_pos, UI_TOOLBAR_BUTTON_WIDTH, button_height, this_button.get_label(), this_button.enabled, this_button.pressed);
+		Drawing::draw_button(draw_context, button_pos, UI_TOOLBAR_BUTTON_WIDTH, button_height, this_button.get_label(), this_button.enabled, this_button.pressed);
 
 		section_begin_x += UI_TOOLBAR_BUTTON_WIDTH + UI_TOOLBAR_BUTTON_HPAD * 2;
 	}

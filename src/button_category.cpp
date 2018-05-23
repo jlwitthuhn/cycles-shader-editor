@@ -65,7 +65,7 @@ CyclesShaderEditor::NodeCategoryButton::~NodeCategoryButton()
 
 void CyclesShaderEditor::NodeCategoryButton::draw(const FloatPos draw_position, NVGcontext* const draw_context)
 {
-	Drawing::draw_button(draw_context, draw_position.get_pos_x(), draw_position.get_pos_y(), get_button_width(), get_button_height(), label, true, pressed);
+	Drawing::draw_button(draw_context, draw_position, get_button_width(), get_button_height(), label, true, pressed);
 }
 
 void CyclesShaderEditor::NodeCategoryButton::update_mouse_position(const FloatPos local_position)

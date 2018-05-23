@@ -76,7 +76,7 @@ float CyclesShaderEditor::EditColorPanel::draw(NVGcontext* draw_context, ColorSo
 		// Cursor
 		const float cursor_pos_x = hsv.sat * rect_width + draw_x;
 		const float cursor_pos_y = (1.0f - hsv.val) * rect_height + draw_y;
-		Drawing::draw_color_pick_cursor(draw_context, cursor_pos_x, cursor_pos_y);
+		Drawing::draw_color_pick_cursor(draw_context, FloatPos(cursor_pos_x, cursor_pos_y));
 
 		// Click target
 		FloatPos color_rect_begin = FloatPos(draw_x, draw_y);

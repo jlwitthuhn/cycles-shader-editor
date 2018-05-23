@@ -22,7 +22,7 @@ float CyclesShaderEditor::NodeCreationButton::draw(NVGcontext* const draw_contex
 		return 0.0f;
 	}
 
-	Drawing::draw_button(draw_context, draw_pos.get_pos_x(), draw_pos.get_pos_y(), button_width, UI_SUBWIN_NODE_LIST_NODE_BUTTON_HEIGHT, label.c_str(), true, pressed);
+	Drawing::draw_button(draw_context, draw_pos, button_width, UI_SUBWIN_NODE_LIST_NODE_BUTTON_HEIGHT, label.c_str(), true, pressed);
 
 	return UI_SUBWIN_NODE_LIST_NODE_BUTTON_HEIGHT + UI_SUBWIN_NODE_LIST_BUTTON_VPADDING * 2;
 }
