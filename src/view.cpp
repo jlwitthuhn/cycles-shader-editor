@@ -6,6 +6,7 @@
 
 #include <nanovg.h>
 
+#include "drawing.h"
 #include "util_rectangle.h"
 
 static constexpr int GRID_SIZE_INT = 32;
@@ -100,10 +101,10 @@ void CyclesShaderEditor::EditGraphView::update(FloatPos view_local_mouse_pos, in
 	const float view_height = viewport_height / zoom_scale;
 
 	// Calculate screen limits
-	border_left = view_center.get_floor_pos_x() - static_cast<int>(view_width) / 2;
-	border_right = view_center.get_floor_pos_x() + static_cast<int>(view_width) / 2;
-	border_top = view_center.get_floor_pos_y() - static_cast<int>(view_height) / 2;
-	border_bottom = view_center.get_floor_pos_y() + static_cast<int>(view_height) / 2;
+	border_left = view_center.get_floor_x() - static_cast<int>(view_width) / 2;
+	border_right = view_center.get_floor_x() + static_cast<int>(view_width) / 2;
+	border_top = view_center.get_floor_y() - static_cast<int>(view_height) / 2;
+	border_bottom = view_center.get_floor_y() + static_cast<int>(view_height) / 2;
 
 	if (mouse_move_active) {
 		// Find the difference between where the mouse was last frame, and where it will be this frame
@@ -113,10 +114,10 @@ void CyclesShaderEditor::EditGraphView::update(FloatPos view_local_mouse_pos, in
 		FloatPos delta = potential_world_position - mouse_world_position;
 		view_center = view_center - delta;
 		// Re-calculate screen limits with new center
-		border_left = view_center.get_floor_pos_x() - static_cast<int>(view_width) / 2;
-		border_right = view_center.get_floor_pos_x() + static_cast<int>(view_width) / 2;
-		border_top = view_center.get_floor_pos_y() - static_cast<int>(view_height) / 2;
-		border_bottom = view_center.get_floor_pos_y() + static_cast<int>(view_height) / 2;
+		border_left = view_center.get_floor_x() - static_cast<int>(view_width) / 2;
+		border_right = view_center.get_floor_x() + static_cast<int>(view_width) / 2;
+		border_top = view_center.get_floor_y() - static_cast<int>(view_height) / 2;
+		border_bottom = view_center.get_floor_y() + static_cast<int>(view_height) / 2;
 	}
 	// Convert coordinate from window space to world space
 	const float x_pos = view_local_mouse_pos.get_x() / (viewport_width) * (view_width) + border_left;
@@ -215,7 +216,7 @@ void CyclesShaderEditor::EditGraphView::draw(NVGcontext* draw_context)
 		CyclesShaderEditor::FloatPos node_local_mouse_pos = mouse_world_position - (*node_iterator)->world_pos;
 		(*node_iterator)->set_mouse_position(node_local_mouse_pos);
 		nvgSave(draw_context);
-		nvgTranslate(draw_context, (*node_iterator)->world_pos.get_floor_pos_x(), (*node_iterator)->world_pos.get_floor_pos_y());
+		nvgTranslate(draw_context, (*node_iterator)->world_pos.get_floor_x(), (*node_iterator)->world_pos.get_floor_y());
 		(*node_iterator)->draw_node(draw_context);
 		nvgRestore(draw_context);
 	}
@@ -240,37 +241,12 @@ void CyclesShaderEditor::EditGraphView::draw(NVGcontext* draw_context)
 	std::list<NodeConnection>::iterator connection_iter;
 	for (connection_iter = connections.begin(); connection_iter != connections.end(); ++connection_iter) {
 		NodeConnection this_connection = *connection_iter;
-
-		float source_x = this_connection.begin_socket->world_draw_position.get_x();
-		float source_y = this_connection.begin_socket->world_draw_position.get_y();
-		float dest_x = this_connection.end_socket->world_draw_position.get_x();
-		float dest_y = this_connection.end_socket->world_draw_position.get_y();
-
-		float mid_x = source_x + (dest_x - source_x) / 2;
-
-		nvgBeginPath(draw_context);
-		nvgMoveTo(draw_context, source_x, source_y);
-		nvgBezierTo(draw_context, mid_x, source_y, mid_x, dest_y, dest_x, dest_y);
-		nvgStrokeColor(draw_context, nvgRGBA(255, 255, 255, 255));
-		nvgStrokeWidth(draw_context, 2.0f);
-		nvgStroke(draw_context);
+		Drawing::draw_node_connection_curve(draw_context, this_connection.begin_socket->world_draw_position, this_connection.end_socket->world_draw_position, 2.0f);
 	}
 
 	// Connection in progress
 	if (connection_in_progress_start != nullptr) {
-		float source_x = connection_in_progress_start->world_draw_position.get_x();
-		float source_y = connection_in_progress_start->world_draw_position.get_y();
-		float dest_x = mouse_world_position.get_x();
-		float dest_y = mouse_world_position.get_y();
-
-		float mid_x = source_x + (dest_x - source_x) / 2;
-
-		nvgBeginPath(draw_context);
-		nvgMoveTo(draw_context, source_x, source_y);
-		nvgBezierTo(draw_context, mid_x, source_y, mid_x, dest_y, dest_x, dest_y);
-		nvgStrokeColor(draw_context, nvgRGBA(255, 255, 255, 255));
-		nvgStrokeWidth(draw_context, 3.2f);
-		nvgStroke(draw_context);
+		Drawing::draw_node_connection_curve(draw_context, connection_in_progress_start->world_draw_position, mouse_world_position, 3.2f);
 	}
 
 	nvgRestore(draw_context);

@@ -395,8 +395,8 @@ void CyclesShaderEditor::EditorNode::update_output_node(OutputNode& output)
 {
 	output.type = type;
 
-	output.world_x = world_pos.get_floor_pos_x();
-	output.world_y = world_pos.get_floor_pos_y();
+	output.world_x = world_pos.get_floor_x();
+	output.world_y = world_pos.get_floor_y();
 
 	if (type == CyclesNodeType::MaterialOutput) {
 		output.name = std::string("output");

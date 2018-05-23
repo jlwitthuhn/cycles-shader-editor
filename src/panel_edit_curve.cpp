@@ -110,8 +110,8 @@ float CyclesShaderEditor::EditCurvePanel::draw(NVGcontext* draw_context)
 				const FloatPos left_point_panel_space = get_panel_space_point(left_point, UI_SUBWIN_PARAM_EDIT_RECT_HPAD, UI_SUBWIN_PARAM_EDIT_RECT_VPAD, rect_width, rect_height);
 				const FloatPos right_point_panel_space = get_panel_space_point(right_point, UI_SUBWIN_PARAM_EDIT_RECT_HPAD, UI_SUBWIN_PARAM_EDIT_RECT_VPAD, rect_width, rect_height);
 
-				nvgMoveTo(draw_context, left_point_panel_space.get_floor_pos_x(), left_point_panel_space.get_floor_pos_y());
-				nvgLineTo(draw_context, right_point_panel_space.get_floor_pos_x(), right_point_panel_space.get_floor_pos_y());
+				nvgMoveTo(draw_context, left_point_panel_space.get_floor_x(), left_point_panel_space.get_floor_y());
+				nvgLineTo(draw_context, right_point_panel_space.get_floor_x(), right_point_panel_space.get_floor_y());
 			}
 
 			// Vertical
@@ -122,8 +122,8 @@ float CyclesShaderEditor::EditCurvePanel::draw(NVGcontext* draw_context)
 				const FloatPos top_point_panel_space = get_panel_space_point(top_point, UI_SUBWIN_PARAM_EDIT_RECT_HPAD, UI_SUBWIN_PARAM_EDIT_RECT_VPAD, rect_width, rect_height);
 				const FloatPos bot_point_panel_space = get_panel_space_point(bot_point, UI_SUBWIN_PARAM_EDIT_RECT_HPAD, UI_SUBWIN_PARAM_EDIT_RECT_VPAD, rect_width, rect_height);
 
-				nvgMoveTo(draw_context, top_point_panel_space.get_floor_pos_x(), top_point_panel_space.get_floor_pos_y());
-				nvgLineTo(draw_context, bot_point_panel_space.get_floor_pos_x(), bot_point_panel_space.get_floor_pos_y());
+				nvgMoveTo(draw_context, top_point_panel_space.get_floor_x(), top_point_panel_space.get_floor_y());
+				nvgLineTo(draw_context, bot_point_panel_space.get_floor_x(), bot_point_panel_space.get_floor_y());
 			}
 		}
 		nvgStrokeWidth(draw_context, 1.0f);

@@ -1,5 +1,7 @@
 #include "drawing.h"
 
+#include <cmath>
+
 #include <nanovg.h>
 
 #include "gui_sizes.h"
@@ -95,5 +97,29 @@ void CyclesShaderEditor::Drawing::draw_color_pick_cursor(NVGcontext* const draw_
 	nvgFill(draw_context);
 	nvgStrokeColor(draw_context, nvgRGBAf(1.0f, 1.0f, 1.0f, 1.0f));
 	nvgStrokeWidth(draw_context, 1.0f);
+	nvgStroke(draw_context);
+}
+
+void CyclesShaderEditor::Drawing::draw_node_connection_curve(
+	NVGcontext* const draw_context,
+	const FloatPos begin_pos,
+	const FloatPos end_pos,
+	const float width
+	)
+{
+	const float source_x = begin_pos.get_x();
+	const float source_y = begin_pos.get_y();
+	const float dest_x = end_pos.get_x();
+	const float dest_y = end_pos.get_y();
+
+	const float c_distance = fabs(dest_x - source_x) / 2.0f;
+	const float c1_x = source_x + c_distance;
+	const float c2_x = dest_x - c_distance;
+
+	nvgBeginPath(draw_context);
+	nvgMoveTo(draw_context, source_x, source_y);
+	nvgBezierTo(draw_context, c1_x, source_y, c2_x, dest_y, dest_x, dest_y);
+	nvgStrokeColor(draw_context, nvgRGBA(255, 255, 255, 255));
+	nvgStrokeWidth(draw_context, width);
 	nvgStroke(draw_context);
 }
