@@ -23,7 +23,7 @@ void CyclesShaderEditor::BaseInputBox::draw(NVGcontext* const draw_context, cons
 
 	// Back fill
 	nvgBeginPath(draw_context);
-	nvgRoundedRect(draw_context, position.get_pos_x(), position.get_pos_y(), width, height, INPUT_CORNER_RADIUS);
+	nvgRoundedRect(draw_context, position.get_x(), position.get_y(), width, height, INPUT_CORNER_RADIUS);
 	if (is_mouse_over()) {
 		nvgFillColor(draw_context, nvgRGBA(235, 235, 235, 255));
 	}
@@ -47,12 +47,12 @@ void CyclesShaderEditor::BaseInputBox::draw(NVGcontext* const draw_context, cons
 	else {
 		socket_text_stream << get_value_as_string();
 	}
-	nvgText(draw_context, position.get_pos_x() + width / 2, position.get_pos_y() + height / 2, socket_text_stream.str().c_str(), nullptr);
+	nvgText(draw_context, position.get_x() + width / 2, position.get_y() + height / 2, socket_text_stream.str().c_str(), nullptr);
 
 	if (selected) {
 		// Outline
 		nvgBeginPath(draw_context);
-		nvgRoundedRect(draw_context, position.get_pos_x(), position.get_pos_y(), width, height, INPUT_CORNER_RADIUS);
+		nvgRoundedRect(draw_context, position.get_x(), position.get_y(), width, height, INPUT_CORNER_RADIUS);
 		nvgStrokeColor(draw_context, nvgRGBA(0, 0, 0, 255));
 		nvgStrokeWidth(draw_context, 1.0f);
 		nvgStroke(draw_context);
@@ -70,10 +70,10 @@ bool CyclesShaderEditor::BaseInputBox::is_mouse_over()
 		return false;
 	}
 
-	return (parent_mouse_pos.get_pos_x() > position.get_pos_x() &&
-		parent_mouse_pos.get_pos_x() < position.get_pos_x() + width &&
-		parent_mouse_pos.get_pos_y() > position.get_pos_y() &&
-		parent_mouse_pos.get_pos_y() < position.get_pos_y() + height);
+	return (parent_mouse_pos.get_x() > position.get_x() &&
+		parent_mouse_pos.get_x() < position.get_x() + width &&
+		parent_mouse_pos.get_y() > position.get_y() &&
+		parent_mouse_pos.get_y() < position.get_y() + height);
 }
 
 void CyclesShaderEditor::BaseInputBox::handle_character(const unsigned int codepoint)

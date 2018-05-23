@@ -8,18 +8,18 @@ CyclesShaderEditor::GenericClickTarget::GenericClickTarget(const FloatPos begin_
 
 bool CyclesShaderEditor::GenericClickTarget::is_mouse_over_target(const FloatPos mouse_pos)
 {
-	return (mouse_pos.get_pos_x() > begin.get_pos_x() &&
-		mouse_pos.get_pos_x() < end.get_pos_x() &&
-		mouse_pos.get_pos_y() > begin.get_pos_y() &&
-		mouse_pos.get_pos_y() < end.get_pos_y());
+	return (mouse_pos.get_x() > begin.get_x() &&
+		mouse_pos.get_x() < end.get_x() &&
+		mouse_pos.get_y() > begin.get_y() &&
+		mouse_pos.get_y() < end.get_y());
 }
 
 CyclesShaderEditor::FloatPos CyclesShaderEditor::GenericClickTarget::get_normalized_mouse_pos(const CyclesShaderEditor::FloatPos mouse_pos)
 {
-	const float width = end.get_pos_x() - begin.get_pos_x();
-	const float height = end.get_pos_y() - begin.get_pos_y();
-	const float pos_x = (mouse_pos.get_pos_x() - begin.get_pos_x()) / width;
-	const float pos_y = (mouse_pos.get_pos_y() - begin.get_pos_y()) / height;
+	const float width = end.get_x() - begin.get_x();
+	const float height = end.get_y() - begin.get_y();
+	const float pos_x = (mouse_pos.get_x() - begin.get_x()) / width;
+	const float pos_y = (mouse_pos.get_y() - begin.get_y()) / height;
 
 	FloatPos result(pos_x, pos_y);
 	result.clamp_to(FloatPos(0.0f, 0.0f), FloatPos(1.0f, 1.0f));

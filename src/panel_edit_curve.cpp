@@ -11,8 +11,8 @@
 
 static CyclesShaderEditor::FloatPos get_panel_space_point(const CyclesShaderEditor::FloatPos normalized_point, float hpad, float vpad, float width, float height)
 {
-	float out_x = hpad + normalized_point.get_pos_x() * width;
-	float out_y = vpad + (1.0f - normalized_point.get_pos_y()) * height;
+	float out_x = hpad + normalized_point.get_x() * width;
+	float out_y = vpad + (1.0f - normalized_point.get_y()) * height;
 
 	return CyclesShaderEditor::FloatPos(out_x, out_y);
 }
@@ -56,7 +56,7 @@ void CyclesShaderEditor::EditCurvePanel::pre_draw()
 	if (selected_point_valid && move_selected_point && mouse_has_moved) {
 		FloatPos normalized_pos = target_view.get_normalized_mouse_pos(mouse_local_pos);
 		normalized_pos.clamp_to(FloatPos(0.0f, 0.0f), FloatPos(1.0f, 1.0f));
-		FloatPos xy_pos = FloatPos(normalized_pos.get_pos_x(), 1.0f - normalized_pos.get_pos_y());
+		FloatPos xy_pos = FloatPos(normalized_pos.get_x(), 1.0f - normalized_pos.get_y());
 		selected_point_index = attached_curve->move_point(selected_point_index, xy_pos);
 	}
 }
@@ -142,10 +142,10 @@ float CyclesShaderEditor::EditCurvePanel::draw(NVGcontext* draw_context)
 				const FloatPos normalized_point(current_x, current_y);
 				const FloatPos draw_point = get_panel_space_point(normalized_point, UI_SUBWIN_PARAM_EDIT_RECT_HPAD, UI_SUBWIN_PARAM_EDIT_RECT_VPAD, rect_width, rect_height);
 				if (i == 0) {
-					nvgMoveTo(draw_context, draw_point.get_pos_x(), draw_point.get_pos_y());
+					nvgMoveTo(draw_context, draw_point.get_x(), draw_point.get_y());
 				}
 				else {
-					nvgLineTo(draw_context, draw_point.get_pos_x(), draw_point.get_pos_y());
+					nvgLineTo(draw_context, draw_point.get_x(), draw_point.get_y());
 				}
 			}
 		}
@@ -157,7 +157,7 @@ float CyclesShaderEditor::EditCurvePanel::draw(NVGcontext* draw_context)
 		nvgBeginPath(draw_context);
 		for (const FloatPos this_point : attached_curve->curve_points) {
 			const FloatPos panel_space_point = get_panel_space_point(this_point, UI_SUBWIN_PARAM_EDIT_RECT_HPAD, UI_SUBWIN_PARAM_EDIT_RECT_VPAD, rect_width, rect_height);
-			nvgCircle(draw_context, panel_space_point.get_pos_x(), panel_space_point.get_pos_y(), UI_SUBWIN_PARAM_EDIT_CURVE_POINT_RADIUS);
+			nvgCircle(draw_context, panel_space_point.get_x(), panel_space_point.get_y(), UI_SUBWIN_PARAM_EDIT_CURVE_POINT_RADIUS);
 		}
 		nvgFillColor(draw_context, point_color);
 		nvgFill(draw_context);
@@ -167,7 +167,7 @@ float CyclesShaderEditor::EditCurvePanel::draw(NVGcontext* draw_context)
 			const FloatPos selected_point = attached_curve->curve_points[selected_point_index];
 			const FloatPos selected_point_panel_space = get_panel_space_point(selected_point, UI_SUBWIN_PARAM_EDIT_RECT_HPAD, UI_SUBWIN_PARAM_EDIT_RECT_VPAD, rect_width, rect_height);
 			nvgBeginPath(draw_context);
-			nvgCircle(draw_context, selected_point_panel_space.get_pos_x(), selected_point_panel_space.get_pos_y(), UI_SUBWIN_PARAM_EDIT_CURVE_POINT_RADIUS * 1.5f);
+			nvgCircle(draw_context, selected_point_panel_space.get_x(), selected_point_panel_space.get_y(), UI_SUBWIN_PARAM_EDIT_CURVE_POINT_RADIUS * 1.5f);
 			nvgStrokeWidth(draw_context, 1.0f);
 			nvgStrokeColor(draw_context, selected_point_color);
 			nvgStroke(draw_context);
@@ -356,10 +356,10 @@ bool CyclesShaderEditor::EditCurvePanel::is_mouse_over()
 	const float min_y = 0.0f;
 	const float max_y = panel_height;
 
-	if (mouse_local_pos.get_pos_x() > min_x &&
-		mouse_local_pos.get_pos_x() < max_x &&
-		mouse_local_pos.get_pos_y() > min_y &&
-		mouse_local_pos.get_pos_y() < max_y)
+	if (mouse_local_pos.get_x() > min_x &&
+		mouse_local_pos.get_x() < max_x &&
+		mouse_local_pos.get_y() > min_y &&
+		mouse_local_pos.get_y() < max_y)
 	{
 		return true;
 	}
@@ -372,7 +372,7 @@ void CyclesShaderEditor::EditCurvePanel::handle_mouse_button(int button, int act
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
 		if (target_view.is_mouse_over_target(mouse_local_pos)) {
 			FloatPos normalized_pos = target_view.get_normalized_mouse_pos(mouse_local_pos);
-			FloatPos xy_pos = FloatPos(normalized_pos.get_pos_x(), 1.0f - normalized_pos.get_pos_y());
+			FloatPos xy_pos = FloatPos(normalized_pos.get_x(), 1.0f - normalized_pos.get_y());
 			if (edit_mode == EditCurveMode::MOVE) {
 				size_t target_index;
 				if (attached_curve->get_target_index(xy_pos, target_index)) {
@@ -388,7 +388,7 @@ void CyclesShaderEditor::EditCurvePanel::handle_mouse_button(int button, int act
 				}
 			}
 			else if (edit_mode == EditCurveMode::CREATE) {
-				attached_curve->create_point(xy_pos.get_pos_x());
+				attached_curve->create_point(xy_pos.get_x());
 				request_undo_push = true;
 			}
 			else if (edit_mode == EditCurveMode::DELETE) {

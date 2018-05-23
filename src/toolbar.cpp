@@ -86,8 +86,8 @@ void CyclesShaderEditor::NodeEditorToolbar::draw(NVGcontext* draw_context, float
 bool CyclesShaderEditor::NodeEditorToolbar::is_mouse_over()
 {
 	return (
-		mouse_screen_pos.get_pos_y() > 0.0f &&
-		mouse_screen_pos.get_pos_y() < get_toolbar_height()
+		mouse_screen_pos.get_y() > 0.0f &&
+		mouse_screen_pos.get_y() < get_toolbar_height()
 		);
 }
 
@@ -156,10 +156,10 @@ CyclesShaderEditor::ToolbarButton* CyclesShaderEditor::NodeEditorToolbar::get_bu
 		const float BUTTON_MIN_X = section_begin_x + UI_TOOLBAR_BUTTON_HPAD;
 		const float BUTTON_MAX_X = BUTTON_MIN_X + UI_TOOLBAR_BUTTON_WIDTH;
 
-		if (mouse_screen_pos.get_pos_y() > BUTTON_MIN_Y &&
-			mouse_screen_pos.get_pos_y() < BUTTON_MAX_Y &&
-			mouse_screen_pos.get_pos_x() > BUTTON_MIN_X &&
-			mouse_screen_pos.get_pos_x() < BUTTON_MAX_X)
+		if (mouse_screen_pos.get_y() > BUTTON_MIN_Y &&
+			mouse_screen_pos.get_y() < BUTTON_MAX_Y &&
+			mouse_screen_pos.get_x() > BUTTON_MIN_X &&
+			mouse_screen_pos.get_x() < BUTTON_MAX_X)
 		{
 			return &this_button;
 		}

@@ -29,10 +29,10 @@ float CyclesShaderEditor::NodeCreationButton::draw(NVGcontext* const draw_contex
 
 bool CyclesShaderEditor::NodeCreationButton::is_mouse_over_button()
 {
-	if (mouse_parent_pos.get_pos_x() > draw_pos.get_pos_x() &&
-		mouse_parent_pos.get_pos_x() < draw_pos.get_pos_x() + button_width &&
-		mouse_parent_pos.get_pos_y() > draw_pos.get_pos_y() &&
-		mouse_parent_pos.get_pos_y() < draw_pos.get_pos_y() + UI_SUBWIN_NODE_LIST_NODE_BUTTON_HEIGHT)
+	if (mouse_parent_pos.get_x() > draw_pos.get_x() &&
+		mouse_parent_pos.get_x() < draw_pos.get_x() + button_width &&
+		mouse_parent_pos.get_y() > draw_pos.get_y() &&
+		mouse_parent_pos.get_y() < draw_pos.get_y() + UI_SUBWIN_NODE_LIST_NODE_BUTTON_HEIGHT)
 	{
 		return true;
 	}

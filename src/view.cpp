@@ -107,8 +107,8 @@ void CyclesShaderEditor::EditGraphView::update(FloatPos view_local_mouse_pos, in
 
 	if (mouse_move_active) {
 		// Find the difference between where the mouse was last frame, and where it will be this frame
-		const float x_pos = view_local_mouse_pos.get_pos_x() / (viewport_width) * (view_width)+border_left;
-		const float y_pos = view_local_mouse_pos.get_pos_y() / (viewport_height) * (view_height)+border_top;
+		const float x_pos = view_local_mouse_pos.get_x() / (viewport_width) * (view_width)+border_left;
+		const float y_pos = view_local_mouse_pos.get_y() / (viewport_height) * (view_height)+border_top;
 		FloatPos potential_world_position(x_pos, y_pos);
 		FloatPos delta = potential_world_position - mouse_world_position;
 		view_center = view_center - delta;
@@ -119,8 +119,8 @@ void CyclesShaderEditor::EditGraphView::update(FloatPos view_local_mouse_pos, in
 		border_bottom = view_center.get_floor_pos_y() + static_cast<int>(view_height) / 2;
 	}
 	// Convert coordinate from window space to world space
-	const float x_pos = view_local_mouse_pos.get_pos_x() / (viewport_width) * (view_width) + border_left;
-	const float y_pos = view_local_mouse_pos.get_pos_y() / (viewport_height) * (view_height) + border_top;
+	const float x_pos = view_local_mouse_pos.get_x() / (viewport_width) * (view_width) + border_left;
+	const float y_pos = view_local_mouse_pos.get_y() / (viewport_height) * (view_height) + border_top;
 	mouse_world_position = FloatPos(x_pos, y_pos);
 
 	if (box_select_active) {
@@ -227,11 +227,11 @@ void CyclesShaderEditor::EditGraphView::draw(NVGcontext* draw_context)
 
 		nvgBeginPath(draw_context);
 
-		nvgMoveTo(draw_context, world_box_select_begin.get_pos_x(), world_box_select_begin.get_pos_y());
-		nvgLineTo(draw_context, world_box_select_begin.get_pos_x(), world_box_select_end.get_pos_y());
-		nvgLineTo(draw_context, world_box_select_end.get_pos_x(), world_box_select_end.get_pos_y());
-		nvgLineTo(draw_context, world_box_select_end.get_pos_x(), world_box_select_begin.get_pos_y());
-		nvgLineTo(draw_context, world_box_select_begin.get_pos_x(), world_box_select_begin.get_pos_y());
+		nvgMoveTo(draw_context, world_box_select_begin.get_x(), world_box_select_begin.get_y());
+		nvgLineTo(draw_context, world_box_select_begin.get_x(), world_box_select_end.get_y());
+		nvgLineTo(draw_context, world_box_select_end.get_x(), world_box_select_end.get_y());
+		nvgLineTo(draw_context, world_box_select_end.get_x(), world_box_select_begin.get_y());
+		nvgLineTo(draw_context, world_box_select_begin.get_x(), world_box_select_begin.get_y());
 
 		nvgStroke(draw_context);
 	}
@@ -241,10 +241,10 @@ void CyclesShaderEditor::EditGraphView::draw(NVGcontext* draw_context)
 	for (connection_iter = connections.begin(); connection_iter != connections.end(); ++connection_iter) {
 		NodeConnection this_connection = *connection_iter;
 
-		float source_x = this_connection.begin_socket->world_draw_position.get_pos_x();
-		float source_y = this_connection.begin_socket->world_draw_position.get_pos_y();
-		float dest_x = this_connection.end_socket->world_draw_position.get_pos_x();
-		float dest_y = this_connection.end_socket->world_draw_position.get_pos_y();
+		float source_x = this_connection.begin_socket->world_draw_position.get_x();
+		float source_y = this_connection.begin_socket->world_draw_position.get_y();
+		float dest_x = this_connection.end_socket->world_draw_position.get_x();
+		float dest_y = this_connection.end_socket->world_draw_position.get_y();
 
 		float mid_x = source_x + (dest_x - source_x) / 2;
 
@@ -258,10 +258,10 @@ void CyclesShaderEditor::EditGraphView::draw(NVGcontext* draw_context)
 
 	// Connection in progress
 	if (connection_in_progress_start != nullptr) {
-		float source_x = connection_in_progress_start->world_draw_position.get_pos_x();
-		float source_y = connection_in_progress_start->world_draw_position.get_pos_y();
-		float dest_x = mouse_world_position.get_pos_x();
-		float dest_y = mouse_world_position.get_pos_y();
+		float source_x = connection_in_progress_start->world_draw_position.get_x();
+		float source_y = connection_in_progress_start->world_draw_position.get_y();
+		float dest_x = mouse_world_position.get_x();
+		float dest_y = mouse_world_position.get_y();
 
 		float mid_x = source_x + (dest_x - source_x) / 2;
 
@@ -596,23 +596,23 @@ std::set<CyclesShaderEditor::EditorNode*> CyclesShaderEditor::EditGraphView::get
 	float max_x_pos = 0.0f;
 	float max_y_pos = 0.0f;
 
-	if (world_box_select_begin.get_pos_x() < world_box_select_end.get_pos_x()) {
-		min_x_pos = world_box_select_begin.get_pos_x();
-		max_x_pos = world_box_select_end.get_pos_x();
+	if (world_box_select_begin.get_x() < world_box_select_end.get_x()) {
+		min_x_pos = world_box_select_begin.get_x();
+		max_x_pos = world_box_select_end.get_x();
 	}
 	else {
-		min_x_pos = world_box_select_end.get_pos_x();
-		max_x_pos = world_box_select_begin.get_pos_x();
+		min_x_pos = world_box_select_end.get_x();
+		max_x_pos = world_box_select_begin.get_x();
 	}
 	assert(min_x_pos <= max_x_pos);
 
-	if (world_box_select_begin.get_pos_y() < world_box_select_end.get_pos_y()) {
-		min_y_pos = world_box_select_begin.get_pos_y();
-		max_y_pos = world_box_select_end.get_pos_y();
+	if (world_box_select_begin.get_y() < world_box_select_end.get_y()) {
+		min_y_pos = world_box_select_begin.get_y();
+		max_y_pos = world_box_select_end.get_y();
 	}
 	else {
-		min_y_pos = world_box_select_end.get_pos_y();
-		max_y_pos = world_box_select_begin.get_pos_y();
+		min_y_pos = world_box_select_end.get_y();
+		max_y_pos = world_box_select_begin.get_y();
 	}
 	assert(min_y_pos <= max_y_pos);
 

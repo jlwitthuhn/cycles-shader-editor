@@ -18,8 +18,8 @@ void CyclesShaderEditor::Drawing::draw_button(
 	const int button_alpha = enabled ? 127 : 63;
 	const int label_alpha = enabled ? 255 : 127;
 
-	const float x_pos = pos.get_pos_x();
-	const float y_pos = pos.get_pos_y();
+	const float x_pos = pos.get_x();
+	const float y_pos = pos.get_y();
 
 	const unsigned char start_color = pressed ? 0 : 255;
 	const unsigned char end_color = pressed ? 127 : 15;
@@ -62,8 +62,8 @@ void CyclesShaderEditor::Drawing::draw_color_pick_cursor(NVGcontext* const draw_
 	constexpr float CURSOR_LENGTH_SHORT = 3.0f;
 	constexpr float CURSOR_LENGTH_LONG = 8.0f;
 
-	const float x_pos = pos.get_pos_x();
-	const float y_pos = pos.get_pos_y();
+	const float x_pos = pos.get_x();
+	const float y_pos = pos.get_y();
 
 	nvgBeginPath(draw_context);
 

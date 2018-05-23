@@ -420,7 +420,7 @@ void CyclesShaderEditor::EditorMainWindow::draw()
 		const CyclesShaderEditor::FloatPos local_mouse_pos = mouse_screen_pos - subwindow_pos;
 		(*window_iter)->set_mouse_position(local_mouse_pos, max_safe_pos_y);
 		nvgSave(nvg_context);
-		nvgTranslate(nvg_context, subwindow_pos.get_pos_x(), subwindow_pos.get_pos_y());
+		nvgTranslate(nvg_context, subwindow_pos.get_x(), subwindow_pos.get_y());
 		(*window_iter)->draw(nvg_context);
 		nvgRestore(nvg_context);
 	}

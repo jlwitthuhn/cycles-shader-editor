@@ -219,10 +219,10 @@ bool CyclesShaderEditor::EditColorPanel::is_mouse_over()
 	const float min_y = 0.0f;
 	const float max_y = panel_height;
 
-	if (mouse_local_pos.get_pos_x() > min_x &&
-		mouse_local_pos.get_pos_x() < max_x &&
-		mouse_local_pos.get_pos_y() > min_y &&
-		mouse_local_pos.get_pos_y() < max_y)
+	if (mouse_local_pos.get_x() > min_x &&
+		mouse_local_pos.get_x() < max_x &&
+		mouse_local_pos.get_y() > min_y &&
+		mouse_local_pos.get_y() < max_y)
 	{
 		return true;
 	}
@@ -311,7 +311,7 @@ void CyclesShaderEditor::EditColorPanel::set_hsv(HueSatVal hsv)
 
 void CyclesShaderEditor::EditColorPanel::set_hue_from_mouse()
 {
-	float new_hue = hue_bar_click_target.get_normalized_mouse_pos(mouse_local_pos).get_pos_x();
+	float new_hue = hue_bar_click_target.get_normalized_mouse_pos(mouse_local_pos).get_x();
 	if (new_hue < 0.0f) {
 		new_hue = 0.0f;
 	}
@@ -328,8 +328,8 @@ void CyclesShaderEditor::EditColorPanel::set_hue_from_mouse()
 void CyclesShaderEditor::EditColorPanel::set_sat_val_from_mouse()
 {
 	FloatPos mouse_pos_normalized = color_rect_click_target.get_normalized_mouse_pos(mouse_local_pos);
-	const float new_sat = mouse_pos_normalized.get_pos_x();
-	const float new_val = 1.0f - mouse_pos_normalized.get_pos_y();
+	const float new_sat = mouse_pos_normalized.get_x();
+	const float new_val = 1.0f - mouse_pos_normalized.get_y();
 
 	HueSatVal hsv = get_hsv();
 	hsv.sat = new_sat;

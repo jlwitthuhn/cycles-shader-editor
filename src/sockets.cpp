@@ -10,7 +10,7 @@ static constexpr float CURVE_POINT_SELECT_MARGIN = 0.05f;
 
 static bool FloatPos_x_lt(CyclesShaderEditor::FloatPos a, CyclesShaderEditor::FloatPos b)
 {
-	return a.get_pos_x() < b.get_pos_x();
+	return a.get_x() < b.get_x();
 }
 
 CyclesShaderEditor::IntSocketValue::IntSocketValue(int default_val, int min, int max)
@@ -159,8 +159,8 @@ void CyclesShaderEditor::CurveSocketValue::reset_value()
 void CyclesShaderEditor::CurveSocketValue::create_point(float x)
 {
 	for (const FloatPos& this_point : curve_points) {
-		const bool is_above_with_margin = x + CURVE_CREATE_POINT_IGNORE_MARGIN > this_point.get_pos_x();
-		const bool is_below_with_margin = x - CURVE_CREATE_POINT_IGNORE_MARGIN < this_point.get_pos_x();
+		const bool is_above_with_margin = x + CURVE_CREATE_POINT_IGNORE_MARGIN > this_point.get_x();
+		const bool is_below_with_margin = x - CURVE_CREATE_POINT_IGNORE_MARGIN < this_point.get_x();
 		if (is_above_with_margin && is_below_with_margin) {
 			return;
 		}

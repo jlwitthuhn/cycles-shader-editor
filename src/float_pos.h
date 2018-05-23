@@ -10,14 +10,14 @@ namespace CyclesShaderEditor {
 		FloatPos();
 		FloatPos(float x, float y);
 
-		float get_pos_x() const;
-		float get_pos_y() const;
+		float get_x() const;
+		float get_y() const;
 
-		float get_floor_pos_x() const;
-		float get_floor_pos_y() const;
+		float get_floor_x() const;
+		float get_floor_y() const;
 
-		int get_pos_x_int() const;
-		int get_pos_y_int() const;
+		int get_x_as_int() const;
+		int get_y_as_int() const;
 
 		float get_magnitude_squared() const;
 

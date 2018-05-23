@@ -239,14 +239,14 @@ void CyclesShaderEditor::EditorNode::draw_node(NVGcontext* const draw_context)
 				socket_position = CyclesShaderEditor::FloatPos(draw_pos_x + content_width, next_draw_y + UI_NODE_SOCKET_ROW_HEIGHT / 2);
 			}
 			nvgBeginPath(draw_context);
-			nvgCircle(draw_context, socket_position.get_pos_x(), socket_position.get_pos_y(), UI_NODE_SOCKET_RADIUS);
+			nvgCircle(draw_context, socket_position.get_x(), socket_position.get_y(), UI_NODE_SOCKET_RADIUS);
 
 			this_socket->world_draw_position = world_pos + socket_position;
 
 			// Add click target for this socket
-			CyclesShaderEditor::FloatPos local_socket_position(socket_position.get_pos_x() - draw_pos_x, socket_position.get_pos_y() - draw_pos_y);
-			CyclesShaderEditor::FloatPos click_target_begin(local_socket_position.get_pos_x() - 7.0f, local_socket_position.get_pos_y() - 7.0f);
-			CyclesShaderEditor::FloatPos click_target_end(local_socket_position.get_pos_x() + 7.0f, local_socket_position.get_pos_y() + 7.0f);
+			CyclesShaderEditor::FloatPos local_socket_position(socket_position.get_x() - draw_pos_x, socket_position.get_y() - draw_pos_y);
+			CyclesShaderEditor::FloatPos click_target_begin(local_socket_position.get_x() - 7.0f, local_socket_position.get_y() - 7.0f);
+			CyclesShaderEditor::FloatPos click_target_end(local_socket_position.get_x() + 7.0f, local_socket_position.get_y() + 7.0f);
 			SocketClickTarget socket_target(click_target_begin, click_target_end, this_socket);
 			socket_targets.push_back(socket_target);
 
@@ -286,7 +286,7 @@ void CyclesShaderEditor::EditorNode::set_mouse_position(const CyclesShaderEditor
 		const CyclesShaderEditor::FloatPos mouse_movement = (node_local_position - mouse_local_begin_move_pos);
 		world_pos = world_pos + mouse_movement;
 		mouse_local_pos = mouse_local_begin_move_pos;
-		if (std::abs(mouse_movement.get_pos_x()) + std::abs(mouse_movement.get_pos_y()) > 0.1f) {
+		if (std::abs(mouse_movement.get_x()) + std::abs(mouse_movement.get_y()) > 0.1f) {
 			has_moved = true;
 		}
 	}
@@ -300,10 +300,10 @@ bool CyclesShaderEditor::EditorNode::is_mouse_over_node()
 	if (node_moving) {
 		return true;
 	}
-	return (mouse_local_pos.get_pos_x() >= 0.0f &&
-		mouse_local_pos.get_pos_x() <= content_width &&
-		mouse_local_pos.get_pos_y() >= 0.0f &&
-		mouse_local_pos.get_pos_y() <= UI_NODE_HEADER_HEIGHT + content_height);
+	return (mouse_local_pos.get_x() >= 0.0f &&
+		mouse_local_pos.get_x() <= content_width &&
+		mouse_local_pos.get_y() >= 0.0f &&
+		mouse_local_pos.get_y() <= UI_NODE_HEADER_HEIGHT + content_height);
 }
 
 bool CyclesShaderEditor::EditorNode::is_mouse_over_header()
@@ -311,10 +311,10 @@ bool CyclesShaderEditor::EditorNode::is_mouse_over_header()
 	if (node_moving) {
 		return true;
 	}
-	return (mouse_local_pos.get_pos_x() >= 0.0f &&
-		mouse_local_pos.get_pos_x() <= content_width &&
-		mouse_local_pos.get_pos_y() >= 0.0f &&
-		mouse_local_pos.get_pos_y() <= UI_NODE_HEADER_HEIGHT);
+	return (mouse_local_pos.get_x() >= 0.0f &&
+		mouse_local_pos.get_x() <= content_width &&
+		mouse_local_pos.get_y() >= 0.0f &&
+		mouse_local_pos.get_y() <= UI_NODE_HEADER_HEIGHT);
 }
 
 void CyclesShaderEditor::EditorNode::handle_mouse_button(int /*button*/, int /*action*/, int /*mods*/)
@@ -447,7 +447,7 @@ void CyclesShaderEditor::EditorNode::update_output_node(OutputNode& output)
 				OutputCurve out_curve;
 				for (size_t i = 0; i < curve_val->curve_points.size(); i++) {
 					const FloatPos this_point = curve_val->curve_points[i];
-					out_curve.control_points.push_back(Float2(this_point.get_pos_x(), this_point.get_pos_y()));
+					out_curve.control_points.push_back(Float2(this_point.get_x(), this_point.get_y()));
 				}
 				out_curve.enum_curve_interp = static_cast<int>(curve_val->curve_interp);
 				const CurveEvaluator curve(curve_val);

@@ -76,9 +76,9 @@ void CyclesShaderEditor::NodeCategoryButton::update_mouse_position(const FloatPo
 bool CyclesShaderEditor::NodeCategoryButton::is_mouse_over_button()
 {
 	return (
-		mouse_local_pos.get_pos_x() > 0.0f &&
-		mouse_local_pos.get_pos_x() < get_button_width() &&
-		mouse_local_pos.get_pos_y() > 0.0f &&
-		mouse_local_pos.get_pos_y() < get_button_height()
+		mouse_local_pos.get_x() > 0.0f &&
+		mouse_local_pos.get_x() < get_button_width() &&
+		mouse_local_pos.get_y() > 0.0f &&
+		mouse_local_pos.get_y() < get_button_height()
 		);
 }

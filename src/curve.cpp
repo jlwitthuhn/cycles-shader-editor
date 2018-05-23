@@ -17,7 +17,7 @@ CyclesShaderEditor::CurveEvaluator::CurveEvaluator(CurveSocketValue* const curve
 	}
 	// One point, this represents constant output
 	else if (curve_control_points.size() == 1) {
-		const float const_output = curve_control_points[0].get_pos_y();
+		const float const_output = curve_control_points[0].get_y();
 		const FloatPos point_0(0.0f, const_output);
 		const FloatPos point_1(1.0f, const_output);
 		sampled_points.push_back(point_0);
@@ -53,7 +53,7 @@ CyclesShaderEditor::CurveEvaluator::CurveEvaluator(CurveSocketValue* const curve
 
 			// If the sample is before the first control point(b), use the value of the first control point
 			while (next_sample_x <= LAST_SAMPLE_X && hermite_spline.compare_to_range(next_sample_x) == -1) {
-				const FloatPos new_point(next_sample_x, point_b.get_pos_y());
+				const FloatPos new_point(next_sample_x, point_b.get_y());
 				sampled_points.push_back(new_point);
 				next_sample_x += x_increment;
 			}
@@ -68,7 +68,7 @@ CyclesShaderEditor::CurveEvaluator::CurveEvaluator(CurveSocketValue* const curve
 
 			// If the sample is past this range and we are in the last segment, use the value of the last control point
 			while (next_sample_x <= LAST_SAMPLE_X && hermite_spline.compare_to_range(next_sample_x) == 1 && segment_begin_index == final_segment_begin_index) {
-				const FloatPos new_point(next_sample_x, point_c.get_pos_y());
+				const FloatPos new_point(next_sample_x, point_c.get_y());
 				sampled_points.push_back(new_point);
 				next_sample_x += x_increment;
 			}
@@ -85,8 +85,8 @@ CyclesShaderEditor::CurveEvaluator::CurveEvaluator(CurveSocketValue* const curve
 
 CyclesShaderEditor::CurveEvaluator::CurveEvaluator(const FloatPos a, const FloatPos b, const FloatPos c, const FloatPos d, const int segments)
 {
-	const CubicHermiteSplineInterpolator x_solver(a.get_pos_x(), b.get_pos_x(), c.get_pos_x(), d.get_pos_x());
-	const CubicHermiteSplineInterpolator y_solver(a.get_pos_y(), b.get_pos_y(), c.get_pos_y(), d.get_pos_y());
+	const CubicHermiteSplineInterpolator x_solver(a.get_x(), b.get_x(), c.get_x(), d.get_x());
+	const CubicHermiteSplineInterpolator y_solver(a.get_y(), b.get_y(), c.get_y(), d.get_y());
 
 	const float segment_size = 1.0f / segments;
 	for (int i = 0; i <= segments; i++) {
@@ -104,12 +104,12 @@ int CyclesShaderEditor::CurveEvaluator::compare_to_range(const float in_value) c
 		return 0;
 	}
 
-	const float first = sampled_points[0].get_pos_x();
+	const float first = sampled_points[0].get_x();
 	if (in_value < first) {
 		return -1;
 	}
 
-	const float last = sampled_points[sampled_points.size() - 1].get_pos_x();
+	const float last = sampled_points[sampled_points.size() - 1].get_x();
 	if (in_value > last) {
 		return 1;
 	}
@@ -132,7 +132,7 @@ float CyclesShaderEditor::CurveEvaluator::eval(const float in_value) const
 	while ((max_index - min_index) > 1) {
 		const vec_size_t delta = max_index - min_index;
 		const vec_size_t index_to_check = min_index + delta / 2;
-		const float value_to_check = sampled_points[index_to_check].get_pos_x();
+		const float value_to_check = sampled_points[index_to_check].get_x();
 		if (in_value >= value_to_check) {
 			min_index = index_to_check;
 		}
@@ -143,19 +143,19 @@ float CyclesShaderEditor::CurveEvaluator::eval(const float in_value) const
 
 	const FloatPos point_a = sampled_points[min_index];
 	const FloatPos point_b = sampled_points[max_index];
-	const float x_min = point_a.get_pos_x();
-	const float x_max = point_b.get_pos_x();
+	const float x_min = point_a.get_x();
+	const float x_max = point_b.get_x();
 	const float x_delta = x_max - x_min;
 
 	if (in_value < x_min) {
-		return point_a.get_pos_y();
+		return point_a.get_y();
 	}
 	if (in_value > x_max) {
-		return point_b.get_pos_y();
+		return point_b.get_y();
 	}
 
 	const float weight_factor = (in_value - x_min) / (x_delta);
-	const float result = (1.0f - weight_factor) * point_a.get_pos_y() + weight_factor * point_b.get_pos_y();
+	const float result = (1.0f - weight_factor) * point_a.get_y() + weight_factor * point_b.get_y();
 
 	return result;
 }
