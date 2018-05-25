@@ -26,7 +26,7 @@ namespace CyclesShaderEditor {
 		void complete_edit();
 		void cancel_edit();
 
-		bool should_capture_keys();
+		bool should_capture_input() const;
 
 		float width;
 		float height;

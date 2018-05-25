@@ -127,6 +127,11 @@ void CyclesShaderEditor::NodeEditorSubwindow::set_mouse_position(FloatPos local_
 	mouse_panel_pos = mouse_local_pos - FloatPos(0.0f, UI_SUBWIN_HEADER_HEIGHT + 3.0f);
 }
 
+bool CyclesShaderEditor::NodeEditorSubwindow::should_capture_input() const
+{
+	return false;
+}
+
 void CyclesShaderEditor::NodeEditorSubwindow::handle_mouse_button(int /*button*/, int /*action*/, int /*mods*/)
 {
 
@@ -142,6 +147,11 @@ void CyclesShaderEditor::NodeEditorSubwindow::handle_character(unsigned int /*co
 
 }
 
+void CyclesShaderEditor::NodeEditorSubwindow::mouse_left_release()
+{
+
+}
+
 void CyclesShaderEditor::NodeEditorSubwindow::move_window_begin()
 {
 	subwindow_moving = true;
@@ -151,4 +161,9 @@ void CyclesShaderEditor::NodeEditorSubwindow::move_window_begin()
 void CyclesShaderEditor::NodeEditorSubwindow::move_window_end()
 {
 	subwindow_moving = false;
+}
+
+bool CyclesShaderEditor::NodeEditorSubwindow::needs_undo_push()
+{
+	return false;
 }

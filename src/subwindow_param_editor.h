@@ -24,16 +24,18 @@ namespace CyclesShaderEditor {
 		virtual void handle_mouse_button(int button, int action, int mods) override;
 		virtual void handle_key(int key, int scancode, int action, int mods) override;
 		virtual void handle_character(unsigned int codepoint) override;
+		virtual void mouse_left_release() override;
+
+		virtual bool should_capture_input() const override;
 
 		virtual bool is_active() const override;
 
+		virtual bool needs_undo_push() override;
+
 		void set_selected_param(NodeSocket* selected_param);
 
-		bool should_capture_keys();
 		void complete_input();
-		void mouse_button_release();
 
-		bool should_push_undo_state();
 
 	protected:
 		virtual void draw_content(NVGcontext* draw_context) override;

@@ -137,9 +137,15 @@ void CyclesShaderEditor::ParamEditorSubwindow::handle_key(int key, int /*scancod
 
 void CyclesShaderEditor::ParamEditorSubwindow::handle_character(unsigned int codepoint)
 {
-	if (selected_input != nullptr && selected_input->should_capture_keys()) {
+	if (selected_input != nullptr && selected_input->should_capture_input()) {
 		selected_input->handle_character(codepoint);
 	}
+}
+
+void CyclesShaderEditor::ParamEditorSubwindow::mouse_left_release()
+{
+	panel_color.mouse_button_release();
+	panel_curve.mouse_button_release();
 }
 
 bool CyclesShaderEditor::ParamEditorSubwindow::is_active() const
@@ -147,37 +153,7 @@ bool CyclesShaderEditor::ParamEditorSubwindow::is_active() const
 	return (selected_param != nullptr);
 }
 
-void CyclesShaderEditor::ParamEditorSubwindow::set_selected_param(NodeSocket* selected_param)
-{
-	if (this->selected_param == selected_param) {
-		return;
-	}
-	complete_input();
-	panel_curve.reset_panel_state();
-	this->selected_param = selected_param;
-}
-
-bool CyclesShaderEditor::ParamEditorSubwindow::should_capture_keys()
-{
-	if (selected_input != nullptr) {
-		return selected_input->should_capture_keys();
-	}
-
-	return false;
-}
-
-void CyclesShaderEditor::ParamEditorSubwindow::complete_input()
-{
-	select_input(nullptr);
-}
-
-void CyclesShaderEditor::ParamEditorSubwindow::mouse_button_release()
-{
-	panel_color.mouse_button_release();
-	panel_curve.mouse_button_release();
-}
-
-bool CyclesShaderEditor::ParamEditorSubwindow::should_push_undo_state() {
+bool CyclesShaderEditor::ParamEditorSubwindow::needs_undo_push() {
 	bool result = false;
 	if (request_undo_stack_push) {
 		request_undo_stack_push = false;
@@ -190,6 +166,30 @@ bool CyclesShaderEditor::ParamEditorSubwindow::should_push_undo_state() {
 		result = true;
 	}
 	return result;
+}
+
+void CyclesShaderEditor::ParamEditorSubwindow::set_selected_param(NodeSocket* selected_param)
+{
+	if (this->selected_param == selected_param) {
+		return;
+	}
+	complete_input();
+	panel_curve.reset_panel_state();
+	this->selected_param = selected_param;
+}
+
+bool CyclesShaderEditor::ParamEditorSubwindow::should_capture_input() const
+{
+	if (selected_input != nullptr) {
+		return selected_input->should_capture_input();
+	}
+
+	return false;
+}
+
+void CyclesShaderEditor::ParamEditorSubwindow::complete_input()
+{
+	select_input(nullptr);
 }
 
 void CyclesShaderEditor::ParamEditorSubwindow::draw_content(NVGcontext* draw_context)

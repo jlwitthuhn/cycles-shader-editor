@@ -234,6 +234,14 @@ void CyclesShaderEditor::NodeListSubwindow::handle_mouse_button(int button, int 
 	}
 }
 
+void CyclesShaderEditor::NodeListSubwindow::mouse_left_release()
+{
+	if (active_button != nullptr) {
+		active_button->pressed = false;
+		active_button = nullptr;
+	}
+}
+
 CyclesShaderEditor::NodeCategoryButton* CyclesShaderEditor::NodeListSubwindow::get_category_button_under_mouse()
 {
 	for (NodeCategoryButton* category_button : category_buttons) {

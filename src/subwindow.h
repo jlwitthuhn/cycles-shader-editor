@@ -24,12 +24,19 @@ namespace CyclesShaderEditor {
 		virtual bool is_mouse_over_header() const;
 		virtual void set_mouse_position(FloatPos screen_position, float max_pos_y);
 
+		virtual bool should_capture_input() const;
+
 		virtual void handle_mouse_button(int button, int action, int mods);
 		virtual void handle_key(int key, int scancode, int action, int mods);
 		virtual void handle_character(unsigned int codepoint);
+		virtual void mouse_left_release();
 
 		virtual void move_window_begin();
 		virtual void move_window_end();
+
+		// Returns true if changes made by this window require an undo stack push
+		// Currently only used by the param editor subwindow
+		virtual bool needs_undo_push();
 
 		virtual bool is_active() const { return true; }
 

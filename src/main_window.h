@@ -55,7 +55,8 @@ namespace CyclesShaderEditor {
 
 		void update_mouse_position(FloatPos screen_position);
 
-		NodeEditorSubwindow* get_subwindow_under_mouse();
+		NodeEditorSubwindow* get_subwindow_requesting_input() const;
+		NodeEditorSubwindow* get_subwindow_under_mouse() const;
 		void raise_subwindow(NodeEditorSubwindow* subwindow);
 
 		void update_serialized_state();

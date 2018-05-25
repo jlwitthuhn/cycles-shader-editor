@@ -17,6 +17,7 @@ namespace CyclesShaderEditor {
 		virtual void pre_draw() override;
 
 		virtual void handle_mouse_button(int button, int action, int mods) override;
+		virtual void mouse_left_release() override;
 
 		NodeCategoryButton* get_category_button_under_mouse();
 		NodeCreationButton* get_button_under_mouse();

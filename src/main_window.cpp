@@ -227,15 +227,9 @@ void CyclesShaderEditor::EditorMainWindow::handle_mouse_button(const int button,
 		// Connection creation
 		view->cancel_connection();
 
-		// Node creation
-		if (node_list_window != nullptr && node_list_window->active_button != nullptr) {
-			node_list_window->active_button->pressed = false;
-			node_list_window->active_button = nullptr;
-		}
-
-		// Param window
-		if (param_editor_window != nullptr) {
-			param_editor_window->mouse_button_release();
+		// All subwindows should be notified of a mouse button release
+		for (NodeEditorSubwindow* const this_subwindow : subwindows) {
+			this_subwindow->mouse_left_release();
 		}
 
 		// Node moving
@@ -299,8 +293,9 @@ void CyclesShaderEditor::EditorMainWindow::handle_key(const int key, const int s
 	
 
 	// Normal input handled here
-	if (param_editor_window->should_capture_keys()) {
-		param_editor_window->handle_key(key, scancode, action, mods);
+	NodeEditorSubwindow* const subwindow_for_input = get_subwindow_requesting_input();
+	if (subwindow_for_input != nullptr) {
+		subwindow_for_input->handle_key(key, scancode, action, mods);
 	}
 	else {
 		#ifdef __APPLE__
@@ -317,8 +312,9 @@ void CyclesShaderEditor::EditorMainWindow::handle_key(const int key, const int s
 
 void CyclesShaderEditor::EditorMainWindow::handle_character(const unsigned int codepoint)
 {
-	if (param_editor_window->should_capture_keys()) {
-		param_editor_window->handle_character(codepoint);
+	NodeEditorSubwindow* const subwindow_for_input = get_subwindow_requesting_input();
+	if (subwindow_for_input != nullptr) {
+		subwindow_for_input->handle_character(codepoint);
 	}
 }
 
@@ -349,8 +345,10 @@ void CyclesShaderEditor::EditorMainWindow::pre_draw()
 			node->changed = false;
 		}
 	}
-	if (param_editor_window->should_push_undo_state()) {
-		should_push_undo_state = true;
+	for (NodeEditorSubwindow* const this_subwindow : subwindows) {
+		if (this_subwindow->needs_undo_push()) {
+			should_push_undo_state = true;
+		}
 	}
 	if (should_push_undo_state) {
 		push_undo_state();
@@ -360,7 +358,6 @@ void CyclesShaderEditor::EditorMainWindow::pre_draw()
 	double mx, my;
 	glfwGetCursorPos(window, &mx, &my);
 	glfwGetWindowSize(window, &window_width, &window_height);
-
 	update_mouse_position(CyclesShaderEditor::FloatPos(static_cast<float>(mx), static_cast<float>(my)));
 
 	// Handle window events
@@ -500,7 +497,17 @@ void CyclesShaderEditor::EditorMainWindow::update_mouse_position(CyclesShaderEdi
 	mouse_screen_pos = screen_position;
 }
 
-CyclesShaderEditor::NodeEditorSubwindow* CyclesShaderEditor::EditorMainWindow::get_subwindow_under_mouse()
+CyclesShaderEditor::NodeEditorSubwindow* CyclesShaderEditor::EditorMainWindow::get_subwindow_requesting_input() const
+{
+	for (NodeEditorSubwindow* const this_subwindow : subwindows) {
+		if (this_subwindow->should_capture_input()) {
+			return this_subwindow;
+		}
+	}
+	return nullptr;
+}
+
+CyclesShaderEditor::NodeEditorSubwindow* CyclesShaderEditor::EditorMainWindow::get_subwindow_under_mouse() const
 {
 	for (NodeEditorSubwindow* const this_subwindow : subwindows) {
 		if (this_subwindow->is_mouse_over()) {

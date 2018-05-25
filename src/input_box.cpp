@@ -122,7 +122,7 @@ void CyclesShaderEditor::BaseInputBox::cancel_edit()
 	selected = false;
 }
 
-bool CyclesShaderEditor::BaseInputBox::should_capture_keys()
+bool CyclesShaderEditor::BaseInputBox::should_capture_input() const
 {
 	return selected;
 }
