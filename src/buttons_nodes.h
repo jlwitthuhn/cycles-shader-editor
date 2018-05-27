@@ -18,6 +18,7 @@ namespace CyclesShaderEditor {
 		virtual bool is_mouse_over_button();
 
 		// Caller is responsible for deleting the pointer after use
+		virtual EditorNode* create_node();
 		virtual EditorNode* create_node(FloatPos world_position) = 0;
 
 		bool pressed = false;

@@ -18,7 +18,42 @@
 #include "node_textures.h"
 #include "node_vector.h"
 
-CyclesShaderEditor::NodeListSubwindow::NodeListSubwindow(FloatPos screen_position) : NodeEditorSubwindow(screen_position, "Create Node")
+CyclesShaderEditor::NodeCreationHelper::NodeCreationHelper()
+{
+
+}
+
+bool CyclesShaderEditor::NodeCreationHelper::is_ready() const
+{
+	return current_node != nullptr;
+}
+
+void CyclesShaderEditor::NodeCreationHelper::set_node(EditorNode* const new_node)
+{
+	if (current_node != nullptr) {
+		delete current_node;
+	}
+	current_node = new_node;
+}
+
+void CyclesShaderEditor::NodeCreationHelper::clear()
+{
+	if (current_node != nullptr) {
+		delete current_node;
+		current_node = nullptr;
+	}
+}
+
+CyclesShaderEditor::EditorNode* CyclesShaderEditor::NodeCreationHelper::take()
+{
+	EditorNode* const result = current_node;
+	current_node = nullptr;
+	return result;
+}
+
+CyclesShaderEditor::NodeListSubwindow::NodeListSubwindow(const std::weak_ptr<NodeCreationHelper> node_creation_helper, const FloatPos screen_position) :
+	NodeEditorSubwindow(screen_position, "Create Node"),
+	node_creation_helper(node_creation_helper)
 {
 	subwindow_width = UI_SUBWIN_NODE_LIST_WIDTH;
 
@@ -179,8 +214,6 @@ CyclesShaderEditor::NodeListSubwindow::NodeListSubwindow(FloatPos screen_positio
 	cat_converter_button->node_buttons.push_back(vector_math_button);
 	cat_converter_button->node_buttons.push_back(wavelength_button);
 
-	active_button = nullptr;
-
 	active_category = cat_shader_button;
 }
 
@@ -212,13 +245,8 @@ void CyclesShaderEditor::NodeListSubwindow::handle_mouse_button(int button, int 
 			active_category = get_category_button_under_mouse();
 		}
 		else if (get_button_under_mouse() != nullptr) {
-			if (active_button != nullptr) {
-				active_button->pressed = false;
-				active_button = nullptr;
-			}
 			NodeCreationButton* node_button = get_button_under_mouse();
-			node_button->pressed = true;
-			active_button = node_button;
+			activate_creation_button(node_button);
 		}
 	}
 	else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
@@ -226,25 +254,19 @@ void CyclesShaderEditor::NodeListSubwindow::handle_mouse_button(int button, int 
 			move_window_end();
 		}
 		else {
-			if (active_button != nullptr) {
-				active_button->pressed = false;
-				active_button = nullptr;
-			}
+			reset_creation_buttons();
 		}
 	}
 }
 
 void CyclesShaderEditor::NodeListSubwindow::mouse_left_release()
 {
-	if (active_button != nullptr) {
-		active_button->pressed = false;
-		active_button = nullptr;
-	}
+	reset_creation_buttons();
 }
 
 CyclesShaderEditor::NodeCategoryButton* CyclesShaderEditor::NodeListSubwindow::get_category_button_under_mouse()
 {
-	for (NodeCategoryButton* category_button : category_buttons) {
+	for (NodeCategoryButton* const category_button : category_buttons) {
 		if (category_button->is_mouse_over_button()) {
 			return category_button;
 		}
@@ -259,7 +281,7 @@ CyclesShaderEditor::NodeCreationButton* CyclesShaderEditor::NodeListSubwindow::g
 		return nullptr;
 	}
 
-	for (NodeCreationButton* node_button : active_category->node_buttons) {
+	for (NodeCreationButton* const node_button : active_category->node_buttons) {
 		if (node_button->is_mouse_over_button()) {
 			return node_button;
 		}
@@ -268,15 +290,15 @@ CyclesShaderEditor::NodeCreationButton* CyclesShaderEditor::NodeListSubwindow::g
 	return nullptr;
 }
 
-void CyclesShaderEditor::NodeListSubwindow::draw_content(NVGcontext* draw_context)
+void CyclesShaderEditor::NodeListSubwindow::draw_content(NVGcontext* const draw_context)
 {
 	float height_drawn = 0.0f;
 
 	// Node category buttons
 	NodeCategoryButtonPlacer placer(FloatPos(0.0f, height_drawn), subwindow_width, UI_SUBWIN_NODE_LIST_BUTTON_VPADDING);
 
-	for (NodeCategoryButton* category_button : category_buttons) {
-		FloatPos button_position = placer.next_button_position();
+	for (NodeCategoryButton* const category_button : category_buttons) {
+		const FloatPos button_position = placer.next_button_position();
 		category_button->update_mouse_position(mouse_panel_pos - button_position);
 		category_button->draw(button_position, draw_context);
 	}
@@ -285,11 +307,34 @@ void CyclesShaderEditor::NodeListSubwindow::draw_content(NVGcontext* draw_contex
 
 	// Buttons
 	if (active_category != nullptr) {
-		for (NodeCreationButton* node_button : active_category->node_buttons) {
-			FloatPos button_location(0.0f, height_drawn);
+		for (NodeCreationButton* const node_button : active_category->node_buttons) {
+			const FloatPos button_location(0.0f, height_drawn);
 			height_drawn += node_button->draw(draw_context, button_location, mouse_panel_pos, subwindow_width);
 		}
 	}
 
 	content_height = height_drawn + UI_SUBWIN_NODE_LIST_BUTTON_VPADDING;
+}
+
+void CyclesShaderEditor::NodeListSubwindow::activate_creation_button(NodeCreationButton* const node_button)
+{
+	if (node_button == nullptr) {
+		return;
+	}
+	if (const auto node_creation_helper = this->node_creation_helper.lock()) {
+		node_creation_helper->set_node(node_button->create_node());
+		node_button->pressed = true;
+	}
+}
+
+void CyclesShaderEditor::NodeListSubwindow::reset_creation_buttons()
+{
+	if (active_category != nullptr) {
+		for (const auto this_button : active_category->node_buttons) {
+			this_button->pressed = false;
+		}
+	}
+	if (const auto node_creation_helper = this->node_creation_helper.lock()) {
+		node_creation_helper->clear();
+	}
 }

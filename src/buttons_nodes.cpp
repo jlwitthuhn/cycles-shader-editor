@@ -39,3 +39,9 @@ bool CyclesShaderEditor::NodeCreationButton::is_mouse_over_button()
 
 	return false;
 }
+
+CyclesShaderEditor::EditorNode* CyclesShaderEditor::NodeCreationButton::create_node()
+{
+	const FloatPos default_pos(0.0f, 0.0f);
+	return create_node(default_pos);
+}

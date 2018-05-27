@@ -33,6 +33,8 @@ CyclesShaderEditor::EditorMainWindow::EditorMainWindow(GraphEditor* public_windo
 	nvg_context = nullptr;
 
 	last_buffer_swap_time = std::chrono::steady_clock::now();
+
+	node_creation_helper = std::make_shared<NodeCreationHelper>();
 }
 
 CyclesShaderEditor::EditorMainWindow::~EditorMainWindow()
@@ -90,7 +92,7 @@ bool CyclesShaderEditor::EditorMainWindow::create_window()
 	toolbar = new NodeEditorToolbar(&requests);
 	status_bar = new NodeEditorStatusBar();
 
-	node_list_window = new NodeListSubwindow(CyclesShaderEditor::FloatPos(15.0f, NodeEditorToolbar::get_toolbar_height() + 15.0f));
+	NodeEditorSubwindow* const node_list_window = new NodeListSubwindow(node_creation_helper, CyclesShaderEditor::FloatPos(15.0f, NodeEditorToolbar::get_toolbar_height() + 15.0f));
 	param_editor_window = new ParamEditorSubwindow(CyclesShaderEditor::FloatPos(15.0f * 2.0f + UI_SUBWIN_NODE_LIST_WIDTH, NodeEditorToolbar::get_toolbar_height() + 15.0f));
 	subwindows.push_back(node_list_window);
 	subwindows.push_back(param_editor_window);
@@ -197,17 +199,15 @@ void CyclesShaderEditor::EditorMainWindow::handle_mouse_button(const int button,
 		view->get_node_under_mouse()->handle_mouse_button(button, action, mods);
 	}
 
-	else  { // View
+	// View
+	else  {
 		if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_PRESS) {
 			view->mouse_move_begin();
 		}
 		else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
-			if (node_list_window->active_button != nullptr) {
-				const CyclesShaderEditor::FloatPos creation_pos(0.0f, 0.0f);
-				EditorNode* const new_node = node_list_window->active_button->create_node(creation_pos);
+			EditorNode* const new_node = node_creation_helper->take();
+			if (new_node != nullptr) {
 				view->add_node_at_mouse(new_node);
-				node_list_window->active_button->pressed = false;
-				node_list_window->active_button = nullptr;
 			}
 		}
 
@@ -608,7 +608,6 @@ void CyclesShaderEditor::EditorMainWindow::release_resources()
 		delete this_subwindow;
 	}
 	subwindows.clear();
-	node_list_window = nullptr;
 	param_editor_window = nullptr;
 
 	connections.clear();

@@ -2,6 +2,7 @@
 
 #include <chrono>
 #include <list>
+#include <memory>
 #include <set>
 #include <string>
 #include <vector>
@@ -22,6 +23,7 @@ namespace CyclesShaderEditor {
 	class EditGraphView;
 	class EditorNode;
 	class GraphEditor;
+	class NodeCreationHelper;
 	class NodeEditorSubwindow;
 	class NodeListSubwindow;
 	class ParamEditorSubwindow;
@@ -80,8 +82,9 @@ namespace CyclesShaderEditor {
 		std::string serialized_state;
 		UndoStack undo_stack;
 
+		std::shared_ptr<NodeCreationHelper> node_creation_helper;
+
 		std::list<NodeEditorSubwindow*> subwindows;
-		NodeListSubwindow* node_list_window = nullptr;
 		ParamEditorSubwindow* param_editor_window = nullptr;
 
 		NodeEditorToolbar* toolbar = nullptr;
