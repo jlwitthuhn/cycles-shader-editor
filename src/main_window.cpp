@@ -145,7 +145,7 @@ void CyclesShaderEditor::EditorMainWindow::handle_mouse_button(const int button,
 	const bool toolbar_has_focus = (toolbar != nullptr && toolbar->is_mouse_over());
 	const bool node_has_focus = (view->get_node_under_mouse() != nullptr);
 	const bool label_has_focus = (view->get_socket_label_under_mouse() != nullptr);
-	const bool socket_has_focus = (view->get_socket_under_mouse() != nullptr);
+	const bool connector_has_focus = (view->get_socket_connector_under_mouse() != nullptr);
 
 	if (subwindow_has_focus) {
 		raise_subwindow(get_subwindow_under_mouse());
@@ -156,7 +156,7 @@ void CyclesShaderEditor::EditorMainWindow::handle_mouse_button(const int button,
 		toolbar->handle_mouse_button(button, action, mods);
 	}
 
-	else if (socket_has_focus) {
+	else if (connector_has_focus) {
 		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
 			view->begin_connection_under_mouse();
 		}

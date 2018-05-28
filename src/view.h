@@ -5,6 +5,7 @@
 
 #include "float_pos.h"
 #include "node_base.h"
+#include "selection.h"
 #include "zoom.h"
 
 struct NVGcontext;
@@ -29,7 +30,7 @@ namespace CyclesShaderEditor {
 		EditorNode* get_node_under_mouse();
 		NodeSocket* get_socket_label_under_mouse();
 		NodeSocket* get_selected_socket_label();
-		NodeSocket* get_socket_under_mouse();
+		NodeSocket* get_socket_connector_under_mouse();
 		FloatPos get_mouse_world_position();
 		bool is_node_under_mouse_selected();
 		std::string get_zoom_string();
@@ -84,12 +85,12 @@ namespace CyclesShaderEditor {
 		std::list<NodeConnection>& connections;
 
 		// View state
-		std::set<EditorNode*> selected_nodes;
 		NodeSocket* connection_in_progress_start = nullptr;
-		NodeSocket* selected_label = nullptr;
 		bool box_select_active = false;
 		FloatPos world_box_select_begin;
 		FloatPos world_box_select_end;
+
+		Selection selection;
 
 		FloatPos mouse_world_position;
 
