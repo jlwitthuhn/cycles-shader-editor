@@ -57,183 +57,177 @@ CyclesShaderEditor::NodeListSubwindow::NodeListSubwindow(const std::weak_ptr<Nod
 {
 	subwindow_width = UI_SUBWIN_NODE_LIST_WIDTH;
 
-	// Category buttons -- cleaned up in ~NodeListSubwindow
-	NodeCategoryButton* cat_input_button = new NodeCategoryButton(std::string("Input"));
-	NodeCategoryButton* cat_shader_button = new NodeCategoryButton(std::string("Shader"));
-	NodeCategoryButton* cat_texture_button = new NodeCategoryButton(std::string("Texture"));
-	NodeCategoryButton* cat_color_button = new NodeCategoryButton(std::string("Color"));
-	NodeCategoryButton* cat_vector_button = new NodeCategoryButton(std::string("Vector"));
-	NodeCategoryButton* cat_converter_button = new NodeCategoryButton(std::string("Converter"));
+	// Category buttons
+	auto cat_input_button = std::make_unique<NodeCategoryButton>("Input");
+	auto cat_shader_button = std::make_unique<NodeCategoryButton>("Shader");
+	auto cat_texture_button = std::make_unique<NodeCategoryButton>("Texture");
+	auto cat_color_button = std::make_unique<NodeCategoryButton>("Color");
+	auto cat_vector_button = std::make_unique<NodeCategoryButton>("Vector");
+	auto cat_converter_button = std::make_unique<NodeCategoryButton>("Converter");
 
-	category_buttons.push_back(cat_input_button);
-	category_buttons.push_back(cat_shader_button);
-	category_buttons.push_back(cat_texture_button);
-	category_buttons.push_back(cat_color_button);
-	category_buttons.push_back(cat_vector_button);
-	category_buttons.push_back(cat_converter_button);
+	cat_shader_button->selected = true;
 
-	// Input buttons -- cleaned up in ~NodeCategoryButton
-	NodeCreationButton* camera_data_button = new GenericNodeButton<CameraDataNode>();
-	NodeCreationButton* fresnel_button = new GenericNodeButton<FresnelNode>();
-	NodeCreationButton* geometry_button = new GenericNodeButton<GeometryNode>();
-	NodeCreationButton* layer_weight_button = new GenericNodeButton<LayerWeightNode>();
-	NodeCreationButton* light_path_button = new GenericNodeButton<LightPathNode>();
-	NodeCreationButton* object_info_button = new GenericNodeButton<ObjectInfoNode>();
-	NodeCreationButton* rgb_button = new GenericNodeButton<RGBNode>();
-	NodeCreationButton* tangent_button = new GenericNodeButton<TangentNode>();
-	NodeCreationButton* tex_coord_button = new GenericNodeButton<TextureCoordinateNode>();
-	NodeCreationButton* value_button = new GenericNodeButton<ValueNode>();
-	NodeCreationButton* wireframe_button = new GenericNodeButton<WireframeNode>();
+	// Input buttons
+	{
+		auto camera_data_button = std::make_unique<GenericNodeButton<CameraDataNode>>();
+		auto fresnel_button = std::make_unique<GenericNodeButton<FresnelNode>>();
+		auto geometry_button = std::make_unique<GenericNodeButton<GeometryNode>>();
+		auto layer_weight_button = std::make_unique<GenericNodeButton<LayerWeightNode>>();
+		auto light_path_button = std::make_unique<GenericNodeButton<LightPathNode>>();
+		auto object_info_button = std::make_unique<GenericNodeButton<ObjectInfoNode>>();
+		auto rgb_button = std::make_unique<GenericNodeButton<RGBNode>>();
+		auto tangent_button = std::make_unique<GenericNodeButton<TangentNode>>();
+		auto tex_coord_button = std::make_unique<GenericNodeButton<TextureCoordinateNode>>();
+		auto value_button = std::make_unique<GenericNodeButton<ValueNode>>();
+		auto wireframe_button = std::make_unique<GenericNodeButton<WireframeNode>>();
 
-	cat_input_button->node_buttons.push_back(camera_data_button);
-	cat_input_button->node_buttons.push_back(fresnel_button);
-	cat_input_button->node_buttons.push_back(geometry_button);
-	cat_input_button->node_buttons.push_back(layer_weight_button);
-	cat_input_button->node_buttons.push_back(light_path_button);
-	cat_input_button->node_buttons.push_back(object_info_button);
-	cat_input_button->node_buttons.push_back(rgb_button);
-	cat_input_button->node_buttons.push_back(tangent_button);
-	cat_input_button->node_buttons.push_back(tex_coord_button);
-	cat_input_button->node_buttons.push_back(value_button);
-	cat_input_button->node_buttons.push_back(wireframe_button);
+		cat_input_button->node_buttons.push_back(std::move(camera_data_button));
+		cat_input_button->node_buttons.push_back(std::move(fresnel_button));
+		cat_input_button->node_buttons.push_back(std::move(geometry_button));
+		cat_input_button->node_buttons.push_back(std::move(layer_weight_button));
+		cat_input_button->node_buttons.push_back(std::move(light_path_button));
+		cat_input_button->node_buttons.push_back(std::move(object_info_button));
+		cat_input_button->node_buttons.push_back(std::move(rgb_button));
+		cat_input_button->node_buttons.push_back(std::move(tangent_button));
+		cat_input_button->node_buttons.push_back(std::move(tex_coord_button));
+		cat_input_button->node_buttons.push_back(std::move(value_button));
+		cat_input_button->node_buttons.push_back(std::move(wireframe_button));
+	}
 
-	// Shaders buttons -- same ownership as input buttons
-	NodeCreationButton* add_button = new GenericNodeButton<AddShaderNode>();
-	NodeCreationButton* ao_button = new GenericNodeButton<AmbientOcculsionNode>();
-	NodeCreationButton* anisotropic_button = new GenericNodeButton<AnisotropicBSDFNode>();
-	NodeCreationButton* diffuse_button = new GenericNodeButton<DiffuseBSDFNode>();
-	NodeCreationButton* emission_button = new GenericNodeButton<EmissionNode>();
-	NodeCreationButton* glass_button = new GenericNodeButton<GlassBSDFNode>();
-	NodeCreationButton* glossy_button = new GenericNodeButton<GlossyBSDFNode>();
-	NodeCreationButton* hair_button = new GenericNodeButton<HairBSDFNode>();
-	NodeCreationButton* holdout_button = new GenericNodeButton<HoldoutNode>();
-	NodeCreationButton* mix_button = new GenericNodeButton<MixShaderNode>();
-	NodeCreationButton* principled_button = new GenericNodeButton<PrincipledBSDFNode>();
-	NodeCreationButton* refraction_button = new GenericNodeButton<RefractionBSDFNode>();
-	NodeCreationButton* sss_button = new GenericNodeButton<SubsurfaceScatteringNode>();
-	NodeCreationButton* toon_button = new GenericNodeButton<ToonBSDFNode>();
-	NodeCreationButton* translucent_button = new GenericNodeButton<TranslucentBSDFNode>();
-	NodeCreationButton* transparent_button = new GenericNodeButton<TransparentBSDFNode>();
-	NodeCreationButton* velvet_button = new GenericNodeButton<VelvetBSDFNode>();
-	NodeCreationButton* vol_absorption_button = new GenericNodeButton<VolumeAbsorptionNode>();
-	NodeCreationButton* vol_scatter_button = new GenericNodeButton<VolumeScatterNode>();
+	// Shaders buttons
+	{
+		auto add_button = std::make_unique<GenericNodeButton<AddShaderNode>>();
+		auto ao_button = std::make_unique<GenericNodeButton<AmbientOcculsionNode>>();
+		auto anisotropic_button = std::make_unique<GenericNodeButton<AnisotropicBSDFNode>>();
+		auto diffuse_button = std::make_unique<GenericNodeButton<DiffuseBSDFNode>>();
+		auto emission_button = std::make_unique<GenericNodeButton<EmissionNode>>();
+		auto glass_button = std::make_unique<GenericNodeButton<GlassBSDFNode>>();
+		auto glossy_button = std::make_unique<GenericNodeButton<GlossyBSDFNode>>();
+		auto hair_button = std::make_unique<GenericNodeButton<HairBSDFNode>>();
+		auto holdout_button = std::make_unique<GenericNodeButton<HoldoutNode>>();
+		auto mix_button = std::make_unique<GenericNodeButton<MixShaderNode>>();
+		auto principled_button = std::make_unique<GenericNodeButton<PrincipledBSDFNode>>();
+		auto refraction_button = std::make_unique<GenericNodeButton<RefractionBSDFNode>>();
+		auto sss_button = std::make_unique<GenericNodeButton<SubsurfaceScatteringNode>>();
+		auto toon_button = std::make_unique<GenericNodeButton<ToonBSDFNode>>();
+		auto translucent_button = std::make_unique<GenericNodeButton<TranslucentBSDFNode>>();
+		auto transparent_button = std::make_unique<GenericNodeButton<TransparentBSDFNode>>();
+		auto velvet_button = std::make_unique<GenericNodeButton<VelvetBSDFNode>>();
+		auto vol_absorption_button = std::make_unique<GenericNodeButton<VolumeAbsorptionNode>>();
+		auto vol_scatter_button = std::make_unique<GenericNodeButton<VolumeScatterNode>>();
 
-	cat_shader_button->node_buttons.push_back(add_button);
-	cat_shader_button->node_buttons.push_back(ao_button);
-	cat_shader_button->node_buttons.push_back(anisotropic_button);
-	cat_shader_button->node_buttons.push_back(diffuse_button);
-	cat_shader_button->node_buttons.push_back(emission_button);
-	cat_shader_button->node_buttons.push_back(glass_button);
-	cat_shader_button->node_buttons.push_back(glossy_button);
-	cat_shader_button->node_buttons.push_back(hair_button);
-	cat_shader_button->node_buttons.push_back(holdout_button);
-	cat_shader_button->node_buttons.push_back(mix_button);
-	cat_shader_button->node_buttons.push_back(principled_button);
-	cat_shader_button->node_buttons.push_back(refraction_button);
-	cat_shader_button->node_buttons.push_back(sss_button);
-	cat_shader_button->node_buttons.push_back(toon_button);
-	cat_shader_button->node_buttons.push_back(translucent_button);
-	cat_shader_button->node_buttons.push_back(transparent_button);
-	cat_shader_button->node_buttons.push_back(velvet_button);
-	cat_shader_button->node_buttons.push_back(vol_absorption_button);
-	cat_shader_button->node_buttons.push_back(vol_scatter_button);
+		cat_shader_button->node_buttons.push_back(std::move(add_button));
+		cat_shader_button->node_buttons.push_back(std::move(ao_button));
+		cat_shader_button->node_buttons.push_back(std::move(anisotropic_button));
+		cat_shader_button->node_buttons.push_back(std::move(diffuse_button));
+		cat_shader_button->node_buttons.push_back(std::move(emission_button));
+		cat_shader_button->node_buttons.push_back(std::move(glass_button));
+		cat_shader_button->node_buttons.push_back(std::move(glossy_button));
+		cat_shader_button->node_buttons.push_back(std::move(hair_button));
+		cat_shader_button->node_buttons.push_back(std::move(holdout_button));
+		cat_shader_button->node_buttons.push_back(std::move(mix_button));
+		cat_shader_button->node_buttons.push_back(std::move(principled_button));
+		cat_shader_button->node_buttons.push_back(std::move(refraction_button));
+		cat_shader_button->node_buttons.push_back(std::move(sss_button));
+		cat_shader_button->node_buttons.push_back(std::move(toon_button));
+		cat_shader_button->node_buttons.push_back(std::move(translucent_button));
+		cat_shader_button->node_buttons.push_back(std::move(transparent_button));
+		cat_shader_button->node_buttons.push_back(std::move(velvet_button));
+		cat_shader_button->node_buttons.push_back(std::move(vol_absorption_button));
+		cat_shader_button->node_buttons.push_back(std::move(vol_scatter_button));
+	}
 
-	// Texture buttons -- same ownership as input buttons
+	// Texture buttons
+	{
 #ifdef INCLUDE_MAX_INTEGRATION
-	NodeCreationButton* max_tex_button = new GenericNodeButton<MaxTexmapShaderNode>();
+		auto max_tex_button = std::make_unique<GenericNodeButton<MaxTexmapShaderNode>>();
 #endif
-	NodeCreationButton* brick_tex_button = new GenericNodeButton<BrickTextureNode>();
-	NodeCreationButton* checker_tex_button = new GenericNodeButton<CheckerTextureNode>();
-	NodeCreationButton* gradient_tex_button = new GenericNodeButton<GradientTextureNode>();
-	NodeCreationButton* magic_tex_button = new GenericNodeButton<MagicTextureNode>();
-	NodeCreationButton* musgrave_tex_button = new GenericNodeButton<MusgraveTextureNode>();
-	NodeCreationButton* noise_tex_button = new GenericNodeButton<NoiseTextureNode>();
-	NodeCreationButton* voronoi_tex_button = new GenericNodeButton<VoronoiTextureNode>();
-	NodeCreationButton* wave_tex_button = new GenericNodeButton<WaveTextureNode>();
+		auto brick_tex_button = std::make_unique<GenericNodeButton<BrickTextureNode>>();
+		auto checker_tex_button = std::make_unique<GenericNodeButton<CheckerTextureNode>>();
+		auto gradient_tex_button = std::make_unique<GenericNodeButton<GradientTextureNode>>();
+		auto magic_tex_button = std::make_unique<GenericNodeButton<MagicTextureNode>>();
+		auto musgrave_tex_button = std::make_unique<GenericNodeButton<MusgraveTextureNode>>();
+		auto noise_tex_button = std::make_unique<GenericNodeButton<NoiseTextureNode>>();
+		auto voronoi_tex_button = std::make_unique<GenericNodeButton<VoronoiTextureNode>>();
+		auto wave_tex_button = std::make_unique<GenericNodeButton<WaveTextureNode>>();
 
 #ifdef INCLUDE_MAX_INTEGRATION
-	cat_texture_button->node_buttons.push_back(max_tex_button);
+		cat_texture_button->node_buttons.push_back(std::move(max_tex_button));
 #endif
-	cat_texture_button->node_buttons.push_back(brick_tex_button);
-	cat_texture_button->node_buttons.push_back(checker_tex_button);
-	cat_texture_button->node_buttons.push_back(gradient_tex_button);
-	cat_texture_button->node_buttons.push_back(magic_tex_button);
-	cat_texture_button->node_buttons.push_back(musgrave_tex_button);
-	cat_texture_button->node_buttons.push_back(noise_tex_button);
-	cat_texture_button->node_buttons.push_back(voronoi_tex_button);
-	cat_texture_button->node_buttons.push_back(wave_tex_button);
+		cat_texture_button->node_buttons.push_back(std::move(brick_tex_button));
+		cat_texture_button->node_buttons.push_back(std::move(checker_tex_button));
+		cat_texture_button->node_buttons.push_back(std::move(gradient_tex_button));
+		cat_texture_button->node_buttons.push_back(std::move(magic_tex_button));
+		cat_texture_button->node_buttons.push_back(std::move(musgrave_tex_button));
+		cat_texture_button->node_buttons.push_back(std::move(noise_tex_button));
+		cat_texture_button->node_buttons.push_back(std::move(voronoi_tex_button));
+		cat_texture_button->node_buttons.push_back(std::move(wave_tex_button));
+	}
 
-	// Color buttons -- same ownership as input buttons
-	NodeCreationButton* bright_contrast_button = new GenericNodeButton<BrightnessContrastNode>();
-	NodeCreationButton* gamma_button = new GenericNodeButton<GammaNode>();
-	NodeCreationButton* hsv_button = new GenericNodeButton<HSVNode>();
-	NodeCreationButton* invert_button = new GenericNodeButton<InvertNode>();
-	NodeCreationButton* light_falloff_button = new GenericNodeButton<LightFalloffNode>();
-	NodeCreationButton* mix_rgb_button = new GenericNodeButton<MixRGBNode>();
-	NodeCreationButton* rgb_curves_button = new GenericNodeButton<RGBCurvesNode>();
+	// Color buttons
+	{
+		auto bright_contrast_button = std::make_unique<GenericNodeButton<BrightnessContrastNode>>();
+		auto gamma_button = std::make_unique<GenericNodeButton<GammaNode>>();
+		auto hsv_button = std::make_unique<GenericNodeButton<HSVNode>>();
+		auto invert_button = std::make_unique<GenericNodeButton<InvertNode>>();
+		auto light_falloff_button = std::make_unique<GenericNodeButton<LightFalloffNode>>();
+		auto mix_rgb_button = std::make_unique<GenericNodeButton<MixRGBNode>>();
+		auto rgb_curves_button = std::make_unique<GenericNodeButton<RGBCurvesNode>>();
 
-	cat_color_button->node_buttons.push_back(bright_contrast_button);
-	cat_color_button->node_buttons.push_back(gamma_button);
-	cat_color_button->node_buttons.push_back(hsv_button);
-	cat_color_button->node_buttons.push_back(invert_button);
-	cat_color_button->node_buttons.push_back(light_falloff_button);
-	cat_color_button->node_buttons.push_back(mix_rgb_button);
-	cat_color_button->node_buttons.push_back(rgb_curves_button);
+		cat_color_button->node_buttons.push_back(std::move(bright_contrast_button));
+		cat_color_button->node_buttons.push_back(std::move(gamma_button));
+		cat_color_button->node_buttons.push_back(std::move(hsv_button));
+		cat_color_button->node_buttons.push_back(std::move(invert_button));
+		cat_color_button->node_buttons.push_back(std::move(light_falloff_button));
+		cat_color_button->node_buttons.push_back(std::move(mix_rgb_button));
+		cat_color_button->node_buttons.push_back(std::move(rgb_curves_button));
+	}
 
-	// Vector buttons -- same ownership as input buttons
-	NodeCreationButton* bump_button = new GenericNodeButton<BumpNode>();
-	NodeCreationButton* normal_map_button = new GenericNodeButton<NormalMapNode>();
-	NodeCreationButton* vector_transform_button = new GenericNodeButton<VectorTransformNode>();
+	// Vector buttons
+	{
+		auto bump_button = std::make_unique<GenericNodeButton<BumpNode>>();
+		auto normal_map_button = std::make_unique<GenericNodeButton<NormalMapNode>>();
+		auto vector_transform_button = std::make_unique<GenericNodeButton<VectorTransformNode>>();
 
-	cat_vector_button->node_buttons.push_back(bump_button);
-	cat_vector_button->node_buttons.push_back(normal_map_button);
-	cat_vector_button->node_buttons.push_back(vector_transform_button);
+		cat_vector_button->node_buttons.push_back(std::move(bump_button));
+		cat_vector_button->node_buttons.push_back(std::move(normal_map_button));
+		cat_vector_button->node_buttons.push_back(std::move(vector_transform_button));
+	}
 
 	// Converter buttons
-	NodeCreationButton* blackbody_button = new GenericNodeButton<BlackbodyNode>();
-	NodeCreationButton* combine_hsv_button = new GenericNodeButton<CombineHSVNode>();
-	NodeCreationButton* combine_rgb_button = new GenericNodeButton<CombineRGBNode>();
-	NodeCreationButton* combine_xyz_button = new GenericNodeButton<CombineXYZNode>();
-	NodeCreationButton* math_button = new GenericNodeButton<MathNode>();
-	NodeCreationButton* rgb_to_bw_button = new GenericNodeButton<RGBToBWNode>();
-	NodeCreationButton* separate_hsv_button = new GenericNodeButton<SeparateHSVNode>();
-	NodeCreationButton* separate_rgb_button = new GenericNodeButton<SeparateRGBNode>();
-	NodeCreationButton* separate_xyz_button = new GenericNodeButton<SeparateXYZNode>();
-	NodeCreationButton* vector_math_button = new GenericNodeButton<VectorMathNode>();
-	NodeCreationButton* wavelength_button = new GenericNodeButton<WavelengthNode>();
+	{
+		auto blackbody_button = std::make_unique<GenericNodeButton<BlackbodyNode>>();
+		auto combine_hsv_button = std::make_unique<GenericNodeButton<CombineHSVNode>>();
+		auto combine_rgb_button = std::make_unique<GenericNodeButton<CombineRGBNode>>();
+		auto combine_xyz_button = std::make_unique<GenericNodeButton<CombineXYZNode>>();
+		auto math_button = std::make_unique<GenericNodeButton<MathNode>>();
+		auto rgb_to_bw_button = std::make_unique<GenericNodeButton<RGBToBWNode>>();
+		auto separate_hsv_button = std::make_unique<GenericNodeButton<SeparateHSVNode>>();
+		auto separate_rgb_button = std::make_unique<GenericNodeButton<SeparateRGBNode>>();
+		auto separate_xyz_button = std::make_unique<GenericNodeButton<SeparateXYZNode>>();
+		auto vector_math_button = std::make_unique<GenericNodeButton<VectorMathNode>>();
+		auto wavelength_button = std::make_unique<GenericNodeButton<WavelengthNode>>();
 
-	cat_converter_button->node_buttons.push_back(blackbody_button);
-	cat_converter_button->node_buttons.push_back(combine_hsv_button);
-	cat_converter_button->node_buttons.push_back(combine_rgb_button);
-	cat_converter_button->node_buttons.push_back(combine_xyz_button);
-	cat_converter_button->node_buttons.push_back(math_button);
-	cat_converter_button->node_buttons.push_back(rgb_to_bw_button);
-	cat_converter_button->node_buttons.push_back(separate_hsv_button);
-	cat_converter_button->node_buttons.push_back(separate_rgb_button);
-	cat_converter_button->node_buttons.push_back(separate_xyz_button);
-	cat_converter_button->node_buttons.push_back(vector_math_button);
-	cat_converter_button->node_buttons.push_back(wavelength_button);
-
-	active_category = cat_shader_button;
-}
-
-CyclesShaderEditor::NodeListSubwindow::~NodeListSubwindow()
-{
-	for (NodeCategoryButton* category_button : category_buttons) {
-		delete category_button;
+		cat_converter_button->node_buttons.push_back(std::move(blackbody_button));
+		cat_converter_button->node_buttons.push_back(std::move(combine_hsv_button));
+		cat_converter_button->node_buttons.push_back(std::move(combine_rgb_button));
+		cat_converter_button->node_buttons.push_back(std::move(combine_xyz_button));
+		cat_converter_button->node_buttons.push_back(std::move(math_button));
+		cat_converter_button->node_buttons.push_back(std::move(rgb_to_bw_button));
+		cat_converter_button->node_buttons.push_back(std::move(separate_hsv_button));
+		cat_converter_button->node_buttons.push_back(std::move(separate_rgb_button));
+		cat_converter_button->node_buttons.push_back(std::move(separate_xyz_button));
+		cat_converter_button->node_buttons.push_back(std::move(vector_math_button));
+		cat_converter_button->node_buttons.push_back(std::move(wavelength_button));
 	}
-}
 
-void CyclesShaderEditor::NodeListSubwindow::pre_draw()
-{
-	for (NodeCategoryButton* category_button : category_buttons) {
-		if (category_button == active_category) {
-			category_button->pressed = true;
-		}
-		else {
-			category_button->pressed = false;
-		}
-	}
+	// Add category buttons at the end because we need to std::move them into the list
+	category_buttons.push_back(std::move(cat_input_button));
+	category_buttons.push_back(std::move(cat_shader_button));
+	category_buttons.push_back(std::move(cat_texture_button));
+	category_buttons.push_back(std::move(cat_color_button));
+	category_buttons.push_back(std::move(cat_vector_button));
+	category_buttons.push_back(std::move(cat_converter_button));
 }
 
 void CyclesShaderEditor::NodeListSubwindow::handle_mouse_button(int button, int action, int /*mods*/) {
@@ -241,12 +235,11 @@ void CyclesShaderEditor::NodeListSubwindow::handle_mouse_button(int button, int 
 		if (is_mouse_over_header()) {
 			move_window_begin();
 		}
-		else if (get_category_button_under_mouse() != nullptr) {
-			active_category = get_category_button_under_mouse();
+		else if (is_category_button_under_mouse()) {
+			select_category_button_under_mouse();
 		}
-		else if (get_button_under_mouse() != nullptr) {
-			NodeCreationButton* node_button = get_button_under_mouse();
-			activate_creation_button(node_button);
+		else if (is_creation_button_under_mouse()) {
+			select_creation_button_under_mouse();
 		}
 	}
 	else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
@@ -264,32 +257,6 @@ void CyclesShaderEditor::NodeListSubwindow::mouse_left_release()
 	reset_creation_buttons();
 }
 
-CyclesShaderEditor::NodeCategoryButton* CyclesShaderEditor::NodeListSubwindow::get_category_button_under_mouse()
-{
-	for (NodeCategoryButton* const category_button : category_buttons) {
-		if (category_button->is_mouse_over_button()) {
-			return category_button;
-		}
-	}
-
-	return nullptr;
-}
-
-CyclesShaderEditor::NodeCreationButton* CyclesShaderEditor::NodeListSubwindow::get_button_under_mouse()
-{
-	if (active_category == nullptr) {
-		return nullptr;
-	}
-
-	for (NodeCreationButton* const node_button : active_category->node_buttons) {
-		if (node_button->is_mouse_over_button()) {
-			return node_button;
-		}
-	}
-
-	return nullptr;
-}
-
 void CyclesShaderEditor::NodeListSubwindow::draw_content(NVGcontext* const draw_context)
 {
 	float height_drawn = 0.0f;
@@ -297,7 +264,7 @@ void CyclesShaderEditor::NodeListSubwindow::draw_content(NVGcontext* const draw_
 	// Node category buttons
 	NodeCategoryButtonPlacer placer(FloatPos(0.0f, height_drawn), subwindow_width, UI_SUBWIN_NODE_LIST_BUTTON_VPADDING);
 
-	for (NodeCategoryButton* const category_button : category_buttons) {
+	for (const auto& category_button : category_buttons) {
 		const FloatPos button_position = placer.next_button_position();
 		category_button->update_mouse_position(mouse_panel_pos - button_position);
 		category_button->draw(button_position, draw_context);
@@ -306,33 +273,68 @@ void CyclesShaderEditor::NodeListSubwindow::draw_content(NVGcontext* const draw_
 	height_drawn += placer.get_draw_height();
 
 	// Buttons
-	if (active_category != nullptr) {
-		for (NodeCreationButton* const node_button : active_category->node_buttons) {
-			const FloatPos button_location(0.0f, height_drawn);
-			height_drawn += node_button->draw(draw_context, button_location, mouse_panel_pos, subwindow_width);
-		}
+	for (const auto& node_button : get_active_creation_buttons()) {
+		const FloatPos button_location(0.0f, height_drawn);
+		height_drawn += node_button->draw(draw_context, button_location, mouse_panel_pos, subwindow_width);
 	}
 
 	content_height = height_drawn + UI_SUBWIN_NODE_LIST_BUTTON_VPADDING;
 }
 
-void CyclesShaderEditor::NodeListSubwindow::activate_creation_button(NodeCreationButton* const node_button)
+const std::list<std::unique_ptr<CyclesShaderEditor::NodeCreationButton>>& CyclesShaderEditor::NodeListSubwindow::get_active_creation_buttons() const
 {
-	if (node_button == nullptr) {
-		return;
+	for (const auto& this_category : category_buttons) {
+		if (this_category->selected) {
+			return this_category->node_buttons;
+		}
 	}
+	return empty_creation_button_list;
+}
+
+bool CyclesShaderEditor::NodeListSubwindow::is_category_button_under_mouse() const
+{
+	for (const auto& this_category : category_buttons) {
+		if (this_category->is_mouse_over_button()) {
+			return true;
+		}
+	}
+	return false;
+}
+
+bool CyclesShaderEditor::NodeListSubwindow::is_creation_button_under_mouse() const
+{
+	for (const auto& creation_button : get_active_creation_buttons()) {
+		if (creation_button->is_mouse_over_button()) {
+			return true;
+		}
+	}
+	return false;
+}
+
+void CyclesShaderEditor::NodeListSubwindow::select_category_button_under_mouse()
+{
+	for (const auto& this_category : category_buttons) {
+		this_category->selected = this_category->is_mouse_over_button();
+	}
+}
+
+void CyclesShaderEditor::NodeListSubwindow::select_creation_button_under_mouse()
+{
 	if (const auto node_creation_helper = this->node_creation_helper.lock()) {
-		node_creation_helper->set_node(node_button->create_node());
-		node_button->pressed = true;
+		for (const auto& creation_button : get_active_creation_buttons()) {
+			if (creation_button->is_mouse_over_button()) {
+				node_creation_helper->set_node(creation_button->create_node());
+				creation_button->pressed = true;
+				break;
+			}
+		}
 	}
 }
 
 void CyclesShaderEditor::NodeListSubwindow::reset_creation_buttons()
 {
-	if (active_category != nullptr) {
-		for (const auto this_button : active_category->node_buttons) {
-			this_button->pressed = false;
-		}
+	for (const auto& this_button : get_active_creation_buttons()) {
+		this_button->pressed = false;
 	}
 	if (const auto node_creation_helper = this->node_creation_helper.lock()) {
 		node_creation_helper->clear();

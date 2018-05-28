@@ -1,8 +1,10 @@
 #pragma once
 
 #include <list>
+#include <memory>
 #include <string>
 
+#include "buttons_nodes.h"
 #include "float_pos.h"
 #include "gui_sizes.h"
 
@@ -34,16 +36,15 @@ namespace CyclesShaderEditor {
 		static float get_button_height() { return UI_SUBWIN_NODE_LIST_CAT_BUTTON_HEIGHT; }
 
 		NodeCategoryButton(const std::string& label);
-		~NodeCategoryButton();
 
 		void draw(FloatPos draw_position, NVGcontext* draw_context);
 		void update_mouse_position(FloatPos local_position);
 
-		bool is_mouse_over_button();
+		bool is_mouse_over_button() const;
 
-		bool pressed = false;
+		bool selected = false;
 
-		std::list<NodeCreationButton*> node_buttons;
+		std::list<std::unique_ptr<NodeCreationButton>> node_buttons;
 
 	private:
 		std::string label;

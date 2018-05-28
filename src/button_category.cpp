@@ -2,11 +2,7 @@
 
 #include <cmath>
 
-#include <nanovg.h>
-
-#include "buttons_nodes.h"
 #include "drawing.h"
-#include "gui_sizes.h"
 
 CyclesShaderEditor::NodeCategoryButtonPlacer::NodeCategoryButtonPlacer(const FloatPos draw_origin, const float parent_width, const float vertical_padding)
 {
@@ -56,16 +52,10 @@ CyclesShaderEditor::NodeCategoryButton::NodeCategoryButton(const std::string& la
 	this->label = label;
 }
 
-CyclesShaderEditor::NodeCategoryButton::~NodeCategoryButton()
-{
-	for (NodeCreationButton* const node_button : node_buttons) {
-		delete node_button;
-	}
-}
-
 void CyclesShaderEditor::NodeCategoryButton::draw(const FloatPos draw_position, NVGcontext* const draw_context)
 {
-	Drawing::draw_button(draw_context, draw_position, get_button_width(), get_button_height(), label, true, pressed);
+	constexpr bool BUTTON_ENABLED = true;
+	Drawing::draw_button(draw_context, draw_position, get_button_width(), get_button_height(), label, BUTTON_ENABLED, selected);
 }
 
 void CyclesShaderEditor::NodeCategoryButton::update_mouse_position(const FloatPos local_position)
@@ -73,7 +63,7 @@ void CyclesShaderEditor::NodeCategoryButton::update_mouse_position(const FloatPo
 	mouse_local_pos = local_position;
 }
 
-bool CyclesShaderEditor::NodeCategoryButton::is_mouse_over_button()
+bool CyclesShaderEditor::NodeCategoryButton::is_mouse_over_button() const
 {
 	return (
 		mouse_local_pos.get_x() > 0.0f &&
