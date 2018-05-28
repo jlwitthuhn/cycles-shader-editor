@@ -28,27 +28,22 @@ bool CyclesShaderEditor::NodeCreationHelper::is_ready() const
 	return current_node != nullptr;
 }
 
-void CyclesShaderEditor::NodeCreationHelper::set_node(EditorNode* const new_node)
+void CyclesShaderEditor::NodeCreationHelper::set_node(std::unique_ptr<EditorNode>& new_node)
 {
-	if (current_node != nullptr) {
-		delete current_node;
-	}
-	current_node = new_node;
+	current_node = std::move(new_node);
 }
 
 void CyclesShaderEditor::NodeCreationHelper::clear()
 {
-	if (current_node != nullptr) {
-		delete current_node;
-		current_node = nullptr;
-	}
+	current_node = std::unique_ptr<EditorNode>();
 }
 
-CyclesShaderEditor::EditorNode* CyclesShaderEditor::NodeCreationHelper::take()
+std::unique_ptr<CyclesShaderEditor::EditorNode> CyclesShaderEditor::NodeCreationHelper::take()
 {
-	EditorNode* const result = current_node;
-	current_node = nullptr;
-	return result;
+	if (current_node) {
+		return std::move(current_node);
+	}
+	return std::unique_ptr<EditorNode>();
 }
 
 CyclesShaderEditor::NodeListSubwindow::NodeListSubwindow(const std::weak_ptr<NodeCreationHelper> node_creation_helper, const FloatPos screen_position) :

@@ -17,12 +17,12 @@ namespace CyclesShaderEditor {
 
 		bool is_ready() const;
 
-		void set_node(EditorNode* new_node);
+		void set_node(std::unique_ptr<EditorNode>& new_node);
 		void clear();
-		EditorNode* take();
+		std::unique_ptr<EditorNode> take();
 
 	private:
-		EditorNode* current_node = nullptr;
+		std::unique_ptr<EditorNode> current_node;
 	};
 
 	class NodeListSubwindow : public NodeEditorSubwindow {

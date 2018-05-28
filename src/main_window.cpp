@@ -205,9 +205,10 @@ void CyclesShaderEditor::EditorMainWindow::handle_mouse_button(const int button,
 			view->mouse_move_begin();
 		}
 		else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
-			EditorNode* const new_node = node_creation_helper->take();
-			if (new_node != nullptr) {
-				view->add_node_at_mouse(new_node);
+			std::unique_ptr<EditorNode> new_node = node_creation_helper->take();
+			if (new_node) {
+				// TODO: convert to shared_ptr instead of raw pointer here
+				view->add_node_at_mouse(new_node.release());
 			}
 		}
 

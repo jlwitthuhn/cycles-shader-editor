@@ -35,7 +35,7 @@ CyclesShaderEditor::EditorNode::~EditorNode()
 	}
 }
 
-std::string CyclesShaderEditor::EditorNode::get_title()
+std::string CyclesShaderEditor::EditorNode::get_title() const
 {
 	return title;
 }
@@ -295,7 +295,7 @@ void CyclesShaderEditor::EditorNode::set_mouse_position(const CyclesShaderEditor
 	}
 }
 
-bool CyclesShaderEditor::EditorNode::is_mouse_over_node()
+bool CyclesShaderEditor::EditorNode::is_mouse_over_node() const
 {
 	if (node_moving) {
 		return true;
@@ -306,7 +306,7 @@ bool CyclesShaderEditor::EditorNode::is_mouse_over_node()
 		mouse_local_pos.get_y() <= UI_NODE_HEADER_HEIGHT + content_height);
 }
 
-bool CyclesShaderEditor::EditorNode::is_mouse_over_header()
+bool CyclesShaderEditor::EditorNode::is_mouse_over_header() const
 {
 	if (node_moving) {
 		return true;

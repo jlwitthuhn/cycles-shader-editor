@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <string>
 
 #include "float_pos.h"
@@ -17,9 +18,7 @@ namespace CyclesShaderEditor {
 		virtual float draw(NVGcontext* draw_context, FloatPos draw_origin, FloatPos parent_local_mouse_pos, float parent_width);
 		virtual bool is_mouse_over_button();
 
-		// Caller is responsible for deleting the pointer after use
-		virtual EditorNode* create_node();
-		virtual EditorNode* create_node(FloatPos world_position) = 0;
+		virtual std::unique_ptr<EditorNode> create_node() = 0;
 
 		bool pressed = false;
 
@@ -33,19 +32,18 @@ namespace CyclesShaderEditor {
 	};
 
 	// Generic
-
 	template<typename T>
 	class GenericNodeButton : public NodeCreationButton {
 	public:
 		GenericNodeButton() {
 			const FloatPos irrelevant_position(0.0f, 0.0f);
-			T* const tmp_node = new T(irrelevant_position);
-			this->label = tmp_node->get_title();
-			delete tmp_node;
+			const T tmp_node(irrelevant_position);
+			this->label = tmp_node.get_title();
 		}
 
-		virtual EditorNode* create_node(const FloatPos world_position) override {
-			return new T(world_position);
+		virtual std::unique_ptr<EditorNode> create_node() override {
+			const FloatPos irrelevant_position(0.0f, 0.0f);
+			return std::make_unique<T>(irrelevant_position);
 		}
 	};
 

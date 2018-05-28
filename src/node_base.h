@@ -29,13 +29,13 @@ namespace CyclesShaderEditor {
 	public:
 		virtual ~EditorNode();
 
-		virtual std::string get_title();
+		virtual std::string get_title() const;
 
 		virtual void draw_node(NVGcontext* draw_context);
 		virtual void set_mouse_position(FloatPos node_local_position);
 
-		virtual bool is_mouse_over_node();
-		virtual bool is_mouse_over_header();
+		virtual bool is_mouse_over_node() const;
+		virtual bool is_mouse_over_header() const;
 		virtual void handle_mouse_button(int button, int action, int mods);
 
 		virtual void move_begin();
