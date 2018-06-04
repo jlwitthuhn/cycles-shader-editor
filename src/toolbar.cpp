@@ -7,12 +7,12 @@
 #include "gui_sizes.h"
 #include "ui_requests.h"
 
-CyclesShaderEditor::ToolbarButton::ToolbarButton(ToolbarButtonType type)
+CyclesShaderEditor::ToolbarButton::ToolbarButton(const ToolbarButtonType type)
 {
 	this->type = type;
 }
 
-std::string CyclesShaderEditor::ToolbarButton::get_label()
+std::string CyclesShaderEditor::ToolbarButton::get_label() const
 {
 	switch (type) {
 	case ToolbarButtonType::SAVE:
@@ -30,10 +30,29 @@ std::string CyclesShaderEditor::ToolbarButton::get_label()
 	}
 }
 
-CyclesShaderEditor::NodeEditorToolbar::NodeEditorToolbar(UIRequests* requests)
+void CyclesShaderEditor::ToolbarButton::set_geometry(const FloatPos pos_in, const float width_in, const float height_in)
 {
-	this->requests = requests;
+	pos = pos_in;
+	width = width_in;
+	height = height_in;
+}
 
+bool CyclesShaderEditor::ToolbarButton::is_under_point(const FloatPos point) const
+{
+	const float min_x = pos.get_x();
+	const float max_x = pos.get_x() + width;
+	const float min_y = pos.get_y();
+	const float max_y = pos.get_y() + height;
+	return (
+		pos.get_x() > min_x &&
+		pos.get_x() < max_x &&
+		pos.get_y() > min_y &&
+		pos.get_y() < max_y
+	);
+}
+
+CyclesShaderEditor::NodeEditorToolbar::NodeEditorToolbar()
+{
 	buttons.push_back(ToolbarButton(ToolbarButtonType::SAVE));
 	buttons.push_back(ToolbarButton(ToolbarButtonType::SPACER));
 	buttons.push_back(ToolbarButton(ToolbarButtonType::UNDO));
@@ -55,7 +74,7 @@ void CyclesShaderEditor::NodeEditorToolbar::draw(NVGcontext* draw_context, float
 
 	// Draw buttons
 	float section_begin_x = 0;
-	for (ToolbarButton this_button: buttons) {
+	for (ToolbarButton& this_button: buttons) {
 		if (this_button.type == ToolbarButtonType::SPACER) {
 
 			const float x_pos = section_begin_x + UI_TOOLBAR_SPACER_WIDTH / 2.0f;
@@ -76,11 +95,22 @@ void CyclesShaderEditor::NodeEditorToolbar::draw(NVGcontext* draw_context, float
 		const FloatPos button_pos(section_begin_x + UI_TOOLBAR_BUTTON_HPAD, UI_TOOLBAR_BUTTON_VPAD);
 		const float button_height = get_toolbar_height() - 2 * UI_TOOLBAR_BUTTON_VPAD;
 		Drawing::draw_button(draw_context, button_pos, UI_TOOLBAR_BUTTON_WIDTH, button_height, this_button.get_label(), this_button.enabled, this_button.pressed);
+		this_button.set_geometry(button_pos, UI_TOOLBAR_BUTTON_WIDTH, button_height);
 
 		section_begin_x += UI_TOOLBAR_BUTTON_WIDTH + UI_TOOLBAR_BUTTON_HPAD * 2;
 	}
 
 	nvgRestore(draw_context);
+}
+
+void CyclesShaderEditor::NodeEditorToolbar::set_button_enabled(const ToolbarButtonType type, const bool enabled)
+{
+	for (ToolbarButton& this_button : buttons) {
+		if (this_button.type == type) {
+			this_button.enabled = enabled;
+			return;
+		}
+	}
 }
 
 bool CyclesShaderEditor::NodeEditorToolbar::is_mouse_over()
@@ -91,33 +121,6 @@ bool CyclesShaderEditor::NodeEditorToolbar::is_mouse_over()
 		);
 }
 
-void CyclesShaderEditor::NodeEditorToolbar::release_buttons()
-{
-	for (ToolbarButton& this_button : buttons) {
-		this_button.pressed = false;
-	}
-}
-
-void CyclesShaderEditor::NodeEditorToolbar::disable_button(ToolbarButtonType type)
-{
-	for (ToolbarButton& this_button : buttons) {
-		if (this_button.type == type) {
-			this_button.enabled = false;
-			return;
-		}
-	}
-}
-
-void CyclesShaderEditor::NodeEditorToolbar::enable_button(ToolbarButtonType type)
-{
-	for (ToolbarButton& this_button : buttons) {
-		if (this_button.type == type) {
-			this_button.enabled = true;
-			return;
-		}
-	}
-}
-
 void CyclesShaderEditor::NodeEditorToolbar::set_mouse_position(FloatPos screen_position)
 {
 	mouse_screen_pos = screen_position;
@@ -126,77 +129,61 @@ void CyclesShaderEditor::NodeEditorToolbar::set_mouse_position(FloatPos screen_p
 void CyclesShaderEditor::NodeEditorToolbar::handle_mouse_button(int button, int action, int /*mods*/)
 {
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-		ToolbarButton* toolbar_button = get_button_under_mouse();
-		if (toolbar_button != nullptr) {
-			toolbar_button->pressed = true;
-		}
+		press_button_under_mouse();
 	}
 	else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
-		ToolbarButton* toolbar_button = get_button_under_mouse();
-		if (toolbar_button != nullptr) {
-			if (toolbar_button->pressed) {
-				set_request(toolbar_button->type);
-			}
-			toolbar_button->pressed = false;
+		release_button_under_mouse();
+		for (ToolbarButton& this_button : buttons) {
+			this_button.pressed = false;
 		}
 	}
 }
 
-CyclesShaderEditor::ToolbarButton* CyclesShaderEditor::NodeEditorToolbar::get_button_under_mouse()
+CyclesShaderEditor::UIRequests CyclesShaderEditor::NodeEditorToolbar::consume_ui_requests()
 {
-	const float BUTTON_MIN_Y = UI_TOOLBAR_BUTTON_VPAD;
-	const float BUTTON_MAX_Y = get_toolbar_height() - UI_TOOLBAR_BUTTON_VPAD;
+	const UIRequests result = requests;
+	requests.clear();
+	return result;
+}
 
-	float section_begin_x = 0;
-	for (ToolbarButton& this_button : buttons) {
-		if (this_button.type == ToolbarButtonType::SPACER) {
-			section_begin_x += UI_TOOLBAR_SPACER_WIDTH;
-			continue;
+void CyclesShaderEditor::NodeEditorToolbar::press_button_under_mouse()
+{
+	for (ToolbarButton& button : buttons) {
+		if (button.is_under_point(mouse_screen_pos)) {
+			button.pressed = true;
 		}
-		const float BUTTON_MIN_X = section_begin_x + UI_TOOLBAR_BUTTON_HPAD;
-		const float BUTTON_MAX_X = BUTTON_MIN_X + UI_TOOLBAR_BUTTON_WIDTH;
-
-		if (mouse_screen_pos.get_y() > BUTTON_MIN_Y &&
-			mouse_screen_pos.get_y() < BUTTON_MAX_Y &&
-			mouse_screen_pos.get_x() > BUTTON_MIN_X &&
-			mouse_screen_pos.get_x() < BUTTON_MAX_X)
-		{
-			return &this_button;
-		}
-
-		section_begin_x += UI_TOOLBAR_BUTTON_WIDTH + UI_TOOLBAR_BUTTON_HPAD * 2;
 	}
+}
 
-	return nullptr;
+void CyclesShaderEditor::NodeEditorToolbar::release_button_under_mouse()
+{
+	for (ToolbarButton& button : buttons) {
+		if (button.is_under_point(mouse_screen_pos)) {
+			if (button.pressed) {
+				set_request(button.type);
+			}
+			button.pressed = false;
+		}
+	}
 }
 
 void CyclesShaderEditor::NodeEditorToolbar::set_request(ToolbarButtonType button_type)
 {
 	switch (button_type) {
 	case ToolbarButtonType::SAVE:
-		if (requests->save == false) {
-			requests->save = true;
-		}
+		requests.save = true;
 		break;
 	case ToolbarButtonType::UNDO:
-		if (requests->undo == false) {
-			requests->undo = true;
-		}
+		requests.undo = true;
 		break;
 	case ToolbarButtonType::REDO:
-		if (requests->redo == false) {
-			requests->redo = true;
-		}
+		requests.redo = true;
 		break;
 	case ToolbarButtonType::ZOOM_IN:
-		if (requests->zoom_in == false) {
-			requests->zoom_in = true;
-		}
+		requests.zoom_in = true;
 		break;
 	case ToolbarButtonType::ZOOM_OUT:
-		if (requests->zoom_out == false) {
-			requests->zoom_out = true;
-		}
+		requests.zoom_out = true;
 		break;
 	default:
 		break;

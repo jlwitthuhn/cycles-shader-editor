@@ -16,9 +16,9 @@ void CyclesShaderEditor::Drawing::draw_button(
 	const bool pressed
 	)
 {
-	const int gradient_alpha = enabled ? 31 : 15;
-	const int button_alpha = enabled ? 127 : 63;
-	const int label_alpha = enabled ? 255 : 127;
+	const unsigned char gradient_alpha = enabled ? 31 : 15;
+	const unsigned char button_alpha = enabled ? 127 : 63;
+	const unsigned char label_alpha = enabled ? 255 : 127;
 
 	const float x_pos = pos.get_x();
 	const float y_pos = pos.get_y();

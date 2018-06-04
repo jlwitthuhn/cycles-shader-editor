@@ -59,7 +59,7 @@ void CyclesShaderEditor::EditorNode::draw_node(NVGcontext* const draw_context)
 		nvgBeginPath(draw_context);
 		nvgRoundedRect(draw_context, draw_pos_x, draw_pos_y, content_width, UI_NODE_HEADER_HEIGHT, UI_NODE_CORNER_RADIUS);
 		nvgRect(draw_context, draw_pos_x, rect_pos_y, content_width, UI_NODE_CORNER_RADIUS);
-		if (is_mouse_over_header()) {
+		if (highlight_header) {
 			nvgFillColor(draw_context, nvgRGBA(225, 225, 225, 255));
 		}
 		else {
@@ -280,80 +280,34 @@ void CyclesShaderEditor::EditorNode::draw_node(NVGcontext* const draw_context)
 	}
 }
 
-void CyclesShaderEditor::EditorNode::set_mouse_position(const CyclesShaderEditor::FloatPos node_local_position)
+bool CyclesShaderEditor::EditorNode::is_node_under_point(const FloatPos check_world_pos) const
 {
-	if (node_moving) {
-		const CyclesShaderEditor::FloatPos mouse_movement = (node_local_position - mouse_local_begin_move_pos);
-		world_pos = world_pos + mouse_movement;
-		mouse_local_pos = mouse_local_begin_move_pos;
-		if (std::abs(mouse_movement.get_x()) + std::abs(mouse_movement.get_y()) > 0.1f) {
-			has_moved = true;
-		}
-	}
-	else {
-		mouse_local_pos = node_local_position;
-	}
+	const FloatPos local_pos = get_local_pos(check_world_pos);
+	return (
+		local_pos.get_x() >= 0.0f &&
+		local_pos.get_x() <= content_width &&
+		local_pos.get_y() >= 0.0f &&
+		local_pos.get_y() <= UI_NODE_HEADER_HEIGHT + content_height
+	);
 }
 
-bool CyclesShaderEditor::EditorNode::is_mouse_over_node() const
+CyclesShaderEditor::NodeSocket* CyclesShaderEditor::EditorNode::get_socket_connector_under_point(const FloatPos check_world_pos) const
 {
-	if (node_moving) {
-		return true;
-	}
-	return (mouse_local_pos.get_x() >= 0.0f &&
-		mouse_local_pos.get_x() <= content_width &&
-		mouse_local_pos.get_y() >= 0.0f &&
-		mouse_local_pos.get_y() <= UI_NODE_HEADER_HEIGHT + content_height);
-}
-
-bool CyclesShaderEditor::EditorNode::is_mouse_over_header() const
-{
-	if (node_moving) {
-		return true;
-	}
-	return (mouse_local_pos.get_x() >= 0.0f &&
-		mouse_local_pos.get_x() <= content_width &&
-		mouse_local_pos.get_y() >= 0.0f &&
-		mouse_local_pos.get_y() <= UI_NODE_HEADER_HEIGHT);
-}
-
-void CyclesShaderEditor::EditorNode::handle_mouse_button(int /*button*/, int /*action*/, int /*mods*/)
-{
-
-}
-
-void CyclesShaderEditor::EditorNode::move_begin()
-{
-	has_moved = false;
-	node_moving = true;
-	mouse_local_begin_move_pos = mouse_local_pos;
-}
-
-void CyclesShaderEditor::EditorNode::move_end()
-{
-	if (node_moving && has_moved) {
-		changed = true;
-	}
-	node_moving = false;
-}
-
-CyclesShaderEditor::NodeSocket* CyclesShaderEditor::EditorNode::get_socket_under_mouse()
-{
-	std::vector<SocketClickTarget>::iterator target_iter;
-	for (target_iter = socket_targets.begin(); target_iter != socket_targets.end(); ++target_iter) {
-		if ((*target_iter).is_mouse_over_target(mouse_local_pos)) {
-			return (*target_iter).socket;
+	const FloatPos local_pos = get_local_pos(check_world_pos);
+	for (const auto click_target : socket_targets) {
+		if (click_target.is_mouse_over_target(local_pos)) {
+			return click_target.socket;
 		}
 	}
 	return nullptr;
 }
 
-CyclesShaderEditor::NodeSocket* CyclesShaderEditor::EditorNode::get_socket_label_under_mouse()
+CyclesShaderEditor::NodeSocket* CyclesShaderEditor::EditorNode::get_socket_label_under_point(const FloatPos check_world_pos) const
 {
-	std::vector<SocketClickTarget>::iterator target_iter;
-	for (target_iter = label_targets.begin(); target_iter != label_targets.end(); ++target_iter) {
-		if ((*target_iter).is_mouse_over_target(mouse_local_pos)) {
-			return (*target_iter).socket;
+	const FloatPos local_pos = get_local_pos(check_world_pos);
+	for (const auto click_target : label_targets) {
+		if (click_target.is_mouse_over_target(local_pos)) {
+			return click_target.socket;
 		}
 	}
 	return nullptr;
@@ -366,7 +320,6 @@ CyclesShaderEditor::NodeSocket* CyclesShaderEditor::EditorNode::get_socket_by_di
 			return socket;
 		}
 	}
-
 	return nullptr;
 }
 
@@ -377,7 +330,6 @@ CyclesShaderEditor::NodeSocket* CyclesShaderEditor::EditorNode::get_socket_by_in
 			return socket;
 		}
 	}
-
 	return nullptr;
 }
 
@@ -459,4 +411,9 @@ void CyclesShaderEditor::EditorNode::update_output_node(OutputNode& output)
 			}
 		}
 	}
+}
+
+CyclesShaderEditor::FloatPos CyclesShaderEditor::EditorNode::get_local_pos(FloatPos world_pos_in) const
+{
+	return world_pos_in - world_pos;
 }

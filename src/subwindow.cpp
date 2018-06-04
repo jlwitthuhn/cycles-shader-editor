@@ -3,6 +3,7 @@
 #include <nanovg.h>
 
 #include "gui_sizes.h"
+#include "selection.h"
 
 CyclesShaderEditor::NodeEditorSubwindow::NodeEditorSubwindow(FloatPos screen_position, std::string title)
 {
@@ -147,11 +148,6 @@ void CyclesShaderEditor::NodeEditorSubwindow::handle_character(unsigned int /*co
 
 }
 
-void CyclesShaderEditor::NodeEditorSubwindow::mouse_left_release()
-{
-
-}
-
 void CyclesShaderEditor::NodeEditorSubwindow::move_window_begin()
 {
 	subwindow_moving = true;
@@ -166,4 +162,9 @@ void CyclesShaderEditor::NodeEditorSubwindow::move_window_end()
 bool CyclesShaderEditor::NodeEditorSubwindow::needs_undo_push()
 {
 	return false;
+}
+
+void CyclesShaderEditor::NodeEditorSubwindow::update_selection(std::weak_ptr<const Selection> /*selection*/)
+{
+	// Do nothing
 }

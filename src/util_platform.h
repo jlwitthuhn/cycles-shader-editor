@@ -11,10 +11,14 @@ namespace CyclesShaderEditor {
 #else
 	typedef std::string PathString;
 #endif
-	PathString get_pathstring(const std::string& input);
-	PathString get_font_path(const PathString& search_path, const std::string& filename);
+	namespace Platform {
+		PathString get_pathstring(const std::string& input);
+		PathString get_font_path(const PathString& search_path, const std::string& filename);
 
-	void nvg_create_font(const PathString& path, const std::string& name, NVGcontext* nvg_context);
+		void nvg_create_font(const PathString& path, const std::string& name, NVGcontext* nvg_context);
 
-	void thread_usleep(int us);
+		int get_delete_key();
+
+		void thread_usleep(int us);
+	}
 }

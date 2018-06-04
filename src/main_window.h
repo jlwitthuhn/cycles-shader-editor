@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 
+#include "editable_graph.h"
 #include "float_pos.h"
 #include "node_base.h"
 #include "statusbar.h"
@@ -45,7 +46,7 @@ namespace CyclesShaderEditor {
 		void handle_character(unsigned int codepoint);
 		void handle_scroll(double xoffset, double yoffset);
 
-		void load_serialized_graph(const std::string& graph);
+		void load_serialized_graph(const std::string& graph_str);
 
 	private:
 		void pre_draw();
@@ -57,9 +58,11 @@ namespace CyclesShaderEditor {
 
 		void update_mouse_position(FloatPos screen_position);
 
-		NodeEditorSubwindow* get_subwindow_requesting_input() const;
-		NodeEditorSubwindow* get_subwindow_under_mouse() const;
-		void raise_subwindow(NodeEditorSubwindow* subwindow);
+		// Forwards input to any subwindow that wants to grab input
+		// Returns true if a subwindow accepted the input, false otherwise
+		bool forward_mouse_to_subwindow(int button, int action, int mods);
+		bool forward_key_to_subwindow(int key, int scancode, int action, int mods);
+		bool forward_character_to_subwindow(unsigned int codepoint);
 
 		void update_serialized_state();
 		void push_undo_state();
@@ -73,8 +76,7 @@ namespace CyclesShaderEditor {
 
 		void release_resources();
 
-		std::list<EditorNode*> nodes;
-		std::list<NodeConnection> connections;
+		EditableGraph main_graph;
 
 		FloatPos mouse_screen_pos;
 		int window_width, window_height;
@@ -84,13 +86,11 @@ namespace CyclesShaderEditor {
 
 		std::shared_ptr<NodeCreationHelper> node_creation_helper;
 
-		std::list<NodeEditorSubwindow*> subwindows;
-		ParamEditorSubwindow* param_editor_window = nullptr;
+		std::list<std::unique_ptr<NodeEditorSubwindow>> subwindows;
 
-		NodeEditorToolbar* toolbar = nullptr;
-		NodeEditorStatusBar* status_bar = nullptr;
-
-		EditGraphView* view = nullptr;
+		std::unique_ptr<NodeEditorToolbar> toolbar;
+		std::unique_ptr<NodeEditorStatusBar> status_bar;
+		std::unique_ptr<EditGraphView> view;
 
 		UIRequests requests;
 

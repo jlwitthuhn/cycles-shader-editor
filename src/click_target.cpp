@@ -6,7 +6,7 @@ CyclesShaderEditor::GenericClickTarget::GenericClickTarget(const FloatPos begin_
 	end = end_pos;
 }
 
-bool CyclesShaderEditor::GenericClickTarget::is_mouse_over_target(const FloatPos mouse_pos)
+bool CyclesShaderEditor::GenericClickTarget::is_mouse_over_target(const FloatPos mouse_pos) const
 {
 	return (mouse_pos.get_x() > begin.get_x() &&
 		mouse_pos.get_x() < end.get_x() &&

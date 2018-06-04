@@ -247,11 +247,6 @@ void CyclesShaderEditor::NodeListSubwindow::handle_mouse_button(int button, int 
 	}
 }
 
-void CyclesShaderEditor::NodeListSubwindow::mouse_left_release()
-{
-	reset_creation_buttons();
-}
-
 void CyclesShaderEditor::NodeListSubwindow::draw_content(NVGcontext* const draw_context)
 {
 	float height_drawn = 0.0f;
@@ -318,7 +313,8 @@ void CyclesShaderEditor::NodeListSubwindow::select_creation_button_under_mouse()
 	if (const auto node_creation_helper = this->node_creation_helper.lock()) {
 		for (const auto& creation_button : get_active_creation_buttons()) {
 			if (creation_button->is_mouse_over_button()) {
-				node_creation_helper->set_node(creation_button->create_node());
+				auto ptr = creation_button->create_node();
+				node_creation_helper->set_node(ptr);
 				creation_button->pressed = true;
 				break;
 			}

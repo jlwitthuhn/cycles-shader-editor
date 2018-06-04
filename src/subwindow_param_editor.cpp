@@ -9,6 +9,7 @@
 #include "gui_sizes.h"
 #include "input_box.h"
 #include "node_base.h"
+#include "selection.h"
 
 CyclesShaderEditor::ParamEditorSubwindow::ParamEditorSubwindow(FloatPos screen_position) :
 	NodeEditorSubwindow(screen_position, "Parameter Editor"),
@@ -113,6 +114,11 @@ void CyclesShaderEditor::ParamEditorSubwindow::handle_mouse_button(int button, i
 			complete_input();
 		}
 	}
+
+	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
+		panel_color.mouse_button_release();
+		panel_curve.mouse_button_release();
+	}
 }
 
 void CyclesShaderEditor::ParamEditorSubwindow::handle_key(int key, int /*scancode*/, int action, int /*mods*/)
@@ -142,18 +148,13 @@ void CyclesShaderEditor::ParamEditorSubwindow::handle_character(unsigned int cod
 	}
 }
 
-void CyclesShaderEditor::ParamEditorSubwindow::mouse_left_release()
-{
-	panel_color.mouse_button_release();
-	panel_curve.mouse_button_release();
-}
-
 bool CyclesShaderEditor::ParamEditorSubwindow::is_active() const
 {
 	return (selected_param != nullptr);
 }
 
-bool CyclesShaderEditor::ParamEditorSubwindow::needs_undo_push() {
+bool CyclesShaderEditor::ParamEditorSubwindow::needs_undo_push()
+{
 	bool result = false;
 	if (request_undo_stack_push) {
 		request_undo_stack_push = false;
@@ -168,14 +169,15 @@ bool CyclesShaderEditor::ParamEditorSubwindow::needs_undo_push() {
 	return result;
 }
 
-void CyclesShaderEditor::ParamEditorSubwindow::set_selected_param(NodeSocket* selected_param)
+void CyclesShaderEditor::ParamEditorSubwindow::update_selection(std::weak_ptr<const Selection> selection)
 {
-	if (this->selected_param == selected_param) {
-		return;
+	if (auto selection_ptr = selection.lock()) {
+		if (selected_param != selection_ptr->socket) {
+			complete_input();
+			panel_curve.reset_panel_state();
+			selected_param = selection_ptr->socket;
+		}
 	}
-	complete_input();
-	panel_curve.reset_panel_state();
-	this->selected_param = selected_param;
 }
 
 bool CyclesShaderEditor::ParamEditorSubwindow::should_capture_input() const

@@ -26,9 +26,9 @@ bool CyclesShaderEditor::EditColorPanel::is_active()
 	return active;
 }
 
-void CyclesShaderEditor::EditColorPanel::set_active(bool active)
+void CyclesShaderEditor::EditColorPanel::set_active(bool active_in)
 {
-	this->active = active;
+	active = active_in;
 }
 
 float CyclesShaderEditor::EditColorPanel::draw(NVGcontext* draw_context, ColorSocketValue* socket_value)

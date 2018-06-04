@@ -193,7 +193,7 @@ bool CyclesShaderEditor::CurveSocketValue::get_target_index(const FloatPos& targ
 	constexpr float MAX_DISTANCE_SQUARED = CURVE_POINT_SELECT_MARGIN * CURVE_POINT_SELECT_MARGIN;
 
 	bool target_found = false;
-	size_t target_index;
+	size_t target_index = 0;
 	float target_distance_squared = MAX_DISTANCE_SQUARED;
 	for (size_t i = 0; i < curve_points.size(); i++) {
 		const FloatPos& this_point = curve_points[i];

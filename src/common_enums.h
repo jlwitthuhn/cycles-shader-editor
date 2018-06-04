@@ -2,6 +2,11 @@
 
 namespace CyclesShaderEditor {
 
+	enum class ShaderGraphType {
+		EMPTY,
+		MATERIAL,
+	};
+
 	enum class EditCurveMode {
 		MOVE,
 		CREATE,

@@ -15,7 +15,6 @@ CyclesShaderEditor::MaterialOutputNode::MaterialOutputNode(FloatPos position)
 	sockets.push_back(displacement_input);
 
 	type = CyclesNodeType::MaterialOutput;
-	node_moving = false;
 
 	// This node being added should not trigger an update to undo state
 	changed = false;

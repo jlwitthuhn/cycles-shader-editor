@@ -17,9 +17,9 @@ CyclesShaderEditor::BaseInputBox::BaseInputBox(const float width, const float he
 	this->height = height;
 }
 
-void CyclesShaderEditor::BaseInputBox::draw(NVGcontext* const draw_context, const FloatPos parent_mouse_pos)
+void CyclesShaderEditor::BaseInputBox::draw(NVGcontext* const draw_context, const FloatPos parent_mouse_pos_in)
 {
-	this->parent_mouse_pos = parent_mouse_pos;
+	parent_mouse_pos = parent_mouse_pos_in;
 
 	// Back fill
 	nvgBeginPath(draw_context);
@@ -132,9 +132,9 @@ CyclesShaderEditor::IntInputBox::IntInputBox(const float width, const float heig
 
 }
 
-void CyclesShaderEditor::IntInputBox::set_int_value(IntSocketValue* const socket_value)
+void CyclesShaderEditor::IntInputBox::set_int_value(IntSocketValue* const socket_value_in)
 {
-	this->socket_value = socket_value;
+	socket_value = socket_value_in;
 }
 
 std::string CyclesShaderEditor::IntInputBox::get_value_as_string()
@@ -169,9 +169,9 @@ CyclesShaderEditor::FloatInputBox::FloatInputBox(float width, float height) : Ba
 
 }
 
-void CyclesShaderEditor::FloatInputBox::set_float_value(FloatSocketValue* socket_value)
+void CyclesShaderEditor::FloatInputBox::set_float_value(FloatSocketValue* socket_value_in)
 {
-	this->socket_value = socket_value;
+	socket_value = socket_value_in;
 }
 
 void CyclesShaderEditor::FloatInputBox::set_float_value(float value)

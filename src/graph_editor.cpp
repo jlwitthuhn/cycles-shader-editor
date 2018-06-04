@@ -5,7 +5,7 @@
 CyclesShaderEditor::GraphEditor::GraphEditor()
 {
 	main_window = new EditorMainWindow(this);
-	const PathString default_font_path = get_pathstring("font");
+	const PathString default_font_path = Platform::get_pathstring("font");
 	set_font_search_path(default_font_path);
 }
 

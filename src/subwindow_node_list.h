@@ -30,7 +30,6 @@ namespace CyclesShaderEditor {
 		NodeListSubwindow(std::weak_ptr<NodeCreationHelper> node_creation_helper, FloatPos screen_position);
 
 		virtual void handle_mouse_button(int button, int action, int mods) override;
-		virtual void mouse_left_release() override;
 
 	protected:
 		virtual void draw_content(NVGcontext* draw_context) override;

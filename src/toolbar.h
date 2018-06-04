@@ -1,16 +1,15 @@
 #pragma once
 
+#include <list>
 #include <string>
-#include <vector>
 
 #include "float_pos.h"
 #include "gui_sizes.h"
+#include "ui_requests.h"
 
 struct NVGcontext;
 
 namespace CyclesShaderEditor {
-
-	class UIRequests;
 
 	enum class ToolbarButtonType {
 		SAVE,
@@ -25,38 +24,48 @@ namespace CyclesShaderEditor {
 	public:
 		ToolbarButton(ToolbarButtonType type);
 
-		std::string get_label();
+		std::string get_label() const;
+
+		// Called from NodeEditorToolbar::draw to store the geometry of this button every draw
+		void set_geometry(FloatPos pos, float width, float height);
+		bool is_under_point(FloatPos point) const;
 
 		ToolbarButtonType type = ToolbarButtonType::SPACER;
 		bool pressed = false;
 		bool enabled = true;
+
+	private:
+		FloatPos pos;
+		float width;
+		float height;
 	};
 
 	class NodeEditorToolbar {
 	public:
 		static float get_toolbar_height() { return UI_TOOLBAR_HEIGHT; }
 
-		NodeEditorToolbar(UIRequests* requests);
+		NodeEditorToolbar();
 
 		void draw(NVGcontext* draw_context, float toolbar_width);
+
+		void set_button_enabled(ToolbarButtonType type, bool enabled);
+
 		bool is_mouse_over();
-		void release_buttons();
-
-		void disable_button(ToolbarButtonType type);
-		void enable_button(ToolbarButtonType type);
-
 		void set_mouse_position(FloatPos screen_position);
 		void handle_mouse_button(int button, int action, int mods);
 
+		UIRequests consume_ui_requests();
+
 	private:
-		ToolbarButton* get_button_under_mouse();
+		void press_button_under_mouse();
+		void release_button_under_mouse();
 		void set_request(ToolbarButtonType button_type);
 
 		FloatPos mouse_screen_pos;
 
-		std::vector<ToolbarButton> buttons;
+		std::list<ToolbarButton> buttons;
 
-		UIRequests* requests = nullptr;
+		UIRequests requests;
 	};
 
 }

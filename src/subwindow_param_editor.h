@@ -24,15 +24,13 @@ namespace CyclesShaderEditor {
 		virtual void handle_mouse_button(int button, int action, int mods) override;
 		virtual void handle_key(int key, int scancode, int action, int mods) override;
 		virtual void handle_character(unsigned int codepoint) override;
-		virtual void mouse_left_release() override;
 
 		virtual bool should_capture_input() const override;
 
 		virtual bool is_active() const override;
 
 		virtual bool needs_undo_push() override;
-
-		void set_selected_param(NodeSocket* selected_param);
+		virtual void update_selection(std::weak_ptr<const Selection> selection) override;
 
 		void complete_input();
 

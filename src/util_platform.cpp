@@ -6,9 +6,10 @@
 #include <unistd.h>
 #endif
 
+#include <GLFW/glfw3.h>
 #include <nanovg.h>
 
-CyclesShaderEditor::PathString CyclesShaderEditor::get_pathstring(const std::string& input)
+CyclesShaderEditor::PathString CyclesShaderEditor::Platform::get_pathstring(const std::string& input)
 {
 #ifdef _WIN32
 	return std::wstring(input.begin(), input.end());
@@ -17,7 +18,7 @@ CyclesShaderEditor::PathString CyclesShaderEditor::get_pathstring(const std::str
 #endif
 }
 
-CyclesShaderEditor::PathString CyclesShaderEditor::get_font_path(const PathString& search_path, const std::string& filename)
+CyclesShaderEditor::PathString CyclesShaderEditor::Platform::get_font_path(const PathString& search_path, const std::string& filename)
 {
 #ifdef _WIN32
 	wchar_t PATH_SEPARATOR = L'\\';
@@ -27,7 +28,7 @@ CyclesShaderEditor::PathString CyclesShaderEditor::get_font_path(const PathStrin
 	return search_path + PATH_SEPARATOR + get_pathstring(filename);
 }
 
-void CyclesShaderEditor::nvg_create_font(const PathString& path, const std::string& name, NVGcontext* const nvg_context)
+void CyclesShaderEditor::Platform::nvg_create_font(const PathString& path, const std::string& name, NVGcontext* const nvg_context)
 {
 #ifdef _WIN32
 	nvgCreateFontW(nvg_context, name.c_str(), path.c_str());
@@ -36,7 +37,16 @@ void CyclesShaderEditor::nvg_create_font(const PathString& path, const std::stri
 #endif
 }
 
-void CyclesShaderEditor::thread_usleep(const int us)
+int CyclesShaderEditor::Platform::get_delete_key()
+{
+#ifdef __APPLE__
+	return GLFW_KEY_BACKSPACE;
+#else
+	return GLFW_KEY_DELETE;
+#endif
+}
+
+void CyclesShaderEditor::Platform::thread_usleep(const int us)
 {
 #ifdef _WIN32
 	Sleep(static_cast<DWORD>(us / 1000));

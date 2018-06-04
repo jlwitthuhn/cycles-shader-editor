@@ -32,17 +32,11 @@ namespace CyclesShaderEditor {
 		virtual std::string get_title() const;
 
 		virtual void draw_node(NVGcontext* draw_context);
-		virtual void set_mouse_position(FloatPos node_local_position);
 
-		virtual bool is_mouse_over_node() const;
-		virtual bool is_mouse_over_header() const;
-		virtual void handle_mouse_button(int button, int action, int mods);
+		virtual bool is_node_under_point(FloatPos check_world_pos) const;
+		virtual NodeSocket* get_socket_connector_under_point(FloatPos check_world_pos) const;
+		virtual NodeSocket* get_socket_label_under_point(FloatPos check_world_pos) const;
 
-		virtual void move_begin();
-		virtual void move_end();
-
-		virtual NodeSocket* get_socket_under_mouse();
-		virtual NodeSocket* get_socket_label_under_mouse();
 		virtual NodeSocket* get_socket_by_display_name(SocketInOut in_out, const std::string& socket_name);
 		virtual NodeSocket* get_socket_by_internal_name(SocketInOut in_out, const std::string& socket_name);
 
@@ -60,13 +54,11 @@ namespace CyclesShaderEditor {
 		FloatPos world_pos;
 
 	protected:
+		FloatPos get_local_pos(FloatPos world_pos_in) const;
+
 		std::string title;
 
-		FloatPos mouse_local_pos;
-		FloatPos mouse_local_begin_move_pos;
-
-		bool node_moving = false;
-		bool has_moved = false;
+		bool highlight_header = false;
 
 		float content_width = 150.0f;
 		float content_height = 0.0f;

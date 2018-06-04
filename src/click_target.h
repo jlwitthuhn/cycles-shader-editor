@@ -10,7 +10,7 @@ namespace CyclesShaderEditor {
 	public:
 		GenericClickTarget(FloatPos begin_pos, FloatPos end_pos);
 
-		bool is_mouse_over_target(FloatPos mouse_pos);
+		bool is_mouse_over_target(FloatPos mouse_pos) const;
 		FloatPos get_normalized_mouse_pos(FloatPos mouse_pos);
 
 	protected:

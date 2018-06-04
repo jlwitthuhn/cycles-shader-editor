@@ -49,6 +49,11 @@ float CyclesShaderEditor::FloatPos::get_magnitude_squared() const
 	return pos_x * pos_x + pos_y * pos_y;
 }
 
+bool CyclesShaderEditor::FloatPos::is_nonzero() const
+{
+	return (pos_x != 0.0f || pos_y != 0.0f);
+}
+
 void CyclesShaderEditor::FloatPos::clamp_to(const FloatPos& begin, const FloatPos& end)
 {
 	if (pos_x < begin.get_x()) {
@@ -77,6 +82,12 @@ CyclesShaderEditor::FloatPos CyclesShaderEditor::FloatPos::operator+(const Float
 CyclesShaderEditor::FloatPos CyclesShaderEditor::FloatPos::operator-(const FloatPos& other) const
 {
 	return FloatPos(pos_x - other.get_x(), pos_y - other.get_y());
+}
+
+void CyclesShaderEditor::FloatPos::operator+=(const FloatPos& other)
+{
+	pos_x += other.pos_x;
+	pos_y += other.pos_y;
 }
 
 CyclesShaderEditor::FloatPos CyclesShaderEditor::FloatPos::operator/(const float& other) const

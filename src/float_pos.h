@@ -21,10 +21,13 @@ namespace CyclesShaderEditor {
 
 		float get_magnitude_squared() const;
 
+		bool is_nonzero() const;
+
 		void clamp_to(const FloatPos& begin, const FloatPos& end);
 
 		FloatPos operator+(const FloatPos& other) const;
 		FloatPos operator-(const FloatPos& other) const;
+		void operator+=(const FloatPos& other);
 
 		FloatPos operator/(const float& other) const;
 
