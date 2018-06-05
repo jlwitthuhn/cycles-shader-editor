@@ -35,7 +35,7 @@ endif
 
 CPPFLAGS_NVG := -MMD -MP $(DEFINES_FLAGS)
 CPPFLAGS := -MMD -MP $(DEFINES_FLAGS) -Inanovg/src/
-CXXFLAGS := -Wall -std=c++11 $(DEP_CXXFLAGS)
+CXXFLAGS := -Wall -std=c++14 $(DEP_CXXFLAGS)
 LDFLAGS := -lstdc++ -lm -lGLEW -lglfw $(GL_LDFLAGS) $(DEP_LDFLAGS) $(MORE_LDFLAGS)
 
 MKDIR_P = mkdir -p

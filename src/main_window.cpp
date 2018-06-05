@@ -9,6 +9,7 @@
 #include <nanovg.h>
 #include <nanovg_gl.h>
 
+#include "button_category.h"
 #include "buttons_nodes.h"
 #include "glfw_callbacks.h"
 #include "gui_sizes.h"
@@ -24,7 +25,9 @@
 #include "util_rectangle.h"
 #include "view.h"
 
-CyclesShaderEditor::EditorMainWindow::EditorMainWindow(GraphEditor* public_window) : public_window(public_window), main_graph(ShaderGraphType::MATERIAL)
+CyclesShaderEditor::EditorMainWindow::EditorMainWindow(GraphEditor* public_window) :
+	main_graph(ShaderGraphType::MATERIAL),
+	public_window(public_window)
 {
 	window_width = UI_WINDOW_WIDTH;
 	window_height = UI_WINDOW_HEIGHT;
