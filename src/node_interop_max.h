@@ -4,6 +4,8 @@
 
 namespace CyclesShaderEditor {
 
+	class FloatPos;
+
 	class MaxTexmapShaderNode : public EditorNode {
 	public:
 		MaxTexmapShaderNode(FloatPos position);

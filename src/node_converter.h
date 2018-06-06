@@ -4,6 +4,8 @@
 
 namespace CyclesShaderEditor {
 
+	class FloatPos;
+
 	class BlackbodyNode : public EditorNode {
 	public:
 		BlackbodyNode(FloatPos position);

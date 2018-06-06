@@ -1,6 +1,7 @@
 #pragma once
 
 #include <sstream>
+#include <string>
 
 #include "float_pos.h"
 

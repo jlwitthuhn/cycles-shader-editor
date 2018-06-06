@@ -1,5 +1,12 @@
 #include "node_interop_max.h"
 
+#include <string>
+#include <vector>
+
+#include "float_pos.h"
+#include "output.h"
+#include "sockets.h"
+
 CyclesShaderEditor::MaxTexmapShaderNode::MaxTexmapShaderNode(FloatPos position)
 {
 	world_pos = position;

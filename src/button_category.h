@@ -12,8 +12,6 @@ struct NVGcontext;
 
 namespace CyclesShaderEditor {
 
-	class NodeCreationButton;
-
 	class NodeCategoryButtonPlacer {
 	public:
 		NodeCategoryButtonPlacer(FloatPos draw_origin, float parent_width, float vertical_padding);

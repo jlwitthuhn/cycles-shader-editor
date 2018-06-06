@@ -1,7 +1,14 @@
 #include "node_colors.h"
 
+#include <map>
+#include <string>
+#include <vector>
+
 #include "config.h"
 #include "curve.h"
+#include "float_pos.h"
+#include "output.h"
+#include "sockets.h"
 
 CyclesShaderEditor::MixRGBNode::MixRGBNode(FloatPos position)
 {
@@ -234,7 +241,7 @@ void CyclesShaderEditor::RGBCurvesNode::update_output_node(OutputNode& output)
 	OutputCurve out_g_curve;
 	OutputCurve out_b_curve;
 
-	for (size_t i = 0; i < CURVE_TABLE_SIZE; i++) {
+	for (unsigned int i = 0; i < CURVE_TABLE_SIZE; i++) {
 		const float x = static_cast<float>(i) / (CURVE_TABLE_SIZE - 1.0f);
 		out_r_curve.samples.push_back(rgb_curve.eval(r_curve.eval(x)));
 		out_g_curve.samples.push_back(rgb_curve.eval(g_curve.eval(x)));

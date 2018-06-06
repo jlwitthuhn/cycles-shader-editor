@@ -1,5 +1,12 @@
 #include "node_inputs.h"
 
+#include <string>
+#include <vector>
+
+#include "float_pos.h"
+#include "output.h"
+#include "sockets.h"
+
 CyclesShaderEditor::LightPathNode::LightPathNode(FloatPos position)
 {
 	world_pos = position;

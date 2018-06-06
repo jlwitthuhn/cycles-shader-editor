@@ -3,13 +3,16 @@
 #include <list>
 #include <memory>
 
+#include "button_category.h"
+#include "buttons_nodes.h"
+#include "node_base.h"
 #include "subwindow.h"
+
+struct NVGcontext;
 
 namespace CyclesShaderEditor {
 
-	class EditorNode;
-	class NodeCategoryButton;
-	class NodeCreationButton;
+	class FloatPos;
 
 	class NodeCreationHelper {
 	public:

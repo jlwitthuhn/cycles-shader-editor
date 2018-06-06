@@ -1,5 +1,6 @@
 #include "selection.h"
 
+#include "float_pos.h"
 #include "node_base.h"
 
 void CyclesShaderEditor::Selection::move_nodes(const FloatPos delta)

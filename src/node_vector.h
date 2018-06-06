@@ -4,6 +4,8 @@
 
 namespace CyclesShaderEditor {
 
+	class FloatPos;
+
 	class BumpNode : public EditorNode {
 	public:
 		BumpNode(FloatPos position);

@@ -1,11 +1,10 @@
 #pragma once
 
-#include <list>
 #include <memory>
 #include <set>
+#include <string>
 
 #include "float_pos.h"
-#include "node_base.h"
 #include "zoom.h"
 
 struct NVGcontext;
@@ -13,7 +12,9 @@ struct NVGcontext;
 namespace CyclesShaderEditor {
 
 	class EditableGraph;
+	class EditorNode;
 	class NodeCreationHelper;
+	class NodeSocket;
 	class Selection;
 
 	enum class SelectMode {

@@ -4,6 +4,7 @@
 
 #include <nanovg.h>
 
+#include "float_pos.h"
 #include "gui_sizes.h"
 
 void CyclesShaderEditor::Drawing::draw_button(
@@ -56,7 +57,7 @@ void CyclesShaderEditor::Drawing::draw_button(
 	nvgTextAlign(draw_context, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
 	nvgFontBlur(draw_context, 0.0f);
 	nvgFillColor(draw_context, nvgRGBA(0, 0, 0, label_alpha));
-	nvgText(draw_context, x_pos + width / 2, y_pos + height / 2, label.c_str(), NULL);
+	nvgText(draw_context, x_pos + width / 2, y_pos + height / 2, label.c_str(), nullptr);
 }
 
 void CyclesShaderEditor::Drawing::draw_color_pick_cursor(NVGcontext* const draw_context, const FloatPos pos)

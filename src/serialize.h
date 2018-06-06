@@ -4,15 +4,13 @@
 #include <string>
 #include <vector>
 
-#include "node_base.h"
-
-
 namespace CyclesShaderEditor {
 
 	struct OutputConnection;
 	struct OutputNode;
 
 	class EditorNode;
+	class NodeConnection;
 
 	void generate_output_lists(std::list<EditorNode*>& node_list, std::list<NodeConnection>& connection_list, std::vector<OutputNode>& out_node_list, std::vector<OutputConnection>& out_connection_list);
 

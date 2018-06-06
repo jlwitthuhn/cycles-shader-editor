@@ -2,14 +2,17 @@
 
 #include <algorithm>
 #include <cmath>
+#include <memory>
+#include <string>
 
 #include <GLFW/glfw3.h>
 #include <nanovg.h>
 
+#include "float_pos.h"
 #include "gui_sizes.h"
 #include "input_box.h"
-#include "node_base.h"
 #include "selection.h"
+#include "sockets.h"
 
 CyclesShaderEditor::ParamEditorSubwindow::ParamEditorSubwindow(FloatPos screen_position) :
 	NodeEditorSubwindow(screen_position, "Parameter Editor"),

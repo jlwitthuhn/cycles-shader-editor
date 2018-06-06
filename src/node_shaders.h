@@ -4,6 +4,8 @@
 
 namespace CyclesShaderEditor {
 
+	class FloatPos;
+
 	class AmbientOcculsionNode : public EditorNode {
 	public:
 		AmbientOcculsionNode(FloatPos position);

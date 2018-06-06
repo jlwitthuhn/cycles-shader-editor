@@ -4,6 +4,8 @@
 
 namespace CyclesShaderEditor {
 
+	class FloatPos;
+
 	class MaterialOutputNode : public EditorNode {
 	public:
 		MaterialOutputNode(FloatPos position);

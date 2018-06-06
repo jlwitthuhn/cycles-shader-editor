@@ -1,8 +1,11 @@
 #pragma once
 
 #include "click_target.h"
+#include "float_pos.h"
 #include "input_box.h"
 #include "util_color.h"
+
+struct NVGcontext;
 
 namespace CyclesShaderEditor {
 	class ColorSocketValue;

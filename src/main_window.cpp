@@ -1,7 +1,7 @@
 #include "main_window.h"
 
-#include <cassert>
-#include <cmath>
+#include <map>
+#include <utility>
 #include <vector>
 
 #include <GL/glew.h>
@@ -9,20 +9,20 @@
 #include <nanovg.h>
 #include <nanovg_gl.h>
 
-#include "button_category.h"
-#include "buttons_nodes.h"
+#include "common_enums.h"
 #include "glfw_callbacks.h"
 #include "gui_sizes.h"
-#include "graph_decoder.h"
 #include "graph_editor.h"
-#include "node_outputs.h"
-#include "node_shaders.h"
+#include "node_base.h"
 #include "output.h"
 #include "serialize.h"
+#include "sockets.h"
+#include "statusbar.h"
+#include "subwindow.h"
 #include "subwindow_node_list.h"
 #include "subwindow_param_editor.h"
+#include "toolbar.h"
 #include "util_platform.h"
-#include "util_rectangle.h"
 #include "view.h"
 
 CyclesShaderEditor::EditorMainWindow::EditorMainWindow(GraphEditor* public_window) :

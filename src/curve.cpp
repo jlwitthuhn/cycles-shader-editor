@@ -1,5 +1,8 @@
 #include "curve.h"
 
+#include <memory>
+
+#include "common_enums.h"
 #include "sockets.h"
 #include "util_hermite_spline.h"
 
@@ -29,11 +32,13 @@ CyclesShaderEditor::CurveEvaluator::CurveEvaluator(CurveSocketValue* const curve
 		// Sample as a series of cubic hermite splines
 		constexpr float FIRST_SAMPLE_X = 0.0f;
 		constexpr float LAST_SAMPLE_X = 1.0f;
+	
+		typedef std::vector<FloatPos>::size_type vec_fp_size_t;
 
 		const float x_increment = (LAST_SAMPLE_X - FIRST_SAMPLE_X) / segments;
 		float next_sample_x = FIRST_SAMPLE_X;
-		const size_t final_segment_begin_index = curve_control_points.size() - 2;
-		for (size_t segment_begin_index = 0; segment_begin_index <= final_segment_begin_index; segment_begin_index++) {
+		const vec_fp_size_t final_segment_begin_index = curve_control_points.size() - 2;
+		for (vec_fp_size_t segment_begin_index = 0; segment_begin_index <= final_segment_begin_index; segment_begin_index++) {
 			const FloatPos point_b = curve_control_points[segment_begin_index];
 			const FloatPos point_c = curve_control_points[segment_begin_index + 1];
 			FloatPos point_a, point_d;
@@ -123,15 +128,15 @@ float CyclesShaderEditor::CurveEvaluator::eval(const float in_value) const
 		return in_value;
 	}
 
-	typedef std::vector<FloatPos>::size_type vec_size_t;
+	typedef std::vector<FloatPos>::size_type vec_fp_size_t;
 
 	// sampled_points is ordered by x value
 	// do a binary search to find which two values surround the input value
-	vec_size_t min_index = 0;
-	vec_size_t max_index = sampled_points.size() - 1;
+	vec_fp_size_t min_index = 0;
+	vec_fp_size_t max_index = sampled_points.size() - 1;
 	while ((max_index - min_index) > 1) {
-		const vec_size_t delta = max_index - min_index;
-		const vec_size_t index_to_check = min_index + delta / 2;
+		const vec_fp_size_t delta = max_index - min_index;
+		const vec_fp_size_t index_to_check = min_index + delta / 2;
 		const float value_to_check = sampled_points[index_to_check].get_x();
 		if (in_value >= value_to_check) {
 			min_index = index_to_check;

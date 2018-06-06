@@ -24,7 +24,7 @@ CyclesShaderEditor::ZoomManager::ZoomManager()
 	zooms.push_back(5.00f);
 
 	zoom_level = -1;
-	for (size_t i = 0; i < zooms.size(); i++) {
+	for (std::vector<float>::size_type i = 0; i < zooms.size(); i++) {
 		if (zooms[i] == 1.0f) {
 			zoom_level = static_cast<int>(i);
 		}

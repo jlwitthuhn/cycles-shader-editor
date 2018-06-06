@@ -1,5 +1,12 @@
 #include "node_converter.h"
 
+#include <string>
+#include <vector>
+
+#include "float_pos.h"
+#include "output.h"
+#include "sockets.h"
+
 CyclesShaderEditor::BlackbodyNode::BlackbodyNode(FloatPos position)
 {
 	world_pos = position;

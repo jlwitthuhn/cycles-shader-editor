@@ -3,15 +3,10 @@
 #include <chrono>
 #include <list>
 #include <memory>
-#include <set>
 #include <string>
-#include <vector>
 
 #include "editable_graph.h"
 #include "float_pos.h"
-#include "node_base.h"
-#include "statusbar.h"
-#include "toolbar.h"
 #include "ui_requests.h"
 #include "util_platform.h"
 #include "undo.h"
@@ -22,12 +17,11 @@ struct NVGcontext;
 namespace CyclesShaderEditor {
 
 	class EditGraphView;
-	class EditorNode;
 	class GraphEditor;
 	class NodeCreationHelper;
+	class NodeEditorStatusBar;
 	class NodeEditorSubwindow;
-	class NodeListSubwindow;
-	class ParamEditorSubwindow;
+	class NodeEditorToolbar;
 
 	class EditorMainWindow {
 	public:

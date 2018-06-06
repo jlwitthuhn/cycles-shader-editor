@@ -1,5 +1,8 @@
 #include "subwindow_node_list.h"
 
+#include <string>
+#include <utility>
+
 #include <nanovg.h>
 #include <GLFW/glfw3.h>
 
@@ -7,13 +10,12 @@
 
 #include "button_category.h"
 #include "buttons_nodes.h"
+#include "float_pos.h"
 #include "gui_sizes.h"
-#include "input_box.h"
 #include "node_colors.h"
 #include "node_converter.h"
 #include "node_inputs.h"
 #include "node_interop_max.h"
-#include "node_outputs.h"
 #include "node_shaders.h"
 #include "node_textures.h"
 #include "node_vector.h"

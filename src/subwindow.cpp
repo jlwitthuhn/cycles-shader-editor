@@ -3,7 +3,6 @@
 #include <nanovg.h>
 
 #include "gui_sizes.h"
-#include "selection.h"
 
 CyclesShaderEditor::NodeEditorSubwindow::NodeEditorSubwindow(FloatPos screen_position, std::string title)
 {

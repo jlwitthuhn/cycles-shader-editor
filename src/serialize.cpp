@@ -4,7 +4,11 @@
 #include <map>
 #include <string>
 #include <sstream>
+#include <utility>
 
+#include "common_enums.h"
+#include "float_pos.h"
+#include "node_base.h"
 #include "node_colors.h"
 #include "node_converter.h"
 #include "node_inputs.h"
@@ -14,6 +18,7 @@
 #include "node_textures.h"
 #include "node_vector.h"
 #include "output.h"
+#include "sockets.h"
 
 static const char SEPARATOR = '|';
 
@@ -180,13 +185,13 @@ static void deserialize_curve(std::string serialized_curve, CyclesShaderEditor::
 	}
 
 	// Make sure the number of points and total number of tokens match
-	const size_t control_point_count = static_cast<size_t>(std::stoi(control_point_count_str));
+	const std::size_t control_point_count = static_cast<std::size_t>(std::stoul(control_point_count_str));
 	if (control_point_count < 1 || tokenized_input.size() != 3 + 2 * control_point_count) {
 		return;
 	}
 
 	curve_value->curve_points.clear();
-	for (size_t points_copied = 0; points_copied < control_point_count; points_copied++) {
+	for (std::size_t points_copied = 0; points_copied < control_point_count; points_copied++) {
 		const float x = std::stof(*(input_iter++));
 		const float y = std::stof(*(input_iter++));
 		CyclesShaderEditor::FloatPos this_point(x, y);

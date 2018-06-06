@@ -1,5 +1,7 @@
 #include "util_rectangle.h"
 
+#include "float_pos.h"
+
 bool CyclesShaderEditor::do_rectangles_overlap(FloatPos low1, FloatPos high1, FloatPos low2, FloatPos high2)
 {
 	// Return false if there is no horizontal overlap

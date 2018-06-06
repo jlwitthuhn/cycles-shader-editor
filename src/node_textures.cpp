@@ -1,5 +1,12 @@
 #include "node_textures.h"
 
+#include <string>
+#include <vector>
+
+#include "float_pos.h"
+#include "output.h"
+#include "sockets.h"
+
 CyclesShaderEditor::BrickTextureNode::BrickTextureNode(FloatPos position)
 {
 	world_pos = position;

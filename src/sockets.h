@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <string>
 #include <vector>
 
@@ -136,9 +137,9 @@ namespace CyclesShaderEditor {
 		void create_point(float x);
 		void delete_point(const FloatPos& target);
 		// Gets the index, if any, of the closest point within selection range
-		bool get_target_index(const FloatPos& target, size_t& index);
+		bool get_target_index(const FloatPos& target, std::size_t& index);
 		// Move a point and return its new index
-		size_t move_point(const size_t index, const FloatPos& new_point);
+		std::size_t move_point(std::size_t index, const FloatPos& new_point);
 
 		void sort_curve_points();
 

@@ -1,5 +1,12 @@
 #include "node_outputs.h"
 
+#include <string>
+#include <vector>
+
+#include "float_pos.h"
+#include "output.h"
+#include "sockets.h"
+
 CyclesShaderEditor::MaterialOutputNode::MaterialOutputNode(FloatPos position)
 {
 	world_pos = position;

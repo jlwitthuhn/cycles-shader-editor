@@ -3,11 +3,11 @@
 
 #include <string>
 
-#include "float_pos.h"
-
 struct NVGcontext;
 
 namespace CyclesShaderEditor {
+
+	class FloatPos;
 
 	namespace Drawing {
 

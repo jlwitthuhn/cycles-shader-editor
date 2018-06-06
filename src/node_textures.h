@@ -4,6 +4,8 @@
 
 namespace CyclesShaderEditor {
 
+	class FloatPos;
+
 	class BrickTextureNode : public EditorNode {
 	public:
 		BrickTextureNode(FloatPos position);

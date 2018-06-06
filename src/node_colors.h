@@ -4,6 +4,10 @@
 
 namespace CyclesShaderEditor {
 
+	class FloatPos;
+
+	struct OutputNode;
+
 	class MixRGBNode : public EditorNode {
 	public:
 		MixRGBNode(FloatPos position);

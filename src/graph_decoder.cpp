@@ -1,5 +1,8 @@
 #include "graph_decoder.h"
 
+#include <list>
+
+#include "node_base.h"
 #include "serialize.h"
 
 CyclesShaderEditor::CyclesNodeGraph::CyclesNodeGraph(const std::string& encoded_graph)

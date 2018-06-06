@@ -4,6 +4,8 @@
 
 namespace CyclesShaderEditor {
 
+	class FloatPos;
+
 	class LightPathNode : public EditorNode {
 	public:
 		LightPathNode(FloatPos position);

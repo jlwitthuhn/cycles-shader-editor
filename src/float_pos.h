@@ -1,7 +1,5 @@
 #pragma once
 
-#include <string>
-
 namespace CyclesShaderEditor {
 
 	// Represents some position in 2d space

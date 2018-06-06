@@ -1,17 +1,21 @@
 #pragma once
 
+#include <memory>
 #include <vector>
 
+#include "click_target.h"
 #include "input_box.h"
 #include "panel_edit_color.h"
 #include "panel_edit_curve.h"
 #include "subwindow.h"
 
+struct NVGcontext;
+
 namespace CyclesShaderEditor {
 
-	class BoolValueClickTarget;
+	class FloatPos;
 	class NodeSocket;
-	class StringEnumClickTarget;
+	class Selection;
 
 	class ParamEditorSubwindow : public NodeEditorSubwindow {
 	public:

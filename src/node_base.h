@@ -6,12 +6,11 @@
 #include "click_target.h"
 #include "float_pos.h"
 #include "output.h"
+#include "sockets.h"
 
 struct NVGcontext;
 
 namespace CyclesShaderEditor {
-
-	struct OutputNode;
 
 	class EditorNode;
 

@@ -1,5 +1,12 @@
 #include "node_shaders.h"
 
+#include <string>
+#include <vector>
+
+#include "float_pos.h"
+#include "output.h"
+#include "sockets.h"
+
 CyclesShaderEditor::AmbientOcculsionNode::AmbientOcculsionNode(FloatPos position)
 {
 	world_pos = position;

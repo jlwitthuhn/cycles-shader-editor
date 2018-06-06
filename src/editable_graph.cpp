@@ -1,5 +1,6 @@
 #include "editable_graph.h"
 
+#include "float_pos.h"
 #include "node_outputs.h"
 
 CyclesShaderEditor::EditableGraph::EditableGraph(const ShaderGraphType type)

@@ -1,10 +1,9 @@
 #include "node_base.h"
 
-#include <cmath>
 #include <iomanip>
+#include <map>
 #include <sstream>
 
-#include <GLFW/glfw3.h>
 #include <nanovg.h>
 
 #include "config.h"
@@ -86,7 +85,7 @@ void CyclesShaderEditor::EditorNode::draw_node(NVGcontext* const draw_context)
 	nvgTextAlign(draw_context, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
 	nvgFontBlur(draw_context, 0.0f);
 	nvgFillColor(draw_context, nvgRGBA(0, 0, 0, 255));
-	nvgText(draw_context, draw_pos_x + content_width / 2, draw_pos_y + UI_NODE_HEADER_HEIGHT / 2, title.c_str(), NULL);
+	nvgText(draw_context, draw_pos_x + content_width / 2, draw_pos_y + UI_NODE_HEADER_HEIGHT / 2, title.c_str(), nullptr);
 
 	float next_draw_y = draw_pos_y + UI_NODE_HEADER_HEIGHT + 2.0f;
 	// Sockets
@@ -397,13 +396,14 @@ void CyclesShaderEditor::EditorNode::update_output_node(OutputNode& output)
 			CurveSocketValue* const curve_val = dynamic_cast<CurveSocketValue*>(this_socket->value);
 			if (curve_val != nullptr) {
 				OutputCurve out_curve;
-				for (size_t i = 0; i < curve_val->curve_points.size(); i++) {
+				typedef std::vector<FloatPos>::size_type vec_index;
+				for (vec_index i = 0; i < curve_val->curve_points.size(); i++) {
 					const FloatPos this_point = curve_val->curve_points[i];
 					out_curve.control_points.push_back(Float2(this_point.get_x(), this_point.get_y()));
 				}
 				out_curve.enum_curve_interp = static_cast<int>(curve_val->curve_interp);
 				const CurveEvaluator curve(curve_val);
-				for (size_t i = 0; i < CURVE_TABLE_SIZE; i++) {
+				for (vec_index i = 0; i < CURVE_TABLE_SIZE; i++) {
 					const float x = static_cast<float>(i) / (CURVE_TABLE_SIZE - 1.0f);
 					out_curve.samples.push_back(curve.eval(x));
 				}

@@ -188,7 +188,7 @@ void CyclesShaderEditor::CurveSocketValue::delete_point(const FloatPos& target)
 	}
 }
 
-bool CyclesShaderEditor::CurveSocketValue::get_target_index(const FloatPos& target, size_t& index)
+bool CyclesShaderEditor::CurveSocketValue::get_target_index(const FloatPos& target, std::size_t& index)
 {
 	constexpr float MAX_DISTANCE_SQUARED = CURVE_POINT_SELECT_MARGIN * CURVE_POINT_SELECT_MARGIN;
 
@@ -214,7 +214,7 @@ bool CyclesShaderEditor::CurveSocketValue::get_target_index(const FloatPos& targ
 	return false;
 }
 
-size_t CyclesShaderEditor::CurveSocketValue::move_point(const size_t index, const FloatPos& new_point)
+size_t CyclesShaderEditor::CurveSocketValue::move_point(const std::size_t index, const FloatPos& new_point)
 {
 	if (index >= curve_points.size()) {
 		// Index should always be valid

@@ -1,7 +1,11 @@
 #pragma once
 
+#include <cstddef>
+
 #include "click_target.h"
 #include "common_enums.h"
+
+#include "float_pos.h"
 
 struct NVGcontext;
 
@@ -43,7 +47,7 @@ namespace CyclesShaderEditor {
 		CurveInterpClickTarget target_interp_linear;
 		CurveInterpClickTarget target_interp_hermite;
 
-		size_t selected_point_index = 0;
+		std::size_t selected_point_index = 0;
 		bool selected_point_valid = false;
 
 		bool move_selected_point = false;

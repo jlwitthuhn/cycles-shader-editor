@@ -1,13 +1,13 @@
 #include "input_box.h"
 
 #include <cctype>
-#include <cstring>
 #include <iomanip>
 #include <sstream>
+#include <stdexcept>
 
 #include <nanovg.h>
 
-#include "node_base.h"
+#include "sockets.h"
 
 const float INPUT_CORNER_RADIUS = 3.0f;
 

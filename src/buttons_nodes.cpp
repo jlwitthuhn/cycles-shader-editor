@@ -2,12 +2,6 @@
 
 #include "drawing.h"
 #include "gui_sizes.h"
-#include "node_colors.h"
-#include "node_inputs.h"
-#include "node_interop_max.h"
-#include "node_shaders.h"
-#include "node_textures.h"
-#include "node_vector.h"
 
 float CyclesShaderEditor::NodeCreationButton::draw(NVGcontext* const draw_context, const FloatPos draw_origin, const FloatPos parent_local_mouse_pos, const float parent_width)
 {

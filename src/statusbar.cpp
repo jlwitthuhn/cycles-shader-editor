@@ -22,7 +22,7 @@ void CyclesShaderEditor::NodeEditorStatusBar::draw(NVGcontext* const draw_contex
 	nvgTextAlign(draw_context, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
 	nvgFontBlur(draw_context, 0.0f);
 	nvgFillColor(draw_context, nvgRGBA(0, 0, 0, 255));
-	nvgText(draw_context, 4.0f, get_status_bar_height() / 2.0f, status_text.c_str(), NULL);
+	nvgText(draw_context, 4.0f, get_status_bar_height() / 2.0f, status_text.c_str(), nullptr);
 
 	// Zoom text
 	nvgFontSize(draw_context, UI_FONT_SIZE_NORMAL);
@@ -30,7 +30,7 @@ void CyclesShaderEditor::NodeEditorStatusBar::draw(NVGcontext* const draw_contex
 	nvgTextAlign(draw_context, NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
 	nvgFontBlur(draw_context, 0.0f);
 	nvgFillColor(draw_context, nvgRGBA(0, 0, 0, 255));
-	nvgText(draw_context, width - 4.0f, get_status_bar_height() / 2.0f, zoom_text.c_str(), NULL);
+	nvgText(draw_context, width - 4.0f, get_status_bar_height() / 2.0f, zoom_text.c_str(), nullptr);
 }
 
 void CyclesShaderEditor::NodeEditorStatusBar::set_status_text(const std::string& text)
