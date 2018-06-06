@@ -7,6 +7,8 @@
 #include "gui_sizes.h"
 #include "ui_requests.h"
 
+#include <iostream>
+
 CyclesShaderEditor::ToolbarButton::ToolbarButton(const ToolbarButtonType type)
 {
 	this->type = type;
@@ -44,10 +46,10 @@ bool CyclesShaderEditor::ToolbarButton::is_under_point(const FloatPos point) con
 	const float min_y = pos.get_y();
 	const float max_y = pos.get_y() + height;
 	return (
-		pos.get_x() > min_x &&
-		pos.get_x() < max_x &&
-		pos.get_y() > min_y &&
-		pos.get_y() < max_y
+		point.get_x() >= min_x &&
+		point.get_x() <= max_x &&
+		point.get_y() >= min_y &&
+		point.get_y() <= max_y
 	);
 }
 
