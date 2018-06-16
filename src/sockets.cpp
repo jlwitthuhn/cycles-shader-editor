@@ -250,16 +250,16 @@ CyclesShaderEditor::FloatRGBColor CyclesShaderEditor::ColorSocketValue::get_valu
 	return value;
 }
 
-CyclesShaderEditor::NodeSocket::NodeSocket(EditorNode* parent, SocketInOut socket_in_out, SocketType socket_type, std::string display_name, std::string internal_name)
+CyclesShaderEditor::NodeSocket::NodeSocket(EditorNode* parent, SocketIOType io_type, SocketType socket_type, std::string display_name, std::string internal_name)
 {
 	this->parent = parent;
-	this->socket_in_out = socket_in_out;
+	this->io_type = io_type;
 	this->socket_type = socket_type;
 	this->display_name = display_name;
 	this->internal_name = internal_name;
 
 	// Set selectable flag for editable data types
-	if (socket_in_out == SocketInOut::Input) {
+	if (io_type == SocketIOType::Input) {
 		if (socket_type == SocketType::Float ||
 			socket_type == SocketType::Color ||
 			socket_type == SocketType::StringEnum ||

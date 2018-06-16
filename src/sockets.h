@@ -24,11 +24,6 @@ namespace CyclesShaderEditor {
 		Curve,
 	};
 
-	enum class SocketInOut {
-		Input,
-		Output,
-	};
-
 	struct Float3Holder {
 		float x = 0.0f;
 		float y = 0.0f;
@@ -149,7 +144,7 @@ namespace CyclesShaderEditor {
 
 	class NodeSocket {
 	public:
-		NodeSocket(EditorNode* parent, SocketInOut socket_in_out, SocketType socket_type, std::string display_name, std::string internal_name);
+		NodeSocket(EditorNode* parent, SocketIOType io_type, SocketType socket_type, std::string display_name, std::string internal_name);
 		~NodeSocket();
 
 		void set_float_val(float float_in);
@@ -158,7 +153,7 @@ namespace CyclesShaderEditor {
 
 		EditorNode* parent = nullptr;
 
-		SocketInOut socket_in_out;
+		SocketIOType io_type;
 		SocketType socket_type;
 		std::string display_name;
 		std::string internal_name;

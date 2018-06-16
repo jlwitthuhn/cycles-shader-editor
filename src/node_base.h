@@ -18,10 +18,11 @@ namespace CyclesShaderEditor {
 	public:
 		NodeConnection(NodeSocket* begin_socket, NodeSocket* end_socket);
 
-		bool includes_node(EditorNode* node);
+		bool is_valid() const;
+		bool includes_node(EditorNode* node) const;
 
-		NodeSocket* begin_socket = nullptr;
-		NodeSocket* end_socket = nullptr;
+		NodeSocket* const begin_socket;
+		NodeSocket* const end_socket;
 	};
 
 	class EditorNode {
@@ -32,12 +33,12 @@ namespace CyclesShaderEditor {
 
 		virtual void draw_node(NVGcontext* draw_context);
 
-		virtual bool is_node_under_point(FloatPos check_world_pos) const;
+		virtual bool is_under_point(FloatPos check_world_pos) const;
 		virtual NodeSocket* get_socket_connector_under_point(FloatPos check_world_pos) const;
 		virtual NodeSocket* get_socket_label_under_point(FloatPos check_world_pos) const;
 
-		virtual NodeSocket* get_socket_by_display_name(SocketInOut in_out, const std::string& socket_name);
-		virtual NodeSocket* get_socket_by_internal_name(SocketInOut in_out, const std::string& socket_name);
+		virtual NodeSocket* get_socket_by_display_name(SocketIOType in_out, const std::string& socket_name);
+		virtual NodeSocket* get_socket_by_internal_name(SocketIOType in_out, const std::string& socket_name);
 
 		virtual FloatPos get_dimensions();
 

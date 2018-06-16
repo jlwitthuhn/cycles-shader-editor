@@ -156,6 +156,7 @@ void CyclesShaderEditor::EditorMainWindow::handle_mouse_button(const int button,
 	// Special case for mouse button release, notify all ui elements so click+drag works
 	if (action == GLFW_RELEASE) {
 		view->handle_mouse_button(button, action, mods);
+		toolbar->handle_mouse_button(button, action, mods);
 		for (const auto& this_subwindow : subwindows) {
 			this_subwindow->handle_mouse_button(button, action, mods);
 		}
@@ -184,16 +185,16 @@ void CyclesShaderEditor::EditorMainWindow::handle_key(const int key, const int s
 	if (action == GLFW_PRESS || action == GLFW_REPEAT) {
 		switch (key) {
 		case GLFW_KEY_LEFT:
-			requests.move_left = true;
+			requests.view.pan_left = true;
 			return;
 		case GLFW_KEY_RIGHT:
-			requests.move_right = true;
+			requests.view.pan_right = true;
 			return;
 		case GLFW_KEY_UP:
-			requests.move_up = true;
+			requests.view.pan_up = true;
 			return;
 		case GLFW_KEY_DOWN:
-			requests.move_down = true;
+			requests.view.pan_down = true;
 			return;
 		default:
 			break;
@@ -217,10 +218,10 @@ void CyclesShaderEditor::EditorMainWindow::handle_character(const unsigned int c
 void CyclesShaderEditor::EditorMainWindow::handle_scroll(const double /*xoffset*/, const double yoffset)
 {
 	if (yoffset > 0.1) {
-		requests.zoom_in = true;
+		requests.view.zoom_in = true;
 	}
 	else if (yoffset < -0.1) {
-		requests.zoom_out = true;
+		requests.view.zoom_out = true;
 	}
 }
 
@@ -236,16 +237,13 @@ void CyclesShaderEditor::EditorMainWindow::pre_draw()
 	// Check nodes to see if we should save current state
 	{
 		bool should_push_undo_state = false;
-		for (EditorNode* const node : main_graph.nodes) {
-			if (node->changed) {
-				should_push_undo_state = true;
-				node->changed = false;
-			}
-		}
 		for (auto& this_subwindow : subwindows) {
 			if (this_subwindow->needs_undo_push()) {
 				should_push_undo_state = true;
 			}
+		}
+		if (main_graph.needs_undo_push()) {
+			should_push_undo_state = true;
 		}
 		if (view->needs_undo_push()) {
 			should_push_undo_state = true;
@@ -376,30 +374,7 @@ void CyclesShaderEditor::EditorMainWindow::service_requests()
 		redo();
 		requests.redo = false;
 	}
-	if (requests.move_left) {
-		view->move_left();
-		requests.move_left = false;
-	}
-	if (requests.move_right) {
-		view->move_right();
-		requests.move_right = false;
-	}
-	if (requests.move_up) {
-		view->move_up();
-		requests.move_up = false;
-	}
-	if (requests.move_down) {
-		view->move_down();
-		requests.move_down = false;
-	}
-	if (requests.zoom_in) {
-		view->zoom_in();
-		requests.zoom_in = false;
-	}
-	if (requests.zoom_out) {
-		view->zoom_out();
-		requests.zoom_out = false;
-	}
+	view->handle_requests(requests.view);
 }
 
 void CyclesShaderEditor::EditorMainWindow::update_mouse_position(CyclesShaderEditor::FloatPos screen_position)
@@ -407,8 +382,6 @@ void CyclesShaderEditor::EditorMainWindow::update_mouse_position(CyclesShaderEdi
 	screen_position.clamp_to(CyclesShaderEditor::FloatPos(0.0f, 0.0f), CyclesShaderEditor::FloatPos(window_width - 1.0f, window_height - 1.0f));
 	mouse_screen_pos = screen_position;
 }
-
-
 
 bool CyclesShaderEditor::EditorMainWindow::forward_mouse_to_subwindow(const int button, const int action, const int mods)
 {
@@ -494,8 +467,7 @@ void CyclesShaderEditor::EditorMainWindow::clear_graph(const bool reset_undo)
 	if (reset_undo) {
 		undo_stack.clear();
 	}
-	view->deselect_label();
-	view->clear_node_selection();
+	view->clear_selection();
 	main_graph.nodes.clear();
 	main_graph.connections.clear();
 	update_serialized_state();

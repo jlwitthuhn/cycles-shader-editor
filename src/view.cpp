@@ -14,6 +14,7 @@
 #include "selection.h"
 #include "sockets.h"
 #include "subwindow_node_list.h"
+#include "ui_requests.h"
 #include "util_platform.h"
 #include "util_rectangle.h"
 
@@ -38,76 +39,6 @@ CyclesShaderEditor::EditGraphView::EditGraphView(EditableGraph* const graph, std
 	: graph(graph), node_creation_helper(node_creation_helper), selection(std::make_shared<Selection>())
 {
 	view_center = FloatPos(0.0f, 0.0f);
-}
-
-CyclesShaderEditor::EditorNode* CyclesShaderEditor::EditGraphView::get_node_under_mouse()
-{
-	for (EditorNode* this_node : graph->nodes) {
-		if (this_node->is_node_under_point(mouse_world_position)) {
-			return this_node;
-		}
-	}
-
-	return nullptr;
-}
-
-CyclesShaderEditor::NodeSocket* CyclesShaderEditor::EditGraphView::get_socket_label_under_mouse()
-{
-	for (EditorNode* const this_node : graph->nodes) {
-		NodeSocket* const maybe_socket = this_node->get_socket_label_under_point(mouse_world_position);
-		if (maybe_socket != nullptr) {
-			return maybe_socket;
-		}
-	}
-
-	return nullptr;
-}
-
-CyclesShaderEditor::NodeSocket* CyclesShaderEditor::EditGraphView::get_selected_socket_label()
-{
-	return selection->socket;
-}
-
-CyclesShaderEditor::NodeSocket* CyclesShaderEditor::EditGraphView::get_socket_connector_under_mouse()
-{
-	for (EditorNode* this_node : graph->nodes) {
-		NodeSocket* maybe_socket = this_node->get_socket_connector_under_point(mouse_world_position);
-		if (maybe_socket != nullptr) {
-			return maybe_socket;
-		}
-	}
-
-	return nullptr;
-}
-
-CyclesShaderEditor::FloatPos CyclesShaderEditor::EditGraphView::get_mouse_world_position()
-{
-	return mouse_world_position;
-}
-
-bool CyclesShaderEditor::EditGraphView::is_node_under_mouse_selected()
-{
-	if (selection->nodes.empty()) {
-		return false;
-	}
-
-	EditorNode* const under_mouse = get_node_under_mouse();
-	if (under_mouse == nullptr) {
-		return false;
-	}
-
-	return (selection->nodes.count(under_mouse) == 1);
-}
-
-std::string CyclesShaderEditor::EditGraphView::get_zoom_string()
-{
-	char buf[20];
-	const int result = snprintf(buf, 20, "Zoom: %3.1f%%", zoom.get_world_scale() * 100.0f);
-	if (result <= 0) {
-		// This should never happen
-		return "ZOOM ERROR";
-	}
-	return std::string(buf);
 }
 
 void CyclesShaderEditor::EditGraphView::set_mouse_position(const FloatPos view_local_mouse_pos, const int viewport_width, const int viewport_height)
@@ -279,42 +210,44 @@ void CyclesShaderEditor::EditGraphView::draw(NVGcontext* draw_context)
 
 void CyclesShaderEditor::EditGraphView::handle_mouse_button(const int button, const int action, const int mods)
 {
-	const bool node_has_focus = (get_node_under_mouse() != nullptr);
-	const bool label_has_focus = (get_socket_label_under_mouse() != nullptr);
-	const bool connector_has_focus = (get_socket_connector_under_mouse() != nullptr);
+	EditorNode* const focused_node = graph->get_node_under_point(mouse_world_position);
+	NodeSocket* const focused_label = graph->get_socket_under_point(mouse_world_position);
+	NodeSocket* const focused_connector_in = graph->get_connector_under_point(mouse_world_position, SocketIOType::Input);
+	NodeSocket* const focused_connector_out = graph->get_connector_under_point(mouse_world_position, SocketIOType::Output);
 
-	if (connector_has_focus) {
+	if (focused_connector_out) {
 		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-			begin_connection_under_mouse();
-		}
-		else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
-			complete_connection_at_mouse();
+			begin_connection(focused_connector_out);
 		}
 	}
-	else if (node_has_focus) {
+	else if (focused_connector_in) {
+		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+			reroute_connection(focused_connector_in);
+		}
+		else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
+			complete_connection(focused_connector_in);
+		}
+	}
+	else if (focused_node) {
 		// If the user clicked a label, select it
-		if (label_has_focus) {
+		if (focused_label) {
 			if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
 				select_label_under_mouse();
 			}
 		}
 
-		// Move all selected nodes when user clicks the node header
 		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-
-			if (mods & GLFW_MOD_CONTROL) {
-				raise_node_under_mouse(SelectMode::ADD);
+			// Raise the node under the mouse and add it to the selection, then begin moving entire selection
+			EditorNode* const node_to_select = graph->get_node_under_point(mouse_world_position);
+			graph->raise_node(node_to_select);
+			if (mods == GLFW_MOD_CONTROL) {
+				selection->modify_selection(SelectMode::ADD, node_to_select);
 			}
-			else if (mods & GLFW_MOD_SHIFT) {
-				raise_node_under_mouse(SelectMode::TOGGLE);
+			else if (mods == GLFW_MOD_SHIFT) {
+				selection->modify_selection(SelectMode::TOGGLE, node_to_select);
 			}
 			else {
-				if (is_node_under_mouse_selected()) {
-					raise_node_under_mouse(SelectMode::NONE);
-				}
-				else {
-					raise_node_under_mouse(SelectMode::EXCLUSIVE);
-				}
+				selection->modify_selection(SelectMode::NORMAL, node_to_select);
 			}
 			node_move_begin();
 		}
@@ -331,7 +264,8 @@ void CyclesShaderEditor::EditGraphView::handle_mouse_button(const int button, co
 			if (const auto node_creation_helper = this->node_creation_helper.lock()) {
 				std::unique_ptr<EditorNode> new_node = node_creation_helper->take();
 				if (new_node) {
-					add_node_at_mouse(new_node);
+					graph->add_node(new_node, mouse_world_position);
+					selection->nodes.clear();
 				}
 			}
 		}
@@ -346,7 +280,7 @@ void CyclesShaderEditor::EditGraphView::handle_mouse_button(const int button, co
 			cancel_connection();
 
 			// Box selection
-			SelectMode box_mode = SelectMode::EXCLUSIVE;
+			SelectMode box_mode = SelectMode::NORMAL;
 			if (mods & GLFW_MOD_CONTROL) {
 				box_mode = SelectMode::ADD;
 			}
@@ -365,7 +299,36 @@ void CyclesShaderEditor::EditGraphView::handle_key(const int key, const int scan
 {
 	const int delete_key = Platform::get_delete_key();
 	if (key == delete_key && action == GLFW_PRESS) {
-		delete_selected_nodes();
+		graph->remove_node_set(selection->nodes);
+	}
+}
+
+void CyclesShaderEditor::EditGraphView::handle_requests(ViewUIRequests& requests)
+{
+	if (requests.pan_left) {
+		pan(-1, 0);
+		requests.pan_left = false;
+	}
+	if (requests.pan_right) {
+		pan(1, 0);
+		requests.pan_right = false;
+	}
+	if (requests.pan_up) {
+		pan(0, -1);
+		requests.pan_up = false;
+	}
+	if (requests.pan_down) {
+		pan(0, 1);
+		requests.pan_down = false;
+	}
+
+	if (requests.zoom_in) {
+		zoom.zoom_in();
+		requests.zoom_in = false;
+	}
+	if (requests.zoom_out) {
+		zoom.zoom_out();
+		requests.zoom_out = false;
 	}
 }
 
@@ -384,255 +347,60 @@ std::weak_ptr<const CyclesShaderEditor::Selection> CyclesShaderEditor::EditGraph
 	return selection;
 }
 
-void CyclesShaderEditor::EditGraphView::add_node_at_mouse(std::unique_ptr<EditorNode>& node)
+void CyclesShaderEditor::EditGraphView::clear_selection()
 {
-	if (node.get() == nullptr) {
-		return;
-	}
-
-	EditorNode* const node_ptr = node.release();
-	node_ptr->world_pos = mouse_world_position;
-	graph->nodes.push_front(node_ptr);
-	selection->nodes.clear();
-	selection->nodes.insert(node_ptr);
+	selection->clear();
 }
 
-void CyclesShaderEditor::EditGraphView::begin_connection_under_mouse()
+std::string CyclesShaderEditor::EditGraphView::get_zoom_string() const
 {
-	NodeSocket* const under_mouse = get_socket_connector_under_mouse();
-	if (under_mouse == nullptr) {
+	constexpr unsigned char BUFFER_SIZE = 24;
+	char buf[BUFFER_SIZE];
+	const int result = snprintf(buf, BUFFER_SIZE, "Zoom: %3.1f%%", zoom.get_world_scale() * 100.0f);
+	if (result <= 0) {
+		// This should never happen
+		return "ZOOM ERROR";
+	}
+	return std::string(buf);
+}
+
+void CyclesShaderEditor::EditGraphView::begin_connection(NodeSocket* const socket_begin)
+{
+	if (socket_begin == nullptr) {
 		connection_in_progress_start = nullptr;
 		return;
 	}
 
-	if (under_mouse->socket_in_out == SocketInOut::Output) {
-		connection_in_progress_start = under_mouse;
+	if (socket_begin->io_type == SocketIOType::Output) {
+		connection_in_progress_start = socket_begin;
 	}
-	else if (under_mouse->socket_in_out == SocketInOut::Input) {
-		// If a connection already exists, remove it and make a new one with the same source. This also allows drag to disconnect.
-		under_mouse->parent->changed = true;
-		std::list<NodeConnection>::iterator connection_iter;
-		for (connection_iter = graph->connections.begin(); connection_iter != graph->connections.end(); ++connection_iter) {
-			if (connection_iter->end_socket == under_mouse) {
-				// In this case, remove the existing connection and create a new one in progress with the same source
-				connection_in_progress_start = connection_iter->begin_socket;
-				graph->connections.erase(connection_iter);
-				break;
-			}
-		}
+}
+
+void CyclesShaderEditor::EditGraphView::complete_connection(NodeSocket* const socket_end)
+{
+	if (connection_in_progress_start == nullptr) {
+		return;
 	}
+	if (socket_end == nullptr) {
+		return;
+	}
+	graph->add_connection(connection_in_progress_start, socket_end);
+	cancel_connection();
+}
+
+void CyclesShaderEditor::EditGraphView::reroute_connection(NodeSocket* const socket_end)
+{
+	if (socket_end == nullptr) {
+		return;
+	}
+
+	NodeConnection removed_connection = graph->remove_connection_with_end(socket_end);
+	connection_in_progress_start = removed_connection.begin_socket;
 }
 
 void CyclesShaderEditor::EditGraphView::cancel_connection()
 {
 	connection_in_progress_start = nullptr;
-}
-
-void CyclesShaderEditor::EditGraphView::complete_connection_at_mouse()
-{
-	if (connection_in_progress_start == nullptr) {
-		cancel_connection();
-		return;
-	}
-	NodeSocket* const connector_under_mouse = get_socket_connector_under_mouse();
-	if (connector_under_mouse == nullptr) {
-		cancel_connection();
-		return;
-	}
-	if (connector_under_mouse->socket_in_out != SocketInOut::Input || connection_in_progress_start->socket_in_out != SocketInOut::Output) {
-		cancel_connection();
-		return;
-	}
-	if (connection_in_progress_start->parent == connector_under_mouse->parent) {
-		// Two sockets on the same node, do not make a connection
-		cancel_connection();
-		return;
-	}
-
-	// Remove any existing connection at this input
-	std::list<NodeConnection>::iterator connection_iter = graph->connections.begin();
-	while (connection_iter != graph->connections.end()) {
-		if (connection_iter->end_socket == connector_under_mouse) {
-			graph->connections.erase(connection_iter++);
-		}
-		else {
-			++connection_iter;
-		}
-	}
-
-	// Flag as changed so undo state is updated
-	connection_in_progress_start->parent->changed = true;
-	connector_under_mouse->parent->changed = true;
-
-	NodeConnection new_connection(connection_in_progress_start, connector_under_mouse);
-	graph->connections.push_front(new_connection);
-	cancel_connection();
-}
-
-void CyclesShaderEditor::EditGraphView::clear_input_socket_under_mouse()
-{
-	NodeSocket* const under_mouse = get_socket_connector_under_mouse();
-	if (under_mouse == nullptr || under_mouse->socket_in_out != SocketInOut::Input) {
-		return;
-	}
-	std::list<NodeConnection>::iterator connection_iter;
-	for (connection_iter = graph->connections.begin(); connection_iter != graph->connections.end(); ++connection_iter) {
-		if (connection_iter->end_socket == under_mouse) {
-			graph->connections.erase(connection_iter);
-			break;
-		}
-	}
-}
-
-void CyclesShaderEditor::EditGraphView::clear_node_selection()
-{
-	selection->nodes.clear();
-}
-
-void CyclesShaderEditor::EditGraphView::delete_selected_nodes()
-{
-	if (selection->nodes.empty()) {
-		return;
-	}
-	for (EditorNode* this_node : selection->nodes) {
-		delete_node(this_node);
-	}
-	selection->nodes.clear();
-	should_push_undo_state = true;
-}
-
-void CyclesShaderEditor::EditGraphView::delete_node(EditorNode* const node)
-{
-	if (node == nullptr) {
-		return;
-	}
-
-	cancel_connection();
-	deselect_label();
-
-	if (node->can_be_deleted() == false) {
-		return;
-	}
-	std::list<EditorNode*>::iterator iter;
-	for (iter = graph->nodes.begin(); iter != graph->nodes.end(); ++iter) {
-		EditorNode* this_node = *iter;
-		if (this_node == node) {
-			// Iterate through and erase all connections with this node
-			std::list<NodeConnection>::iterator connection_iter = graph->connections.begin();
-			while (connection_iter != graph->connections.end()) {
-				if (connection_iter->includes_node(this_node)) {
-					graph->connections.erase(connection_iter++);
-				}
-				else {
-					++connection_iter;
-				}
-			}
-			// Finally erase node
-			graph->nodes.erase(iter);
-			delete this_node;
-			return;
-		}
-	}
-}
-
-void CyclesShaderEditor::EditGraphView::node_move_begin()
-{
-	node_move_active = true;
-	node_move_did_something = false;
-}
-
-void CyclesShaderEditor::EditGraphView::node_move_end()
-{
-	if (node_move_active && node_move_did_something) {
-		should_push_undo_state = true;
-	}
-	node_move_active = false;
-	node_move_did_something = false;
-}
-
-void CyclesShaderEditor::EditGraphView::move_left()
-{
-	view_center = view_center - FloatPos(GRID_SIZE_FL, 0.0f);
-}
-
-void CyclesShaderEditor::EditGraphView::move_right()
-{
-	view_center = view_center + FloatPos(GRID_SIZE_FL, 0.0f);
-}
-
-void CyclesShaderEditor::EditGraphView::move_up()
-{
-	view_center = view_center - FloatPos(0.0f, GRID_SIZE_FL);
-}
-
-void CyclesShaderEditor::EditGraphView::move_down()
-{
-	view_center = view_center + FloatPos(0.0f, GRID_SIZE_FL);
-}
-
-void CyclesShaderEditor::EditGraphView::zoom_in()
-{
-	zoom.zoom_in();
-}
-
-void CyclesShaderEditor::EditGraphView::zoom_out()
-{
-	zoom.zoom_out();
-}
-
-void CyclesShaderEditor::EditGraphView::box_select_begin()
-{
-	box_select_active = true;
-	world_box_select_begin = mouse_world_position;
-	world_box_select_end = mouse_world_position;
-}
-
-void CyclesShaderEditor::EditGraphView::box_select_end(SelectMode mode)
-{
-	if (box_select_active == false) {
-		return;
-	}
-
-	std::set<EditorNode*> boxed_nodes = get_boxed_nodes();
-
-	switch (mode) {
-		case SelectMode::EXCLUSIVE:
-			selection->nodes.clear();
-			selection->nodes.insert(boxed_nodes.begin(), boxed_nodes.end());
-			break;
-		case SelectMode::ADD:
-			selection->nodes.insert(boxed_nodes.begin(), boxed_nodes.end());
-			break;
-		case SelectMode::TOGGLE:
-			for (EditorNode* this_node : boxed_nodes) {
-				if (selection->nodes.count(this_node) == 1) {
-					selection->nodes.erase(this_node);
-				}
-				else {
-					selection->nodes.insert(this_node);
-				}
-			}
-			break;
-		case SelectMode::NONE:
-			break;
-	}
-
-	box_select_active = false;
-}
-
-void CyclesShaderEditor::EditGraphView::select_label_under_mouse()
-{
-	select_label(get_socket_label_under_mouse());
-}
-
-void CyclesShaderEditor::EditGraphView::deselect_label()
-{
-	select_label(nullptr);
-}
-
-void CyclesShaderEditor::EditGraphView::raise_node_under_mouse(SelectMode mode)
-{
-	raise_node(get_node_under_mouse(), mode);
 }
 
 void CyclesShaderEditor::EditGraphView::select_label(NodeSocket* label)
@@ -647,41 +415,6 @@ void CyclesShaderEditor::EditGraphView::select_label(NodeSocket* label)
 		label->selected = true;
 	}
 	selection->socket = label;
-}
-
-void CyclesShaderEditor::EditGraphView::raise_node(EditorNode* node, SelectMode mode)
-{
-	if (node == nullptr) {
-		return;
-	}
-
-	for (EditorNode* this_node : graph->nodes) {
-		if (this_node == node) {
-			graph->nodes.remove(this_node);
-			graph->nodes.push_front(this_node);
-
-			if (mode == SelectMode::EXCLUSIVE) {
-				selection->nodes.clear();
-				selection->nodes.insert(this_node);
-			}
-			else if (mode == SelectMode::ADD) {
-				selection->nodes.insert(this_node);
-			}
-			else if (mode == SelectMode::TOGGLE) {
-				if (selection->nodes.count(this_node) == 1) {
-					selection->nodes.erase(this_node);
-				}
-				else {
-					selection->nodes.insert(this_node);
-				}
-			}
-			else if (mode == SelectMode::NONE) {
-				// Do nothing, explicitly
-			}
-
-			return;
-		}
-	}
 }
 
 std::set<CyclesShaderEditor::EditorNode*> CyclesShaderEditor::EditGraphView::get_boxed_nodes()
@@ -727,4 +460,72 @@ std::set<CyclesShaderEditor::EditorNode*> CyclesShaderEditor::EditGraphView::get
 	}
 
 	return result;
+}
+
+void CyclesShaderEditor::EditGraphView::node_move_begin()
+{
+	node_move_active = true;
+	node_move_did_something = false;
+}
+
+void CyclesShaderEditor::EditGraphView::node_move_end()
+{
+	if (node_move_active && node_move_did_something) {
+		should_push_undo_state = true;
+	}
+	node_move_active = false;
+	node_move_did_something = false;
+}
+
+void CyclesShaderEditor::EditGraphView::pan(const int horizontal_ticks, const int vertical_ticks)
+{
+	view_center = view_center + FloatPos(GRID_SIZE_FL * horizontal_ticks, GRID_SIZE_FL * vertical_ticks);
+}
+
+void CyclesShaderEditor::EditGraphView::box_select_begin()
+{
+	box_select_active = true;
+	world_box_select_begin = mouse_world_position;
+	world_box_select_end = mouse_world_position;
+}
+
+void CyclesShaderEditor::EditGraphView::box_select_end(SelectMode mode)
+{
+	if (box_select_active == false) {
+		return;
+	}
+
+	std::set<EditorNode*> boxed_nodes = get_boxed_nodes();
+
+	switch (mode) {
+	case SelectMode::NORMAL:
+		selection->nodes.clear();
+		selection->nodes.insert(boxed_nodes.begin(), boxed_nodes.end());
+		break;
+	case SelectMode::ADD:
+		selection->nodes.insert(boxed_nodes.begin(), boxed_nodes.end());
+		break;
+	case SelectMode::TOGGLE:
+		for (EditorNode* this_node : boxed_nodes) {
+			if (selection->nodes.count(this_node) == 1) {
+				selection->nodes.erase(this_node);
+			}
+			else {
+				selection->nodes.insert(this_node);
+			}
+		}
+		break;
+	}
+
+	box_select_active = false;
+}
+
+void CyclesShaderEditor::EditGraphView::select_label_under_mouse()
+{
+	select_label(graph->get_socket_under_point(mouse_world_position));
+}
+
+void CyclesShaderEditor::EditGraphView::deselect_label()
+{
+	select_label(nullptr);
 }

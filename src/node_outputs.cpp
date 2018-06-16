@@ -13,9 +13,9 @@ CyclesShaderEditor::MaterialOutputNode::MaterialOutputNode(FloatPos position)
 
 	title = "Material Output";
 
-	NodeSocket* surface_input = new NodeSocket(this, SocketInOut::Input, SocketType::Closure, "Surface", "surface");
-	NodeSocket* volume_input = new NodeSocket(this, SocketInOut::Input, SocketType::Closure, "Volume", "volume");
-	NodeSocket* displacement_input = new NodeSocket(this, SocketInOut::Input, SocketType::Float, "Displacement", "displacement");
+	NodeSocket* surface_input = new NodeSocket(this, SocketIOType::Input, SocketType::Closure, "Surface", "surface");
+	NodeSocket* volume_input = new NodeSocket(this, SocketIOType::Input, SocketType::Closure, "Volume", "volume");
+	NodeSocket* displacement_input = new NodeSocket(this, SocketIOType::Input, SocketType::Float, "Displacement", "displacement");
 
 	sockets.push_back(surface_input);
 	sockets.push_back(volume_input);

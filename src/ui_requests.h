@@ -4,6 +4,23 @@ namespace CyclesShaderEditor {
 
 	// Every frame, requests from several UI components will be combined with operator|=
 	// For each flag that is true, the main window will take some action
+	class ViewUIRequests {
+	public:
+		ViewUIRequests();
+
+		void clear();
+
+		void operator|=(const ViewUIRequests& other);
+
+		bool pan_left = false;
+		bool pan_right = false;
+		bool pan_up = false;
+		bool pan_down = false;
+
+		bool zoom_in = false;
+		bool zoom_out = false;
+	};
+	
 	class UIRequests {
 	public:
 		UIRequests();
@@ -16,13 +33,7 @@ namespace CyclesShaderEditor {
 		bool undo = false;
 		bool redo = false;
 
-		bool move_left = false;
-		bool move_right = false;
-		bool move_up = false;
-		bool move_down = false;
-
-		bool zoom_in = false;
-		bool zoom_out = false;
+		ViewUIRequests view;
 	};
 
 }

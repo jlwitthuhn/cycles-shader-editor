@@ -599,7 +599,7 @@ static CyclesShaderEditor::EditorNode* deserialize_node(std::list<std::string>& 
 	}
 
 	for (std::pair<std::string, std::string> this_param : params) {
-		NodeSocket* this_socket = result->get_socket_by_internal_name(SocketInOut::Input, this_param.first);
+		NodeSocket* this_socket = result->get_socket_by_internal_name(SocketIOType::Input, this_param.first);
 
 		if (this_socket == nullptr) {
 			continue;
@@ -736,8 +736,8 @@ void CyclesShaderEditor::deserialize_graph(const std::string& graph, std::list<E
 			continue;
 		}
 
-		NodeSocket* source = nodes_by_name[source_node]->get_socket_by_display_name(SocketInOut::Output, source_socket);
-		NodeSocket* dest = nodes_by_name[dest_node]->get_socket_by_display_name(SocketInOut::Input, dest_socket);
+		NodeSocket* source = nodes_by_name[source_node]->get_socket_by_display_name(SocketIOType::Output, source_socket);
+		NodeSocket* dest = nodes_by_name[dest_node]->get_socket_by_display_name(SocketIOType::Input, dest_socket);
 
 		if (source == nullptr || dest == nullptr) {
 			continue;

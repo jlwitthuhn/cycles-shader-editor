@@ -201,7 +201,7 @@ void CyclesShaderEditor::ParamEditorSubwindow::draw_content(NVGcontext* draw_con
 {
 	float height_drawn = 0.0f;
 
-	if (selected_param != nullptr && selected_param->socket_in_out == SocketInOut::Input)
+	if (selected_param != nullptr && selected_param->io_type == SocketIOType::Input)
 	{
 		int_input_box.displayed = false;
 		float_input_box.displayed = false;

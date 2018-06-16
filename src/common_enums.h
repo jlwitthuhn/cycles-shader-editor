@@ -18,4 +18,8 @@ namespace CyclesShaderEditor {
 		CUBIC_HERMITE,
 	};
 
+	enum class SocketIOType {
+		Input,
+		Output,
+	};
 }

@@ -7,8 +7,6 @@
 #include "gui_sizes.h"
 #include "ui_requests.h"
 
-#include <iostream>
-
 CyclesShaderEditor::ToolbarButton::ToolbarButton(const ToolbarButtonType type)
 {
 	this->type = type;
@@ -64,7 +62,7 @@ CyclesShaderEditor::NodeEditorToolbar::NodeEditorToolbar()
 	buttons.push_back(ToolbarButton(ToolbarButtonType::ZOOM_OUT));
 }
 
-void CyclesShaderEditor::NodeEditorToolbar::draw(NVGcontext* draw_context, float toolbar_width)
+void CyclesShaderEditor::NodeEditorToolbar::draw(NVGcontext* const draw_context, const float toolbar_width)
 {
 	nvgSave(draw_context);
 
@@ -182,10 +180,10 @@ void CyclesShaderEditor::NodeEditorToolbar::set_request(ToolbarButtonType button
 		requests.redo = true;
 		break;
 	case ToolbarButtonType::ZOOM_IN:
-		requests.zoom_in = true;
+		requests.view.zoom_in = true;
 		break;
 	case ToolbarButtonType::ZOOM_OUT:
-		requests.zoom_out = true;
+		requests.view.zoom_out = true;
 		break;
 	default:
 		break;

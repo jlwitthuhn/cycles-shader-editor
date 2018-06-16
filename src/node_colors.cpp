@@ -16,11 +16,11 @@ CyclesShaderEditor::MixRGBNode::MixRGBNode(FloatPos position)
 
 	title = "Mix RGB";
 
-	NodeSocket* color_output = new NodeSocket(this, SocketInOut::Output, SocketType::Color, "Color", "color");
+	NodeSocket* color_output = new NodeSocket(this, SocketIOType::Output, SocketType::Color, "Color", "color");
 
 	sockets.push_back(color_output);
 
-	NodeSocket* type_input = new NodeSocket(this, SocketInOut::Input, SocketType::StringEnum, "Type", "type");
+	NodeSocket* type_input = new NodeSocket(this, SocketIOType::Input, SocketType::StringEnum, "Type", "type");
 	StringEnumSocketValue* type_value = new StringEnumSocketValue();
 	type_value->enum_values.push_back(StringEnumPair("Linear Light", "linear_light"));
 	type_value->enum_values.push_back(StringEnumPair("Soft Light", "soft_light"));
@@ -42,13 +42,13 @@ CyclesShaderEditor::MixRGBNode::MixRGBNode(FloatPos position)
 	type_value->enum_values.push_back(StringEnumPair("Mix", "mix"));
 	type_value->set_from_internal_name("mix");
 	type_input->value = type_value;
-	NodeSocket* clamp_input = new NodeSocket(this, SocketInOut::Input, SocketType::Boolean, "Clamp", "use_clamp");
+	NodeSocket* clamp_input = new NodeSocket(this, SocketIOType::Input, SocketType::Boolean, "Clamp", "use_clamp");
 	clamp_input->value = new BoolSocketValue(false);
-	NodeSocket* fac_input = new NodeSocket(this, SocketInOut::Input, SocketType::Float, "Fac", "fac");
+	NodeSocket* fac_input = new NodeSocket(this, SocketIOType::Input, SocketType::Float, "Fac", "fac");
 	fac_input->value = new FloatSocketValue(0.5f, 0.0f, 1.0f);
-	NodeSocket* color1_input = new NodeSocket(this, SocketInOut::Input, SocketType::Color, "Color1", "color1");
+	NodeSocket* color1_input = new NodeSocket(this, SocketIOType::Input, SocketType::Color, "Color1", "color1");
 	color1_input->value = new ColorSocketValue(1.0f, 1.0f, 1.0f);
-	NodeSocket* color2_input = new NodeSocket(this, SocketInOut::Input, SocketType::Color, "Color2", "color2");
+	NodeSocket* color2_input = new NodeSocket(this, SocketIOType::Input, SocketType::Color, "Color2", "color2");
 	color2_input->value = new ColorSocketValue(1.0f, 1.0f, 1.0f);
 
 	sockets.push_back(type_input);
@@ -66,13 +66,13 @@ CyclesShaderEditor::InvertNode::InvertNode(FloatPos position)
 
 	title = "Invert";
 
-	NodeSocket* color_output = new NodeSocket(this, SocketInOut::Output, SocketType::Color, "Color", "color");
+	NodeSocket* color_output = new NodeSocket(this, SocketIOType::Output, SocketType::Color, "Color", "color");
 
 	sockets.push_back(color_output);
 
-	NodeSocket* fac_input = new NodeSocket(this, SocketInOut::Input, SocketType::Float, "Fac", "fac");
+	NodeSocket* fac_input = new NodeSocket(this, SocketIOType::Input, SocketType::Float, "Fac", "fac");
 	fac_input->value = new FloatSocketValue(1.0f, 0.0f, 1.0f);
-	NodeSocket* color_input = new NodeSocket(this, SocketInOut::Input, SocketType::Color, "Color", "color");
+	NodeSocket* color_input = new NodeSocket(this, SocketIOType::Input, SocketType::Color, "Color", "color");
 	color_input->value = new ColorSocketValue(1.0f, 1.0f, 1.0f);
 
 	sockets.push_back(fac_input);
@@ -87,17 +87,17 @@ CyclesShaderEditor::LightFalloffNode::LightFalloffNode(FloatPos position)
 
 	title = "Light Falloff";
 
-	NodeSocket* quadratic_output = new NodeSocket(this, SocketInOut::Output, SocketType::Float, "Quadratic", "quadratic");
-	NodeSocket* linear_output = new NodeSocket(this, SocketInOut::Output, SocketType::Float, "Linear", "linear");
-	NodeSocket* constant_output = new NodeSocket(this, SocketInOut::Output, SocketType::Float, "Constant", "constant");
+	NodeSocket* quadratic_output = new NodeSocket(this, SocketIOType::Output, SocketType::Float, "Quadratic", "quadratic");
+	NodeSocket* linear_output = new NodeSocket(this, SocketIOType::Output, SocketType::Float, "Linear", "linear");
+	NodeSocket* constant_output = new NodeSocket(this, SocketIOType::Output, SocketType::Float, "Constant", "constant");
 
 	sockets.push_back(quadratic_output);
 	sockets.push_back(linear_output);
 	sockets.push_back(constant_output);
 
-	NodeSocket* strength_input = new NodeSocket(this, SocketInOut::Input, SocketType::Float, "Strength", "strength");
+	NodeSocket* strength_input = new NodeSocket(this, SocketIOType::Input, SocketType::Float, "Strength", "strength");
 	strength_input->value = new FloatSocketValue(100.0f, 0.0f, 10000.0f);
-	NodeSocket* smooth_input = new NodeSocket(this, SocketInOut::Input, SocketType::Float, "Smooth", "smooth");
+	NodeSocket* smooth_input = new NodeSocket(this, SocketIOType::Input, SocketType::Float, "Smooth", "smooth");
 	smooth_input->value = new FloatSocketValue(0.0f, 0.0f, 1000.0f);
 
 	sockets.push_back(strength_input);
@@ -112,19 +112,19 @@ CyclesShaderEditor::HSVNode::HSVNode(FloatPos position)
 
 	title = "HSV";
 
-	NodeSocket* color_output = new NodeSocket(this, SocketInOut::Output, SocketType::Color, "Color", "color");
+	NodeSocket* color_output = new NodeSocket(this, SocketIOType::Output, SocketType::Color, "Color", "color");
 
 	sockets.push_back(color_output);
 
-	NodeSocket* hue_input = new NodeSocket(this, SocketInOut::Input, SocketType::Float, "Hue", "hue");
+	NodeSocket* hue_input = new NodeSocket(this, SocketIOType::Input, SocketType::Float, "Hue", "hue");
 	hue_input->value = new FloatSocketValue(0.5f, 0.0f, 1.0f);
-	NodeSocket* sat_input = new NodeSocket(this, SocketInOut::Input, SocketType::Float, "Saturation", "saturation");
+	NodeSocket* sat_input = new NodeSocket(this, SocketIOType::Input, SocketType::Float, "Saturation", "saturation");
 	sat_input->value = new FloatSocketValue(1.0f, 0.0f, 2.0f);
-	NodeSocket* val_input = new NodeSocket(this, SocketInOut::Input, SocketType::Float, "Value", "value");
+	NodeSocket* val_input = new NodeSocket(this, SocketIOType::Input, SocketType::Float, "Value", "value");
 	val_input->value = new FloatSocketValue(1.0f, 0.0f, 2.0f);
-	NodeSocket* fac_input = new NodeSocket(this, SocketInOut::Input, SocketType::Float, "Fac", "fac");
+	NodeSocket* fac_input = new NodeSocket(this, SocketIOType::Input, SocketType::Float, "Fac", "fac");
 	fac_input->value = new FloatSocketValue(1.0f, 0.0f, 1.0f);
-	NodeSocket* color_input = new NodeSocket(this, SocketInOut::Input, SocketType::Color, "Color", "color");
+	NodeSocket* color_input = new NodeSocket(this, SocketIOType::Input, SocketType::Color, "Color", "color");
 	color_input->value = new ColorSocketValue(1.0f, 1.0f, 1.0f);
 
 	sockets.push_back(hue_input);
@@ -142,13 +142,13 @@ CyclesShaderEditor::GammaNode::GammaNode(FloatPos position)
 
 	title = "Gamma";
 
-	NodeSocket* color_output = new NodeSocket(this, SocketInOut::Output, SocketType::Color, "Color", "color");
+	NodeSocket* color_output = new NodeSocket(this, SocketIOType::Output, SocketType::Color, "Color", "color");
 
 	sockets.push_back(color_output);
 
-	NodeSocket* color_input = new NodeSocket(this, SocketInOut::Input, SocketType::Color, "Color", "color");
+	NodeSocket* color_input = new NodeSocket(this, SocketIOType::Input, SocketType::Color, "Color", "color");
 	color_input->value = new ColorSocketValue(1.0f, 1.0f, 1.0f);
-	NodeSocket* gamma_input = new NodeSocket(this, SocketInOut::Input, SocketType::Float, "Gamma", "gamma");
+	NodeSocket* gamma_input = new NodeSocket(this, SocketIOType::Input, SocketType::Float, "Gamma", "gamma");
 	gamma_input->value = new FloatSocketValue(1.0f, 0.001f, 10.0f);
 
 	sockets.push_back(color_input);
@@ -163,15 +163,15 @@ CyclesShaderEditor::BrightnessContrastNode::BrightnessContrastNode(FloatPos posi
 
 	title = "Bright/Contrast";
 
-	NodeSocket* color_output = new NodeSocket(this, SocketInOut::Output, SocketType::Color, "Color", "color");
+	NodeSocket* color_output = new NodeSocket(this, SocketIOType::Output, SocketType::Color, "Color", "color");
 
 	sockets.push_back(color_output);
 
-	NodeSocket* color_input = new NodeSocket(this, SocketInOut::Input, SocketType::Color, "Color", "color");
+	NodeSocket* color_input = new NodeSocket(this, SocketIOType::Input, SocketType::Color, "Color", "color");
 	color_input->value = new ColorSocketValue(1.0f, 1.0f, 1.0f);
-	NodeSocket* bright_input = new NodeSocket(this, SocketInOut::Input, SocketType::Float, "Bright", "bright");
+	NodeSocket* bright_input = new NodeSocket(this, SocketIOType::Input, SocketType::Float, "Bright", "bright");
 	bright_input->value = new FloatSocketValue(0.0f, -100.0f, 100.0f);
-	NodeSocket* cont_input = new NodeSocket(this, SocketInOut::Input, SocketType::Float, "Contrast", "contrast");
+	NodeSocket* cont_input = new NodeSocket(this, SocketIOType::Input, SocketType::Float, "Contrast", "contrast");
 	cont_input->value = new FloatSocketValue(0.0f, -100.0f, 100.0f);
 
 	sockets.push_back(color_input);
@@ -187,21 +187,21 @@ CyclesShaderEditor::RGBCurvesNode::RGBCurvesNode(FloatPos position)
 
 	title = "RGB Curves";
 
-	NodeSocket* color_output = new NodeSocket(this, SocketInOut::Output, SocketType::Color, "Color", "color");
+	NodeSocket* color_output = new NodeSocket(this, SocketIOType::Output, SocketType::Color, "Color", "color");
 
 	sockets.push_back(color_output);
 
-	NodeSocket* rgb_curve_input = new NodeSocket(this, SocketInOut::Input, SocketType::Curve, "RGB Curve", "rgb_curve");
+	NodeSocket* rgb_curve_input = new NodeSocket(this, SocketIOType::Input, SocketType::Curve, "RGB Curve", "rgb_curve");
 	rgb_curve_input->value = new CurveSocketValue();
-	NodeSocket* r_curve_input = new NodeSocket(this, SocketInOut::Input, SocketType::Curve, "Red Curve", "r_curve");
+	NodeSocket* r_curve_input = new NodeSocket(this, SocketIOType::Input, SocketType::Curve, "Red Curve", "r_curve");
 	r_curve_input->value = new CurveSocketValue();
-	NodeSocket* g_curve_input = new NodeSocket(this, SocketInOut::Input, SocketType::Curve, "Green Curve", "g_curve");
+	NodeSocket* g_curve_input = new NodeSocket(this, SocketIOType::Input, SocketType::Curve, "Green Curve", "g_curve");
 	g_curve_input->value = new CurveSocketValue();
-	NodeSocket* b_curve_input = new NodeSocket(this, SocketInOut::Input, SocketType::Curve, "Blue Curve", "b_curve");
+	NodeSocket* b_curve_input = new NodeSocket(this, SocketIOType::Input, SocketType::Curve, "Blue Curve", "b_curve");
 	b_curve_input->value = new CurveSocketValue();
-	NodeSocket* fac_input = new NodeSocket(this, SocketInOut::Input, SocketType::Float, "Fac", "fac");
+	NodeSocket* fac_input = new NodeSocket(this, SocketIOType::Input, SocketType::Float, "Fac", "fac");
 	fac_input->value = new FloatSocketValue(1.0f, -1.0f, 1.0f);
-	NodeSocket* color_input = new NodeSocket(this, SocketInOut::Input, SocketType::Color, "Color", "color");
+	NodeSocket* color_input = new NodeSocket(this, SocketIOType::Input, SocketType::Color, "Color", "color");
 	color_input->value = new ColorSocketValue(1.0f, 1.0f, 1.0f);
 
 	sockets.push_back(rgb_curve_input);
@@ -222,10 +222,10 @@ void CyclesShaderEditor::RGBCurvesNode::update_output_node(OutputNode& output)
 	// This is a combination of the channel-specific curves and the RGB curve which applies to all channels
 	// Channel-specific curves are applied before the rgb curve
 
-	NodeSocket* const rgb_curve_socket = get_socket_by_internal_name(SocketInOut::Input, "rgb_curve");
-	NodeSocket* const r_curve_socket = get_socket_by_internal_name(SocketInOut::Input, "r_curve");
-	NodeSocket* const g_curve_socket = get_socket_by_internal_name(SocketInOut::Input, "g_curve");
-	NodeSocket* const b_curve_socket = get_socket_by_internal_name(SocketInOut::Input, "b_curve");
+	NodeSocket* const rgb_curve_socket = get_socket_by_internal_name(SocketIOType::Input, "rgb_curve");
+	NodeSocket* const r_curve_socket = get_socket_by_internal_name(SocketIOType::Input, "r_curve");
+	NodeSocket* const g_curve_socket = get_socket_by_internal_name(SocketIOType::Input, "g_curve");
+	NodeSocket* const b_curve_socket = get_socket_by_internal_name(SocketIOType::Input, "b_curve");
 
 	CurveSocketValue* const rgb_curve_val = dynamic_cast<CurveSocketValue*>(rgb_curve_socket->value);
 	CurveSocketValue* const r_curve_val = dynamic_cast<CurveSocketValue*>(r_curve_socket->value);

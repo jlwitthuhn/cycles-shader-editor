@@ -8,7 +8,7 @@ namespace CyclesShaderEditor {
 	public:
 		ZoomManager();
 
-		float get_world_scale();
+		float get_world_scale() const;
 
 		void zoom_in();
 		void zoom_out();

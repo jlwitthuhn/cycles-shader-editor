@@ -35,7 +35,7 @@ CyclesShaderEditor::ZoomManager::ZoomManager()
 	}
 }
 
-float CyclesShaderEditor::ZoomManager::get_world_scale()
+float CyclesShaderEditor::ZoomManager::get_world_scale() const
 {
 	return zooms[zoom_level];
 }
