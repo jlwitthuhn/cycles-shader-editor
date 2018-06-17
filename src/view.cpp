@@ -197,12 +197,16 @@ void CyclesShaderEditor::EditGraphView::draw(NVGcontext* draw_context)
 	std::list<NodeConnection>::iterator connection_iter;
 	for (connection_iter = graph->connections.begin(); connection_iter != graph->connections.end(); ++connection_iter) {
 		NodeConnection this_connection = *connection_iter;
-		Drawing::draw_node_connection_curve(draw_context, this_connection.begin_socket->world_draw_position, this_connection.end_socket->world_draw_position, 2.0f);
+		auto conn_begin = this_connection.begin_socket.lock();
+		auto conn_end = this_connection.end_socket.lock();
+		if (conn_begin && conn_end) {
+			Drawing::draw_node_connection_curve(draw_context, conn_begin->world_draw_position, conn_end->world_draw_position, 2.0f);
+		}
 	}
 
 	// Connection in progress
-	if (connection_in_progress_start != nullptr) {
-		Drawing::draw_node_connection_curve(draw_context, connection_in_progress_start->world_draw_position, mouse_world_position, 3.2f);
+	if (const auto connection_start = connection_in_progress_start.lock()) {
+		Drawing::draw_node_connection_curve(draw_context, connection_start->world_draw_position, mouse_world_position, 3.2f);
 	}
 
 	nvgRestore(draw_context);
@@ -211,26 +215,26 @@ void CyclesShaderEditor::EditGraphView::draw(NVGcontext* draw_context)
 void CyclesShaderEditor::EditGraphView::handle_mouse_button(const int button, const int action, const int mods)
 {
 	EditorNode* const focused_node = graph->get_node_under_point(mouse_world_position);
-	NodeSocket* const focused_label = graph->get_socket_under_point(mouse_world_position);
-	NodeSocket* const focused_connector_in = graph->get_connector_under_point(mouse_world_position, SocketIOType::Input);
-	NodeSocket* const focused_connector_out = graph->get_connector_under_point(mouse_world_position, SocketIOType::Output);
+	const auto focused_label_ptr = graph->get_socket_under_point(mouse_world_position).lock();
+	const auto focused_connector_in_ptr = graph->get_connector_under_point(mouse_world_position, SocketIOType::Input).lock();
+	const auto focused_connector_out_ptr = graph->get_connector_under_point(mouse_world_position, SocketIOType::Output).lock();
 
-	if (focused_connector_out) {
+	if (focused_connector_out_ptr) {
 		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-			begin_connection(focused_connector_out);
+			begin_connection(focused_connector_out_ptr);
 		}
 	}
-	else if (focused_connector_in) {
+	else if (focused_connector_in_ptr) {
 		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-			reroute_connection(focused_connector_in);
+			reroute_connection(focused_connector_in_ptr);
 		}
 		else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
-			complete_connection(focused_connector_in);
+			complete_connection(focused_connector_in_ptr);
 		}
 	}
 	else if (focused_node) {
 		// If the user clicked a label, select it
-		if (focused_label) {
+		if (focused_label_ptr) {
 			if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
 				select_label_under_mouse();
 			}
@@ -364,55 +368,51 @@ std::string CyclesShaderEditor::EditGraphView::get_zoom_string() const
 	return std::string(buf);
 }
 
-void CyclesShaderEditor::EditGraphView::begin_connection(NodeSocket* const socket_begin)
+void CyclesShaderEditor::EditGraphView::begin_connection(const std::weak_ptr<NodeSocket> socket_begin)
 {
-	if (socket_begin == nullptr) {
-		connection_in_progress_start = nullptr;
-		return;
+	if (const auto socket_begin_ptr = socket_begin.lock()) {
+		if (socket_begin_ptr->io_type == SocketIOType::Output) {
+			connection_in_progress_start = socket_begin;
+			return;
+		}
 	}
-
-	if (socket_begin->io_type == SocketIOType::Output) {
-		connection_in_progress_start = socket_begin;
-	}
-}
-
-void CyclesShaderEditor::EditGraphView::complete_connection(NodeSocket* const socket_end)
-{
-	if (connection_in_progress_start == nullptr) {
-		return;
-	}
-	if (socket_end == nullptr) {
-		return;
-	}
-	graph->add_connection(connection_in_progress_start, socket_end);
+	// If no connection was started, clear the current connection-in-progress state
 	cancel_connection();
 }
 
-void CyclesShaderEditor::EditGraphView::reroute_connection(NodeSocket* const socket_end)
+void CyclesShaderEditor::EditGraphView::complete_connection(const std::weak_ptr<NodeSocket> socket_end)
 {
-	if (socket_end == nullptr) {
+	if (connection_in_progress_start.expired()) {
 		return;
 	}
+	if (socket_end.lock()) {
+		graph->add_connection(connection_in_progress_start, socket_end);
+	}
+	cancel_connection();
+}
 
+void CyclesShaderEditor::EditGraphView::reroute_connection(const std::weak_ptr<NodeSocket> socket_end)
+{
 	NodeConnection removed_connection = graph->remove_connection_with_end(socket_end);
 	connection_in_progress_start = removed_connection.begin_socket;
 }
 
 void CyclesShaderEditor::EditGraphView::cancel_connection()
 {
-	connection_in_progress_start = nullptr;
+	connection_in_progress_start = std::weak_ptr<NodeSocket>();
 }
 
-void CyclesShaderEditor::EditGraphView::select_label(NodeSocket* label)
+void CyclesShaderEditor::EditGraphView::select_label(const std::weak_ptr<NodeSocket> label)
 {
-	if (selection->socket == label) {
+	const std::shared_ptr<NodeSocket> selected_socket_ptr = selection->socket.lock();
+	if (selected_socket_ptr == label.lock()) {
 		return;
 	}
-	if (selection->socket != nullptr) {
-		selection->socket->selected = false;
+	if (selected_socket_ptr) {
+		selected_socket_ptr->selected = false;
 	}
-	if (label != nullptr) {
-		label->selected = true;
+	if (auto label_ptr = label.lock()) {
+		label_ptr->selected = true;
 	}
 	selection->socket = label;
 }
@@ -527,5 +527,5 @@ void CyclesShaderEditor::EditGraphView::select_label_under_mouse()
 
 void CyclesShaderEditor::EditGraphView::deselect_label()
 {
-	select_label(nullptr);
+	select_label(std::weak_ptr<NodeSocket>());
 }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <set>
 
 namespace CyclesShaderEditor {
@@ -24,6 +25,6 @@ namespace CyclesShaderEditor {
 		void clear();
 
 		std::set<EditorNode*> nodes;
-		NodeSocket* socket = nullptr;
+		std::weak_ptr<NodeSocket> socket;
 	};
 }

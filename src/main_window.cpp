@@ -301,7 +301,9 @@ void CyclesShaderEditor::EditorMainWindow::pre_draw()
 
 	// Mark all connected input sockets
 	for (NodeConnection& connection : main_graph.connections) {
-		connection.end_socket->input_connected_this_frame = true;
+		if (auto connection_end = connection.end_socket.lock()) {
+			connection_end->input_connected_this_frame = true;
+		}
 	}
 
 	for (auto& this_subwindow : subwindows) {

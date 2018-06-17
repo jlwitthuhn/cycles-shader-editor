@@ -20,13 +20,25 @@ void CyclesShaderEditor::EditableGraph::add_node(std::unique_ptr<EditorNode>& no
 	should_push_undo_state = true;
 }
 
-void CyclesShaderEditor::EditableGraph::add_connection(NodeSocket* const socket_begin, NodeSocket* const socket_end)
+void CyclesShaderEditor::EditableGraph::add_connection(const std::weak_ptr<NodeSocket> socket_begin, const std::weak_ptr<NodeSocket> socket_end)
 {
-	if (socket_begin == nullptr || socket_end == nullptr) {
+	if (const auto socket_begin_ptr = socket_begin.lock()) {
+		if (socket_begin_ptr->io_type != SocketIOType::Output) {
+			return;
+		}
+	}
+	else {
+		// pointer is invalid
 		return;
 	}
-	if (socket_begin->io_type != SocketIOType::Output || socket_end->io_type != SocketIOType::Input) {
-		return;	
+	if (const auto socket_end_ptr = socket_end.lock()) {
+		if (socket_end_ptr->io_type != SocketIOType::Input) {
+			return;
+		}
+	}
+	else {
+		// pointer is invalid
+		return;
 	}
 	// Remove any existing connection with this endpoint
 	remove_connection_with_end(socket_end);
@@ -35,15 +47,15 @@ void CyclesShaderEditor::EditableGraph::add_connection(NodeSocket* const socket_
 	connections.push_back(new_connection);
 }
 
-CyclesShaderEditor::NodeConnection CyclesShaderEditor::EditableGraph::remove_connection_with_end(NodeSocket* const socket_end)
+CyclesShaderEditor::NodeConnection CyclesShaderEditor::EditableGraph::remove_connection_with_end(const std::weak_ptr<NodeSocket> socket_end)
 {
-	const NodeConnection default_result = NodeConnection(nullptr, nullptr);
-	if (socket_end == nullptr) {
+	const NodeConnection default_result = NodeConnection(std::weak_ptr<NodeSocket>(), std::weak_ptr<NodeSocket>());
+	if (socket_end.expired()) {
 		return default_result;
 	}
 	std::list<NodeConnection>::iterator iter;
 	for (iter = connections.begin(); iter != connections.end(); iter++) {
-		if (iter->end_socket == socket_end) {
+		if (iter->end_socket.lock() == socket_end.lock()) {
 			should_push_undo_state = true;
 			NodeConnection result = *iter;
 			connections.erase(iter);
@@ -59,7 +71,7 @@ void CyclesShaderEditor::EditableGraph::remove_node_set(const std::set<EditorNod
 	std::list<EditorNode*>::iterator node_iter = nodes.begin();
 	while (node_iter != nodes.end()) {
 		EditorNode* const this_node = *node_iter;
-		if (nodes_to_remove.count(this_node) == 1) {
+		if (this_node->can_be_deleted() && nodes_to_remove.count(this_node) == 1) {
 			delete this_node;
 			node_iter = nodes.erase(node_iter);
 			should_push_undo_state = true;
@@ -69,20 +81,7 @@ void CyclesShaderEditor::EditableGraph::remove_node_set(const std::set<EditorNod
 		}
 	}
 
-	// Remove all connections referencing these nodes
-	std::list<NodeConnection>::iterator connection_iter = connections.begin();
-	while (connection_iter != connections.end()) {
-		const NodeConnection this_connection = *connection_iter;
-		const bool begin_socket_matches = nodes_to_remove.count(this_connection.begin_socket->parent) == 1;
-		const bool end_socket_matches = nodes_to_remove.count(this_connection.end_socket->parent) == 1;
-		if (begin_socket_matches || end_socket_matches) {
-			connection_iter = connections.erase(connection_iter);
-			should_push_undo_state = true;
-		}
-		else {
-			connection_iter++;
-		}
-	}
+	remove_invalid_connections();
 }
 
 bool CyclesShaderEditor::EditableGraph::is_node_under_point(const FloatPos world_pos) const
@@ -105,26 +104,28 @@ CyclesShaderEditor::EditorNode* CyclesShaderEditor::EditableGraph::get_node_unde
 	return nullptr;
 }
 
-CyclesShaderEditor::NodeSocket* CyclesShaderEditor::EditableGraph::get_socket_under_point(const FloatPos world_pos) const
+std::weak_ptr<CyclesShaderEditor::NodeSocket> CyclesShaderEditor::EditableGraph::get_socket_under_point(const FloatPos world_pos) const
 {
 	for (const auto this_node : nodes) {
 		auto maybe_result = this_node->get_socket_label_under_point(world_pos);
-		if (maybe_result) {
+		if (maybe_result.lock()) {
 			return maybe_result;
 		}
 	}
-	return nullptr;
+	return std::weak_ptr<NodeSocket>();
 }
 
-CyclesShaderEditor::NodeSocket* CyclesShaderEditor::EditableGraph::get_connector_under_point(const FloatPos world_pos, const SocketIOType io_type) const
+std::weak_ptr<CyclesShaderEditor::NodeSocket> CyclesShaderEditor::EditableGraph::get_connector_under_point(const FloatPos world_pos, const SocketIOType io_type) const
 {
 	for (const auto this_node : nodes) {
 		auto maybe_result = this_node->get_socket_connector_under_point(world_pos);
-		if (maybe_result && maybe_result->io_type == io_type) {
-			return maybe_result;
+		if (auto maybe_result_ptr = maybe_result.lock()) {
+			if (maybe_result_ptr->io_type == io_type) {
+				return maybe_result;
+			}
 		}
 	}
-	return nullptr;
+	return std::weak_ptr<NodeSocket>();
 }
 
 void CyclesShaderEditor::EditableGraph::raise_node(EditorNode* const node)
@@ -177,11 +178,24 @@ void CyclesShaderEditor::EditableGraph::reset(const ShaderGraphType type)
 	}
 }
 
-// Remove this once nodes use smart pointers
+// TODO: Remove this once nodes use smart pointers
 void CyclesShaderEditor::EditableGraph::clear_nodes()
 {
 	for (const auto* this_node : nodes) {
 		delete this_node;
 	}
 	nodes.clear();
+}
+
+void CyclesShaderEditor::EditableGraph::remove_invalid_connections()
+{
+	std::list<NodeConnection>::iterator iter = connections.begin();
+	while (iter != connections.end()) {
+		if (iter->is_valid()) {
+			iter++;
+		}
+		else {
+			iter = connections.erase(iter);
+		}
+	}
 }

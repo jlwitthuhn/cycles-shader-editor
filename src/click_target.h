@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include "common_enums.h"
 #include "float_pos.h"
 #include "sockets.h"
@@ -62,9 +64,9 @@ namespace CyclesShaderEditor {
 
 	class SocketClickTarget : public GenericClickTarget {
 	public:
-		SocketClickTarget(FloatPos begin_pos, FloatPos end_pos, NodeSocket* socket);
+		SocketClickTarget(FloatPos begin_pos, FloatPos end_pos, std::weak_ptr<NodeSocket> socket);
 
-		NodeSocket* socket;
+		const std::weak_ptr<NodeSocket> socket;
 	};
 
 }

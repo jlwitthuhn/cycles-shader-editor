@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -16,13 +17,13 @@ namespace CyclesShaderEditor {
 
 	class NodeConnection {
 	public:
-		NodeConnection(NodeSocket* begin_socket, NodeSocket* end_socket);
+		NodeConnection(std::weak_ptr<NodeSocket> begin_socket, std::weak_ptr<NodeSocket> end_socket);
 
 		bool is_valid() const;
 		bool includes_node(EditorNode* node) const;
 
-		NodeSocket* const begin_socket;
-		NodeSocket* const end_socket;
+		const std::weak_ptr<NodeSocket> begin_socket;
+		const std::weak_ptr<NodeSocket> end_socket;
 	};
 
 	class EditorNode {
@@ -34,11 +35,11 @@ namespace CyclesShaderEditor {
 		virtual void draw_node(NVGcontext* draw_context);
 
 		virtual bool is_under_point(FloatPos check_world_pos) const;
-		virtual NodeSocket* get_socket_connector_under_point(FloatPos check_world_pos) const;
-		virtual NodeSocket* get_socket_label_under_point(FloatPos check_world_pos) const;
+		virtual std::weak_ptr<NodeSocket> get_socket_connector_under_point(FloatPos check_world_pos) const;
+		virtual std::weak_ptr<NodeSocket> get_socket_label_under_point(FloatPos check_world_pos) const;
 
-		virtual NodeSocket* get_socket_by_display_name(SocketIOType in_out, const std::string& socket_name);
-		virtual NodeSocket* get_socket_by_internal_name(SocketIOType in_out, const std::string& socket_name);
+		virtual std::weak_ptr<NodeSocket> get_socket_by_display_name(SocketIOType in_out, const std::string& socket_name);
+		virtual std::weak_ptr<NodeSocket> get_socket_by_internal_name(SocketIOType in_out, const std::string& socket_name);
 
 		virtual FloatPos get_dimensions();
 
@@ -63,7 +64,7 @@ namespace CyclesShaderEditor {
 		float content_width = 150.0f;
 		float content_height = 0.0f;
 
-		std::vector<NodeSocket*> sockets;
+		std::vector<std::shared_ptr<NodeSocket>> sockets;
 		std::vector<SocketClickTarget> socket_targets;
 		std::vector<SocketClickTarget> label_targets;
 	};

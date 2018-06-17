@@ -49,7 +49,7 @@ namespace CyclesShaderEditor {
 		void click_bool_target_under_mouse();
 		void click_enum_target_under_mouse();
 
-		NodeSocket* selected_param = nullptr;
+		std::weak_ptr<NodeSocket> selected_param;
 
 		BaseInputBox* selected_input = nullptr;
 

@@ -50,5 +50,5 @@ void CyclesShaderEditor::Selection::modify_selection(SelectMode mode, EditorNode
 void CyclesShaderEditor::Selection::clear()
 {
 	nodes.clear();
-	socket = nullptr;
+	socket = std::weak_ptr<NodeSocket>();
 }

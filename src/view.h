@@ -58,12 +58,12 @@ namespace CyclesShaderEditor {
 		std::string get_zoom_string() const;
 
 	private:
-		void begin_connection(NodeSocket* socket_begin);
-		void complete_connection(NodeSocket* socket_end);
-		void reroute_connection(NodeSocket* socket_end);
+		void begin_connection(std::weak_ptr<NodeSocket> socket_begin);
+		void complete_connection(std::weak_ptr<NodeSocket> socket_end);
+		void reroute_connection(std::weak_ptr<NodeSocket> socket_end);
 		void cancel_connection();
 
-		void select_label(NodeSocket* label);
+		void select_label(std::weak_ptr<NodeSocket> label);
 
 		std::set<EditorNode*> get_boxed_nodes();
 
@@ -84,7 +84,7 @@ namespace CyclesShaderEditor {
 
 		std::weak_ptr<NodeCreationHelper> node_creation_helper;
 
-		NodeSocket* connection_in_progress_start = nullptr;
+		std::weak_ptr<NodeSocket> connection_in_progress_start;
 
 		bool box_select_active = false;
 		FloatPos world_box_select_begin;

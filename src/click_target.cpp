@@ -82,7 +82,9 @@ void CyclesShaderEditor::CurveInterpClickTarget::click()
 	*interp_enum = this_interp;
 }
 
-CyclesShaderEditor::SocketClickTarget::SocketClickTarget(const FloatPos begin_pos, const FloatPos end_pos, NodeSocket* const socket) : GenericClickTarget(begin_pos, end_pos)
+CyclesShaderEditor::SocketClickTarget::SocketClickTarget(const FloatPos begin_pos, const FloatPos end_pos, const std::weak_ptr<NodeSocket> socket) :
+	GenericClickTarget(begin_pos, end_pos),
+	socket(socket)
 {
-	this->socket = socket;
+
 }

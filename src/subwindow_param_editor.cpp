@@ -29,12 +29,14 @@ CyclesShaderEditor::ParamEditorSubwindow::ParamEditorSubwindow(FloatPos screen_p
 
 void CyclesShaderEditor::ParamEditorSubwindow::pre_draw()
 {
-	if (selected_param != nullptr && selected_param->socket_type == SocketType::Curve && selected_param->value != nullptr) {
-		CurveSocketValue* curve = dynamic_cast<CurveSocketValue*>(selected_param->value);
-		if (curve != nullptr) {
-			panel_curve.set_attached_curve_value(curve);
-			panel_curve.pre_draw();
-			return;
+	if (auto selected_param_ptr = selected_param.lock()) {
+		if (selected_param_ptr->socket_type == SocketType::Curve && selected_param_ptr->value != nullptr) {
+			CurveSocketValue* curve = dynamic_cast<CurveSocketValue*>(selected_param_ptr->value);
+			if (curve != nullptr) {
+				panel_curve.set_attached_curve_value(curve);
+				panel_curve.pre_draw();
+				return;
+			}
 		}
 	}
 	panel_curve.set_attached_curve_value(nullptr);
@@ -153,7 +155,7 @@ void CyclesShaderEditor::ParamEditorSubwindow::handle_character(unsigned int cod
 
 bool CyclesShaderEditor::ParamEditorSubwindow::is_active() const
 {
-	return (selected_param != nullptr);
+	return (selected_param.use_count() > 0);
 }
 
 bool CyclesShaderEditor::ParamEditorSubwindow::needs_undo_push()
@@ -174,8 +176,9 @@ bool CyclesShaderEditor::ParamEditorSubwindow::needs_undo_push()
 
 void CyclesShaderEditor::ParamEditorSubwindow::update_selection(std::weak_ptr<const Selection> selection)
 {
-	if (auto selection_ptr = selection.lock()) {
-		if (selected_param != selection_ptr->socket) {
+	auto selection_ptr = selection.lock();
+	if (selection_ptr) {
+		if (selected_param.lock() != selection_ptr->socket.lock()) {
 			complete_input();
 			panel_curve.reset_panel_state();
 			selected_param = selection_ptr->socket;
@@ -201,8 +204,8 @@ void CyclesShaderEditor::ParamEditorSubwindow::draw_content(NVGcontext* draw_con
 {
 	float height_drawn = 0.0f;
 
-	if (selected_param != nullptr && selected_param->io_type == SocketIOType::Input)
-	{
+	auto selected_param_ptr = selected_param.lock();
+	if (selected_param_ptr && selected_param_ptr->io_type == SocketIOType::Input) {
 		int_input_box.displayed = false;
 		float_input_box.displayed = false;
 		vector_x_input_box.displayed = false;
@@ -219,12 +222,12 @@ void CyclesShaderEditor::ParamEditorSubwindow::draw_content(NVGcontext* draw_con
 		nvgFontBlur(draw_context, 0.0f);
 		nvgFillColor(draw_context, nvgRGBA(0, 0, 0, 255));
 
-		std::string parameter_name_text = "Parameter: " + selected_param->display_name;
+		std::string parameter_name_text = "Parameter: " + selected_param_ptr->display_name;
 		nvgText(draw_context, subwindow_width / 2, height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT / 2, parameter_name_text.c_str(), nullptr);
 		height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
 
 		std::string parameter_type_text;
-		switch (selected_param->socket_type) {
+		switch (selected_param_ptr->socket_type) {
 		case SocketType::Float:
 			parameter_type_text = "Type: Float";
 			break;
@@ -275,7 +278,7 @@ void CyclesShaderEditor::ParamEditorSubwindow::draw_content(NVGcontext* draw_con
 
 		panel_start_y = height_drawn;
 
-		if (selected_param->socket_type == SocketType::Int) {
+		if (selected_param_ptr->socket_type == SocketType::Int) {
 			int_input_box.displayed = true;
 
 			nvgFontSize(draw_context, UI_FONT_SIZE_NORMAL);
@@ -291,12 +294,12 @@ void CyclesShaderEditor::ParamEditorSubwindow::draw_content(NVGcontext* draw_con
 			float input_y_draw = height_drawn + (UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT - float_input_box.height) / 2;
 
 			int_input_box.set_position(FloatPos(input_x_draw, input_y_draw));
-			int_input_box.set_int_value(dynamic_cast<IntSocketValue*>(selected_param->value));
+			int_input_box.set_int_value(dynamic_cast<IntSocketValue*>(selected_param_ptr->value));
 			int_input_box.draw(draw_context, mouse_panel_pos);
 
 			height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
 		}
-		else if (selected_param->socket_type == SocketType::Float) {
+		else if (selected_param_ptr->socket_type == SocketType::Float) {
 			float_input_box.displayed = true;
 
 			nvgFontSize(draw_context, UI_FONT_SIZE_NORMAL);
@@ -312,17 +315,17 @@ void CyclesShaderEditor::ParamEditorSubwindow::draw_content(NVGcontext* draw_con
 			float input_y_draw = height_drawn + (UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT - float_input_box.height) / 2;
 
 			float_input_box.set_position(FloatPos(input_x_draw, input_y_draw));
-			float_input_box.set_float_value(dynamic_cast<FloatSocketValue*>(selected_param->value));
+			float_input_box.set_float_value(dynamic_cast<FloatSocketValue*>(selected_param_ptr->value));
 			float_input_box.draw(draw_context, mouse_panel_pos);
 
 			height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
 		}
-		else if (selected_param->socket_type == SocketType::Vector) {
+		else if (selected_param_ptr->socket_type == SocketType::Vector) {
 			vector_x_input_box.displayed = true;
 			vector_y_input_box.displayed = true;
 			vector_z_input_box.displayed = true;
 
-			Float3SocketValue* float3_socket_val = dynamic_cast<Float3SocketValue*>(selected_param->value);
+			Float3SocketValue* float3_socket_val = dynamic_cast<Float3SocketValue*>(selected_param_ptr->value);
 
 			nvgFontSize(draw_context, UI_FONT_SIZE_NORMAL);
 			nvgFontFace(draw_context, "sans");
@@ -364,16 +367,16 @@ void CyclesShaderEditor::ParamEditorSubwindow::draw_content(NVGcontext* draw_con
 
 			height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
 		}
-		else if (selected_param->socket_type == SocketType::Color) {
+		else if (selected_param_ptr->socket_type == SocketType::Color) {
 			nvgSave(draw_context);
 			nvgTranslate(draw_context, 0.0f, panel_start_y);
 			panel_color.set_active(true);
-			ColorSocketValue* color_socket_val = dynamic_cast<ColorSocketValue*>(selected_param->value);
+			ColorSocketValue* color_socket_val = dynamic_cast<ColorSocketValue*>(selected_param_ptr->value);
 			height_drawn += panel_color.draw(draw_context, color_socket_val);
 			nvgRestore(draw_context);
 		}
-		else if (selected_param->socket_type == SocketType::StringEnum) {
-			StringEnumSocketValue* str_enum_value = dynamic_cast<StringEnumSocketValue*>(selected_param->value);
+		else if (selected_param_ptr->socket_type == SocketType::StringEnum) {
+			StringEnumSocketValue* str_enum_value = dynamic_cast<StringEnumSocketValue*>(selected_param_ptr->value);
 
 			nvgFontSize(draw_context, UI_FONT_SIZE_NORMAL);
 			nvgFontFace(draw_context, "sans");
@@ -422,8 +425,8 @@ void CyclesShaderEditor::ParamEditorSubwindow::draw_content(NVGcontext* draw_con
 				height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
 			}
 		}
-		else if (selected_param->socket_type == SocketType::Boolean) {
-			BoolSocketValue* bool_value = dynamic_cast<BoolSocketValue*>(selected_param->value);
+		else if (selected_param_ptr->socket_type == SocketType::Boolean) {
+			BoolSocketValue* bool_value = dynamic_cast<BoolSocketValue*>(selected_param_ptr->value);
 
 			const std::string true_label = "True";
 			const std::string false_label = "False";
@@ -490,10 +493,10 @@ void CyclesShaderEditor::ParamEditorSubwindow::draw_content(NVGcontext* draw_con
 				height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
 			}
 		}
-		else if (selected_param->socket_type == SocketType::Curve) {
+		else if (selected_param_ptr->socket_type == SocketType::Curve) {
 			nvgSave(draw_context);
 			nvgTranslate(draw_context, 0.0f, panel_start_y);
-			CurveSocketValue* curve_socket_val = dynamic_cast<CurveSocketValue*>(selected_param->value);
+			CurveSocketValue* curve_socket_val = dynamic_cast<CurveSocketValue*>(selected_param_ptr->value);
 			panel_curve.set_attached_curve_value(curve_socket_val);
 			height_drawn += panel_curve.draw(draw_context);
 			nvgRestore(draw_context);
