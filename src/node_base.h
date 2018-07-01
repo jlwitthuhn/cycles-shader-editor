@@ -4,10 +4,10 @@
 #include <string>
 #include <vector>
 
-#include "click_target.h"
 #include "float_pos.h"
 #include "output.h"
 #include "sockets.h"
+#include "util_area.h"
 
 struct NVGcontext;
 
@@ -28,8 +28,6 @@ namespace CyclesShaderEditor {
 
 	class EditorNode {
 	public:
-		virtual ~EditorNode();
-
 		virtual std::string get_title() const;
 
 		virtual void draw_node(NVGcontext* draw_context);
@@ -65,8 +63,8 @@ namespace CyclesShaderEditor {
 		float content_height = 0.0f;
 
 		std::vector<std::shared_ptr<NodeSocket>> sockets;
-		std::vector<SocketClickTarget> socket_targets;
-		std::vector<SocketClickTarget> label_targets;
+		std::vector<SocketArea> socket_targets;
+		std::vector<SocketArea> label_targets;
 	};
 
 }

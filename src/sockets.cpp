@@ -22,6 +22,11 @@ CyclesShaderEditor::IntSocketValue::IntSocketValue(int default_val, int min, int
 	set_value(default_val);
 }
 
+CyclesShaderEditor::SocketType CyclesShaderEditor::IntSocketValue::get_type() const
+{
+	return SocketType::INT;
+}
+
 int CyclesShaderEditor::IntSocketValue::get_value()
 {
 	return value;
@@ -49,6 +54,11 @@ CyclesShaderEditor::FloatSocketValue::FloatSocketValue(float default_val, float 
 	set_value(default_val);
 }
 
+CyclesShaderEditor::SocketType CyclesShaderEditor::FloatSocketValue::get_type() const
+{
+	return SocketType::FLOAT;
+}
+
 float CyclesShaderEditor::FloatSocketValue::get_value()
 {
 	return value;
@@ -71,44 +81,54 @@ CyclesShaderEditor::Float3SocketValue::Float3SocketValue(
 	float default_x, float min_x, float max_x,
 	float default_y, float min_y, float max_y,
 	float default_z, float min_z, float max_z) :
-	x_socket_val(default_x, min_x, max_x),
-	y_socket_val(default_y, min_y, max_y),
-	z_socket_val(default_z, min_z, max_z)
+	x_socket_val(std::make_shared<FloatSocketValue>(default_x, min_x, max_x)),
+	y_socket_val(std::make_shared<FloatSocketValue>(default_y, min_y, max_y)),
+	z_socket_val(std::make_shared<FloatSocketValue>(default_z, min_z, max_z))
 {
 
+}
+
+CyclesShaderEditor::SocketType CyclesShaderEditor::Float3SocketValue::get_type() const
+{
+	return SocketType::VECTOR;
 }
 
 CyclesShaderEditor::Float3Holder CyclesShaderEditor::Float3SocketValue::get_value()
 {
 	Float3Holder result;
-	result.x = x_socket_val.get_value();
-	result.y = y_socket_val.get_value();
-	result.z = z_socket_val.get_value();
+	result.x = x_socket_val->get_value();
+	result.y = y_socket_val->get_value();
+	result.z = z_socket_val->get_value();
 
 	return result;
 }
 
 void CyclesShaderEditor::Float3SocketValue::set_x(float x_in)
 {
-	x_socket_val.set_value(x_in);
+	x_socket_val->set_value(x_in);
 }
 
 void CyclesShaderEditor::Float3SocketValue::set_y(float y_in)
 {
-	y_socket_val.set_value(y_in);
+	y_socket_val->set_value(y_in);
 }
 
 void CyclesShaderEditor::Float3SocketValue::set_z(float z_in)
 {
-	z_socket_val.set_value(z_in);
+	z_socket_val->set_value(z_in);
 }
 
 CyclesShaderEditor::ColorSocketValue::ColorSocketValue(float default_r, float default_g, float default_b) :
-	red_socket_val(default_r, 0.0f, 1.0f),
-	green_socket_val(default_g, 0.0f, 1.0f),
-	blue_socket_val(default_b, 0.0f, 1.0f)
+	red_socket_val(std::make_shared<FloatSocketValue>(default_r, 0.0f, 1.0f)),
+	green_socket_val(std::make_shared<FloatSocketValue>(default_g, 0.0f, 1.0f)),
+	blue_socket_val(std::make_shared<FloatSocketValue>(default_b, 0.0f, 1.0f))
 {
 
+}
+
+CyclesShaderEditor::SocketType CyclesShaderEditor::ColorSocketValue::get_type() const
+{
+	return SocketType::COLOR;
 }
 
 CyclesShaderEditor::StringEnumPair::StringEnumPair(std::string display_value, std::string internal_value)
@@ -120,6 +140,11 @@ CyclesShaderEditor::StringEnumPair::StringEnumPair(std::string display_value, st
 CyclesShaderEditor::StringEnumSocketValue::StringEnumSocketValue() : value("", "")
 {
 
+}
+
+CyclesShaderEditor::SocketType CyclesShaderEditor::StringEnumSocketValue::get_type() const
+{
+	return SocketType::STRING_ENUM;
 }
 
 bool CyclesShaderEditor::StringEnumSocketValue::set_from_internal_name(std::string internal_name)
@@ -140,9 +165,19 @@ CyclesShaderEditor::BoolSocketValue::BoolSocketValue(bool default_val)
 	value = default_value;
 }
 
+CyclesShaderEditor::SocketType CyclesShaderEditor::BoolSocketValue::get_type() const
+{
+	return SocketType::BOOLEAN;
+}
+
 CyclesShaderEditor::CurveSocketValue::CurveSocketValue()
 {
 	reset_value();
+}
+
+CyclesShaderEditor::SocketType CyclesShaderEditor::CurveSocketValue::get_type() const
+{
+	return SocketType::CURVE;
 }
 
 void CyclesShaderEditor::CurveSocketValue::reset_value()
@@ -244,9 +279,9 @@ void CyclesShaderEditor::CurveSocketValue::sort_curve_points()
 CyclesShaderEditor::FloatRGBColor CyclesShaderEditor::ColorSocketValue::get_value()
 {
 	FloatRGBColor value;
-	value.r = red_socket_val.get_value();
-	value.g = green_socket_val.get_value();
-	value.b = blue_socket_val.get_value();
+	value.r = red_socket_val->get_value();
+	value.g = green_socket_val->get_value();
+	value.b = blue_socket_val->get_value();
 	return value;
 }
 
@@ -259,67 +294,68 @@ CyclesShaderEditor::NodeSocket::NodeSocket(EditorNode* parent, SocketIOType io_t
 	this->internal_name = internal_name;
 
 	// Set selectable flag for editable data types
-	if (io_type == SocketIOType::Input) {
-		if (socket_type == SocketType::Float ||
-			socket_type == SocketType::Color ||
-			socket_type == SocketType::StringEnum ||
-			socket_type == SocketType::Int ||
-			socket_type == SocketType::Boolean ||
-			socket_type == SocketType::Curve)
+	if (io_type == SocketIOType::INPUT) {
+		if (socket_type == SocketType::FLOAT ||
+			socket_type == SocketType::COLOR ||
+			socket_type == SocketType::STRING_ENUM ||
+			socket_type == SocketType::INT ||
+			socket_type == SocketType::BOOLEAN ||
+			socket_type == SocketType::CURVE)
 		{
 			selectable = true;
 		}
 	}
 
 	// Set flag to not draw
-	if (socket_type == SocketType::StringEnum || socket_type == SocketType::Int || socket_type == SocketType::Boolean || socket_type == SocketType::Curve) {
+	if (socket_type == SocketType::STRING_ENUM || socket_type == SocketType::INT || socket_type == SocketType::BOOLEAN || socket_type == SocketType::CURVE) {
 		draw_socket = false;
-	}
-}
-
-CyclesShaderEditor::NodeSocket::~NodeSocket()
-{
-	if (value != nullptr) {
-		delete value;
 	}
 }
 
 void CyclesShaderEditor::NodeSocket::set_float_val(float float_in)
 {
-	if (socket_type != SocketType::Float) {
+	if (socket_type != SocketType::FLOAT) {
 		return;
 	}
 
-	FloatSocketValue* float_val = dynamic_cast<FloatSocketValue*>(value);
-	float_val->set_value(float_in);
+	const std::shared_ptr<FloatSocketValue> float_val = std::dynamic_pointer_cast<FloatSocketValue>(value);
+	if (float_val) {
+		float_val->set_value(float_in);
+	}
 }
 
 void CyclesShaderEditor::NodeSocket::set_float3_val(float x_in, float y_in, float z_in)
 {
-	if (socket_type != SocketType::Color && socket_type != SocketType::Vector) {
+	if (socket_type != SocketType::COLOR && socket_type != SocketType::VECTOR) {
 		return;
 	}
 
-	if (socket_type == SocketType::Color) {
-		ColorSocketValue* color_val = dynamic_cast<ColorSocketValue*>(value);
-		color_val->red_socket_val.set_value(x_in);
-		color_val->green_socket_val.set_value(y_in);
-		color_val->blue_socket_val.set_value(z_in);
+	if (socket_type == SocketType::COLOR) {
+		const std::shared_ptr<ColorSocketValue> color_val = std::dynamic_pointer_cast<ColorSocketValue>(value);
+		if (color_val) {
+			color_val->red_socket_val->set_value(x_in);
+			color_val->green_socket_val->set_value(y_in);
+			color_val->blue_socket_val->set_value(z_in);
+		}
 	}
-	else if (socket_type == SocketType::Vector) {
-		Float3SocketValue* float3_val = dynamic_cast<Float3SocketValue*>(value);
-		float3_val->set_x(x_in);
-		float3_val->set_y(y_in);
-		float3_val->set_z(z_in);
+	else if (socket_type == SocketType::VECTOR) {
+		const std::shared_ptr<Float3SocketValue> float3_val = std::dynamic_pointer_cast<Float3SocketValue>(value);
+		if (float3_val) {
+			float3_val->set_x(x_in);
+			float3_val->set_y(y_in);
+			float3_val->set_z(z_in);
+		}
 	}
 }
 
 void CyclesShaderEditor::NodeSocket::set_string_val(StringEnumPair string_in)
 {
-	if (socket_type != SocketType::StringEnum) {
+	if (socket_type != SocketType::STRING_ENUM) {
 		return;
 	}
 
-	StringEnumSocketValue* string_enum_value = dynamic_cast<StringEnumSocketValue*>(value);
-	string_enum_value->value = string_in;
+	const std::shared_ptr<StringEnumSocketValue> string_enum_val = std::dynamic_pointer_cast<StringEnumSocketValue>(value);
+	if (string_enum_val) {
+		string_enum_val->value = string_in;
+	}
 }

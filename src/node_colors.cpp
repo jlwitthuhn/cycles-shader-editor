@@ -16,12 +16,12 @@ CyclesShaderEditor::MixRGBNode::MixRGBNode(FloatPos position)
 
 	title = "Mix RGB";
 
-	const std::shared_ptr<NodeSocket> color_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Color, "Color", "color");
+	const auto color_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::COLOR, "Color", "color");
 
 	sockets.push_back(color_output);
 
-	const std::shared_ptr<NodeSocket> type_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::StringEnum, "Type", "type");
-	StringEnumSocketValue* type_value = new StringEnumSocketValue();
+	const auto type_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::STRING_ENUM, "Type", "type");
+	const auto type_value = std::make_shared<StringEnumSocketValue>();
 	type_value->enum_values.push_back(StringEnumPair("Linear Light", "linear_light"));
 	type_value->enum_values.push_back(StringEnumPair("Soft Light", "soft_light"));
 	type_value->enum_values.push_back(StringEnumPair("Color", "color"));
@@ -42,14 +42,14 @@ CyclesShaderEditor::MixRGBNode::MixRGBNode(FloatPos position)
 	type_value->enum_values.push_back(StringEnumPair("Mix", "mix"));
 	type_value->set_from_internal_name("mix");
 	type_input->value = type_value;
-	const std::shared_ptr<NodeSocket> clamp_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Boolean, "Clamp", "use_clamp");
-	clamp_input->value = new BoolSocketValue(false);
-	const std::shared_ptr<NodeSocket> fac_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Float, "Fac", "fac");
-	fac_input->value = new FloatSocketValue(0.5f, 0.0f, 1.0f);
-	const std::shared_ptr<NodeSocket> color1_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Color, "Color1", "color1");
-	color1_input->value = new ColorSocketValue(1.0f, 1.0f, 1.0f);
-	const std::shared_ptr<NodeSocket> color2_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Color, "Color2", "color2");
-	color2_input->value = new ColorSocketValue(1.0f, 1.0f, 1.0f);
+	const auto clamp_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::BOOLEAN, "Clamp", "use_clamp");
+	clamp_input->value = std::make_shared<BoolSocketValue>(false);
+	const auto fac_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Fac", "fac");
+	fac_input->value = std::make_shared<FloatSocketValue>(0.5f, 0.0f, 1.0f);
+	const auto color1_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::COLOR, "Color1", "color1");
+	color1_input->value = std::make_shared<ColorSocketValue>(1.0f, 1.0f, 1.0f);
+	const auto color2_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::COLOR, "Color2", "color2");
+	color2_input->value = std::make_shared<ColorSocketValue>(1.0f, 1.0f, 1.0f);
 
 	sockets.push_back(type_input);
 	sockets.push_back(clamp_input);
@@ -66,14 +66,14 @@ CyclesShaderEditor::InvertNode::InvertNode(FloatPos position)
 
 	title = "Invert";
 
-	const std::shared_ptr<NodeSocket> color_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Color, "Color", "color");
+	const auto color_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::COLOR, "Color", "color");
 
 	sockets.push_back(color_output);
 
-	const std::shared_ptr<NodeSocket> fac_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Float, "Fac", "fac");
-	fac_input->value = new FloatSocketValue(1.0f, 0.0f, 1.0f);
-	const std::shared_ptr<NodeSocket> color_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Color, "Color", "color");
-	color_input->value = new ColorSocketValue(1.0f, 1.0f, 1.0f);
+	const auto fac_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Fac", "fac");
+	fac_input->value = std::make_shared<FloatSocketValue>(1.0f, 0.0f, 1.0f);
+	const auto color_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::COLOR, "Color", "color");
+	color_input->value = std::make_shared<ColorSocketValue>(1.0f, 1.0f, 1.0f);
 
 	sockets.push_back(fac_input);
 	sockets.push_back(color_input);
@@ -87,18 +87,18 @@ CyclesShaderEditor::LightFalloffNode::LightFalloffNode(FloatPos position)
 
 	title = "Light Falloff";
 
-	const std::shared_ptr<NodeSocket> quadratic_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Float, "Quadratic", "quadratic");
-	const std::shared_ptr<NodeSocket> linear_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Float, "Linear", "linear");
-	const std::shared_ptr<NodeSocket> constant_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Float, "Constant", "constant");
+	const auto quadratic_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Quadratic", "quadratic");
+	const auto linear_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Linear", "linear");
+	const auto constant_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Constant", "constant");
 
 	sockets.push_back(quadratic_output);
 	sockets.push_back(linear_output);
 	sockets.push_back(constant_output);
 
-	const std::shared_ptr<NodeSocket> strength_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Float, "Strength", "strength");
-	strength_input->value = new FloatSocketValue(100.0f, 0.0f, 10000.0f);
-	const std::shared_ptr<NodeSocket> smooth_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Float, "Smooth", "smooth");
-	smooth_input->value = new FloatSocketValue(0.0f, 0.0f, 1000.0f);
+	const auto strength_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Strength", "strength");
+	strength_input->value = std::make_shared<FloatSocketValue>(100.0f, 0.0f, 10000.0f);
+	const auto smooth_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Smooth", "smooth");
+	smooth_input->value = std::make_shared<FloatSocketValue>(0.0f, 0.0f, 1000.0f);
 
 	sockets.push_back(strength_input);
 	sockets.push_back(smooth_input);
@@ -112,20 +112,20 @@ CyclesShaderEditor::HSVNode::HSVNode(FloatPos position)
 
 	title = "HSV";
 
-	const std::shared_ptr<NodeSocket> color_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Color, "Color", "color");
+	const auto color_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::COLOR, "Color", "color");
 
 	sockets.push_back(color_output);
 
-	const std::shared_ptr<NodeSocket> hue_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Float, "Hue", "hue");
-	hue_input->value = new FloatSocketValue(0.5f, 0.0f, 1.0f);
-	const std::shared_ptr<NodeSocket> sat_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Float, "Saturation", "saturation");
-	sat_input->value = new FloatSocketValue(1.0f, 0.0f, 2.0f);
-	const std::shared_ptr<NodeSocket> val_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Float, "Value", "value");
-	val_input->value = new FloatSocketValue(1.0f, 0.0f, 2.0f);
-	const std::shared_ptr<NodeSocket> fac_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Float, "Fac", "fac");
-	fac_input->value = new FloatSocketValue(1.0f, 0.0f, 1.0f);
-	const std::shared_ptr<NodeSocket> color_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Color, "Color", "color");
-	color_input->value = new ColorSocketValue(1.0f, 1.0f, 1.0f);
+	const auto hue_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Hue", "hue");
+	hue_input->value = std::make_shared<FloatSocketValue>(0.5f, 0.0f, 1.0f);
+	const auto sat_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Saturation", "saturation");
+	sat_input->value = std::make_shared<FloatSocketValue>(1.0f, 0.0f, 2.0f);
+	const auto val_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Value", "value");
+	val_input->value = std::make_shared<FloatSocketValue>(1.0f, 0.0f, 2.0f);
+	const auto fac_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Fac", "fac");
+	fac_input->value = std::make_shared<FloatSocketValue>(1.0f, 0.0f, 1.0f);
+	const auto color_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::COLOR, "Color", "color");
+	color_input->value = std::make_shared<ColorSocketValue>(1.0f, 1.0f, 1.0f);
 
 	sockets.push_back(hue_input);
 	sockets.push_back(sat_input);
@@ -142,14 +142,14 @@ CyclesShaderEditor::GammaNode::GammaNode(FloatPos position)
 
 	title = "Gamma";
 
-	const std::shared_ptr<NodeSocket> color_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Color, "Color", "color");
+	const auto color_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::COLOR, "Color", "color");
 
 	sockets.push_back(color_output);
 
-	const std::shared_ptr<NodeSocket> color_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Color, "Color", "color");
-	color_input->value = new ColorSocketValue(1.0f, 1.0f, 1.0f);
-	const std::shared_ptr<NodeSocket> gamma_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Float, "Gamma", "gamma");
-	gamma_input->value = new FloatSocketValue(1.0f, 0.001f, 10.0f);
+	const auto color_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::COLOR, "Color", "color");
+	color_input->value = std::make_shared<ColorSocketValue>(1.0f, 1.0f, 1.0f);
+	const auto gamma_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Gamma", "gamma");
+	gamma_input->value = std::make_shared<FloatSocketValue>(1.0f, 0.001f, 10.0f);
 
 	sockets.push_back(color_input);
 	sockets.push_back(gamma_input);
@@ -163,16 +163,16 @@ CyclesShaderEditor::BrightnessContrastNode::BrightnessContrastNode(FloatPos posi
 
 	title = "Bright/Contrast";
 
-	const std::shared_ptr<NodeSocket> color_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Color, "Color", "color");
+	const auto color_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::COLOR, "Color", "color");
 
 	sockets.push_back(color_output);
 
-	const std::shared_ptr<NodeSocket> color_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Color, "Color", "color");
-	color_input->value = new ColorSocketValue(1.0f, 1.0f, 1.0f);
-	const std::shared_ptr<NodeSocket> bright_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Float, "Bright", "bright");
-	bright_input->value = new FloatSocketValue(0.0f, -100.0f, 100.0f);
-	const std::shared_ptr<NodeSocket> cont_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Float, "Contrast", "contrast");
-	cont_input->value = new FloatSocketValue(0.0f, -100.0f, 100.0f);
+	const auto color_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::COLOR, "Color", "color");
+	color_input->value = std::make_shared<ColorSocketValue>(1.0f, 1.0f, 1.0f);
+	const auto bright_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Bright", "bright");
+	bright_input->value = std::make_shared<FloatSocketValue>(0.0f, -100.0f, 100.0f);
+	const auto cont_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Contrast", "contrast");
+	cont_input->value = std::make_shared<FloatSocketValue>(0.0f, -100.0f, 100.0f);
 
 	sockets.push_back(color_input);
 	sockets.push_back(bright_input);
@@ -187,22 +187,22 @@ CyclesShaderEditor::RGBCurvesNode::RGBCurvesNode(FloatPos position)
 
 	title = "RGB Curves";
 
-	const std::shared_ptr<NodeSocket> color_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Color, "Color", "color");
+	const auto color_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::COLOR, "Color", "color");
 
 	sockets.push_back(color_output);
 
-	const std::shared_ptr<NodeSocket> rgb_curve_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Curve, "RGB Curve", "rgb_curve");
-	rgb_curve_input->value = new CurveSocketValue();
-	const std::shared_ptr<NodeSocket> r_curve_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Curve, "Red Curve", "r_curve");
-	r_curve_input->value = new CurveSocketValue();
-	const std::shared_ptr<NodeSocket> g_curve_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Curve, "Green Curve", "g_curve");
-	g_curve_input->value = new CurveSocketValue();
-	const std::shared_ptr<NodeSocket> b_curve_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Curve, "Blue Curve", "b_curve");
-	b_curve_input->value = new CurveSocketValue();
-	const std::shared_ptr<NodeSocket> fac_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Float, "Fac", "fac");
-	fac_input->value = new FloatSocketValue(1.0f, -1.0f, 1.0f);
-	const std::shared_ptr<NodeSocket> color_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Color, "Color", "color");
-	color_input->value = new ColorSocketValue(1.0f, 1.0f, 1.0f);
+	const auto rgb_curve_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::CURVE, "RGB Curve", "rgb_curve");
+	rgb_curve_input->value = std::make_shared<CurveSocketValue>();
+	const auto r_curve_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::CURVE, "Red Curve", "r_curve");
+	r_curve_input->value = std::make_shared<CurveSocketValue>();
+	const auto g_curve_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::CURVE, "Green Curve", "g_curve");
+	g_curve_input->value = std::make_shared<CurveSocketValue>();
+	const auto b_curve_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::CURVE, "Blue Curve", "b_curve");
+	b_curve_input->value = std::make_shared<CurveSocketValue>();
+	const auto fac_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Fac", "fac");
+	fac_input->value = std::make_shared<FloatSocketValue>(1.0f, -1.0f, 1.0f);
+	const auto color_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::COLOR, "Color", "color");
+	color_input->value = std::make_shared<ColorSocketValue>(1.0f, 1.0f, 1.0f);
 
 	sockets.push_back(rgb_curve_input);
 	sockets.push_back(r_curve_input);
@@ -222,15 +222,15 @@ void CyclesShaderEditor::RGBCurvesNode::update_output_node(OutputNode& output)
 	// This is a combination of the channel-specific curves and the RGB curve which applies to all channels
 	// Channel-specific curves are applied before the rgb curve
 
-	const std::shared_ptr<NodeSocket> rgb_curve_socket = get_socket_by_internal_name(SocketIOType::Input, "rgb_curve").lock();
-	const std::shared_ptr<NodeSocket> r_curve_socket = get_socket_by_internal_name(SocketIOType::Input, "r_curve").lock();
-	const std::shared_ptr<NodeSocket> g_curve_socket = get_socket_by_internal_name(SocketIOType::Input, "g_curve").lock();
-	const std::shared_ptr<NodeSocket> b_curve_socket = get_socket_by_internal_name(SocketIOType::Input, "b_curve").lock();
+	const auto rgb_curve_socket = get_socket_by_internal_name(SocketIOType::INPUT, "rgb_curve").lock();
+	const auto r_curve_socket = get_socket_by_internal_name(SocketIOType::INPUT, "r_curve").lock();
+	const auto g_curve_socket = get_socket_by_internal_name(SocketIOType::INPUT, "g_curve").lock();
+	const auto b_curve_socket = get_socket_by_internal_name(SocketIOType::INPUT, "b_curve").lock();
 
-	CurveSocketValue* const rgb_curve_val = dynamic_cast<CurveSocketValue*>(rgb_curve_socket->value);
-	CurveSocketValue* const r_curve_val = dynamic_cast<CurveSocketValue*>(r_curve_socket->value);
-	CurveSocketValue* const g_curve_val = dynamic_cast<CurveSocketValue*>(g_curve_socket->value);
-	CurveSocketValue* const b_curve_val = dynamic_cast<CurveSocketValue*>(b_curve_socket->value);
+	const auto rgb_curve_val = std::dynamic_pointer_cast<CurveSocketValue>(rgb_curve_socket->value);
+	const auto r_curve_val = std::dynamic_pointer_cast<CurveSocketValue>(r_curve_socket->value);
+	const auto g_curve_val = std::dynamic_pointer_cast<CurveSocketValue>(g_curve_socket->value);
+	const auto b_curve_val = std::dynamic_pointer_cast<CurveSocketValue>(b_curve_socket->value);
 
 	CurveEvaluator rgb_curve(rgb_curve_val);
 	CurveEvaluator r_curve(r_curve_val);

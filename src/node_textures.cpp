@@ -13,44 +13,44 @@ CyclesShaderEditor::BrickTextureNode::BrickTextureNode(FloatPos position)
 
 	title = "Brick Texture";
 
-	const std::shared_ptr<NodeSocket> color_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Color, "Color", "color");
-	const std::shared_ptr<NodeSocket> fac_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Float, "Fac", "fac");
+	const auto color_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::COLOR, "Color", "color");
+	const auto fac_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Fac", "fac");
 
 	sockets.push_back(color_output);
 	sockets.push_back(fac_output);
 
-	const std::shared_ptr<NodeSocket> offset_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Float, "Offset", "offset");
-	offset_input->value = new FloatSocketValue(0.5f, 0.0f, 1.0f);
+	const auto offset_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Offset", "offset");
+	offset_input->value = std::make_shared<FloatSocketValue>(0.5f, 0.0f, 1.0f);
 	offset_input->draw_socket = false;
-	const std::shared_ptr<NodeSocket> offset_freq_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Int, "Offset Freq", "offset_frequency");
-	offset_freq_input->value = new IntSocketValue(2, 1, 99);
+	const auto offset_freq_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::INT, "Offset Freq", "offset_frequency");
+	offset_freq_input->value = std::make_shared<IntSocketValue>(2, 1, 99);
 	offset_freq_input->draw_socket = false;
-	const std::shared_ptr<NodeSocket> squash_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Float, "Squash", "squash");
-	squash_input->value = new FloatSocketValue(1.0f, 0.0f, 99.0f);
+	const auto squash_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Squash", "squash");
+	squash_input->value = std::make_shared<FloatSocketValue>(1.0f, 0.0f, 99.0f);
 	squash_input->draw_socket = false;
-	const std::shared_ptr<NodeSocket> squash_freq_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Int, "Squash Freq", "squash_frequency");
-	squash_freq_input->value = new IntSocketValue(2, 1, 99);
+	const auto squash_freq_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::INT, "Squash Freq", "squash_frequency");
+	squash_freq_input->value = std::make_shared<IntSocketValue>(2, 1, 99);
 	squash_freq_input->draw_socket = false;
 
-	const std::shared_ptr<NodeSocket> vector_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Vector, "Vector", "vector");
-	const std::shared_ptr<NodeSocket> color1_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Color, "Color1", "color1");
-	color1_input->value = new ColorSocketValue(1.0f, 1.0f, 1.0f);
-	const std::shared_ptr<NodeSocket> color2_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Color, "Color2", "color2");
-	color2_input->value = new ColorSocketValue(0.5f, 0.5f, 0.5f);
-	const std::shared_ptr<NodeSocket> mortar_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Color, "Mortar", "mortar");
-	mortar_input->value = new ColorSocketValue(0.0f, 0.0f, 0.0f);
-	const std::shared_ptr<NodeSocket> scale_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Float, "Scale", "scale");
-	scale_input->value = new FloatSocketValue(5.0f, -1000.0f, 1000.0f);
-	const std::shared_ptr<NodeSocket> mortar_size_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Float, "Mortar Size", "mortar_size");
-	mortar_size_input->value = new FloatSocketValue(0.02f, 0.0f, 0.25f);
-	const std::shared_ptr<NodeSocket> mortar_smooth_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Float, "Mortar Smooth", "mortar_smooth");
-	mortar_smooth_input->value = new FloatSocketValue(0.1f, 0.0f, 1.0f);
-	const std::shared_ptr<NodeSocket> bias_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Float, "Bias", "bias");
-	bias_input->value = new FloatSocketValue(0.0f, -1.0f, 1.0f);
-	const std::shared_ptr<NodeSocket> brick_width_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Float, "Brick Width", "brick_width");
-	brick_width_input->value = new FloatSocketValue(0.5f, 0.01f, 100.0f);
-	const std::shared_ptr<NodeSocket> row_height_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Float, "Row Height", "row_height");
-	row_height_input->value = new FloatSocketValue(0.25f, 0.01f, 100.0f);
+	const auto vector_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::VECTOR, "Vector", "vector");
+	const auto color1_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::COLOR, "Color1", "color1");
+	color1_input->value = std::make_shared<ColorSocketValue>(1.0f, 1.0f, 1.0f);
+	const auto color2_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::COLOR, "Color2", "color2");
+	color2_input->value = std::make_shared<ColorSocketValue>(0.5f, 0.5f, 0.5f);
+	const auto mortar_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::COLOR, "Mortar", "mortar");
+	mortar_input->value = std::make_shared<ColorSocketValue>(0.0f, 0.0f, 0.0f);
+	const auto scale_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Scale", "scale");
+	scale_input->value = std::make_shared<FloatSocketValue>(5.0f, -1000.0f, 1000.0f);
+	const auto mortar_size_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Mortar Size", "mortar_size");
+	mortar_size_input->value = std::make_shared<FloatSocketValue>(0.02f, 0.0f, 0.25f);
+	const auto mortar_smooth_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Mortar Smooth", "mortar_smooth");
+	mortar_smooth_input->value = std::make_shared<FloatSocketValue>(0.1f, 0.0f, 1.0f);
+	const auto bias_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Bias", "bias");
+	bias_input->value = std::make_shared<FloatSocketValue>(0.0f, -1.0f, 1.0f);
+	const auto brick_width_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Brick Width", "brick_width");
+	brick_width_input->value = std::make_shared<FloatSocketValue>(0.5f, 0.01f, 100.0f);
+	const auto row_height_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Row Height", "row_height");
+	row_height_input->value = std::make_shared<FloatSocketValue>(0.25f, 0.01f, 100.0f);
 
 	sockets.push_back(offset_input);
 	sockets.push_back(offset_freq_input);
@@ -77,19 +77,19 @@ CyclesShaderEditor::NoiseTextureNode::NoiseTextureNode(FloatPos position)
 
 	title = "Noise Texture";
 
-	const std::shared_ptr<NodeSocket> color_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Color, "Color", "color");
-	const std::shared_ptr<NodeSocket> fac_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Float, "Fac", "fac");
+	const auto color_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::COLOR, "Color", "color");
+	const auto fac_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Fac", "fac");
 
 	sockets.push_back(color_output);
 	sockets.push_back(fac_output);
 
-	const std::shared_ptr<NodeSocket> vector_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Vector, "Vector", "vector");
-	const std::shared_ptr<NodeSocket> scale_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Float, "Scale", "scale");
-	scale_input->value = new FloatSocketValue(0.5f, -1000.0f, 1000.0f);
-	const std::shared_ptr<NodeSocket> detail_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Float, "Detail", "detail");
-	detail_input->value = new FloatSocketValue(2.0f, 0.0f, 16.0f);
-	const std::shared_ptr<NodeSocket> distortion_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Float, "Distortion", "distortion");
-	distortion_input->value = new FloatSocketValue(0.0f, -1000.0f, 1000.0f);
+	const auto vector_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::VECTOR, "Vector", "vector");
+	const auto scale_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Scale", "scale");
+	scale_input->value = std::make_shared<FloatSocketValue>(0.5f, -1000.0f, 1000.0f);
+	const auto detail_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Detail", "detail");
+	detail_input->value = std::make_shared<FloatSocketValue>(2.0f, 0.0f, 16.0f);
+	const auto distortion_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Distortion", "distortion");
+	distortion_input->value = std::make_shared<FloatSocketValue>(0.0f, -1000.0f, 1000.0f);
 
 	sockets.push_back(vector_input);
 	sockets.push_back(scale_input);
@@ -105,33 +105,33 @@ CyclesShaderEditor::WaveTextureNode::WaveTextureNode(FloatPos position)
 
 	title = "Wave Texture";
 
-	const std::shared_ptr<NodeSocket> color_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Color, "Color", "color");
-	const std::shared_ptr<NodeSocket> fac_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Float, "Fac", "fac");
+	const auto color_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::COLOR, "Color", "color");
+	const auto fac_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Fac", "fac");
 
 	sockets.push_back(color_output);
 	sockets.push_back(fac_output);
 
-	const std::shared_ptr<NodeSocket> type_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::StringEnum, "Type", "type");
-	StringEnumSocketValue* type_value = new StringEnumSocketValue();
+	const auto type_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::STRING_ENUM, "Type", "type");
+	const auto type_value = std::make_shared<StringEnumSocketValue>();
 	type_value->enum_values.push_back(StringEnumPair("Bands", "bands"));
 	type_value->enum_values.push_back(StringEnumPair("Rings", "rings"));
 	type_value->set_from_internal_name("bands");
 	type_input->value = type_value;
-	const std::shared_ptr<NodeSocket> profile_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::StringEnum, "Profile", "profile");
-	StringEnumSocketValue* profile_value = new StringEnumSocketValue();
+	const auto profile_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::STRING_ENUM, "Profile", "profile");
+	const auto profile_value = std::make_shared<StringEnumSocketValue>();
 	profile_value->enum_values.push_back(StringEnumPair("Saw", "saw"));
 	profile_value->enum_values.push_back(StringEnumPair("Sine", "sine"));
 	profile_value->set_from_internal_name("sine");
 	profile_input->value = profile_value;
-	const std::shared_ptr<NodeSocket> vector_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Vector, "Vector", "vector");
-	const std::shared_ptr<NodeSocket> scale_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Float, "Scale", "scale");
-	scale_input->value = new FloatSocketValue(0.5f, -1000.0f, 1000.0f);
-	const std::shared_ptr<NodeSocket> distortion_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Float, "Distortion", "distortion");
-	distortion_input->value = new FloatSocketValue(0.0f, -1000.0f, 1000.0f);
-	const std::shared_ptr<NodeSocket> detail_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Float, "Detail", "detail");
-	detail_input->value = new FloatSocketValue(2.0f, 0.0f, 16.0f);
-	const std::shared_ptr<NodeSocket> detail_scale_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Float, "Detail Scale", "detail_scale");
-	detail_scale_input->value = new FloatSocketValue(1.0f, -1000.0f, 1000.0f);
+	const auto vector_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::VECTOR, "Vector", "vector");
+	const auto scale_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Scale", "scale");
+	scale_input->value = std::make_shared<FloatSocketValue>(0.5f, -1000.0f, 1000.0f);
+	const auto distortion_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Distortion", "distortion");
+	distortion_input->value = std::make_shared<FloatSocketValue>(0.0f, -1000.0f, 1000.0f);
+	const auto detail_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Detail", "detail");
+	detail_input->value = std::make_shared<FloatSocketValue>(2.0f, 0.0f, 16.0f);
+	const auto detail_scale_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Detail Scale", "detail_scale");
+	detail_scale_input->value = std::make_shared<FloatSocketValue>(1.0f, -1000.0f, 1000.0f);
 
 	sockets.push_back(type_input);
 	sockets.push_back(profile_input);
@@ -150,21 +150,21 @@ CyclesShaderEditor::VoronoiTextureNode::VoronoiTextureNode(FloatPos position)
 
 	title = "Voronoi Texture";
 
-	const std::shared_ptr<NodeSocket> color_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Color, "Color", "color");
-	const std::shared_ptr<NodeSocket> fac_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Float, "Fac", "fac");
+	const auto color_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::COLOR, "Color", "color");
+	const auto fac_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Fac", "fac");
 
 	sockets.push_back(color_output);
 	sockets.push_back(fac_output);
 
-	const std::shared_ptr<NodeSocket> coloring_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::StringEnum, "Coloring", "coloring");
-	StringEnumSocketValue* coloring_value = new StringEnumSocketValue();
+	const auto coloring_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::STRING_ENUM, "Coloring", "coloring");
+	const auto coloring_value = std::make_shared<StringEnumSocketValue>();
 	coloring_value->enum_values.push_back(StringEnumPair("Cells", "cells"));
 	coloring_value->enum_values.push_back(StringEnumPair("Intensity", "intensity"));
 	coloring_value->set_from_internal_name("intensity");
 	coloring_input->value = coloring_value;
-	const std::shared_ptr<NodeSocket> vector_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Vector, "Vector", "vector");
-	const std::shared_ptr<NodeSocket> scale_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Float, "Scale", "scale");
-	scale_input->value = new FloatSocketValue(0.5f, -1000.0f, 1000.0f);
+	const auto vector_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::VECTOR, "Vector", "vector");
+	const auto scale_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Scale", "scale");
+	scale_input->value = std::make_shared<FloatSocketValue>(0.5f, -1000.0f, 1000.0f);
 
 	sockets.push_back(coloring_input);
 	sockets.push_back(vector_input);
@@ -179,14 +179,14 @@ CyclesShaderEditor::MusgraveTextureNode::MusgraveTextureNode(FloatPos position)
 
 	title = "Musgrave Texture";
 
-	const std::shared_ptr<NodeSocket> color_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Color, "Color", "color");
-	const std::shared_ptr<NodeSocket> fac_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Float, "Fac", "fac");
+	const auto color_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::COLOR, "Color", "color");
+	const auto fac_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Fac", "fac");
 
 	sockets.push_back(color_output);
 	sockets.push_back(fac_output);
 
-	const std::shared_ptr<NodeSocket> type_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::StringEnum, "Type", "type");
-	StringEnumSocketValue* type_value = new StringEnumSocketValue();
+	const auto type_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::STRING_ENUM, "Type", "type");
+	const auto type_value = std::make_shared<StringEnumSocketValue>();
 	type_value->enum_values.push_back(StringEnumPair("fBM", "fBM"));
 	type_value->enum_values.push_back(StringEnumPair("Hetero Terrain", "hetero_terrain"));
 	type_value->enum_values.push_back(StringEnumPair("Hybrid Multifractal", "hybrid_multifractal"));
@@ -194,19 +194,19 @@ CyclesShaderEditor::MusgraveTextureNode::MusgraveTextureNode(FloatPos position)
 	type_value->enum_values.push_back(StringEnumPair("Ridged Multifractal", "ridged_multifractal"));
 	type_value->set_from_internal_name("fBM");
 	type_input->value = type_value;
-	const std::shared_ptr<NodeSocket> vector_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Vector, "Vector", "vector");
-	const std::shared_ptr<NodeSocket> scale_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Float, "Scale", "scale");
-	scale_input->value = new FloatSocketValue(0.5f, -1000.0f, 1000.0f);
-	const std::shared_ptr<NodeSocket> detail_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Float, "Detail", "detail");
-	detail_input->value = new FloatSocketValue(2.0f, 0.0f, 16.0f);
-	const std::shared_ptr<NodeSocket> dimension_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Float, "Dimension", "dimension");
-	dimension_input->value = new FloatSocketValue(2.0f, 0.0f, 1000.0f);
-	const std::shared_ptr<NodeSocket> lacunarity_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Float, "Lacunarity", "lacunarity");
-	lacunarity_input->value = new FloatSocketValue(1.0f, 0.0f, 1000.0f);
-	const std::shared_ptr<NodeSocket> offset_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Float, "Offset", "offset");
-	offset_input->value = new FloatSocketValue(0.0f, -1000.0f, 1000.0f);
-	const std::shared_ptr<NodeSocket> gain_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Float, "Gain", "gain");
-	gain_input->value = new FloatSocketValue(1.0f, 0.0f, 1000.0f);
+	const auto vector_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::VECTOR, "Vector", "vector");
+	const auto scale_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Scale", "scale");
+	scale_input->value = std::make_shared<FloatSocketValue>(0.5f, -1000.0f, 1000.0f);
+	const auto detail_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Detail", "detail");
+	detail_input->value = std::make_shared<FloatSocketValue>(2.0f, 0.0f, 16.0f);
+	const auto dimension_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Dimension", "dimension");
+	dimension_input->value = std::make_shared<FloatSocketValue>(2.0f, 0.0f, 1000.0f);
+	const auto lacunarity_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Lacunarity", "lacunarity");
+	lacunarity_input->value = std::make_shared<FloatSocketValue>(1.0f, 0.0f, 1000.0f);
+	const auto offset_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Offset", "offset");
+	offset_input->value = std::make_shared<FloatSocketValue>(0.0f, -1000.0f, 1000.0f);
+	const auto gain_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Gain", "gain");
+	gain_input->value = std::make_shared<FloatSocketValue>(1.0f, 0.0f, 1000.0f);
 
 	sockets.push_back(type_input);
 	sockets.push_back(vector_input);
@@ -226,14 +226,14 @@ CyclesShaderEditor::GradientTextureNode::GradientTextureNode(FloatPos position)
 
 	title = "Gradient Texture";
 
-	const std::shared_ptr<NodeSocket> color_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Color, "Color", "color");
-	const std::shared_ptr<NodeSocket> fac_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Float, "Fac", "fac");
+	const auto color_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::COLOR, "Color", "color");
+	const auto fac_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Fac", "fac");
 
 	sockets.push_back(color_output);
 	sockets.push_back(fac_output);
 
-	const std::shared_ptr<NodeSocket> type_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::StringEnum, "Type", "type");
-	StringEnumSocketValue* type_value = new StringEnumSocketValue();
+	const auto type_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::STRING_ENUM, "Type", "type");
+	const auto type_value = std::make_shared<StringEnumSocketValue>();
 	type_value->enum_values.push_back(StringEnumPair("Linear", "linear"));
 	type_value->enum_values.push_back(StringEnumPair("Quadratic", "quadratic"));
 	type_value->enum_values.push_back(StringEnumPair("Easing", "easing"));
@@ -243,7 +243,7 @@ CyclesShaderEditor::GradientTextureNode::GradientTextureNode(FloatPos position)
 	type_value->enum_values.push_back(StringEnumPair("Spherical", "spherical"));
 	type_value->set_from_internal_name("linear");
 	type_input->value = type_value;
-	const std::shared_ptr<NodeSocket> vector_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Vector, "Vector", "vector");
+	const auto vector_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::VECTOR, "Vector", "vector");
 
 	sockets.push_back(type_input);
 	sockets.push_back(vector_input);
@@ -257,19 +257,19 @@ CyclesShaderEditor::MagicTextureNode::MagicTextureNode(FloatPos position)
 
 	title = "Magic Texture";
 
-	const std::shared_ptr<NodeSocket> color_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Color, "Color", "color");
-	const std::shared_ptr<NodeSocket> fac_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Float, "Fac", "fac");
+	const auto color_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::COLOR, "Color", "color");
+	const auto fac_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Fac", "fac");
 
 	sockets.push_back(color_output);
 	sockets.push_back(fac_output);
 
-	const std::shared_ptr<NodeSocket> depth_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Int, "Depth", "depth");
-	depth_input->value = new IntSocketValue(2, 0, 10);
-	const std::shared_ptr<NodeSocket> vector_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Vector, "Vector", "vector");
-	const std::shared_ptr<NodeSocket> scale_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Float, "Scale", "scale");
-	scale_input->value = new FloatSocketValue(0.5f, -1000.0f, 1000.0f);
-	const std::shared_ptr<NodeSocket> distortion_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Float, "Distortion", "distortion");
-	distortion_input->value = new FloatSocketValue(1.0f, -1000.0f, 1000.0f);
+	const auto depth_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::INT, "Depth", "depth");
+	depth_input->value = std::make_shared<IntSocketValue>(2, 0, 10);
+	const auto vector_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::VECTOR, "Vector", "vector");
+	const auto scale_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Scale", "scale");
+	scale_input->value = std::make_shared<FloatSocketValue>(0.5f, -1000.0f, 1000.0f);
+	const auto distortion_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Distortion", "distortion");
+	distortion_input->value = std::make_shared<FloatSocketValue>(1.0f, -1000.0f, 1000.0f);
 
 	sockets.push_back(depth_input);
 	sockets.push_back(vector_input);
@@ -285,19 +285,19 @@ CyclesShaderEditor::CheckerTextureNode::CheckerTextureNode(FloatPos position)
 
 	title = "Checker Texture";
 
-	const std::shared_ptr<NodeSocket> color_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Color, "Color", "color");
-	const std::shared_ptr<NodeSocket> fac_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Float, "Fac", "fac");
+	const auto color_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::COLOR, "Color", "color");
+	const auto fac_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Fac", "fac");
 
 	sockets.push_back(color_output);
 	sockets.push_back(fac_output);
 
-	const std::shared_ptr<NodeSocket> vector_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Vector, "Vector", "vector");
-	const std::shared_ptr<NodeSocket> color1_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Color, "Color1", "color1");
-	color1_input->value = new ColorSocketValue(1.0f, 1.0f, 1.0f);
-	const std::shared_ptr<NodeSocket> color2_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Color, "Color2", "color2");
-	color2_input->value = new ColorSocketValue(0.0f, 0.0f, 0.0f);
-	const std::shared_ptr<NodeSocket> scale_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Float, "Scale", "scale");
-	scale_input->value = new FloatSocketValue(0.5f, -1000.0f, 1000.0f);
+	const auto vector_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::VECTOR, "Vector", "vector");
+	const auto color1_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::COLOR, "Color1", "color1");
+	color1_input->value = std::make_shared<ColorSocketValue>(1.0f, 1.0f, 1.0f);
+	const auto color2_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::COLOR, "Color2", "color2");
+	color2_input->value = std::make_shared<ColorSocketValue>(0.0f, 0.0f, 0.0f);
+	const auto scale_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Scale", "scale");
+	scale_input->value = std::make_shared<FloatSocketValue>(0.5f, -1000.0f, 1000.0f);
 
 	sockets.push_back(vector_input);
 	sockets.push_back(color1_input);

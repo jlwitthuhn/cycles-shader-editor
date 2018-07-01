@@ -19,7 +19,20 @@ namespace CyclesShaderEditor {
 	};
 
 	enum class SocketIOType {
-		Input,
-		Output,
+		INPUT,
+		OUTPUT,
+	};
+
+	enum class SocketType {
+		FLOAT,
+		INT,
+		COLOR,
+		VECTOR,
+		NORMAL,
+		CLOSURE,
+		STRING,
+		STRING_ENUM,
+		BOOLEAN,
+		CURVE,
 	};
 }

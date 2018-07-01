@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <sstream>
 #include <string>
 
@@ -16,9 +17,9 @@ namespace CyclesShaderEditor {
 	public:
 		BaseInputBox(float width, float height);
 
-		void draw(NVGcontext* draw_context, FloatPos parent_mouse_pos);
+		void draw(NVGcontext* draw_context, bool highlight);
 		void set_position(FloatPos parent_position);
-		bool is_mouse_over();
+		bool is_under_point(FloatPos parent_local_pos);
 
 		void handle_character(unsigned int codepoint);
 		void backspace();
@@ -38,11 +39,8 @@ namespace CyclesShaderEditor {
 		virtual std::string get_value_as_string() = 0;
 		virtual void set_value_from_input_stream() = 0;
 
-		// Position of this UI element, relative to parent subwindow
+		// Position of this UI element, relative to parent component
 		FloatPos position;
-
-		// Position of mouse, relative to parent
-		FloatPos parent_mouse_pos;
 
 		bool selected = false;
 
@@ -53,20 +51,20 @@ namespace CyclesShaderEditor {
 	public:
 		IntInputBox(float width, float height);
 
-		void set_int_value(IntSocketValue* socket_value);
+		void set_int_value(std::weak_ptr<IntSocketValue> socket_value);
 
 	private:
 		virtual std::string get_value_as_string();
 		virtual void set_value_from_input_stream();
 
-		IntSocketValue* socket_value = nullptr;
+		std::weak_ptr<IntSocketValue> socket_value;
 	};
 
 	class FloatInputBox : public BaseInputBox {
 	public:
 		FloatInputBox(float width, float height);
 
-		void set_float_value(FloatSocketValue* socket_value);
+		void set_float_value(std::weak_ptr<FloatSocketValue> socket_value);
 		void set_float_value(float value);
 		float get_float_value();
 
@@ -74,7 +72,7 @@ namespace CyclesShaderEditor {
 		virtual std::string get_value_as_string();
 		virtual void set_value_from_input_stream();
 
-		FloatSocketValue* socket_value = nullptr;
+		std::weak_ptr<FloatSocketValue> socket_value;
 	};
 
 }

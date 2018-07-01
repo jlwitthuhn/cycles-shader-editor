@@ -88,6 +88,11 @@ CyclesShaderEditor::CurveEvaluator::CurveEvaluator(CurveSocketValue* const curve
 	}
 }
 
+CyclesShaderEditor::CurveEvaluator::CurveEvaluator(const std::shared_ptr<CurveSocketValue> curve_socket_val, const int segments) : CurveEvaluator(curve_socket_val.get(), segments)
+{
+
+}
+
 CyclesShaderEditor::CurveEvaluator::CurveEvaluator(const FloatPos a, const FloatPos b, const FloatPos c, const FloatPos d, const int segments)
 {
 	const CubicHermiteSplineInterpolator x_solver(a.get_x(), b.get_x(), c.get_x(), d.get_x());

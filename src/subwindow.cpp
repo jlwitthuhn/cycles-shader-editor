@@ -75,6 +75,7 @@ void CyclesShaderEditor::NodeEditorSubwindow::draw(NVGcontext* draw_context)
 	nvgFillColor(draw_context, nvgRGBA(0, 0, 0, 255));
 	nvgText(draw_context, subwindow_width / 2, UI_SUBWIN_HEADER_HEIGHT / 2, title.c_str(), nullptr);
 
+	// Set up context and call draw_content
 	nvgSave(draw_context);
 	nvgTranslate(draw_context, 0.0f, UI_SUBWIN_HEADER_HEIGHT + 3.0f);
 	nvgScissor(draw_context, 0.0f, 0.0f, get_width(), content_height);
@@ -124,12 +125,17 @@ void CyclesShaderEditor::NodeEditorSubwindow::set_mouse_position(FloatPos local_
 	else {
 		mouse_local_pos = local_position;
 	}
-	mouse_panel_pos = mouse_local_pos - FloatPos(0.0f, UI_SUBWIN_HEADER_HEIGHT + 3.0f);
+	mouse_content_pos = mouse_local_pos - FloatPos(0.0f, UI_SUBWIN_HEADER_HEIGHT + 3.0f);
 }
 
 bool CyclesShaderEditor::NodeEditorSubwindow::should_capture_input() const
 {
 	return false;
+}
+
+void CyclesShaderEditor::NodeEditorSubwindow::deselect_input_box()
+{
+
 }
 
 void CyclesShaderEditor::NodeEditorSubwindow::handle_mouse_button(int /*button*/, int /*action*/, int /*mods*/)

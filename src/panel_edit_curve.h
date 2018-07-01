@@ -1,56 +1,50 @@
 #pragma once
 
 #include <cstddef>
+#include <memory>
 
-#include "click_target.h"
 #include "common_enums.h"
-
 #include "float_pos.h"
-
-struct NVGcontext;
+#include "panel_edit.h"
+#include "util_area.h"
 
 namespace CyclesShaderEditor {
-	class CurveSocketValue;
+	class SocketValue;
 
-	class EditCurvePanel {
+	class EditCurvePanel : public ParamEditorPanel {
 	public:
 		EditCurvePanel(float width);
 
-		bool is_active();
-		void set_attached_curve_value(CurveSocketValue* curve_value);
+		virtual bool is_active() const override;
 
-		void reset_panel_state();
+		virtual void pre_draw() override;
+		virtual float draw(NVGcontext* draw_context) override;
+		virtual void handle_mouse_button(int button, int action, int mods) override;
 
-		void pre_draw();
-		float draw(NVGcontext* draw_context);
-		void set_mouse_local_position(FloatPos local_pos);
-		bool is_mouse_over();
+		virtual void set_attached_value(std::weak_ptr<SocketValue> socket_value) override;
 
-		void handle_mouse_button(int button, int action, int mods);
-		void mouse_button_release();
+		virtual bool should_push_undo_state() override;
 
-		bool should_push_undo_state();
+	protected:
+		virtual void reset() override;
 
 	private:
-		CurveSocketValue* attached_curve = nullptr;
+		void move_selected_point(FloatPos new_pos);
+
+		std::weak_ptr<CurveSocketValue> attached_curve;
 		EditCurveMode edit_mode = EditCurveMode::MOVE;
 
-		FloatPos mouse_local_pos;
-
-		float panel_width = 1.0f;
-		float panel_height = 1.0f;
-
-		GenericClickTarget target_view;
-		CurveEditModeClickTarget target_edit_mode_move;
-		CurveEditModeClickTarget target_edit_mode_create;
-		CurveEditModeClickTarget target_edit_mode_delete;
-		CurveInterpClickTarget target_interp_linear;
-		CurveInterpClickTarget target_interp_hermite;
+		Area target_view;
+		CurveEditModeArea target_edit_mode_move;
+		CurveEditModeArea target_edit_mode_create;
+		CurveEditModeArea target_edit_mode_delete;
+		CurveInterpModeArea target_interp_linear;
+		CurveInterpModeArea target_interp_hermite;
 
 		std::size_t selected_point_index = 0;
 		bool selected_point_valid = false;
 
-		bool move_selected_point = false;
+		bool moving_selected_point = false;
 		bool mouse_has_moved = false;
 		FloatPos move_selected_point_begin_mouse_pos;
 

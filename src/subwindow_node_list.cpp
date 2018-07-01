@@ -258,7 +258,7 @@ void CyclesShaderEditor::NodeListSubwindow::draw_content(NVGcontext* const draw_
 
 	for (const auto& category_button : category_buttons) {
 		const FloatPos button_position = placer.next_button_position();
-		category_button->update_mouse_position(mouse_panel_pos - button_position);
+		category_button->update_mouse_position(mouse_content_pos - button_position);
 		category_button->draw(button_position, draw_context);
 	}
 
@@ -267,7 +267,7 @@ void CyclesShaderEditor::NodeListSubwindow::draw_content(NVGcontext* const draw_
 	// Buttons
 	for (const auto& node_button : get_active_creation_buttons()) {
 		const FloatPos button_location(0.0f, height_drawn);
-		height_drawn += node_button->draw(draw_context, button_location, mouse_panel_pos, subwindow_width);
+		height_drawn += node_button->draw(draw_context, button_location, mouse_content_pos, subwindow_width);
 	}
 
 	content_height = height_drawn + UI_SUBWIN_NODE_LIST_BUTTON_VPADDING;

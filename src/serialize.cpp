@@ -163,7 +163,7 @@ static std::string serialize_curve(const CyclesShaderEditor::OutputCurve& curve)
 	return curve_stream.str();
 }
 
-static void deserialize_curve(std::string serialized_curve, CyclesShaderEditor::CurveSocketValue* curve_value)
+static void deserialize_curve(std::string serialized_curve, std::shared_ptr<CyclesShaderEditor::CurveSocketValue> curve_value)
 {
 	curve_value->reset_value();
 	constexpr char CURVE_SEPARATOR = ',';
@@ -603,17 +603,17 @@ static CyclesShaderEditor::EditorNode* deserialize_node(std::list<std::string>& 
 	}
 
 	for (std::pair<std::string, std::string> this_param : params) {
-		std::weak_ptr<NodeSocket> this_socket = result->get_socket_by_internal_name(SocketIOType::Input, this_param.first);
+		std::weak_ptr<NodeSocket> this_socket = result->get_socket_by_internal_name(SocketIOType::INPUT, this_param.first);
 
 		if (auto this_socket_ptr = this_socket.lock()) {
 			switch (this_socket_ptr->socket_type) {
 
-			case SocketType::Float:
+			case SocketType::FLOAT:
 				this_socket_ptr->set_float_val(std::stof(this_param.second));
 				break;
 
-			case SocketType::Color:
-			case SocketType::Vector:
+			case SocketType::COLOR:
+			case SocketType::VECTOR:
 			{
 				std::list<std::string> floats = tokenize_string(this_param.second, ',');
 				if (floats.size() != 3) {
@@ -627,32 +627,40 @@ static CyclesShaderEditor::EditorNode* deserialize_node(std::list<std::string>& 
 				break;
 			}
 
-			case SocketType::StringEnum:
-				if (this_socket_ptr->value != nullptr) {
-					dynamic_cast<StringEnumSocketValue*>(this_socket_ptr->value)->set_from_internal_name(this_param.second);
+			case SocketType::STRING_ENUM:
+			{
+				const auto string_val = std::dynamic_pointer_cast<StringEnumSocketValue>(this_socket_ptr->value);
+				if (string_val) {
+					string_val->set_from_internal_name(this_param.second);
 				}
 				break;
+			}
 
-			case SocketType::Int:
-				if (this_socket_ptr->value != nullptr) {
-					IntSocketValue* int_val = dynamic_cast<IntSocketValue*>(this_socket_ptr->value);
+			case SocketType::INT:
+			{
+				const auto int_val = std::dynamic_pointer_cast<IntSocketValue>(this_socket_ptr->value);
+				if (int_val) {
 					int_val->set_value(std::stoi(this_param.second));
 				}
 				break;
+			}
 
-			case SocketType::Boolean:
-				if (this_socket_ptr->value != nullptr) {
-					BoolSocketValue* bool_val = dynamic_cast<BoolSocketValue*>(this_socket_ptr->value);
+			case SocketType::BOOLEAN:
+			{
+				const auto bool_val = std::dynamic_pointer_cast<BoolSocketValue>(this_socket_ptr->value);
+				if (bool_val) {
 					bool_val->value = std::stoi(this_param.second) != 0;
 				}
 				break;
+			}
 
-			case SocketType::Curve:
-				if (this_socket_ptr->value != nullptr) {
-					CurveSocketValue* curve_val = dynamic_cast<CurveSocketValue*>(this_socket_ptr->value);
+			case SocketType::CURVE:
+			{
+				const auto curve_val = std::dynamic_pointer_cast<CurveSocketValue>(this_socket_ptr->value);
+				if (curve_val) {
 					deserialize_curve(this_param.second, curve_val);
 				}
-
+			}
 			default:
 				break;
 			}
@@ -738,8 +746,8 @@ void CyclesShaderEditor::deserialize_graph(const std::string& graph, std::list<E
 			continue;
 		}
 
-		const std::weak_ptr<NodeSocket> source = nodes_by_name[source_node]->get_socket_by_display_name(SocketIOType::Output, source_socket);
-		const std::weak_ptr<NodeSocket> dest = nodes_by_name[dest_node]->get_socket_by_display_name(SocketIOType::Input, dest_socket);
+		const std::weak_ptr<NodeSocket> source = nodes_by_name[source_node]->get_socket_by_display_name(SocketIOType::OUTPUT, source_socket);
+		const std::weak_ptr<NodeSocket> dest = nodes_by_name[dest_node]->get_socket_by_display_name(SocketIOType::INPUT, dest_socket);
 
 		if (source.expired() || dest.expired()) {
 			continue;

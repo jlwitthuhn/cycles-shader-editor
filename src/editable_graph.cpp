@@ -22,17 +22,23 @@ void CyclesShaderEditor::EditableGraph::add_node(std::unique_ptr<EditorNode>& no
 
 void CyclesShaderEditor::EditableGraph::add_connection(const std::weak_ptr<NodeSocket> socket_begin, const std::weak_ptr<NodeSocket> socket_end)
 {
+	EditorNode* source_node = nullptr;
 	if (const auto socket_begin_ptr = socket_begin.lock()) {
-		if (socket_begin_ptr->io_type != SocketIOType::Output) {
+		if (socket_begin_ptr->io_type != SocketIOType::OUTPUT) {
 			return;
 		}
+		source_node = socket_begin_ptr->parent;
 	}
 	else {
 		// pointer is invalid
 		return;
 	}
 	if (const auto socket_end_ptr = socket_end.lock()) {
-		if (socket_end_ptr->io_type != SocketIOType::Input) {
+		if (socket_end_ptr->io_type != SocketIOType::INPUT) {
+			return;
+		}
+		if (socket_end_ptr->parent == source_node) {
+			// Do not allow a node to connect to itself
 			return;
 		}
 	}

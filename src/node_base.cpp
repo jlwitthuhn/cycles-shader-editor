@@ -38,11 +38,6 @@ bool CyclesShaderEditor::NodeConnection::includes_node(EditorNode* const node) c
 	return false;
 }
 
-CyclesShaderEditor::EditorNode::~EditorNode()
-{
-	// TODO: remove me maybe
-}
-
 std::string CyclesShaderEditor::EditorNode::get_title() const
 {
 	return title;
@@ -106,13 +101,15 @@ void CyclesShaderEditor::EditorNode::draw_node(NVGcontext* const draw_context)
 		std::string text_before_crossout; // For measuring text size later
 		if (this_socket->value != nullptr) {
 			text_before_crossout = this_socket->display_name + ":";
-			if (this_socket->socket_type == SocketType::Float) {
-				FloatSocketValue* const float_val = dynamic_cast<FloatSocketValue*>(this_socket->value);
-				std::stringstream label_string_stream;
-				label_string_stream << this_socket->display_name << ": "  << std::fixed << std::setprecision(3) << float_val->get_value();
-				label_text = label_string_stream.str();
+			if (this_socket->socket_type == SocketType::FLOAT) {
+				const std::shared_ptr<FloatSocketValue> float_val = std::dynamic_pointer_cast<FloatSocketValue>(this_socket->value);
+				if (float_val) {
+					std::stringstream label_string_stream;
+					label_string_stream << this_socket->display_name << ": " << std::fixed << std::setprecision(3) << float_val->get_value();
+					label_text = label_string_stream.str();
+				}
 			}
-			else if (this_socket->socket_type == SocketType::Vector) {
+			else if (this_socket->socket_type == SocketType::VECTOR) {
 				if (this_socket->selectable == true) {
 					label_text = this_socket->display_name + ": [Vector]";
 				}
@@ -120,31 +117,35 @@ void CyclesShaderEditor::EditorNode::draw_node(NVGcontext* const draw_context)
 					label_text = this_socket->display_name;
 				}
 			}
-			else if (this_socket->socket_type == SocketType::Color) {
+			else if (this_socket->socket_type == SocketType::COLOR) {
 				std::stringstream label_string_stream;
 				label_string_stream << this_socket->display_name << ": ";
 				label_text = label_string_stream.str();
 			}
-			else if (this_socket->socket_type == SocketType::StringEnum) {
+			else if (this_socket->socket_type == SocketType::STRING_ENUM) {
 				label_text = this_socket->display_name + ": [Enum]";
 			}
-			else if (this_socket->socket_type == SocketType::Int) {
-				IntSocketValue* const int_val = dynamic_cast<IntSocketValue*>(this_socket->value);
-				std::stringstream label_string_stream;
-				label_string_stream << this_socket->display_name << ": " << std::fixed << std::setprecision(3) << int_val->get_value();
-				label_text = label_string_stream.str();
+			else if (this_socket->socket_type == SocketType::INT) {
+				const std::shared_ptr<IntSocketValue> int_val = std::dynamic_pointer_cast<IntSocketValue>(this_socket->value);
+				if (int_val) {
+					std::stringstream label_string_stream;
+					label_string_stream << this_socket->display_name << ": " << std::fixed << std::setprecision(3) << int_val->get_value();
+					label_text = label_string_stream.str();
+				}
 			}
 
-			else if (this_socket->socket_type == SocketType::Boolean) {
-				BoolSocketValue* const bool_val = dynamic_cast<BoolSocketValue*>(this_socket->value);
-				if (bool_val->value) {
-					label_text = this_socket->display_name + ": True";
-				}
-				else {
-					label_text = this_socket->display_name + ": False";
+			else if (this_socket->socket_type == SocketType::BOOLEAN) {
+				const std::shared_ptr<BoolSocketValue> bool_val = std::dynamic_pointer_cast<BoolSocketValue>(this_socket->value);
+				if (bool_val) {
+					if (bool_val->value) {
+						label_text = this_socket->display_name + ": True";
+					}
+					else {
+						label_text = this_socket->display_name + ": False";
+					}
 				}
 			}
-			else if (this_socket->socket_type == SocketType::Curve) {
+			else if (this_socket->socket_type == SocketType::CURVE) {
 				label_text = this_socket->display_name + ": [Curve]";
 			}
 			else {
@@ -170,7 +171,7 @@ void CyclesShaderEditor::EditorNode::draw_node(NVGcontext* const draw_context)
 		nvgFillColor(draw_context, nvgRGBA(0, 0, 0, 255));
 		nvgFontFace(draw_context, "sans");
 
-		if (this_socket->value != nullptr && this_socket->socket_type == SocketType::Color) {
+		if (this_socket->value != nullptr && this_socket->socket_type == SocketType::COLOR) {
 			const float SWATCH_HEIGHT = 14.0f;
 			const float SWATCH_WIDTH = 24.0f;
 			const float SWATCH_CORNER_RADIUS = 8.0f;
@@ -183,7 +184,7 @@ void CyclesShaderEditor::EditorNode::draw_node(NVGcontext* const draw_context)
 			const float text_pos_y = next_draw_y + UI_NODE_SOCKET_ROW_HEIGHT / 2;
 			nvgText(draw_context, text_pos_x, text_pos_y, label_text.c_str(), nullptr);
 
-			const FloatRGBColor swatch_color = dynamic_cast<ColorSocketValue*>(this_socket->value)->get_value();
+			const FloatRGBColor swatch_color = dynamic_cast<ColorSocketValue*>(this_socket->value.get())->get_value();
 
 			const float swatch_pos_x = text_pos_x + label_width / 2 + 1.0f;
 			const float swatch_pos_y = next_draw_y + (UI_NODE_SOCKET_ROW_HEIGHT - SWATCH_HEIGHT) / 2;
@@ -234,13 +235,13 @@ void CyclesShaderEditor::EditorNode::draw_node(NVGcontext* const draw_context)
 			// Add label click target
 			const CyclesShaderEditor::FloatPos click_target_begin(0, next_draw_y - draw_pos_y);
 			const CyclesShaderEditor::FloatPos click_target_end(content_width, next_draw_y - draw_pos_y + UI_NODE_SOCKET_ROW_HEIGHT);
-			const SocketClickTarget label_target(click_target_begin, click_target_end, this_socket);
+			const SocketArea label_target(click_target_begin, click_target_end, this_socket);
 			label_targets.push_back(label_target);
 		}
 
 		if (this_socket->draw_socket) {
 			CyclesShaderEditor::FloatPos socket_position;
-			if (this_socket->io_type == SocketIOType::Input) {
+			if (this_socket->io_type == SocketIOType::INPUT) {
 				socket_position = CyclesShaderEditor::FloatPos(draw_pos_x, next_draw_y + UI_NODE_SOCKET_ROW_HEIGHT / 2);
 			}
 			else {
@@ -255,22 +256,22 @@ void CyclesShaderEditor::EditorNode::draw_node(NVGcontext* const draw_context)
 			CyclesShaderEditor::FloatPos local_socket_position(socket_position.get_x() - draw_pos_x, socket_position.get_y() - draw_pos_y);
 			CyclesShaderEditor::FloatPos click_target_begin(local_socket_position.get_x() - 7.0f, local_socket_position.get_y() - 7.0f);
 			CyclesShaderEditor::FloatPos click_target_end(local_socket_position.get_x() + 7.0f, local_socket_position.get_y() + 7.0f);
-			SocketClickTarget socket_target(click_target_begin, click_target_end, this_socket);
+			SocketArea socket_target(click_target_begin, click_target_end, this_socket);
 			socket_targets.push_back(socket_target);
 
-			if (this_socket->socket_type == SocketType::Closure) {
+			if (this_socket->socket_type == SocketType::CLOSURE) {
 				nvgFillColor(draw_context, nvgRGBA(100, 200, 100, 255));
 			}
-			else if (this_socket->socket_type == SocketType::Color) {
+			else if (this_socket->socket_type == SocketType::COLOR) {
 				nvgFillColor(draw_context, nvgRGBA(200, 200, 42, 255));
 			}
-			else if (this_socket->socket_type == SocketType::Float) {
+			else if (this_socket->socket_type == SocketType::FLOAT) {
 				nvgFillColor(draw_context, nvgRGBA(240, 240, 240, 255));
 			}
-			else if (this_socket->socket_type == SocketType::Normal) {
+			else if (this_socket->socket_type == SocketType::NORMAL) {
 				nvgFillColor(draw_context, nvgRGBA(100, 100, 200, 255));
 			}
-			else if (this_socket->socket_type == SocketType::Vector) {
+			else if (this_socket->socket_type == SocketType::VECTOR) {
 				nvgFillColor(draw_context, nvgRGBA(100, 100, 200, 255));
 			}
 			else {
@@ -303,7 +304,7 @@ std::weak_ptr<CyclesShaderEditor::NodeSocket> CyclesShaderEditor::EditorNode::ge
 {
 	const FloatPos local_pos = get_local_pos(check_world_pos);
 	for (const auto click_target : socket_targets) {
-		if (click_target.is_mouse_over_target(local_pos)) {
+		if (click_target.is_under_point(local_pos)) {
 			return click_target.socket;
 		}
 	}
@@ -318,7 +319,7 @@ std::weak_ptr<CyclesShaderEditor::NodeSocket> CyclesShaderEditor::EditorNode::ge
 	}
 	const FloatPos local_pos = get_local_pos(check_world_pos);
 	for (const auto click_target : label_targets) {
-		if (click_target.is_mouse_over_target(local_pos)) {
+		if (click_target.is_under_point(local_pos)) {
 			return click_target.socket;
 		}
 	}
@@ -367,47 +368,55 @@ void CyclesShaderEditor::EditorNode::update_output_node(OutputNode& output)
 	}
 
 	for (const auto this_socket : sockets) {
-		if (this_socket->io_type != SocketIOType::Input) {
+		if (this_socket->io_type != SocketIOType::INPUT) {
 			continue;
 		}
 
-		if (this_socket->socket_type == SocketType::Float && this_socket->value != nullptr) {
-			FloatSocketValue* const float_val = dynamic_cast<FloatSocketValue*>(this_socket->value);
-			output.float_values[this_socket->internal_name] = float_val->get_value();
+		if (this_socket->socket_type == SocketType::FLOAT) {
+			const std::shared_ptr<FloatSocketValue> float_val = std::dynamic_pointer_cast<FloatSocketValue>(this_socket->value);
+			if (float_val) {
+				output.float_values[this_socket->internal_name] = float_val->get_value();
+			}
 		}
-		else if (this_socket->socket_type == SocketType::Color) {
-			ColorSocketValue* const color_val = dynamic_cast<ColorSocketValue*>(this_socket->value);
-			const float x = color_val->red_socket_val.get_value();
-			const float y = color_val->green_socket_val.get_value();
-			const float z = color_val->blue_socket_val.get_value();
-			Float3 float3_val(x, y, z);
-			output.float3_values[this_socket->internal_name] = float3_val;
+		else if (this_socket->socket_type == SocketType::COLOR) {
+			const std::shared_ptr<ColorSocketValue> color_val = std::dynamic_pointer_cast<ColorSocketValue>(this_socket->value);
+			if (color_val) {
+				const float x = color_val->red_socket_val->get_value();
+				const float y = color_val->green_socket_val->get_value();
+				const float z = color_val->blue_socket_val->get_value();
+				const Float3 float3_val(x, y, z);
+				output.float3_values[this_socket->internal_name] = float3_val;
+			}
 		}
-		else if (this_socket->socket_type == SocketType::Vector && this_socket->value != nullptr) {
-			Float3SocketValue* const float3_socket_val = dynamic_cast<Float3SocketValue*>(this_socket->value);
-			Float3Holder temp_value = float3_socket_val->get_value();
-			Float3 float3_val(temp_value.x, temp_value.y, temp_value.z);
-			output.float3_values[this_socket->internal_name] = float3_val;
+		else if (this_socket->socket_type == SocketType::VECTOR) {
+			const std::shared_ptr<Float3SocketValue> float3_socket_val = std::dynamic_pointer_cast<Float3SocketValue>(this_socket->value);
+			if (float3_socket_val) {
+				const Float3Holder temp_value = float3_socket_val->get_value();
+				const Float3 float3_val(temp_value.x, temp_value.y, temp_value.z);
+				output.float3_values[this_socket->internal_name] = float3_val;
+			}
 		}
-		else if (this_socket->socket_type == SocketType::StringEnum) {
-			StringEnumSocketValue* const string_val = dynamic_cast<StringEnumSocketValue*>(this_socket->value);
-			output.string_values[this_socket->internal_name] = string_val->value.internal_value;
+		else if (this_socket->socket_type == SocketType::STRING_ENUM) {
+			const std::shared_ptr<StringEnumSocketValue> string_val = std::dynamic_pointer_cast<StringEnumSocketValue>(this_socket->value);
+			if (string_val) {
+				output.string_values[this_socket->internal_name] = string_val->value.internal_value;
+			}
 		}
-		else if (this_socket->socket_type == SocketType::Int) {
-			IntSocketValue* const int_val = dynamic_cast<IntSocketValue*>(this_socket->value);
-			if (int_val != nullptr) {
+		else if (this_socket->socket_type == SocketType::INT) {
+			const std::shared_ptr<IntSocketValue> int_val = std::dynamic_pointer_cast<IntSocketValue>(this_socket->value);
+			if (int_val) {
 				output.int_values[this_socket->internal_name] = int_val->get_value();
 			}
 		}
-		else if (this_socket->socket_type == SocketType::Boolean) {
-			BoolSocketValue* const bool_val = dynamic_cast<BoolSocketValue*>(this_socket->value);
-			if (bool_val != nullptr) {
+		else if (this_socket->socket_type == SocketType::BOOLEAN) {
+			const std::shared_ptr<BoolSocketValue> bool_val = std::dynamic_pointer_cast<BoolSocketValue>(this_socket->value);
+			if (bool_val) {
 				output.bool_values[this_socket->internal_name] = bool_val->value;
 			}
 		}
-		else if (this_socket->socket_type == SocketType::Curve) {
-			CurveSocketValue* const curve_val = dynamic_cast<CurveSocketValue*>(this_socket->value);
-			if (curve_val != nullptr) {
+		else if (this_socket->socket_type == SocketType::CURVE) {
+			const std::shared_ptr<CurveSocketValue> curve_val = std::dynamic_pointer_cast<CurveSocketValue>(this_socket->value);
+			if (curve_val) {
 				OutputCurve out_curve;
 				typedef std::vector<FloatPos>::size_type vec_index;
 				for (vec_index i = 0; i < curve_val->curve_points.size(); i++) {

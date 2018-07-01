@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <vector>
 
 #include "float_pos.h"
@@ -13,6 +14,7 @@ namespace CyclesShaderEditor {
 	class CurveEvaluator {
 	public:
 		CurveEvaluator(CurveSocketValue* curve_socket_val, int segments = 512);
+		CurveEvaluator(std::shared_ptr<CurveSocketValue> curve_socket_val, int segments = 512);
 		CurveEvaluator(FloatPos a, FloatPos b, FloatPos c, FloatPos d, int segments = 128);
 
 		int compare_to_range(float in_value) const;

@@ -30,6 +30,7 @@ namespace CyclesShaderEditor {
 
 		// Returns true if this subwindow wants to capture keyboard input
 		virtual bool should_capture_input() const;
+		virtual void deselect_input_box();
 
 		virtual void handle_mouse_button(int button, int action, int mods);
 		virtual void handle_key(int key, int scancode, int action, int mods);
@@ -51,9 +52,9 @@ namespace CyclesShaderEditor {
 		std::string title = "Subwindow";
 		FloatPos subwindow_screen_pos;
 
-		FloatPos mouse_local_pos;
+		FloatPos mouse_local_pos; // Mouse position relative to the top-left corner of the window, prefer using mouse_content_pos over this
 		FloatPos mouse_local_begin_move_pos;
-		FloatPos mouse_panel_pos;
+		FloatPos mouse_content_pos; // Local position not including window header
 
 		float subwindow_width = 100.0f;
 		float content_height = 1.0f;

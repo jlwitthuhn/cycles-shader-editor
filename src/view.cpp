@@ -216,8 +216,8 @@ void CyclesShaderEditor::EditGraphView::handle_mouse_button(const int button, co
 {
 	EditorNode* const focused_node = graph->get_node_under_point(mouse_world_position);
 	const auto focused_label_ptr = graph->get_socket_under_point(mouse_world_position).lock();
-	const auto focused_connector_in_ptr = graph->get_connector_under_point(mouse_world_position, SocketIOType::Input).lock();
-	const auto focused_connector_out_ptr = graph->get_connector_under_point(mouse_world_position, SocketIOType::Output).lock();
+	const auto focused_connector_in_ptr = graph->get_connector_under_point(mouse_world_position, SocketIOType::INPUT).lock();
+	const auto focused_connector_out_ptr = graph->get_connector_under_point(mouse_world_position, SocketIOType::OUTPUT).lock();
 
 	if (focused_connector_out_ptr) {
 		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
@@ -371,7 +371,7 @@ std::string CyclesShaderEditor::EditGraphView::get_zoom_string() const
 void CyclesShaderEditor::EditGraphView::begin_connection(const std::weak_ptr<NodeSocket> socket_begin)
 {
 	if (const auto socket_begin_ptr = socket_begin.lock()) {
-		if (socket_begin_ptr->io_type == SocketIOType::Output) {
+		if (socket_begin_ptr->io_type == SocketIOType::OUTPUT) {
 			connection_in_progress_start = socket_begin;
 			return;
 		}

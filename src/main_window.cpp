@@ -140,6 +140,13 @@ void CyclesShaderEditor::EditorMainWindow::set_target_frame_rate(const double fp
 
 void CyclesShaderEditor::EditorMainWindow::handle_mouse_button(const int button, const int action, const int mods)
 {
+	// Clicking anywhere will deselect any input box
+	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+		for (const auto& this_subwindow : subwindows) {
+			this_subwindow->deselect_input_box();
+		}
+	}
+	
 	const bool toolbar_has_focus = (toolbar != nullptr && toolbar->is_mouse_over());
 
 	if (forward_mouse_to_subwindow(button, action, mods)) {

@@ -1,32 +1,35 @@
 #pragma once
 
-#include "click_target.h"
+#include <memory>
+
 #include "float_pos.h"
 #include "input_box.h"
+#include "panel_edit.h"
+#include "util_area.h"
 #include "util_color.h"
 
-struct NVGcontext;
-
 namespace CyclesShaderEditor {
-	class ColorSocketValue;
+	class SocketValue;
 
-	class EditColorPanel {
+	class EditColorPanel : public ParamEditorPanel {
 	public:
 		EditColorPanel(float width);
 
-		bool is_active();
-		void set_active(bool active);
+		virtual bool is_active() const override;
+		virtual float draw(NVGcontext* draw_context) override;
 
-		float draw(NVGcontext* draw_context, ColorSocketValue* socket_value);
-		void set_mouse_local_position(FloatPos local_pos);
-		bool is_mouse_over();
+		virtual bool should_capture_input() const;
+		virtual void handle_mouse_button(int button, int action, int mods) override;
+		virtual void handle_key(int key, int scancode, int action, int mods) override;
+		virtual void handle_character(unsigned int codepoint) override;
 
-		void handle_mouse_button(int button, int action, int mods);
-		void mouse_button_release();
+		virtual void set_attached_value(std::weak_ptr<SocketValue> socket_value) override;
+		virtual void deselect_input_box() override;
 
-		BaseInputBox* get_input_bux_under_mouse();
+		virtual bool should_push_undo_state() override;
 
-		bool should_push_undo_state();
+	protected:
+		virtual void reset() override;
 
 	private:
 		HueSatVal get_hsv();
@@ -35,9 +38,10 @@ namespace CyclesShaderEditor {
 		void set_hue_from_mouse();
 		void set_sat_val_from_mouse();
 
-		float panel_width = 1.0f;
-		float panel_height = 1.0f;
-		bool active = false;
+		void select_input(FloatInputBox* input);
+
+		std::weak_ptr<ColorSocketValue> attached_color;
+		FloatInputBox* selected_input = nullptr;
 
 		float last_hue = 0.0f;
 
@@ -50,9 +54,7 @@ namespace CyclesShaderEditor {
 		bool mouse_sat_val_selection_active = false;
 		bool mouse_hue_selection_active = false;
 
-		FloatPos mouse_local_pos;
-
-		GenericClickTarget color_rect_click_target;
-		GenericClickTarget hue_bar_click_target;
+		Area color_rect_click_target;
+		Area hue_bar_click_target;
 	};
 }

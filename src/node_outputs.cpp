@@ -13,9 +13,9 @@ CyclesShaderEditor::MaterialOutputNode::MaterialOutputNode(FloatPos position)
 
 	title = "Material Output";
 
-	const std::shared_ptr<NodeSocket> surface_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Closure, "Surface", "surface");
-	const std::shared_ptr<NodeSocket> volume_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Closure, "Volume", "volume");
-	const std::shared_ptr<NodeSocket> displacement_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Float, "Displacement", "displacement");
+	const auto surface_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::CLOSURE, "Surface", "surface");
+	const auto volume_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::CLOSURE, "Volume", "volume");
+	const auto displacement_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Displacement", "displacement");
 
 	sockets.push_back(surface_input);
 	sockets.push_back(volume_input);

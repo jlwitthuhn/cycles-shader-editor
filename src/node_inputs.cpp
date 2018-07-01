@@ -13,18 +13,18 @@ CyclesShaderEditor::LightPathNode::LightPathNode(FloatPos position)
 
 	title = "Light Path";
 
-	const std::shared_ptr<NodeSocket> camera_ray_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Float, "Is Camera Ray", "is_camera_ray");
-	const std::shared_ptr<NodeSocket> shadow_ray_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Float, "Is Shadow Ray", "is_shadow_ray");
-	const std::shared_ptr<NodeSocket> diffuse_ray_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Float, "Is Diffuse Ray", "is_diffuse_ray");
-	const std::shared_ptr<NodeSocket> glossy_ray_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Float, "Is Glossy Ray", "is_glossy_ray");
-	const std::shared_ptr<NodeSocket> singular_ray_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Float, "Is Singular Ray", "is_singular_ray");
-	const std::shared_ptr<NodeSocket> reflection_ray_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Float, "Is Reflection Ray", "is_reflection_ray");
-	const std::shared_ptr<NodeSocket> transmission_ray_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Float, "Is Transmission Ray", "is_transmission_ray");
-	const std::shared_ptr<NodeSocket> vol_scatter_ray_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Float, "Is Volume Scatter Ray", "is_volume_scatter_ray");
-	const std::shared_ptr<NodeSocket> ray_length_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Float, "Ray Length", "ray_length");
-	const std::shared_ptr<NodeSocket> ray_depth_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Float, "Ray Depth", "ray_depth");
-	const std::shared_ptr<NodeSocket> transparent_depth_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Float, "Transparent Depth", "transparent_depth");
-	const std::shared_ptr<NodeSocket> transmission_depth_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Float, "Transmission Depth", "transmission_depth");
+	const auto camera_ray_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Is Camera Ray", "is_camera_ray");
+	const auto shadow_ray_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Is Shadow Ray", "is_shadow_ray");
+	const auto diffuse_ray_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Is Diffuse Ray", "is_diffuse_ray");
+	const auto glossy_ray_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Is Glossy Ray", "is_glossy_ray");
+	const auto singular_ray_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Is Singular Ray", "is_singular_ray");
+	const auto reflection_ray_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Is Reflection Ray", "is_reflection_ray");
+	const auto transmission_ray_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Is Transmission Ray", "is_transmission_ray");
+	const auto vol_scatter_ray_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Is Volume Scatter Ray", "is_volume_scatter_ray");
+	const auto ray_length_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Ray Length", "ray_length");
+	const auto ray_depth_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Ray Depth", "ray_depth");
+	const auto transparent_depth_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Transparent Depth", "transparent_depth");
+	const auto transmission_depth_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Transmission Depth", "transmission_depth");
 
 	sockets.push_back(camera_ray_output);
 	sockets.push_back(shadow_ray_output);
@@ -48,13 +48,13 @@ CyclesShaderEditor::FresnelNode::FresnelNode(FloatPos position)
 
 	title = "Fresnel";
 
-	const std::shared_ptr<NodeSocket> fac_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Float, "Fac", "fac");
+	const auto fac_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Fac", "fac");
 
 	sockets.push_back(fac_output);
 
-	const std::shared_ptr<NodeSocket> ior_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Float, "IOR", "IOR");
-	ior_input->value = new FloatSocketValue(1.45f, 0.0f, 1000.0f);
-	const std::shared_ptr<NodeSocket> normal_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Normal, "Normal", "normal");
+	const auto ior_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "IOR", "IOR");
+	ior_input->value = std::make_shared<FloatSocketValue>(1.45f, 0.0f, 1000.0f);
+	const auto normal_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::NORMAL, "Normal", "normal");
 
 	sockets.push_back(ior_input);
 	sockets.push_back(normal_input);
@@ -68,15 +68,15 @@ CyclesShaderEditor::LayerWeightNode::LayerWeightNode(FloatPos position)
 
 	title = "Layer Weight";
 
-	const std::shared_ptr<NodeSocket> fresnel_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Float, "Fresnel", "fresnel");
-	const std::shared_ptr<NodeSocket> facing_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Float, "Facing", "facing");
+	const auto fresnel_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Fresnel", "fresnel");
+	const auto facing_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Facing", "facing");
 
 	sockets.push_back(fresnel_output);
 	sockets.push_back(facing_output);
 
-	const std::shared_ptr<NodeSocket> blend_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Float, "Blend", "blend");
-	blend_input->value = new FloatSocketValue(0.5f, 0.0f, 1.0f);
-	const std::shared_ptr<NodeSocket> normal_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Normal, "Normal", "normal");
+	const auto blend_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Blend", "blend");
+	blend_input->value = std::make_shared<FloatSocketValue>(0.5f, 0.0f, 1.0f);
+	const auto normal_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::NORMAL, "Normal", "normal");
 
 	sockets.push_back(blend_input);
 	sockets.push_back(normal_input);
@@ -90,9 +90,9 @@ CyclesShaderEditor::CameraDataNode::CameraDataNode(FloatPos position)
 
 	title = "Camera Data";
 
-	const std::shared_ptr<NodeSocket> vector_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Vector, "View Vector", "view_vector");
-	const std::shared_ptr<NodeSocket> z_depth_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Float, "View Z Depth", "view_z_depth");
-	const std::shared_ptr<NodeSocket> distance_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Float, "View Distance", "view_distance");
+	const auto vector_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::VECTOR, "View Vector", "view_vector");
+	const auto z_depth_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "View Z Depth", "view_z_depth");
+	const auto distance_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "View Distance", "view_distance");
 
 	sockets.push_back(vector_output);
 	sockets.push_back(z_depth_output);
@@ -107,18 +107,18 @@ CyclesShaderEditor::TangentNode::TangentNode(FloatPos position)
 
 	title = "Tangent";
 
-	const std::shared_ptr<NodeSocket> tangent_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Vector, "Tangent", "tangent");
+	const auto tangent_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::VECTOR, "Tangent", "tangent");
 
 	sockets.push_back(tangent_output);
 
-	const std::shared_ptr<NodeSocket> direction_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::StringEnum, "Direction", "direction");
-	StringEnumSocketValue* direction_value = new StringEnumSocketValue();
+	const auto direction_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::STRING_ENUM, "Direction", "direction");
+	const auto direction_value = std::make_shared<StringEnumSocketValue>();
 	direction_value->enum_values.push_back(StringEnumPair("Radial", "radial"));
 	direction_value->enum_values.push_back(StringEnumPair("UV Map", "uv_map"));
 	direction_value->set_from_internal_name("radial");
 	direction_input->value = direction_value;
-	const std::shared_ptr<NodeSocket> axis_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::StringEnum, "Radial Axis", "axis");
-	StringEnumSocketValue* axis_value = new StringEnumSocketValue();
+	const auto axis_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::STRING_ENUM, "Radial Axis", "axis");
+	const auto axis_value = std::make_shared<StringEnumSocketValue>();
 	axis_value->enum_values.push_back(StringEnumPair("X", "x"));
 	axis_value->enum_values.push_back(StringEnumPair("Y", "y"));
 	axis_value->enum_values.push_back(StringEnumPair("Z", "z"));
@@ -137,13 +137,13 @@ CyclesShaderEditor::TextureCoordinateNode::TextureCoordinateNode(FloatPos positi
 
 	title = "Texture Coordinate";
 
-	const std::shared_ptr<NodeSocket> generated_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Vector, "Generated", "generated");
-	const std::shared_ptr<NodeSocket> normal_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Vector, "Normal", "normal");
-	const std::shared_ptr<NodeSocket> uv_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Vector, "UV", "UV");
-	const std::shared_ptr<NodeSocket> object_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Vector, "Object", "object");
-	const std::shared_ptr<NodeSocket> camera_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Vector, "Camera", "camera");
-	const std::shared_ptr<NodeSocket> window_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Vector, "Window", "window");
-	const std::shared_ptr<NodeSocket> reflection_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Vector, "Reflection", "reflection");
+	const auto generated_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::VECTOR, "Generated", "generated");
+	const auto normal_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::VECTOR, "Normal", "normal");
+	const auto uv_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::VECTOR, "UV", "UV");
+	const auto object_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::VECTOR, "Object", "object");
+	const auto camera_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::VECTOR, "Camera", "camera");
+	const auto window_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::VECTOR, "Window", "window");
+	const auto reflection_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::VECTOR, "Reflection", "reflection");
 
 	sockets.push_back(generated_output);
 	sockets.push_back(normal_output);
@@ -162,14 +162,14 @@ CyclesShaderEditor::GeometryNode::GeometryNode(FloatPos position)
 
 	title = "Geometry";
 
-	const std::shared_ptr<NodeSocket> position_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Vector, "Position", "position");
-	const std::shared_ptr<NodeSocket> normal_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Normal, "Normal", "normal");
-	const std::shared_ptr<NodeSocket> tangent_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Vector, "Tangent", "tangent");
-	const std::shared_ptr<NodeSocket> true_normal_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Normal, "True Normal", "true_normal");
-	const std::shared_ptr<NodeSocket> incoming_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Vector, "Incoming", "incoming");
-	const std::shared_ptr<NodeSocket> parametric_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Vector, "Parametric", "parametric");
-	const std::shared_ptr<NodeSocket> backfacing_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Float, "Backfacing", "backfacing");
-	const std::shared_ptr<NodeSocket> pointiness_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Float, "Pointiness", "pointiness");
+	const auto position_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::VECTOR, "Position", "position");
+	const auto normal_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::NORMAL, "Normal", "normal");
+	const auto tangent_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::VECTOR, "Tangent", "tangent");
+	const auto true_normal_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::NORMAL, "True Normal", "true_normal");
+	const auto incoming_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::VECTOR, "Incoming", "incoming");
+	const auto parametric_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::VECTOR, "Parametric", "parametric");
+	const auto backfacing_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Backfacing", "backfacing");
+	const auto pointiness_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Pointiness", "pointiness");
 
 	sockets.push_back(position_output);
 	sockets.push_back(normal_output);
@@ -189,10 +189,10 @@ CyclesShaderEditor::ObjectInfoNode::ObjectInfoNode(FloatPos position)
 
 	title = "Object Info";
 
-	const std::shared_ptr<NodeSocket> location_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Vector, "Location", "location");
-	const std::shared_ptr<NodeSocket> object_index_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Float, "Object Index", "object_index");
-	const std::shared_ptr<NodeSocket> material_index_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Float, "Material Index", "material_index");
-	const std::shared_ptr<NodeSocket> random_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Float, "Random", "random");
+	const auto location_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::VECTOR, "Location", "location");
+	const auto object_index_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Object Index", "object_index");
+	const auto material_index_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Material Index", "material_index");
+	const auto random_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Random", "random");
 
 	sockets.push_back(location_output);
 	sockets.push_back(object_index_output);
@@ -208,12 +208,12 @@ CyclesShaderEditor::RGBNode::RGBNode(FloatPos position)
 
 	title = "RGB";
 
-	const std::shared_ptr<NodeSocket> color_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Color, "Color", "color");
+	const auto color_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::COLOR, "Color", "color");
 
 	sockets.push_back(color_output);
 
-	const std::shared_ptr<NodeSocket> value_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Color, "Value", "value");
-	value_input->value = new ColorSocketValue(1.0f, 1.0f, 1.0f);
+	const auto value_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::COLOR, "Value", "value");
+	value_input->value = std::make_shared<ColorSocketValue>(1.0f, 1.0f, 1.0f);
 	value_input->draw_socket = false;
 
 	sockets.push_back(value_input);
@@ -227,12 +227,12 @@ CyclesShaderEditor::ValueNode::ValueNode(FloatPos position)
 
 	title = "Value";
 
-	const std::shared_ptr<NodeSocket> value_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Float, "Value", "value");
+	const auto value_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Value", "value");
 
 	sockets.push_back(value_output);
 
-	const std::shared_ptr<NodeSocket> value_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Float, "Value", "value");
-	value_input->value = new FloatSocketValue(0.0f, -10000.0f, 10000.0f);
+	const auto value_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Value", "value");
+	value_input->value = std::make_shared<FloatSocketValue>(0.0f, -10000.0f, 10000.0f);
 	value_input->draw_socket = false;
 
 	sockets.push_back(value_input);
@@ -246,14 +246,14 @@ CyclesShaderEditor::WireframeNode::WireframeNode(FloatPos position)
 
 	title = "Wireframe";
 
-	const std::shared_ptr<NodeSocket> fac_output = std::make_shared<NodeSocket>(this, SocketIOType::Output, SocketType::Float, "Fac", "fac");
+	const auto fac_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Fac", "fac");
 
 	sockets.push_back(fac_output);
 
-	const std::shared_ptr<NodeSocket> pixel_size_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Boolean, "Use Pixel Size", "use_pixel_size");
-	pixel_size_input->value = new BoolSocketValue(false);
-	const std::shared_ptr<NodeSocket> size_input = std::make_shared<NodeSocket>(this, SocketIOType::Input, SocketType::Float, "Size", "size");
-	size_input->value = new FloatSocketValue(0.04f, 0.0f, 10000.0f);
+	const auto pixel_size_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::BOOLEAN, "Use Pixel Size", "use_pixel_size");
+	pixel_size_input->value = std::make_shared<BoolSocketValue>(false);
+	const auto size_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Size", "size");
+	size_input->value = std::make_shared<FloatSocketValue>(0.04f, 0.0f, 10000.0f);
 
 	sockets.push_back(pixel_size_input);
 	sockets.push_back(size_input);

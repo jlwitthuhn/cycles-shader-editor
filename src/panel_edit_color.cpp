@@ -10,7 +10,7 @@
 #include "sockets.h"
 
 CyclesShaderEditor::EditColorPanel::EditColorPanel(float width) :
-	panel_width(width),
+	ParamEditorPanel(width),
 	color_r_input_box(UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH_BIG, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT),
 	color_g_input_box(UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH_BIG, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT),
 	color_b_input_box(UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH_BIG, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT),
@@ -23,23 +23,20 @@ CyclesShaderEditor::EditColorPanel::EditColorPanel(float width) :
 	color_b_input_box.displayed = true;
 }
 
-bool CyclesShaderEditor::EditColorPanel::is_active()
+bool CyclesShaderEditor::EditColorPanel::is_active() const
 {
-	return active;
+	return static_cast<bool>(attached_color.lock());
 }
 
-void CyclesShaderEditor::EditColorPanel::set_active(bool active_in)
-{
-	active = active_in;
-}
-
-float CyclesShaderEditor::EditColorPanel::draw(NVGcontext* draw_context, ColorSocketValue* socket_value)
+float CyclesShaderEditor::EditColorPanel::draw(NVGcontext* const draw_context)
 {
 	float height_drawn = 0.0f;
 
-	if (socket_value == nullptr) {
+	if (is_active() == false) {
 		return height_drawn;
 	}
+
+	const auto attached_color_ptr = attached_color.lock();
 
 	// We need to know the color value as HSV to draw the ui
 	HueSatVal hsv = get_hsv();
@@ -83,7 +80,7 @@ float CyclesShaderEditor::EditColorPanel::draw(NVGcontext* draw_context, ColorSo
 		// Click target
 		FloatPos color_rect_begin = FloatPos(draw_x, draw_y);
 		FloatPos color_rect_end = FloatPos(draw_x + rect_width, draw_y + rect_height);
-		color_rect_click_target = GenericClickTarget(color_rect_begin, color_rect_end);
+		color_rect_click_target = Area(color_rect_begin, color_rect_end);
 
 		height_drawn += 2 * UI_SUBWIN_PARAM_EDIT_RECT_VPAD + UI_SUBWIN_PARAM_EDIT_RECT_HEIGHT;
 	}
@@ -145,7 +142,7 @@ float CyclesShaderEditor::EditColorPanel::draw(NVGcontext* draw_context, ColorSo
 
 		FloatPos hue_bar_begin = FloatPos(draw_x, draw_y);
 		FloatPos hue_bar_end = FloatPos(draw_x + hue_bar_width, draw_y + hue_bar_height);
-		hue_bar_click_target = GenericClickTarget(hue_bar_begin, hue_bar_end);
+		hue_bar_click_target = Area(hue_bar_begin, hue_bar_end);
 
 		height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
 	}
@@ -163,9 +160,10 @@ float CyclesShaderEditor::EditColorPanel::draw(NVGcontext* draw_context, ColorSo
 	float input_x_draw = (2.0f * panel_width / 3) - (color_r_input_box.width / 2);
 	float input_y_draw = height_drawn + (UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT - color_r_input_box.height) / 2;
 
+	const bool highlight_r = color_r_input_box.is_under_point(mouse_local_pos);
 	color_r_input_box.set_position(FloatPos(input_x_draw, input_y_draw));
-	color_r_input_box.set_float_value(&(socket_value->red_socket_val));
-	color_r_input_box.draw(draw_context, mouse_local_pos);
+	color_r_input_box.set_float_value(attached_color_ptr->red_socket_val);
+	color_r_input_box.draw(draw_context, highlight_r);
 
 	height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
 
@@ -175,9 +173,10 @@ float CyclesShaderEditor::EditColorPanel::draw(NVGcontext* draw_context, ColorSo
 
 	input_y_draw = height_drawn + (UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT - color_g_input_box.height) / 2;
 
+	const bool highlight_g = color_g_input_box.is_under_point(mouse_local_pos);
 	color_g_input_box.set_position(FloatPos(input_x_draw, input_y_draw));
-	color_g_input_box.set_float_value(&(socket_value->green_socket_val));
-	color_g_input_box.draw(draw_context, mouse_local_pos);
+	color_g_input_box.set_float_value(attached_color_ptr->green_socket_val);
+	color_g_input_box.draw(draw_context, highlight_g);
 
 	height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
 
@@ -187,9 +186,10 @@ float CyclesShaderEditor::EditColorPanel::draw(NVGcontext* draw_context, ColorSo
 
 	input_y_draw = height_drawn + (UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT - color_b_input_box.height) / 2;
 
+	const bool highlight_b = color_b_input_box.is_under_point(mouse_local_pos);
 	color_b_input_box.set_position(FloatPos(input_x_draw, input_y_draw));
-	color_b_input_box.set_float_value(&(socket_value->blue_socket_val));
-	color_b_input_box.draw(draw_context, mouse_local_pos);
+	color_b_input_box.set_float_value(attached_color_ptr->blue_socket_val);
+	color_b_input_box.draw(draw_context, highlight_b);
 
 	height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
 
@@ -205,77 +205,90 @@ float CyclesShaderEditor::EditColorPanel::draw(NVGcontext* draw_context, ColorSo
 	return height_drawn;
 }
 
-void CyclesShaderEditor::EditColorPanel::set_mouse_local_position(FloatPos local_pos)
+bool CyclesShaderEditor::EditColorPanel::should_capture_input() const
 {
-	mouse_local_pos = local_pos;
-}
-
-bool CyclesShaderEditor::EditColorPanel::is_mouse_over()
-{
-	if (is_active() == false) {
-		return false;
+	if (selected_input != nullptr) {
+		return selected_input->should_capture_input();
 	}
-
-	const float min_x = 0.0f;
-	const float max_x = panel_width;
-	const float min_y = 0.0f;
-	const float max_y = panel_height;
-
-	if (mouse_local_pos.get_x() > min_x &&
-		mouse_local_pos.get_x() < max_x &&
-		mouse_local_pos.get_y() > min_y &&
-		mouse_local_pos.get_y() < max_y)
-	{
-		return true;
-	}
-
 	return false;
 }
 
 void CyclesShaderEditor::EditColorPanel::handle_mouse_button(int button, int action, int /*mods*/)
 {
-	if (color_rect_click_target.is_mouse_over_target(mouse_local_pos)) {
-		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-			mouse_sat_val_selection_active = true;
+	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+		if (color_rect_click_target.is_under_point(mouse_local_pos)) {
+				mouse_sat_val_selection_active = true;
+		}
+		else if (hue_bar_click_target.is_under_point(mouse_local_pos)) {
+				mouse_hue_selection_active = true;
+		}
+		else if (color_r_input_box.is_under_point(mouse_local_pos)) {
+			select_input(&color_r_input_box);
+		}
+		else if (color_g_input_box.is_under_point(mouse_local_pos)) {
+			select_input(&color_g_input_box);
+		}
+		else if (color_b_input_box.is_under_point(mouse_local_pos)) {
+			select_input(&color_b_input_box);
 		}
 	}
-	else if (hue_bar_click_target.is_mouse_over_target(mouse_local_pos)) {
-		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-			mouse_hue_selection_active = true;
+
+	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
+		// End any click+drag in progress
+		if (mouse_hue_selection_active) {
+			mouse_hue_selection_active = false;
+			value_has_changed = true;
+		}
+		if (mouse_sat_val_selection_active) {
+			mouse_sat_val_selection_active = false;
+			value_has_changed = true;
 		}
 	}
 }
 
-void CyclesShaderEditor::EditColorPanel::mouse_button_release()
+void CyclesShaderEditor::EditColorPanel::handle_key(const int key, const int scancode, const int action, const int mods)
 {
-	if (mouse_hue_selection_active) {
-		mouse_hue_selection_active = false;
-		value_has_changed = true;
-	}
-	if (mouse_sat_val_selection_active) {
-		mouse_sat_val_selection_active = false;
-		value_has_changed = true;
+	if (selected_input != nullptr) {
+		if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+			selected_input->cancel_edit();
+		}
+		else if (key == GLFW_KEY_ENTER && action == GLFW_PRESS) {
+			selected_input->complete_edit();
+			value_has_changed = true;
+		}
+		else if (key == GLFW_KEY_BACKSPACE && action == GLFW_PRESS) {
+			selected_input->backspace();
+		}
 	}
 }
 
-CyclesShaderEditor::BaseInputBox* CyclesShaderEditor::EditColorPanel::get_input_bux_under_mouse()
+void CyclesShaderEditor::EditColorPanel::handle_character(const unsigned int codepoint)
 {
-	if (is_active() == false) {
-		return nullptr;
+	if (selected_input != nullptr) {
+		if (selected_input->should_capture_input()) {
+			selected_input->handle_character(codepoint);
+		}
 	}
+}
 
-	if (color_r_input_box.is_mouse_over()) {
-		return &color_r_input_box;
+void CyclesShaderEditor::EditColorPanel::set_attached_value(const std::weak_ptr<SocketValue> socket_value)
+{
+	if (auto socket_value_ptr = socket_value.lock()) {
+		if (socket_value_ptr != nullptr && socket_value_ptr->get_type() == SocketType::COLOR) {
+			const auto color_value_ptr = std::dynamic_pointer_cast<ColorSocketValue>(socket_value_ptr);
+			if (attached_color.lock() != color_value_ptr) {
+				reset();
+				attached_color = color_value_ptr;
+				return;
+			}
+		}
 	}
-	else if (color_g_input_box.is_mouse_over()) {
-		return &color_g_input_box;
-	}
-	else if (color_b_input_box.is_mouse_over()) {
-		return &color_b_input_box;
-	}
-	else {
-		return nullptr;
-	}
+	attached_color = std::weak_ptr<ColorSocketValue>();
+}
+
+void CyclesShaderEditor::EditColorPanel::deselect_input_box()
+{
+	select_input(nullptr);
 }
 
 bool CyclesShaderEditor::EditColorPanel::should_push_undo_state()
@@ -285,6 +298,11 @@ bool CyclesShaderEditor::EditColorPanel::should_push_undo_state()
 		return true;
 	}
 	return false;
+}
+
+void CyclesShaderEditor::EditColorPanel::reset()
+{
+	last_hue = 0.0f;
 }
 
 CyclesShaderEditor::HueSatVal CyclesShaderEditor::EditColorPanel::get_hsv()
@@ -337,4 +355,15 @@ void CyclesShaderEditor::EditColorPanel::set_sat_val_from_mouse()
 	hsv.sat = new_sat;
 	hsv.val = new_val;
 	set_hsv(hsv);
+}
+
+void CyclesShaderEditor::EditColorPanel::select_input(FloatInputBox* const input)
+{
+	if (selected_input != nullptr) {
+		selected_input->complete_edit();
+	}
+	selected_input = input;
+	if (selected_input != nullptr) {
+		selected_input->begin_edit();
+	}
 }

@@ -10,16 +10,16 @@
 #include "gui_sizes.h"
 #include "sockets.h"
 
-static CyclesShaderEditor::FloatPos get_panel_space_point(const CyclesShaderEditor::FloatPos normalized_point, float hpad, float vpad, float width, float height)
+static CyclesShaderEditor::FloatPos get_panel_space_point(const CyclesShaderEditor::FloatPos normalized_point, const float hpad, const float vpad, const float width, const float height)
 {
-	float out_x = hpad + normalized_point.get_x() * width;
-	float out_y = vpad + (1.0f - normalized_point.get_y()) * height;
+	const float out_x = hpad + normalized_point.get_x() * width;
+	const float out_y = vpad + (1.0f - normalized_point.get_y()) * height;
 
 	return CyclesShaderEditor::FloatPos(out_x, out_y);
 }
 
 CyclesShaderEditor::EditCurvePanel::EditCurvePanel(float width) :
-	panel_width(width),
+	ParamEditorPanel(width),
 	target_view(FloatPos(), FloatPos()),
 	target_edit_mode_move(FloatPos(), FloatPos(), EditCurveMode::MOVE, &edit_mode),
 	target_edit_mode_create(FloatPos(), FloatPos(), EditCurveMode::CREATE, &edit_mode),
@@ -30,35 +30,26 @@ CyclesShaderEditor::EditCurvePanel::EditCurvePanel(float width) :
 
 }
 
-bool CyclesShaderEditor::EditCurvePanel::is_active()
+bool CyclesShaderEditor::EditCurvePanel::is_active() const
 {
-	return (attached_curve != nullptr);
-}
-
-void CyclesShaderEditor::EditCurvePanel::set_attached_curve_value(CyclesShaderEditor::CurveSocketValue* curve_value)
-{
-	attached_curve = curve_value;
-}
-
-void CyclesShaderEditor::EditCurvePanel::reset_panel_state()
-{
-	edit_mode = EditCurveMode::MOVE;
-	selected_point_valid = false;
+	return static_cast<bool>(attached_curve.lock());
 }
 
 void CyclesShaderEditor::EditCurvePanel::pre_draw()
 {
-	assert(attached_curve != nullptr);
+	if (is_active() == false) {
+		return;
+	}
 
-	if (move_selected_point && mouse_local_pos != move_selected_point_begin_mouse_pos) {
+	if (moving_selected_point && mouse_local_pos != move_selected_point_begin_mouse_pos) {
 		mouse_has_moved = true;
 	}
 
-	if (selected_point_valid && move_selected_point && mouse_has_moved) {
+	if (selected_point_valid && moving_selected_point && mouse_has_moved) {
 		FloatPos normalized_pos = target_view.get_normalized_mouse_pos(mouse_local_pos);
 		normalized_pos.clamp_to(FloatPos(0.0f, 0.0f), FloatPos(1.0f, 1.0f));
-		FloatPos xy_pos = FloatPos(normalized_pos.get_x(), 1.0f - normalized_pos.get_y());
-		selected_point_index = attached_curve->move_point(selected_point_index, xy_pos);
+		const FloatPos xy_pos = FloatPos(normalized_pos.get_x(), 1.0f - normalized_pos.get_y());
+		move_selected_point(xy_pos);
 	}
 }
 
@@ -72,6 +63,11 @@ float CyclesShaderEditor::EditCurvePanel::draw(NVGcontext* draw_context)
 
 	if (edit_mode != EditCurveMode::MOVE) {
 		selected_point_valid = false;
+	}
+
+	const auto attached_curve_ptr = attached_curve.lock();
+	if (attached_curve_ptr == nullptr) {
+		return 0.0f;
 	}
 
 	// Draw curve view
@@ -97,7 +93,7 @@ float CyclesShaderEditor::EditCurvePanel::draw(NVGcontext* draw_context)
 		{
 			const FloatPos view_target_begin(rect_draw_x, rect_draw_y);
 			const FloatPos view_target_end(rect_draw_x + rect_width, rect_draw_y + rect_height);
-			target_view = GenericClickTarget(view_target_begin, view_target_end);
+			target_view = Area(view_target_begin, view_target_end);
 		}
 
 		// Draw background lines
@@ -136,7 +132,7 @@ float CyclesShaderEditor::EditCurvePanel::draw(NVGcontext* draw_context)
 		{
 			constexpr int SEGMENTS = 128;
 			constexpr float UNITS_PER_SEGMENT = 1.0f / SEGMENTS;
-			const CurveEvaluator curve(attached_curve);
+			const CurveEvaluator curve(attached_curve_ptr);
 			for (int i = 0; i <= SEGMENTS; i++) {
 				const float current_x = i * UNITS_PER_SEGMENT;
 				const float current_y = curve.eval(current_x);
@@ -156,7 +152,7 @@ float CyclesShaderEditor::EditCurvePanel::draw(NVGcontext* draw_context)
 
 		// Draw points
 		nvgBeginPath(draw_context);
-		for (const FloatPos this_point : attached_curve->curve_points) {
+		for (const FloatPos this_point : attached_curve_ptr->curve_points) {
 			const FloatPos panel_space_point = get_panel_space_point(this_point, UI_SUBWIN_PARAM_EDIT_RECT_HPAD, UI_SUBWIN_PARAM_EDIT_RECT_VPAD, rect_width, rect_height);
 			nvgCircle(draw_context, panel_space_point.get_x(), panel_space_point.get_y(), UI_SUBWIN_PARAM_EDIT_CURVE_POINT_RADIUS);
 		}
@@ -165,7 +161,7 @@ float CyclesShaderEditor::EditCurvePanel::draw(NVGcontext* draw_context)
 
 		// Draw selected point
 		if (selected_point_valid) {
-			const FloatPos selected_point = attached_curve->curve_points[selected_point_index];
+			const FloatPos selected_point = attached_curve_ptr->curve_points[selected_point_index];
 			const FloatPos selected_point_panel_space = get_panel_space_point(selected_point, UI_SUBWIN_PARAM_EDIT_RECT_HPAD, UI_SUBWIN_PARAM_EDIT_RECT_VPAD, rect_width, rect_height);
 			nvgBeginPath(draw_context);
 			nvgCircle(draw_context, selected_point_panel_space.get_x(), selected_point_panel_space.get_y(), UI_SUBWIN_PARAM_EDIT_CURVE_POINT_RADIUS * 1.5f);
@@ -236,19 +232,19 @@ float CyclesShaderEditor::EditCurvePanel::draw(NVGcontext* draw_context)
 		const float horizontal_separator_1_y = height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
 		const float horizontal_separator_2_y = height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT * 2;
 		const float horizontal_separator_3_y = height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT * 3;
-		target_edit_mode_move = CurveEditModeClickTarget(
+		target_edit_mode_move = CurveEditModeArea(
 			FloatPos(click_target_begin_x, horizontal_separator_0_y),
 			FloatPos(click_target_end_x, horizontal_separator_1_y),
 			EditCurveMode::MOVE,
 			&edit_mode
 		);
-		target_edit_mode_create = CurveEditModeClickTarget(
+		target_edit_mode_create = CurveEditModeArea(
 			FloatPos(click_target_begin_x, horizontal_separator_1_y),
 			FloatPos(click_target_end_x, horizontal_separator_2_y),
 			EditCurveMode::CREATE,
 			&edit_mode
 		);
-		target_edit_mode_delete = CurveEditModeClickTarget(
+		target_edit_mode_delete = CurveEditModeArea(
 			FloatPos(click_target_begin_x, horizontal_separator_2_y),
 			FloatPos(click_target_end_x, horizontal_separator_3_y),
 			EditCurveMode::DELETE,
@@ -304,10 +300,10 @@ float CyclesShaderEditor::EditCurvePanel::draw(NVGcontext* draw_context)
 
 		// Mark for selected radio button
 		float selected_radio_pos_y = 0.0f;
-		if (attached_curve->curve_interp == CurveInterpolation::LINEAR) {
+		if (attached_curve_ptr->curve_interp == CurveInterpolation::LINEAR) {
 			selected_radio_pos_y = radio_linear_pos_y;
 		}
-		else if (attached_curve->curve_interp == CurveInterpolation::CUBIC_HERMITE) {
+		else if (attached_curve_ptr->curve_interp == CurveInterpolation::CUBIC_HERMITE) {
 			selected_radio_pos_y = radio_hermite_pos_y;
 		}
 		nvgBeginPath(draw_context);
@@ -315,23 +311,23 @@ float CyclesShaderEditor::EditCurvePanel::draw(NVGcontext* draw_context)
 		nvgFillColor(draw_context, nvgRGBAf(0.9f, 0.9f, 0.9f, 1.0f));
 		nvgFill(draw_context);
 
-		// Make click targets
+		// Make click areas
 		const float click_target_begin_x = mode_label_pos_x + UI_CHECKBOX_SPACING;
 		const float click_target_end_x = click_target_begin_x + 120.0f;
 		const float horizontal_separator_0_y = height_drawn;
 		const float horizontal_separator_1_y = height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
 		const float horizontal_separator_2_y = height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT * 2;
-		target_interp_linear = CurveInterpClickTarget(
+		target_interp_linear = CurveInterpModeArea(
 			FloatPos(click_target_begin_x, horizontal_separator_0_y),
 			FloatPos(click_target_end_x, horizontal_separator_1_y),
 			CurveInterpolation::LINEAR,
-			&(attached_curve->curve_interp)
+			&(attached_curve_ptr->curve_interp)
 		);
-		target_interp_hermite = CurveInterpClickTarget(
+		target_interp_hermite = CurveInterpModeArea(
 			FloatPos(click_target_begin_x, horizontal_separator_1_y),
 			FloatPos(click_target_end_x, horizontal_separator_2_y),
 			CurveInterpolation::CUBIC_HERMITE,
-			&(attached_curve->curve_interp)
+			&(attached_curve_ptr->curve_interp)
 		);
 
 		height_drawn += (UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT * 2);
@@ -341,92 +337,89 @@ float CyclesShaderEditor::EditCurvePanel::draw(NVGcontext* draw_context)
 	return height_drawn;
 }
 
-void CyclesShaderEditor::EditCurvePanel::set_mouse_local_position(FloatPos local_pos)
-{
-	mouse_local_pos = local_pos;
-}
-
-bool CyclesShaderEditor::EditCurvePanel::is_mouse_over()
-{
-	if (is_active() == false) {
-		return false;
-	}
-
-	const float min_x = 0.0f;
-	const float max_x = panel_width;
-	const float min_y = 0.0f;
-	const float max_y = panel_height;
-
-	if (mouse_local_pos.get_x() > min_x &&
-		mouse_local_pos.get_x() < max_x &&
-		mouse_local_pos.get_y() > min_y &&
-		mouse_local_pos.get_y() < max_y)
-	{
-		return true;
-	}
-
-	return false;
-}
-
 void CyclesShaderEditor::EditCurvePanel::handle_mouse_button(int button, int action, int /*mods*/)
 {
+	if (is_active() == false) {
+		return;
+	}
+	const auto attached_curve_ptr = attached_curve.lock();
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-		if (target_view.is_mouse_over_target(mouse_local_pos)) {
+		if (target_view.is_under_point(mouse_local_pos)) {
 			FloatPos normalized_pos = target_view.get_normalized_mouse_pos(mouse_local_pos);
 			FloatPos xy_pos = FloatPos(normalized_pos.get_x(), 1.0f - normalized_pos.get_y());
 			if (edit_mode == EditCurveMode::MOVE) {
 				size_t target_index;
-				if (attached_curve->get_target_index(xy_pos, target_index)) {
+				if (attached_curve_ptr->get_target_index(xy_pos, target_index)) {
 					// Select new point
 					selected_point_index = target_index;
 					selected_point_valid = true;
-				}
-				// Move selected point
-				if (selected_point_valid) {
-					move_selected_point = true;
+					// Set up so mouse drag will move this point
+					moving_selected_point = true;
 					mouse_has_moved = false;
+					move_selected_point_begin_mouse_pos = mouse_local_pos;
+				}
+				else if (selected_point_valid) {
+					// Move selected point the the mouse's position
+					move_selected_point(xy_pos);
+					// Set up so mouse drag will move this point
+					moving_selected_point = true;
+					mouse_has_moved = true;
 					move_selected_point_begin_mouse_pos = mouse_local_pos;
 				}
 			}
 			else if (edit_mode == EditCurveMode::CREATE) {
-				attached_curve->create_point(xy_pos.get_x());
+				attached_curve_ptr->create_point(xy_pos.get_x());
 				request_undo_push = true;
 			}
 			else if (edit_mode == EditCurveMode::DELETE) {
-				attached_curve->delete_point(xy_pos);
+				attached_curve_ptr->delete_point(xy_pos);
 				request_undo_push = true;
 			}
 		}
-		if (target_edit_mode_move.is_mouse_over_target(mouse_local_pos)) {
+		if (target_edit_mode_move.is_under_point(mouse_local_pos)) {
 			target_edit_mode_move.click();
 			request_undo_push = true;
 		}
-		else if (target_edit_mode_create.is_mouse_over_target(mouse_local_pos)) {
+		else if (target_edit_mode_create.is_under_point(mouse_local_pos)) {
 			target_edit_mode_create.click();
 			request_undo_push = true;
 		}
-		else if (target_edit_mode_delete.is_mouse_over_target(mouse_local_pos)) {
+		else if (target_edit_mode_delete.is_under_point(mouse_local_pos)) {
 			target_edit_mode_delete.click();
 			request_undo_push = true;
 		}
-		else if (target_interp_linear.is_mouse_over_target(mouse_local_pos)) {
+		else if (target_interp_linear.is_under_point(mouse_local_pos)) {
 			target_interp_linear.click();
 			request_undo_push = true;
 		}
-		else if (target_interp_hermite.is_mouse_over_target(mouse_local_pos)) {
+		else if (target_interp_hermite.is_under_point(mouse_local_pos)) {
 			target_interp_hermite.click();
 			request_undo_push = true;
 		}
 	}
+
+	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
+		if (moving_selected_point && mouse_has_moved) {
+			request_undo_push = true;
+			mouse_has_moved = false;
+		}
+		moving_selected_point = false;
+	}
 }
 
-void CyclesShaderEditor::EditCurvePanel::mouse_button_release()
+void CyclesShaderEditor::EditCurvePanel::set_attached_value(const std::weak_ptr<SocketValue> socket_value)
 {
-	if (move_selected_point && mouse_has_moved) {
-		request_undo_push = true;
-		mouse_has_moved = false;
+	if (auto socket_value_ptr = socket_value.lock()) {
+		if (socket_value_ptr != nullptr && socket_value_ptr->get_type() == SocketType::CURVE) {
+			const auto curve_value_ptr = std::dynamic_pointer_cast<CurveSocketValue>(socket_value_ptr);
+			if (attached_curve.lock() != curve_value_ptr) {
+				reset();
+				attached_curve = curve_value_ptr;
+				return;
+			}
+		}
 	}
-	move_selected_point = false;
+	attached_curve = std::weak_ptr<CurveSocketValue>();
 }
 
 bool CyclesShaderEditor::EditCurvePanel::should_push_undo_state()
@@ -434,4 +427,19 @@ bool CyclesShaderEditor::EditCurvePanel::should_push_undo_state()
 	bool result = request_undo_push;
 	request_undo_push = false;
 	return result;
+}
+
+void CyclesShaderEditor::EditCurvePanel::reset()
+{
+	edit_mode = EditCurveMode::MOVE;
+	selected_point_valid = false;
+}
+
+void CyclesShaderEditor::EditCurvePanel::move_selected_point(const FloatPos new_pos)
+{
+	if (auto attached_curve_ptr = attached_curve.lock()) {
+		if (selected_point_valid) {
+			selected_point_index = attached_curve_ptr->move_point(selected_point_index, new_pos);
+		}
+	}
 }

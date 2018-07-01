@@ -17,14 +17,12 @@ CyclesShaderEditor::BaseInputBox::BaseInputBox(const float width, const float he
 	this->height = height;
 }
 
-void CyclesShaderEditor::BaseInputBox::draw(NVGcontext* const draw_context, const FloatPos parent_mouse_pos_in)
+void CyclesShaderEditor::BaseInputBox::draw(NVGcontext* const draw_context, const bool hightlight)
 {
-	parent_mouse_pos = parent_mouse_pos_in;
-
 	// Back fill
 	nvgBeginPath(draw_context);
 	nvgRoundedRect(draw_context, position.get_x(), position.get_y(), width, height, INPUT_CORNER_RADIUS);
-	if (is_mouse_over()) {
+	if (hightlight) {
 		nvgFillColor(draw_context, nvgRGBA(235, 235, 235, 255));
 	}
 	else {
@@ -64,16 +62,18 @@ void CyclesShaderEditor::BaseInputBox::set_position(const FloatPos parent_positi
 	this->position = parent_position;
 }
 
-bool CyclesShaderEditor::BaseInputBox::is_mouse_over()
+bool CyclesShaderEditor::BaseInputBox::is_under_point(const FloatPos parent_local_pos)
 {
 	if (displayed == false) {
 		return false;
 	}
 
-	return (parent_mouse_pos.get_x() > position.get_x() &&
-		parent_mouse_pos.get_x() < position.get_x() + width &&
-		parent_mouse_pos.get_y() > position.get_y() &&
-		parent_mouse_pos.get_y() < position.get_y() + height);
+	const FloatPos local_pos = parent_local_pos - position;
+
+	return (local_pos.get_x() > 0 &&
+		local_pos.get_x() < width &&
+		local_pos.get_y() > 0 &&
+		local_pos.get_y() < height);
 }
 
 void CyclesShaderEditor::BaseInputBox::handle_character(const unsigned int codepoint)
@@ -132,88 +132,79 @@ CyclesShaderEditor::IntInputBox::IntInputBox(const float width, const float heig
 
 }
 
-void CyclesShaderEditor::IntInputBox::set_int_value(IntSocketValue* const socket_value_in)
+void CyclesShaderEditor::IntInputBox::set_int_value(const std::weak_ptr<IntSocketValue> socket_value_in)
 {
 	socket_value = socket_value_in;
 }
 
 std::string CyclesShaderEditor::IntInputBox::get_value_as_string()
 {
-	if (socket_value == nullptr) {
-		return std::string();
+	if (auto socket_value_ptr = socket_value.lock()) {
+		std::stringstream value_stream;
+		value_stream << socket_value_ptr->get_value();
+		return value_stream.str();
 	}
-
-	std::stringstream value_stream;
-	value_stream << socket_value->get_value();
-	return value_stream.str();
+	return std::string();
 }
 
 void CyclesShaderEditor::IntInputBox::set_value_from_input_stream()
 {
-	if (socket_value == nullptr) {
-		return;
+	if (auto socket_value_ptr = socket_value.lock()) {
+		const std::string user_input = input_stream.str();
+		try {
+			int val = std::stoi(user_input);
+			socket_value_ptr->set_value(val);
+		}
+		catch (std::invalid_argument&) {}
+		catch (std::out_of_range&) {}
 	}
-
-	const std::string user_input = input_stream.str();
-
-	try {
-		int val = std::stoi(user_input);
-		socket_value->set_value(val);
-	}
-	catch (std::invalid_argument&) { }
-	catch (std::out_of_range&) { }
 }
 
-CyclesShaderEditor::FloatInputBox::FloatInputBox(float width, float height) : BaseInputBox(width, height)
+CyclesShaderEditor::FloatInputBox::FloatInputBox(const float width, const float height) : BaseInputBox(width, height)
 {
 
 }
 
-void CyclesShaderEditor::FloatInputBox::set_float_value(FloatSocketValue* socket_value_in)
+void CyclesShaderEditor::FloatInputBox::set_float_value(const std::weak_ptr<FloatSocketValue> socket_value_in)
 {
 	socket_value = socket_value_in;
 }
 
-void CyclesShaderEditor::FloatInputBox::set_float_value(float value)
+void CyclesShaderEditor::FloatInputBox::set_float_value(const float value)
 {
-	if (socket_value == nullptr) {
-		return;
+	if (auto socket_value_ptr = socket_value.lock()) {
+		socket_value_ptr->set_value(value);
 	}
-	socket_value->set_value(value);
 }
 
 float CyclesShaderEditor::FloatInputBox::get_float_value()
 {
-	if (socket_value == nullptr) {
-		return 0.0f;
+	if (auto socket_value_ptr = socket_value.lock()) {
+		return socket_value_ptr->get_value();
 	}
-
-	return socket_value->get_value();
+	return 0.0f;
 }
 
 std::string CyclesShaderEditor::FloatInputBox::get_value_as_string()
 {
-	if (socket_value == nullptr) {
-		return std::string();
+	if (auto socket_value_ptr = socket_value.lock()) {
+		std::stringstream value_stream;
+		value_stream << std::fixed << std::setprecision(3) << socket_value_ptr->get_value();
+		return value_stream.str();
 	}
-
-	std::stringstream value_stream;
-	value_stream << std::fixed << std::setprecision(3) << socket_value->get_value();
-	return value_stream.str();
+	return std::string();
 }
 
 void CyclesShaderEditor::FloatInputBox::set_value_from_input_stream()
 {
-	if (socket_value == nullptr) {
-		return;
-	}
+	if (auto socket_value_ptr = socket_value.lock()) {
+		const std::string user_input = input_stream.str();
 
-	const std::string user_input = input_stream.str();
-
-	try {
-		float val = std::stof(user_input);
-		socket_value->set_value(val);
+		try {
+			float val = std::stof(user_input);
+			socket_value_ptr->set_value(val);
+		}
+		catch (std::invalid_argument&) {}
+		catch (std::out_of_range&) {}
 	}
-	catch (std::invalid_argument&) { }
-	catch (std::out_of_range&) { }
 }

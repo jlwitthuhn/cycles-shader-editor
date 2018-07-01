@@ -1,13 +1,12 @@
 #pragma once
 
+#include <list>
 #include <memory>
 #include <vector>
 
-#include "click_target.h"
 #include "input_box.h"
-#include "panel_edit_color.h"
-#include "panel_edit_curve.h"
 #include "subwindow.h"
+#include "util_area.h"
 
 struct NVGcontext;
 
@@ -15,6 +14,7 @@ namespace CyclesShaderEditor {
 
 	class FloatPos;
 	class NodeSocket;
+	class ParamEditorPanel;
 	class Selection;
 
 	class ParamEditorSubwindow : public NodeEditorSubwindow {
@@ -30,19 +30,17 @@ namespace CyclesShaderEditor {
 		virtual void handle_character(unsigned int codepoint) override;
 
 		virtual bool should_capture_input() const override;
+		virtual void deselect_input_box() override;
 
 		virtual bool is_active() const override;
 
 		virtual bool needs_undo_push() override;
 		virtual void update_selection(std::weak_ptr<const Selection> selection) override;
 
-		void complete_input();
-
-
 	protected:
 		virtual void draw_content(NVGcontext* draw_context) override;
 
-		void select_input(BaseInputBox* input);
+		void select_input_box(BaseInputBox* input);
 
 		bool is_bool_target_under_mouse();
 		bool is_enum_target_under_mouse();
@@ -50,14 +48,12 @@ namespace CyclesShaderEditor {
 		void click_enum_target_under_mouse();
 
 		std::weak_ptr<NodeSocket> selected_param;
-
 		BaseInputBox* selected_input = nullptr;
 
 		float panel_start_y = 0;
 
 		// Panels
-		EditColorPanel panel_color;
-		EditCurvePanel panel_curve;
+		std::list<std::shared_ptr<ParamEditorPanel>> panels;
 
 		// Int stuff
 		IntInputBox int_input_box;
@@ -71,10 +67,10 @@ namespace CyclesShaderEditor {
 		FloatInputBox vector_z_input_box;
 
 		// Enum stuff
-		std::vector<StringEnumClickTarget> enum_targets;
+		std::vector<StringEnumArea> enum_targets;
 
 		// Bool stuff
-		std::vector<BoolValueClickTarget> bool_targets;
+		std::vector<BoolValueArea> bool_targets;
 
 		// Undo state stuff
 		bool request_undo_stack_push = false;
