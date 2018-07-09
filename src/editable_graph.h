@@ -8,8 +8,9 @@
 #include "node_base.h"
 
 namespace CyclesShaderEditor {
-	
+
 	class FloatPos;
+	class NodeSocket;
 
 	// This class is used to store all data for a single graph that can be edited interactively
 	class EditableGraph {
@@ -18,7 +19,7 @@ namespace CyclesShaderEditor {
 
 		void add_node(std::unique_ptr<EditorNode>& node, FloatPos world_pos);
 		void add_connection(std::weak_ptr<NodeSocket> socket_begin, std::weak_ptr<NodeSocket> socket_end);
-		
+
 		NodeConnection remove_connection_with_end(std::weak_ptr<NodeSocket> socket_end);
 		void remove_node_set(const std::set<EditorNode*>& nodes_to_remove);
 

@@ -8,6 +8,7 @@
 #include <GLFW/glfw3.h>
 #include <nanovg.h>
 
+#include "common_enums.h"
 #include "drawing.h"
 #include "editable_graph.h"
 #include "node_base.h"
@@ -299,7 +300,7 @@ void CyclesShaderEditor::EditGraphView::handle_mouse_button(const int button, co
 	}
 }
 
-void CyclesShaderEditor::EditGraphView::handle_key(const int key, const int scancode, const int action, const int mods)
+void CyclesShaderEditor::EditGraphView::handle_key(const int key, int /*scancode*/, const int action, int /*mods*/)
 {
 	const int delete_key = Platform::get_delete_key();
 	if (key == delete_key && action == GLFW_PRESS) {

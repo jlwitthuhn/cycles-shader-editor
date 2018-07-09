@@ -12,6 +12,7 @@ namespace CyclesShaderEditor {
 	class ParamEditorPanel {
 	public:
 		ParamEditorPanel(float width);
+		virtual ~ParamEditorPanel() {}
 
 		virtual bool is_active() const = 0;
 
@@ -28,7 +29,7 @@ namespace CyclesShaderEditor {
 
 		virtual void set_attached_value(std::weak_ptr<SocketValue> socket_value) = 0;
 		virtual void deselect_input_box();
-		
+
 		virtual bool should_push_undo_state();
 
 	protected:

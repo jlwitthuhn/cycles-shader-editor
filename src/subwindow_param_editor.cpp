@@ -8,9 +8,11 @@
 #include <GLFW/glfw3.h>
 #include <nanovg.h>
 
+#include "common_enums.h"
 #include "float_pos.h"
 #include "gui_sizes.h"
 #include "input_box.h"
+#include "panel_edit.h"
 #include "panel_edit_color.h"
 #include "panel_edit_curve.h"
 #include "selection.h"
@@ -300,7 +302,7 @@ void CyclesShaderEditor::ParamEditorSubwindow::draw_content(NVGcontext* draw_con
 
 			const std::string value_text = "Value:";
 			nvgText(draw_context, subwindow_width / 3, height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT / 2, value_text.c_str(), nullptr);
-			
+
 			const float input_x_draw = (2.0f * subwindow_width / 3) - (float_input_box.width / 2);
 			const float input_y_draw = height_drawn + (UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT - float_input_box.height) / 2;
 

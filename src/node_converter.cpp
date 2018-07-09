@@ -1,8 +1,10 @@
 #include "node_converter.h"
 
+#include <memory>
 #include <string>
 #include <vector>
 
+#include "common_enums.h"
 #include "float_pos.h"
 #include "output.h"
 #include "sockets.h"

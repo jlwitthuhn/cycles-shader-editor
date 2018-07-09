@@ -8,7 +8,10 @@
 #include "panel_edit.h"
 #include "util_area.h"
 
+struct NVGcontext;
+
 namespace CyclesShaderEditor {
+	class CurveSocketValue;
 	class SocketValue;
 
 	class EditCurvePanel : public ParamEditorPanel {

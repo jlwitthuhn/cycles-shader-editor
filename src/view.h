@@ -16,7 +16,6 @@ namespace CyclesShaderEditor {
 	class EditorNode;
 	class NodeCreationHelper;
 	class NodeSocket;
-	class Selection;
 	class ViewUIRequests;
 
 	class EditGraphView {

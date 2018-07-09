@@ -35,7 +35,7 @@ endif
 
 CPPFLAGS_NVG := -MMD -MP $(DEFINES_FLAGS)
 CPPFLAGS := -MMD -MP $(DEFINES_FLAGS) -Inanovg/src/
-CXXFLAGS := -Wall -std=c++14 $(DEP_CXXFLAGS)
+CXXFLAGS := -Wall -Wextra -std=c++14 $(DEP_CXXFLAGS)
 LDFLAGS := -lstdc++ -lm -lGLEW -lglfw $(GL_LDFLAGS) $(DEP_LDFLAGS) $(MORE_LDFLAGS)
 
 MKDIR_P = mkdir -p
@@ -43,7 +43,7 @@ MKDIR_P = mkdir -p
 PUBLIC_INCLUDES = graph_decoder.h graph_editor.h output.h util_platform.h
 PUBLIC_INCLUDE_DST := $(addprefix $(INC_DIR)/,$(PUBLIC_INCLUDES))
 
-$(BINARY_NAME): $(LIB_PATH) $(PUBLIC_INCLUDE_DST) 
+$(BINARY_NAME): $(LIB_PATH) $(PUBLIC_INCLUDE_DST)
 	$(MKDIR_P) $(dir $@)
 	$(CXX) ./example/main.cpp $(LIB_DIR)/$(LIB_NAME) $(CXXFLAGS) $(LDFLAGS) -I$(INC_DIR) -o $@
 
@@ -62,6 +62,10 @@ $(INC_DIR)/%.h: $(SRC_DIR)/%.h
 $(LIB_PATH): $(OBJ_PATHS) $(OBJ_DIR)/nanovg.o
 	$(MKDIR_P) $(dir $@)
 	$(AR) rcs $(LIB_DIR)/$(LIB_NAME) $^
+
+iwyu: CXX := include-what-you-use
+iwyu: CXXFLAGS += -Xiwyu --mapping_file=./extra/iwyu.imp
+iwyu: $(BINARY_NAME)
 
 -include $(GCC_MAKEFILES)
 

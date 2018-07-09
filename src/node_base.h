@@ -4,15 +4,16 @@
 #include <string>
 #include <vector>
 
+#include "common_enums.h"
 #include "float_pos.h"
 #include "output.h"
-#include "sockets.h"
 #include "util_area.h"
 
 struct NVGcontext;
 
 namespace CyclesShaderEditor {
 
+	class NodeSocket;
 	class EditorNode;
 
 	class NodeConnection {
@@ -28,6 +29,8 @@ namespace CyclesShaderEditor {
 
 	class EditorNode {
 	public:
+		virtual ~EditorNode() {}
+
 		virtual std::string get_title() const;
 
 		virtual void draw_node(NVGcontext* draw_context);

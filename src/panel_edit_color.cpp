@@ -5,7 +5,9 @@
 #include <GLFW/glfw3.h>
 #include <nanovg.h>
 
+#include "common_enums.h"
 #include "drawing.h"
+#include "float_pos.h"
 #include "gui_sizes.h"
 #include "sockets.h"
 
@@ -246,7 +248,7 @@ void CyclesShaderEditor::EditColorPanel::handle_mouse_button(int button, int act
 	}
 }
 
-void CyclesShaderEditor::EditColorPanel::handle_key(const int key, const int scancode, const int action, const int mods)
+void CyclesShaderEditor::EditColorPanel::handle_key(const int key, int /*scancode*/, const int action, int /*mods*/)
 {
 	if (selected_input != nullptr) {
 		if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {

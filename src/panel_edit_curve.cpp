@@ -1,6 +1,5 @@
 #include "panel_edit_curve.h"
 
-#include <cassert>
 #include <vector>
 
 #include <GLFW/glfw3.h>

@@ -1,9 +1,11 @@
 #include "node_colors.h"
 
 #include <map>
+#include <memory>
 #include <string>
 #include <vector>
 
+#include "common_enums.h"
 #include "config.h"
 #include "curve.h"
 #include "float_pos.h"

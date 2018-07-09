@@ -1,3 +1,4 @@
 [
-    { include: ["<bits/shared_ptr.h>", "private", "<memory>", "public"] }
+    { include: ["<bits/shared_ptr.h>", "private", "<memory>", "public"] },
+    { include: ["<ext/alloc_traits.h>", "private", "<memory>", "public"] }
 ]

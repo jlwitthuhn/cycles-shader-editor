@@ -26,6 +26,7 @@ namespace CyclesShaderEditor {
 
 	class SocketValue {
 	public:
+		virtual ~SocketValue() {}
 		virtual SocketType get_type() const = 0;
 	};
 

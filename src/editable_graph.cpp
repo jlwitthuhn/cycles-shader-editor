@@ -2,6 +2,7 @@
 
 #include "float_pos.h"
 #include "node_outputs.h"
+#include "sockets.h"
 
 CyclesShaderEditor::EditableGraph::EditableGraph(const ShaderGraphType type)
 {

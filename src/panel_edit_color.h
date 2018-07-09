@@ -2,13 +2,15 @@
 
 #include <memory>
 
-#include "float_pos.h"
 #include "input_box.h"
 #include "panel_edit.h"
 #include "util_area.h"
 #include "util_color.h"
 
+struct NVGcontext;
+
 namespace CyclesShaderEditor {
+	class ColorSocketValue;
 	class SocketValue;
 
 	class EditColorPanel : public ParamEditorPanel {
@@ -18,7 +20,7 @@ namespace CyclesShaderEditor {
 		virtual bool is_active() const override;
 		virtual float draw(NVGcontext* draw_context) override;
 
-		virtual bool should_capture_input() const;
+		virtual bool should_capture_input() const override;
 		virtual void handle_mouse_button(int button, int action, int mods) override;
 		virtual void handle_key(int key, int scancode, int action, int mods) override;
 		virtual void handle_character(unsigned int codepoint) override;
