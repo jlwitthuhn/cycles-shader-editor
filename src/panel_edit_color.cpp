@@ -276,13 +276,13 @@ void CyclesShaderEditor::EditColorPanel::handle_character(const unsigned int cod
 void CyclesShaderEditor::EditColorPanel::set_attached_value(const std::weak_ptr<SocketValue> socket_value)
 {
 	if (auto socket_value_ptr = socket_value.lock()) {
-		if (socket_value_ptr != nullptr && socket_value_ptr->get_type() == SocketType::COLOR) {
+		if (socket_value_ptr->get_type() == SocketType::COLOR) {
 			const auto color_value_ptr = std::dynamic_pointer_cast<ColorSocketValue>(socket_value_ptr);
 			if (attached_color.lock() != color_value_ptr) {
 				reset();
 				attached_color = color_value_ptr;
-				return;
 			}
+			return;
 		}
 	}
 	attached_color = std::weak_ptr<ColorSocketValue>();

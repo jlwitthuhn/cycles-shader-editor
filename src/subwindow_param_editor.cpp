@@ -190,9 +190,9 @@ bool CyclesShaderEditor::ParamEditorSubwindow::needs_undo_push()
 	return result;
 }
 
-void CyclesShaderEditor::ParamEditorSubwindow::update_selection(std::weak_ptr<const Selection> selection)
+void CyclesShaderEditor::ParamEditorSubwindow::update_selection(const std::weak_ptr<const Selection> selection)
 {
-	auto selection_ptr = selection.lock();
+	const auto selection_ptr = selection.lock();
 	if (selection_ptr) {
 		if (selected_param.lock() != selection_ptr->socket.lock()) {
 			deselect_input_box();

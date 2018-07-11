@@ -409,13 +409,13 @@ void CyclesShaderEditor::EditCurvePanel::handle_mouse_button(int button, int act
 void CyclesShaderEditor::EditCurvePanel::set_attached_value(const std::weak_ptr<SocketValue> socket_value)
 {
 	if (auto socket_value_ptr = socket_value.lock()) {
-		if (socket_value_ptr != nullptr && socket_value_ptr->get_type() == SocketType::CURVE) {
+		if (socket_value_ptr->get_type() == SocketType::CURVE) {
 			const auto curve_value_ptr = std::dynamic_pointer_cast<CurveSocketValue>(socket_value_ptr);
 			if (attached_curve.lock() != curve_value_ptr) {
 				reset();
 				attached_curve = curve_value_ptr;
-				return;
 			}
+			return;
 		}
 	}
 	attached_curve = std::weak_ptr<CurveSocketValue>();

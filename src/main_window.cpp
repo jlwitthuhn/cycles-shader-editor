@@ -86,7 +86,7 @@ bool CyclesShaderEditor::EditorMainWindow::create_window()
 	Platform::nvg_create_font(sans_font_path, "sans", nvg_context);
 
 	(*get_callback_window_map())[window] = this;
-	
+
 	glfwSetKeyCallback(window, key_callback);
 	glfwSetMouseButtonCallback(window, mouse_button_callback);
 	glfwSetCharCallback(window, character_callback);
@@ -146,7 +146,7 @@ void CyclesShaderEditor::EditorMainWindow::handle_mouse_button(const int button,
 			this_subwindow->deselect_input_box();
 		}
 	}
-	
+
 	const bool toolbar_has_focus = (toolbar != nullptr && toolbar->is_mouse_over());
 
 	if (forward_mouse_to_subwindow(button, action, mods)) {
@@ -207,7 +207,7 @@ void CyclesShaderEditor::EditorMainWindow::handle_key(const int key, const int s
 			break;
 		}
 	}
-	
+
 	if (forward_key_to_subwindow(key, scancode, action, mods)) {
 		// Subwindow took the input, end here
 		return;
