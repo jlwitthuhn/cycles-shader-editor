@@ -8,6 +8,7 @@
 #include <nanovg.h>
 
 #include "sockets.h"
+#include "util_parse.h"
 
 const float INPUT_CORNER_RADIUS = 3.0f;
 
@@ -201,7 +202,7 @@ void CyclesShaderEditor::FloatInputBox::set_value_from_input_stream()
 		const std::string user_input = input_stream.str();
 
 		try {
-			float val = std::stof(user_input);
+			float val = locale_safe_stof(user_input);
 			socket_value_ptr->set_value(val);
 		}
 		catch (std::invalid_argument&) {}

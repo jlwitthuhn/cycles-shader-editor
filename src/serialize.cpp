@@ -20,6 +20,7 @@
 #include "node_vector.h"
 #include "output.h"
 #include "sockets.h"
+#include "util_parse.h"
 
 static const char SEPARATOR = '|';
 
@@ -193,8 +194,8 @@ static void deserialize_curve(std::string serialized_curve, std::shared_ptr<Cycl
 
 	curve_value->curve_points.clear();
 	for (std::size_t points_copied = 0; points_copied < control_point_count; points_copied++) {
-		const float x = std::stof(*(input_iter++));
-		const float y = std::stof(*(input_iter++));
+		const float x = CyclesShaderEditor::locale_safe_stof(*(input_iter++));
+		const float y = CyclesShaderEditor::locale_safe_stof(*(input_iter++));
 		CyclesShaderEditor::FloatPos this_point(x, y);
 		curve_value->curve_points.push_back(this_point);
 	}
@@ -577,8 +578,8 @@ static CyclesShaderEditor::EditorNode* deserialize_node(std::list<std::string>& 
 
 	std::string type_code = *(token_iter++);
 	std::string name = *(token_iter++);
-	float x_position = std::stof(*(token_iter++));
-	float y_position = std::stof(*(token_iter++));
+	float x_position = CyclesShaderEditor::locale_safe_stof(*(token_iter++));
+	float y_position = CyclesShaderEditor::locale_safe_stof(*(token_iter++));
 
 	std::map<std::string, std::string> params;
 	while (token_iter != tokens.end()) {
@@ -610,7 +611,7 @@ static CyclesShaderEditor::EditorNode* deserialize_node(std::list<std::string>& 
 			switch (this_socket_ptr->socket_type) {
 
 			case SocketType::FLOAT:
-				this_socket_ptr->set_float_val(std::stof(this_param.second));
+				this_socket_ptr->set_float_val(CyclesShaderEditor::locale_safe_stof(this_param.second));
 				break;
 
 			case SocketType::COLOR:
@@ -624,7 +625,7 @@ static CyclesShaderEditor::EditorNode* deserialize_node(std::list<std::string>& 
 				std::string x = *(float_iter++);
 				std::string y = *(float_iter++);
 				std::string z = *(float_iter++);
-				this_socket_ptr->set_float3_val(std::stof(x), std::stof(y), std::stof(z));
+				this_socket_ptr->set_float3_val(CyclesShaderEditor::locale_safe_stof(x), CyclesShaderEditor::locale_safe_stof(y), CyclesShaderEditor::locale_safe_stof(z));
 				break;
 			}
 
