@@ -18,6 +18,8 @@ Libraries you will need are:
 - NanoVG
   - A compatible version is bundled in this repository, but any moderately recent version should work.
 
+A note about NanoVG: The bundled version of NanoVG has an extra function defined, nvgCreateFontW. This works the same as the normal nvgCreateFont but with wchar_t paths rather than char paths. This extra function is required only for building the Windows version of the shader editor because Windows likes to use wchar_t for unicode strings.
+
 OpenGL 2.0 support is required to run the editor.
 
 This project does not depend on any Cycles code or headers.
@@ -83,7 +85,7 @@ You will use largely the same basic flow when using this library. The key points
 
 Now you can create a window and get a serialized graph from it, but that string is not very useful on its own.
 
-To help with this, you can use the CyclesShaderEditor::CyclesNodeGraph class defined in `graph_decoder.h`. This class has a single constructor that takes a serialized graph string as an argument. Once the object construction is complete, the 'nodes' and 'connections' members will be populated with relevant information.
+To help with this, you can use the CyclesShaderEditor::CyclesNodeGraph class defined in `graph_decoder.h`. This class has a single constructor that takes a serialized graph string as an argument. Once the object construction is complete, the 'nodes' and 'connections' member variables will be populated with relevant information.
 
 ### Constructing a ccl::ShaderGraph
 
@@ -91,7 +93,7 @@ The file [extra/shader_graph_converter.cpp](extra/shader_graph_converter.cpp) co
 
 ## The Serialized Graph Format
 
-The format for serialized graph strings is very simple. It is a series of pipe-delimited strings. The basic format of the string is:
+The format for serialized graph strings is very simple. It is a series of pipe-delimited strings. The basic format is:
 ```
 cycles_shader|1|section_nodes|[NODES]|section_connections|[CONNECTIONS]|
 ^             ^ ^             ^       ^                   ^
