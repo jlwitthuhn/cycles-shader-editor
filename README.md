@@ -28,7 +28,7 @@ This project does not depend on any Cycles code or headers.
 
 On unixy systems, you can simply run `make` to build the example program. It will produce a binary named `shader_editor` in the top-level directory. It will also produce a `lib/libshadereditor.a` static library.
 
-On Windows I haven't provided a visual studio project, but it should build fine if you put all the source files together in a C++ project with default settings. You will also need to define the preprocessor symbol `NANOVG_GL2_IMPLEMENTATION` so NanoVG knows what OpenGL implementation to use.
+On Windows I haven't provided a visual studio project, but it should build fine if you put all the source files together in a C++ project with default settings.
 
 ### Using the Editor
 

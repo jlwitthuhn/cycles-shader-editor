@@ -1,5 +1,7 @@
 #include "main_window.h"
 
+#define NANOVG_GL2_IMPLEMENTATION
+
 #include <map>
 #include <utility>
 #include <vector>
