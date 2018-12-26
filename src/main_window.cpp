@@ -126,7 +126,9 @@ bool CyclesShaderEditor::EditorMainWindow::run_window_loop_iteration()
 	glViewport(0, 0, fb_width, fb_height);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-	nvgBeginFrame(nvg_context, window_width, window_height, px_ratio);
+	const float window_width_fl = static_cast<float>(window_width);
+	const float window_height_fl = static_cast<float>(window_height);
+	nvgBeginFrame(nvg_context, window_width_fl, window_height_fl, px_ratio);
 	draw();
 	nvgEndFrame(nvg_context);
 
