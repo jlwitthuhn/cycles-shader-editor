@@ -13,6 +13,7 @@
 
 #include "common_enums.h"
 #include "glfw_callbacks.h"
+#include "glfw_window.h"
 #include "gui_sizes.h"
 #include "graph_editor.h"
 #include "node_base.h"
@@ -27,6 +28,8 @@
 #include "util_platform.h"
 #include "view.h"
 
+#include <iostream>
+
 CyclesShaderEditor::EditorMainWindow::EditorMainWindow(GraphEditor* public_window) :
 	main_graph(ShaderGraphType::MATERIAL),
 	public_window(public_window)
@@ -34,7 +37,6 @@ CyclesShaderEditor::EditorMainWindow::EditorMainWindow(GraphEditor* public_windo
 	window_width = UI_WINDOW_WIDTH;
 	window_height = UI_WINDOW_HEIGHT;
 
-	window = nullptr;
 	nvg_context = nullptr;
 
 	last_buffer_swap_time = std::chrono::steady_clock::now();
@@ -45,6 +47,7 @@ CyclesShaderEditor::EditorMainWindow::EditorMainWindow(GraphEditor* public_windo
 CyclesShaderEditor::EditorMainWindow::~EditorMainWindow()
 {
 	release_resources();
+	glfwTerminate();
 }
 
 void CyclesShaderEditor::EditorMainWindow::set_font_search_path(const PathString& path)
@@ -61,12 +64,12 @@ bool CyclesShaderEditor::EditorMainWindow::create_window()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
-	window = glfwCreateWindow(window_width, window_height, "Node Graph Editor", nullptr, nullptr);
-	if (window == nullptr) {
+	glfw_window = std::make_unique<GlfwWindow>(window_width, window_height, "Node Graph Editor");
+	if (glfw_window->is_valid() == false) {
 		return false;
 	}
 
-	glfwMakeContextCurrent(window);
+	glfwMakeContextCurrent(glfw_window->window_ptr);
 	glfwSwapInterval(0);
 
 	if (glewInit() != GLEW_OK) {
@@ -87,12 +90,12 @@ bool CyclesShaderEditor::EditorMainWindow::create_window()
 	const PathString sans_font_path = Platform::get_font_path(font_search_path, "SourceSansPro-Regular.ttf");
 	Platform::nvg_create_font(sans_font_path, "sans", nvg_context);
 
-	(*get_callback_window_map())[window] = this;
+	register_window_pair_for_callbacks(glfw_window->window_ptr, this);
 
-	glfwSetKeyCallback(window, key_callback);
-	glfwSetMouseButtonCallback(window, mouse_button_callback);
-	glfwSetCharCallback(window, character_callback);
-	glfwSetScrollCallback(window, scroll_callback);
+	glfwSetKeyCallback(glfw_window->window_ptr, key_callback);
+	glfwSetMouseButtonCallback(glfw_window->window_ptr, mouse_button_callback);
+	glfwSetCharCallback(glfw_window->window_ptr, character_callback);
+	glfwSetScrollCallback(glfw_window->window_ptr, scroll_callback);
 
 	toolbar = std::make_unique<NodeEditorToolbar>();
 	status_bar = std::make_unique<NodeEditorStatusBar>();
@@ -113,14 +116,14 @@ bool CyclesShaderEditor::EditorMainWindow::create_window()
 
 bool CyclesShaderEditor::EditorMainWindow::run_window_loop_iteration()
 {
-	if (glfwWindowShouldClose(window)) {
+	if (glfwWindowShouldClose(glfw_window->window_ptr)) {
 		return false;
 	}
 
 	pre_draw();
 
 	int fb_width, fb_height;
-	glfwGetFramebufferSize(window, &fb_width, &fb_height);
+	glfwGetFramebufferSize(glfw_window->window_ptr, &fb_width, &fb_height);
 	const float px_ratio = static_cast<float>(fb_width) / window_width;
 
 	glViewport(0, 0, fb_width, fb_height);
@@ -266,8 +269,8 @@ void CyclesShaderEditor::EditorMainWindow::pre_draw()
 
 	// Get new mouse position and window size
 	double mx, my;
-	glfwGetCursorPos(window, &mx, &my);
-	glfwGetWindowSize(window, &window_width, &window_height);
+	glfwGetCursorPos(glfw_window->window_ptr, &mx, &my);
+	glfwGetWindowSize(glfw_window->window_ptr, &window_width, &window_height);
 	update_mouse_position(CyclesShaderEditor::FloatPos(static_cast<float>(mx), static_cast<float>(my)));
 
 	// Handle window events
@@ -370,7 +373,7 @@ void CyclesShaderEditor::EditorMainWindow::swap_buffers()
 		}
 	}
 	last_buffer_swap_time = std::chrono::steady_clock::now();
-	glfwSwapBuffers(window);
+	glfwSwapBuffers(glfw_window->window_ptr);
 }
 
 void CyclesShaderEditor::EditorMainWindow::service_requests()
@@ -519,16 +522,10 @@ void CyclesShaderEditor::EditorMainWindow::release_resources()
 	status_bar.reset();
 	view.reset();
 
-	if (window != nullptr) {
-		(*get_callback_window_map()).erase(window);
-		glfwDestroyWindow(window);
-		window = nullptr;
-	}
+	glfw_window.release();
 
 	if (nvg_context != nullptr) {
 		nvgDeleteGL2(nvg_context);
 		nvg_context = nullptr;
 	}
-
-	glfwTerminate();
 }

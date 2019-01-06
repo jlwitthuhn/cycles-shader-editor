@@ -11,12 +11,12 @@
 #include "util_platform.h"
 #include "undo.h"
 
-struct GLFWwindow;
 struct NVGcontext;
 
 namespace CyclesShaderEditor {
 
 	class EditGraphView;
+	class GlfwWindow;
 	class GraphEditor;
 	class NodeCreationHelper;
 	class NodeEditorStatusBar;
@@ -88,7 +88,7 @@ namespace CyclesShaderEditor {
 
 		UIRequests requests;
 
-		GLFWwindow* window = nullptr;
+		std::unique_ptr<GlfwWindow> glfw_window;
 		NVGcontext* nvg_context = nullptr;
 
 		GraphEditor* public_window = nullptr;
