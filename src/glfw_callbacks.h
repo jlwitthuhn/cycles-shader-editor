@@ -1,7 +1,5 @@
 #pragma once
 
-#include <map>
-
 struct GLFWwindow;
 
 namespace CyclesShaderEditor {

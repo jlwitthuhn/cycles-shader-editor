@@ -2,7 +2,6 @@
 
 #define NANOVG_GL2_IMPLEMENTATION
 
-#include <map>
 #include <utility>
 #include <vector>
 
@@ -27,8 +26,6 @@
 #include "toolbar.h"
 #include "util_platform.h"
 #include "view.h"
-
-#include <iostream>
 
 CyclesShaderEditor::EditorMainWindow::EditorMainWindow(GraphEditor* public_window) :
 	main_graph(ShaderGraphType::MATERIAL),
