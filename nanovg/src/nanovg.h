@@ -545,7 +545,9 @@ void nvgStroke(NVGcontext* ctx);
 // Creates font by loading it from the disk from specified file name.
 // Returns handle to the font.
 int nvgCreateFont(NVGcontext* ctx, const char* name, const char* filename);
+#ifdef _WIN32
 int nvgCreateFontW(NVGcontext* ctx, const char* name, const wchar_t* filename);
+#endif
 
 // Creates font by loading it from the specified memory chunk.
 // Returns handle to the font.

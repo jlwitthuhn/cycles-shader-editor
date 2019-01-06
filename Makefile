@@ -17,9 +17,6 @@ CPP_FILES := $(notdir ${CPP_PATHS})
 OBJ_PATHS := $(CPP_FILES:%=$(OBJ_DIR)/%.o)
 GCC_MAKEFILES := $(OBJ_PATHS:.o=.d)
 
-DEFINES := NANOVG_GL2_IMPLEMENTATION
-DEFINES_FLAGS := $(addprefix -D,$(DEFINES))
-
 # Uncomment these and point them to your libraries if
 # their includes and libs are not on the default paths
 #DEP_CXXFLAGS := -I../lib/glfw-3.2.1/dist/include/ -I../lib/glew-2.1.0/dist/include/
@@ -33,8 +30,8 @@ else
 GL_LDFLAGS = -lGL
 endif
 
-CPPFLAGS_NVG := -MMD -MP $(DEFINES_FLAGS)
-CPPFLAGS := -MMD -MP $(DEFINES_FLAGS) -Inanovg/src/
+CPPFLAGS_NVG := -MMD -MP
+CPPFLAGS := -MMD -MP -Inanovg/src/
 CXXFLAGS := -Wall -Wextra -std=c++14 $(DEP_CXXFLAGS)
 LDFLAGS := -lstdc++ -lm -lGLEW -lglfw $(GL_LDFLAGS) $(DEP_LDFLAGS) $(MORE_LDFLAGS)
 

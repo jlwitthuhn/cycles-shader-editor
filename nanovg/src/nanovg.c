@@ -2292,10 +2292,12 @@ int nvgCreateFont(NVGcontext* ctx, const char* name, const char* path)
 	return fonsAddFont(ctx->fs, name, path);
 }
 
+#ifdef _WIN32
 int nvgCreateFontW(NVGcontext* ctx, const char* name, const wchar_t* path)
 {
 	return fonsAddFontW(ctx->fs, name, path);
 }
+#endif
 
 int nvgCreateFontMem(NVGcontext* ctx, const char* name, unsigned char* data, int ndata, int freeData)
 {

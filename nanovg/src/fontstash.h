@@ -103,7 +103,9 @@ int fonsResetAtlas(FONScontext* stash, int width, int height);
 
 // Add fonts
 int fonsAddFont(FONScontext* s, const char* name, const char* path);
+#ifdef _WIN32
 int fonsAddFontW(FONScontext* s, const char* name, const wchar_t* path);
+#endif
 int fonsAddFontMem(FONScontext* s, const char* name, unsigned char* data, int ndata, int freeData);
 int fonsGetFontByName(FONScontext* s, const char* name);
 
@@ -919,6 +921,7 @@ error:
 	return FONS_INVALID;
 }
 
+#ifdef _WIN32
 int fonsAddFontW(FONScontext* stash, const char* name, const wchar_t* path)
 {
 	FILE* fp = 0;
@@ -946,6 +949,7 @@ error:
 	if (fp) fclose(fp);
 	return FONS_INVALID;
 }
+#endif
 
 int fonsAddFontMem(FONScontext* stash, const char* name, unsigned char* data, int dataSize, int freeData)
 {
