@@ -130,4 +130,4 @@ cycles_shader|1|section_nodes|diffuse_bsdf|node1|0|0|roughness|0|color|0,1,1|nod
 
 ## License
 
-This project is available under the zlib license. The full text of the license is available in [LICENSE.txt](LICENSE.txt)
+This project is available under the MIT license. The full text of the license is available in [LICENSE.txt](LICENSE.txt)
