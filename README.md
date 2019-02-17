@@ -54,17 +54,22 @@ All types defined in these headers are a part of the CyclesShaderEditor namespac
 The included example program is close to the smallest program possible to make with the library. It is reproduced below.
 
 ```C++
-#include <iostream>
 #include <graph_editor.h>
+
+#include <iostream>
+#include <string>
 
 int main()
 {
 	CyclesShaderEditor::GraphEditor node_window;
+
 	node_window.create_window();
+	
 	while (node_window.run_window_loop_iteration()) {
-		if (node_window.output_updated) {
-			std::cout << "Graph saved:\n" << node_window.serialized_output << std::endl;
-			node_window.output_updated = false;
+		// Check if data is ready
+		std::string graph;
+		if (node_window.get_serialized_graph(graph)) {
+			std::cout << "Graph saved:\n" << graph << std::endl;
 		}
 	}
 	return 0;
@@ -78,8 +83,8 @@ You will use largely the same basic flow when using this library. The key points
 * Once a window exists, loop calling GraphEditor::run_window_loop_iteration() until it returns false.
   * This method is responsible for handling user input and drawing.
   * It will return false once the window has been closed.
-* If GraphEditor::output_updated is true, serialized_output will contain a serialized node graph string.
-  * When this string is read from the window object, output_updated should be set to false. It will be set to true when the user saves again.
+* Call GraphEditor::get_serialized_graph to get the latest serialized graph from the window.
+  * This function will return true if the graph has been updated since the last time get_serialized_graph was called.
 
 ### Decoding the Graph String
 

@@ -1,8 +1,10 @@
 #pragma once
 
-#include "util_platform.h"
-
+#include <memory>
 #include <string>
+
+#include "main_window.h"
+#include "util_platform.h"
 
 namespace CyclesShaderEditor {
 
@@ -11,7 +13,6 @@ namespace CyclesShaderEditor {
 	class GraphEditor {
 	public:
 		GraphEditor();
-		~GraphEditor();
 
 		void set_font_search_path(const PathString& font_path);
 
@@ -22,11 +23,10 @@ namespace CyclesShaderEditor {
 
 		void load_serialized_graph(const std::string& graph);
 
-		std::string serialized_output;
-		bool output_updated = false;
+		bool get_serialized_graph(std::string& graph);
 
 	private:
-		EditorMainWindow* main_window = nullptr;
+		std::unique_ptr<EditorMainWindow> main_window;
 	};
 
 }

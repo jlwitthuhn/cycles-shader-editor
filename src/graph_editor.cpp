@@ -4,14 +4,9 @@
 
 CyclesShaderEditor::GraphEditor::GraphEditor()
 {
-	main_window = new EditorMainWindow(this);
+	main_window = std::make_unique<EditorMainWindow>();
 	const PathString default_font_path = Platform::get_pathstring("font");
 	set_font_search_path(default_font_path);
-}
-
-CyclesShaderEditor::GraphEditor::~GraphEditor()
-{
-	delete main_window;
 }
 
 void CyclesShaderEditor::GraphEditor::set_font_search_path(const PathString& font_path)
@@ -37,4 +32,9 @@ void CyclesShaderEditor::GraphEditor::set_target_frame_rate(const double fps)
 void CyclesShaderEditor::GraphEditor::load_serialized_graph(const std::string& graph)
 {
 	main_window->load_serialized_graph(graph);
+}
+
+bool CyclesShaderEditor::GraphEditor::get_serialized_graph(std::string& graph)
+{
+	return main_window->get_serialized_output(graph);
 }

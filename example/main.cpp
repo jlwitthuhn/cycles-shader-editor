@@ -1,6 +1,7 @@
 #include <graph_editor.h>
 
 #include <iostream>
+#include <string>
 
 int main()
 {
@@ -10,11 +11,10 @@ int main()
 	
 	while (node_window.run_window_loop_iteration()) {
 		// Check if data is ready
-		if (node_window.output_updated) {
-			std::cout << "Graph saved:\n" << node_window.serialized_output << std::endl;
-			node_window.output_updated = false;
+		std::string graph;
+		if (node_window.get_serialized_graph(graph)) {
+			std::cout << "Graph saved:\n" << graph << std::endl;
 		}
 	}
 	return 0;
 }
-

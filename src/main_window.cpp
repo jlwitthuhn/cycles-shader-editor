@@ -14,7 +14,6 @@
 #include "glfw_callbacks.h"
 #include "glfw_window.h"
 #include "gui_sizes.h"
-#include "graph_editor.h"
 #include "node_base.h"
 #include "output.h"
 #include "serialize.h"
@@ -24,12 +23,12 @@
 #include "subwindow_node_list.h"
 #include "subwindow_param_editor.h"
 #include "toolbar.h"
+#include "util_helper_glfw.h"
 #include "util_platform.h"
 #include "view.h"
 
-CyclesShaderEditor::EditorMainWindow::EditorMainWindow(GraphEditor* public_window) :
-	main_graph(ShaderGraphType::MATERIAL),
-	public_window(public_window)
+CyclesShaderEditor::EditorMainWindow::EditorMainWindow() :
+	main_graph(ShaderGraphType::MATERIAL)
 {
 	window_width = UI_WINDOW_WIDTH;
 	window_height = UI_WINDOW_HEIGHT;
@@ -66,7 +65,7 @@ bool CyclesShaderEditor::EditorMainWindow::create_window()
 		return false;
 	}
 
-	glfwMakeContextCurrent(glfw_window->window_ptr);
+	glfwMakeContextCurrent(glfw_window);
 	glfwSwapInterval(0);
 
 	if (glewInit() != GLEW_OK) {
@@ -89,10 +88,10 @@ bool CyclesShaderEditor::EditorMainWindow::create_window()
 
 	register_window_pair_for_callbacks(glfw_window->window_ptr, this);
 
-	glfwSetKeyCallback(glfw_window->window_ptr, key_callback);
-	glfwSetMouseButtonCallback(glfw_window->window_ptr, mouse_button_callback);
-	glfwSetCharCallback(glfw_window->window_ptr, character_callback);
-	glfwSetScrollCallback(glfw_window->window_ptr, scroll_callback);
+	glfwSetKeyCallback(glfw_window, key_callback);
+	glfwSetMouseButtonCallback(glfw_window, mouse_button_callback);
+	glfwSetCharCallback(glfw_window, character_callback);
+	glfwSetScrollCallback(glfw_window, scroll_callback);
 
 	toolbar = std::make_unique<NodeEditorToolbar>();
 	status_bar = std::make_unique<NodeEditorStatusBar>();
@@ -113,14 +112,14 @@ bool CyclesShaderEditor::EditorMainWindow::create_window()
 
 bool CyclesShaderEditor::EditorMainWindow::run_window_loop_iteration()
 {
-	if (glfwWindowShouldClose(glfw_window->window_ptr)) {
+	if (glfwWindowShouldClose(glfw_window)) {
 		return false;
 	}
 
 	pre_draw();
 
 	int fb_width, fb_height;
-	glfwGetFramebufferSize(glfw_window->window_ptr, &fb_width, &fb_height);
+	glfwGetFramebufferSize(glfw_window, &fb_width, &fb_height);
 	const float px_ratio = static_cast<float>(fb_width) / window_width;
 
 	glViewport(0, 0, fb_width, fb_height);
@@ -243,6 +242,17 @@ void CyclesShaderEditor::EditorMainWindow::load_serialized_graph(const std::stri
 	update_serialized_state();
 }
 
+bool CyclesShaderEditor::EditorMainWindow::get_serialized_output(std::string& graph) {
+	graph = serialized_output;
+	if (serialized_output_updated) {
+		serialized_output_updated = false;
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
 void CyclesShaderEditor::EditorMainWindow::pre_draw()
 {
 	// Check nodes to see if we should save current state
@@ -266,8 +276,8 @@ void CyclesShaderEditor::EditorMainWindow::pre_draw()
 
 	// Get new mouse position and window size
 	double mx, my;
-	glfwGetCursorPos(glfw_window->window_ptr, &mx, &my);
-	glfwGetWindowSize(glfw_window->window_ptr, &window_width, &window_height);
+	glfwGetCursorPos(glfw_window, &mx, &my);
+	glfwGetWindowSize(glfw_window, &window_width, &window_height);
 	update_mouse_position(CyclesShaderEditor::FloatPos(static_cast<float>(mx), static_cast<float>(my)));
 
 	// Handle window events
@@ -370,7 +380,7 @@ void CyclesShaderEditor::EditorMainWindow::swap_buffers()
 		}
 	}
 	last_buffer_swap_time = std::chrono::steady_clock::now();
-	glfwSwapBuffers(glfw_window->window_ptr);
+	glfwSwapBuffers(glfw_window);
 }
 
 void CyclesShaderEditor::EditorMainWindow::service_requests()
@@ -495,13 +505,13 @@ void CyclesShaderEditor::EditorMainWindow::do_output()
 
 	clear_graph(false);
 
-	public_window->serialized_output = serialize_graph(out_nodes, out_connections);
+	serialized_output = serialize_graph(out_nodes, out_connections);
+	serialized_output_updated = true;
 
 	// Re-create graph from saved state so serialization errors are more apparent
-	deserialize_graph(public_window->serialized_output, main_graph.nodes, main_graph.connections);
+	deserialize_graph(serialized_output, main_graph.nodes, main_graph.connections);
 	update_serialized_state();
 
-	public_window->output_updated = true;
 	status_bar->set_status_text("Saved");
 }
 

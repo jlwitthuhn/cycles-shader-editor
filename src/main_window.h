@@ -25,7 +25,7 @@ namespace CyclesShaderEditor {
 
 	class EditorMainWindow {
 	public:
-		EditorMainWindow(GraphEditor* public_window);
+		EditorMainWindow();
 		~EditorMainWindow();
 
 		void set_font_search_path(const PathString& font_path);
@@ -41,6 +41,8 @@ namespace CyclesShaderEditor {
 		void handle_scroll(double xoffset, double yoffset);
 
 		void load_serialized_graph(const std::string& graph_str);
+
+		bool get_serialized_output(std::string& graph);
 
 	private:
 		void pre_draw();
@@ -91,7 +93,8 @@ namespace CyclesShaderEditor {
 		std::unique_ptr<GlfwWindow> glfw_window;
 		NVGcontext* nvg_context = nullptr;
 
-		GraphEditor* public_window = nullptr;
+		std::string serialized_output;
+		bool serialized_output_updated = false;
 
 		double target_frame_rate = 60.0;
 		std::chrono::time_point<std::chrono::steady_clock> last_buffer_swap_time;
