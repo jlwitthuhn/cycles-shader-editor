@@ -9,6 +9,8 @@
 #include <GLFW/glfw3.h>
 #include <nanovg.h>
 
+#include "wrapper_nvg_context.h"
+
 CyclesShaderEditor::PathString CyclesShaderEditor::Platform::get_pathstring(const std::string& input)
 {
 #ifdef _WIN32
@@ -31,9 +33,9 @@ CyclesShaderEditor::PathString CyclesShaderEditor::Platform::get_font_path(const
 void CyclesShaderEditor::Platform::nvg_create_font(const PathString& path, const std::string& name, const std::unique_ptr<NvgContext>& nvg_context)
 {
 #ifdef _WIN32
-	nvgCreateFontW(nvg_context, name.c_str(), path.c_str());
+	nvgCreateFontW(nvg_context->context_ptr, name.c_str(), path.c_str());
 #else
-	nvgCreateFont(nvg_context, name.c_str(), path.c_str());
+	nvgCreateFont(nvg_context->context_ptr, name.c_str(), path.c_str());
 #endif
 }
 
