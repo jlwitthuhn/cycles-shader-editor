@@ -9,6 +9,11 @@ CyclesShaderEditor::GraphEditor::GraphEditor()
 	set_font_search_path(default_font_path);
 }
 
+CyclesShaderEditor::GraphEditor::~GraphEditor()
+{
+	// Empty destructor is needed so incomplete EditorMainWindow type can be used in the header
+}
+
 void CyclesShaderEditor::GraphEditor::set_font_search_path(const PathString& font_path)
 {
 	main_window->set_font_search_path(font_path);

@@ -1,4 +1,4 @@
-#include "glfw_window.h"
+#include "wrapper_glfw_window.h"
 
 #include "glfw_callbacks.h"
 

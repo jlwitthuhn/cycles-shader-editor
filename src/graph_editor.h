@@ -3,7 +3,6 @@
 #include <memory>
 #include <string>
 
-#include "main_window.h"
 #include "util_platform.h"
 
 namespace CyclesShaderEditor {
@@ -13,6 +12,7 @@ namespace CyclesShaderEditor {
 	class GraphEditor {
 	public:
 		GraphEditor();
+		~GraphEditor();
 
 		void set_font_search_path(const PathString& font_path);
 

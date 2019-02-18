@@ -28,7 +28,7 @@ CyclesShaderEditor::PathString CyclesShaderEditor::Platform::get_font_path(const
 	return search_path + PATH_SEPARATOR + get_pathstring(filename);
 }
 
-void CyclesShaderEditor::Platform::nvg_create_font(const PathString& path, const std::string& name, NVGcontext* const nvg_context)
+void CyclesShaderEditor::Platform::nvg_create_font(const PathString& path, const std::string& name, const std::unique_ptr<NvgContext>& nvg_context)
 {
 #ifdef _WIN32
 	nvgCreateFontW(nvg_context, name.c_str(), path.c_str());

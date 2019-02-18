@@ -11,8 +11,6 @@
 #include "util_platform.h"
 #include "undo.h"
 
-struct NVGcontext;
-
 namespace CyclesShaderEditor {
 
 	class EditGraphView;
@@ -22,6 +20,7 @@ namespace CyclesShaderEditor {
 	class NodeEditorStatusBar;
 	class NodeEditorSubwindow;
 	class NodeEditorToolbar;
+	class NvgContext;
 
 	class EditorMainWindow {
 	public:
@@ -91,7 +90,7 @@ namespace CyclesShaderEditor {
 		UIRequests requests;
 
 		std::unique_ptr<GlfwWindow> glfw_window;
-		NVGcontext* nvg_context = nullptr;
+		std::unique_ptr<NvgContext> nvg_context;
 
 		std::string serialized_output;
 		bool serialized_output_updated = false;

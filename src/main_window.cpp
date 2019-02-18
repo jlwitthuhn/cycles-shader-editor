@@ -1,18 +1,14 @@
 #include "main_window.h"
 
-#define NANOVG_GL2_IMPLEMENTATION
-
 #include <utility>
 #include <vector>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <nanovg.h>
-#include <nanovg_gl.h>
 
 #include "common_enums.h"
 #include "glfw_callbacks.h"
-#include "glfw_window.h"
 #include "gui_sizes.h"
 #include "node_base.h"
 #include "output.h"
@@ -23,17 +19,18 @@
 #include "subwindow_node_list.h"
 #include "subwindow_param_editor.h"
 #include "toolbar.h"
-#include "util_helper_glfw.h"
 #include "util_platform.h"
 #include "view.h"
+#include "wrapper_glfw_func.h"
+#include "wrapper_glfw_window.h"
+#include "wrapper_nvg_context.h"
+#include "wrapper_nvg_func.h"
 
 CyclesShaderEditor::EditorMainWindow::EditorMainWindow() :
 	main_graph(ShaderGraphType::MATERIAL)
 {
 	window_width = UI_WINDOW_WIDTH;
 	window_height = UI_WINDOW_HEIGHT;
-
-	nvg_context = nullptr;
 
 	last_buffer_swap_time = std::chrono::steady_clock::now();
 
@@ -72,8 +69,8 @@ bool CyclesShaderEditor::EditorMainWindow::create_window()
 		return false;
 	}
 
-	nvg_context = nvgCreateGL2(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
-	if (nvg_context == nullptr) {
+	nvg_context = std::make_unique<NvgContext>();
+	if (nvg_context->is_valid() == false) {
 		return false;
 	}
 
@@ -334,33 +331,35 @@ void CyclesShaderEditor::EditorMainWindow::pre_draw()
 
 void CyclesShaderEditor::EditorMainWindow::draw()
 {
+	NVGcontext* const nvg_ctx_pointer = nvg_context->context_ptr;
+
 	// Draw view
-	nvgSave(nvg_context);
-	view->draw(nvg_context);
-	nvgRestore(nvg_context);
+	nvgSave(nvg_ctx_pointer);
+	view->draw(nvg_ctx_pointer);
+	nvgRestore(nvg_ctx_pointer);
 
 	// Draw toolbar
 	if (toolbar != nullptr) {
-		toolbar->draw(nvg_context, static_cast<float>(window_width));
+		toolbar->draw(nvg_ctx_pointer, static_cast<float>(window_width));
 	}
 
 	// Draw subwindows
 	std::list<std::unique_ptr<NodeEditorSubwindow>>::reverse_iterator window_iter;
 	for (window_iter = subwindows.rbegin(); window_iter != subwindows.rend(); ++window_iter) {
 		const FloatPos subwindow_pos = (*window_iter)->get_screen_pos();
-		nvgSave(nvg_context);
-		nvgTranslate(nvg_context, subwindow_pos.get_x(), subwindow_pos.get_y());
-		(*window_iter)->draw(nvg_context);
-		nvgRestore(nvg_context);
+		nvgSave(nvg_ctx_pointer);
+		nvgTranslate(nvg_ctx_pointer, subwindow_pos.get_x(), subwindow_pos.get_y());
+		(*window_iter)->draw(nvg_ctx_pointer);
+		nvgRestore(nvg_ctx_pointer);
 	}
 
 	// Draw status bar
 	if (status_bar != nullptr) {
 		const float status_bar_height = NodeEditorStatusBar::get_status_bar_height();
-		nvgSave(nvg_context);
-		nvgTranslate(nvg_context, 0.0f, static_cast<float>(window_height) - status_bar_height);
-		status_bar->draw(nvg_context, static_cast<float>(window_width));
-		nvgRestore(nvg_context);
+		nvgSave(nvg_ctx_pointer);
+		nvgTranslate(nvg_ctx_pointer, 0.0f, static_cast<float>(window_height) - status_bar_height);
+		status_bar->draw(nvg_ctx_pointer, static_cast<float>(window_width));
+		nvgRestore(nvg_ctx_pointer);
 	}
 }
 
@@ -530,9 +529,5 @@ void CyclesShaderEditor::EditorMainWindow::release_resources()
 	view.reset();
 
 	glfw_window.release();
-
-	if (nvg_context != nullptr) {
-		nvgDeleteGL2(nvg_context);
-		nvg_context = nullptr;
-	}
+	nvg_context.release();
 }
