@@ -34,6 +34,16 @@ float CyclesShaderEditor::FloatPos::get_floor_y() const
 	return floor(pos_y);
 }
 
+float CyclesShaderEditor::FloatPos::get_round_x() const
+{
+	return roundf(pos_x);
+}
+
+float CyclesShaderEditor::FloatPos::get_round_y() const
+{
+	return roundf(pos_y);
+}
+
 int CyclesShaderEditor::FloatPos::get_x_as_int() const
 {
 	return static_cast<int>(floor(pos_x));
@@ -88,6 +98,11 @@ void CyclesShaderEditor::FloatPos::operator+=(const FloatPos& other)
 {
 	pos_x += other.pos_x;
 	pos_y += other.pos_y;
+}
+
+CyclesShaderEditor::FloatPos CyclesShaderEditor::FloatPos::operator*(const float& other) const
+{
+	return FloatPos(pos_x * other, pos_y * other);
 }
 
 CyclesShaderEditor::FloatPos CyclesShaderEditor::FloatPos::operator/(const float& other) const

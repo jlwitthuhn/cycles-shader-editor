@@ -14,6 +14,9 @@ namespace CyclesShaderEditor {
 		float get_floor_x() const;
 		float get_floor_y() const;
 
+		float get_round_x() const;
+		float get_round_y() const;
+
 		int get_x_as_int() const;
 		int get_y_as_int() const;
 
@@ -27,6 +30,7 @@ namespace CyclesShaderEditor {
 		FloatPos operator-(const FloatPos& other) const;
 		void operator+=(const FloatPos& other);
 
+		FloatPos operator*(const float& other) const;
 		FloatPos operator/(const float& other) const;
 
 		bool operator==(const FloatPos& other) const;

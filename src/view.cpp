@@ -28,10 +28,10 @@ CyclesShaderEditor::EditGraphView::ViewBorders::ViewBorders(
 	const int viewport_height,
 	const float zoom_scale
 	) :
-	left  (view_center.get_floor_x() - static_cast<int>(viewport_width / zoom_scale) / 2),
-	right (view_center.get_floor_x() + static_cast<int>(viewport_width / zoom_scale) / 2),
-	top   (view_center.get_floor_y() - static_cast<int>(viewport_height / zoom_scale) / 2),
-	bottom(view_center.get_floor_y() + static_cast<int>(viewport_height / zoom_scale) / 2)
+	left  (view_center.get_x() - static_cast<int>(viewport_width / zoom_scale) / 2),
+	right (view_center.get_x() + static_cast<int>(viewport_width / zoom_scale) / 2),
+	top   (view_center.get_y() - static_cast<int>(viewport_height / zoom_scale) / 2),
+	bottom(view_center.get_y() + static_cast<int>(viewport_height / zoom_scale) / 2)
 {
 
 }
@@ -47,36 +47,36 @@ void CyclesShaderEditor::EditGraphView::set_mouse_position(const FloatPos view_l
 	widget_width = viewport_width;
 	widget_height = viewport_height;
 
-	const float zoom_scale = zoom.get_world_scale();
+	const float zoom_scale = zoom_level.get_world_scale();
 	const ViewBorders borders(view_center, widget_width, widget_height, zoom_scale);
 
 	// Calculate the viewport height and width, in world space
 	const float view_width = viewport_width / zoom_scale;
 	const float view_height = viewport_height / zoom_scale;
 
-	// Convert mouse position from widget space to world space
+	// Convert mouse position from view space to world space
 	const float x_pos = view_local_mouse_pos.get_x() / (viewport_width) * (view_width) + borders.left;
 	const float y_pos = view_local_mouse_pos.get_y() / (viewport_height) * (view_height) + borders.top;
 
-	const FloatPos calculated_world_pos(x_pos, y_pos);
-	FloatPos new_world_pos = calculated_world_pos;
+	const FloatPos calculated_new_world_pos(x_pos, y_pos);
+	const FloatPos mouse_delta = calculated_new_world_pos - mouse_world_position;
 
 	// If we are panning the view, adjust the view center so the mouse stays in the same world position
 	if (mouse_pan_active) {
-		const FloatPos delta = mouse_world_position - calculated_world_pos;
-		view_center = view_center + delta;
-		new_world_pos = mouse_world_position;
+		view_center = view_center - mouse_delta;
 	}
 
 	if (node_move_active) {
-		const FloatPos mouse_delta = calculated_world_pos - mouse_world_position;
 		if (mouse_delta.is_nonzero()) {
 			selection->move_nodes(mouse_delta);
 			node_move_did_something = true;
 		}
 	}
 
-	mouse_world_position = new_world_pos;
+	// Mouse stays anchored in the world during a pan
+	if (mouse_pan_active == false) {
+		mouse_world_position = calculated_new_world_pos;
+	}
 }
 
 void CyclesShaderEditor::EditGraphView::update()
@@ -98,7 +98,7 @@ void CyclesShaderEditor::EditGraphView::update()
 
 void CyclesShaderEditor::EditGraphView::draw(NVGcontext* draw_context)
 {
-	const float zoom_scale = zoom.get_world_scale();
+	const float zoom_scale = zoom_level.get_world_scale();
 	const ViewBorders borders(view_center, widget_width, widget_height, zoom_scale);
 
 	// Translate the origin so we are drawing in world space
@@ -328,11 +328,13 @@ void CyclesShaderEditor::EditGraphView::handle_requests(ViewUIRequests& requests
 	}
 
 	if (requests.zoom_in) {
-		zoom.zoom_in();
+		zoom_level.zoom_in();
+		snap_view_center();
 		requests.zoom_in = false;
 	}
 	if (requests.zoom_out) {
-		zoom.zoom_out();
+		zoom_level.zoom_out();
+		snap_view_center();
 		requests.zoom_out = false;
 	}
 }
@@ -361,7 +363,7 @@ std::string CyclesShaderEditor::EditGraphView::get_zoom_string() const
 {
 	constexpr unsigned char BUFFER_SIZE = 24;
 	char buf[BUFFER_SIZE];
-	const int result = snprintf(buf, BUFFER_SIZE, "Zoom: %3.1f%%", zoom.get_world_scale() * 100.0f);
+	const int result = snprintf(buf, BUFFER_SIZE, "Zoom: %3.1f%%", zoom_level.get_world_scale() * 100.0f);
 	if (result <= 0) {
 		// This should never happen
 		return "ZOOM ERROR";
@@ -481,6 +483,13 @@ void CyclesShaderEditor::EditGraphView::node_move_end()
 void CyclesShaderEditor::EditGraphView::pan(const int horizontal_ticks, const int vertical_ticks)
 {
 	view_center = view_center + FloatPos(GRID_SIZE_FL * horizontal_ticks, GRID_SIZE_FL * vertical_ticks);
+}
+
+void CyclesShaderEditor::EditGraphView::snap_view_center()
+{
+	// Snap view to nearest whole number (x, y) coordinate
+	// This is to avoid blurry text and lines after a user has panned around while zoomed in
+	view_center = FloatPos(view_center.get_round_x(), view_center.get_round_y());
 }
 
 void CyclesShaderEditor::EditGraphView::box_select_begin()

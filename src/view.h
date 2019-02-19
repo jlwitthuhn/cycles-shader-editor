@@ -70,6 +70,7 @@ namespace CyclesShaderEditor {
 		void node_move_end();
 
 		void pan(int horizontal_ticks, int vertical_ticks);
+		void snap_view_center();
 
 		void box_select_begin();
 		void box_select_end(SelectMode mode);
@@ -90,7 +91,7 @@ namespace CyclesShaderEditor {
 		FloatPos world_box_select_end;
 
 		std::shared_ptr<Selection> selection;
-		ZoomManager zoom;
+		ZoomManager zoom_level;
 
 		FloatPos view_center;
 
