@@ -8,6 +8,7 @@
 #include <nanovg.h>
 
 #include "common_enums.h"
+#include "editable_graph.h"
 #include "glfw_callbacks.h"
 #include "gui_sizes.h"
 #include "node_base.h"
@@ -27,7 +28,7 @@
 #include "wrapper_nvg_func.h"
 
 CyclesShaderEditor::EditorMainWindow::EditorMainWindow() :
-	main_graph(ShaderGraphType::MATERIAL)
+	main_graph(std::make_shared<EditableGraph>(ShaderGraphType::MATERIAL))
 {
 	window_width = UI_WINDOW_WIDTH;
 	window_height = UI_WINDOW_HEIGHT;
@@ -100,7 +101,7 @@ bool CyclesShaderEditor::EditorMainWindow::create_window()
 	subwindows.push_back(std::move(node_list_window));
 	subwindows.push_back(std::move(param_editor_window));
 
-	view = std::make_unique<EditGraphView>(&main_graph, node_creation_helper);
+	view = std::make_unique<EditGraphView>(main_graph, node_creation_helper);
 
 	update_serialized_state();
 
@@ -235,7 +236,7 @@ void CyclesShaderEditor::EditorMainWindow::handle_scroll(const double /*xoffset*
 void CyclesShaderEditor::EditorMainWindow::load_serialized_graph(const std::string& graph_str)
 {
 	clear_graph(true);
-	deserialize_graph(graph_str, this->main_graph.nodes, this->main_graph.connections);
+	deserialize_graph(graph_str, this->main_graph->nodes, this->main_graph->connections);
 	update_serialized_state();
 }
 
@@ -260,7 +261,7 @@ void CyclesShaderEditor::EditorMainWindow::pre_draw()
 				should_push_undo_state = true;
 			}
 		}
-		if (main_graph.needs_undo_push()) {
+		if (main_graph->needs_undo_push()) {
 			should_push_undo_state = true;
 		}
 		if (view->needs_undo_push()) {
@@ -318,7 +319,7 @@ void CyclesShaderEditor::EditorMainWindow::pre_draw()
 	}
 
 	// Mark all connected input sockets
-	for (NodeConnection& connection : main_graph.connections) {
+	for (NodeConnection& connection : main_graph->connections) {
 		if (auto connection_end = connection.end_socket.lock()) {
 			connection_end->input_connected_this_frame = true;
 		}
@@ -447,7 +448,7 @@ void CyclesShaderEditor::EditorMainWindow::update_serialized_state()
 {
 	std::vector<OutputNode> out_nodes;
 	std::vector<OutputConnection> out_connections;
-	generate_output_lists(main_graph.nodes, main_graph.connections, out_nodes, out_connections);
+	generate_output_lists(main_graph->nodes, main_graph->connections, out_nodes, out_connections);
 	serialized_state = serialize_graph(out_nodes, out_connections);
 }
 
@@ -466,7 +467,7 @@ void CyclesShaderEditor::EditorMainWindow::undo()
 	update_serialized_state();
 	const std::string new_state = undo_stack.pop_undo_state(serialized_state);
 	clear_graph(false);
-	deserialize_graph(new_state, main_graph.nodes, main_graph.connections);
+	deserialize_graph(new_state, main_graph->nodes, main_graph->connections);
 	update_serialized_state();
 	status_bar->set_status_text("Graph contains unsaved changes");
 }
@@ -479,7 +480,7 @@ void CyclesShaderEditor::EditorMainWindow::redo()
 	update_serialized_state();
 	const std::string new_state = undo_stack.pop_redo_state(serialized_state);
 	clear_graph(false);
-	deserialize_graph(new_state, main_graph.nodes, main_graph.connections);
+	deserialize_graph(new_state, main_graph->nodes, main_graph->connections);
 	update_serialized_state();
 	status_bar->set_status_text("Graph contains unsaved changes");
 }
@@ -490,8 +491,8 @@ void CyclesShaderEditor::EditorMainWindow::clear_graph(const bool reset_undo)
 		undo_stack.clear();
 	}
 	view->clear_selection();
-	main_graph.nodes.clear();
-	main_graph.connections.clear();
+	main_graph->nodes.clear();
+	main_graph->connections.clear();
 	update_serialized_state();
 }
 
@@ -500,7 +501,7 @@ void CyclesShaderEditor::EditorMainWindow::do_output()
 	std::vector<OutputNode> out_nodes;
 	std::vector<OutputConnection> out_connections;
 
-	generate_output_lists(main_graph.nodes, main_graph.connections, out_nodes, out_connections);
+	generate_output_lists(main_graph->nodes, main_graph->connections, out_nodes, out_connections);
 
 	clear_graph(false);
 
@@ -508,7 +509,7 @@ void CyclesShaderEditor::EditorMainWindow::do_output()
 	serialized_output_updated = true;
 
 	// Re-create graph from saved state so serialization errors are more apparent
-	deserialize_graph(serialized_output, main_graph.nodes, main_graph.connections);
+	deserialize_graph(serialized_output, main_graph->nodes, main_graph->connections);
 	update_serialized_state();
 
 	status_bar->set_status_text("Saved");
@@ -518,11 +519,11 @@ void CyclesShaderEditor::EditorMainWindow::release_resources()
 {
 	subwindows.clear();
 
-	main_graph.connections.clear();
-	for (EditorNode* const this_node : main_graph.nodes) {
+	main_graph->connections.clear();
+	for (EditorNode* const this_node : main_graph->nodes) {
 		delete this_node;
 	}
-	main_graph.nodes.clear();
+	main_graph->nodes.clear();
 
 	toolbar.reset();
 	status_bar.reset();

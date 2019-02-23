@@ -32,7 +32,7 @@ namespace CyclesShaderEditor {
 
 	public:
 		EditGraphView(
-			EditableGraph* graph,
+			std::shared_ptr<EditableGraph> graph,
 			std::weak_ptr<NodeCreationHelper> node_creation_helper
 		);
 
@@ -78,11 +78,8 @@ namespace CyclesShaderEditor {
 		void select_label_under_mouse();
 		void deselect_label();
 
-		// This points to an object owned by MainWindow
-		// It will be valid for the full life of the EditGraphView
-		EditableGraph* const graph;
-
-		std::weak_ptr<NodeCreationHelper> node_creation_helper;
+		const std::shared_ptr<EditableGraph> graph;
+		const std::weak_ptr<NodeCreationHelper> node_creation_helper;
 
 		std::weak_ptr<NodeSocket> connection_in_progress_start;
 

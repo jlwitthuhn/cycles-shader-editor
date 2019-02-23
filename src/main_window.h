@@ -5,7 +5,6 @@
 #include <memory>
 #include <string>
 
-#include "editable_graph.h"
 #include "float_pos.h"
 #include "ui_requests.h"
 #include "util_platform.h"
@@ -13,6 +12,7 @@
 
 namespace CyclesShaderEditor {
 
+	class EditableGraph;
 	class EditGraphView;
 	class GlfwWindow;
 	class GraphEditor;
@@ -71,7 +71,7 @@ namespace CyclesShaderEditor {
 
 		void release_resources();
 
-		EditableGraph main_graph;
+		std::shared_ptr<EditableGraph> main_graph;
 
 		FloatPos mouse_screen_pos;
 		int window_width, window_height;

@@ -36,7 +36,7 @@ CyclesShaderEditor::EditGraphView::ViewBorders::ViewBorders(
 
 }
 
-CyclesShaderEditor::EditGraphView::EditGraphView(EditableGraph* const graph, std::weak_ptr<NodeCreationHelper> node_creation_helper)
+CyclesShaderEditor::EditGraphView::EditGraphView(const std::shared_ptr<EditableGraph> graph, const std::weak_ptr<NodeCreationHelper> node_creation_helper)
 	: graph(graph), node_creation_helper(node_creation_helper), selection(std::make_shared<Selection>())
 {
 	view_center = FloatPos(0.0f, 0.0f);
