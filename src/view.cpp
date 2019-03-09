@@ -84,16 +84,6 @@ void CyclesShaderEditor::EditGraphView::update()
 	if (box_select_active) {
 		world_box_select_end = mouse_world_position;
 	}
-
-	// Iterate through nodes to set the 'selected' state for each
-	for (EditorNode* this_node : graph->nodes) {
-		if (selection->nodes.count(this_node) == 1) {
-			this_node->selected = true;
-		}
-		else {
-			this_node->selected = false;
-		}
-	}
 }
 
 void CyclesShaderEditor::EditGraphView::draw(NVGcontext* draw_context)
@@ -172,9 +162,11 @@ void CyclesShaderEditor::EditGraphView::draw(NVGcontext* draw_context)
 	// Nodes
 	std::list<EditorNode*>::reverse_iterator node_iterator;
 	for (node_iterator = graph->nodes.rbegin(); node_iterator != graph->nodes.rend(); ++node_iterator) {
+		EditorNode* const this_node = *node_iterator;
 		nvgSave(draw_context);
 		nvgTranslate(draw_context, (*node_iterator)->world_pos.get_floor_x(), (*node_iterator)->world_pos.get_floor_y());
-		(*node_iterator)->draw_node(draw_context);
+		const bool node_selected = (selection->nodes.count(this_node) == 1);
+		this_node->draw_node(draw_context, node_selected);
 		nvgRestore(draw_context);
 	}
 

@@ -43,7 +43,7 @@ std::string CyclesShaderEditor::EditorNode::get_title() const
 	return title;
 }
 
-void CyclesShaderEditor::EditorNode::draw_node(NVGcontext* const draw_context)
+void CyclesShaderEditor::EditorNode::draw_node(NVGcontext* const draw_context, const bool selected)
 {
 	float draw_pos_x = 0.0f;
 	float draw_pos_y = 0.0f;
