@@ -161,12 +161,13 @@ void CyclesShaderEditor::EditGraphView::draw(NVGcontext* draw_context)
 
 	// Nodes
 	std::list<EditorNode*>::reverse_iterator node_iterator;
+	const std::shared_ptr<NodeSocket> selected_node = selection->socket.lock();
 	for (node_iterator = graph->nodes.rbegin(); node_iterator != graph->nodes.rend(); ++node_iterator) {
 		EditorNode* const this_node = *node_iterator;
 		nvgSave(draw_context);
 		nvgTranslate(draw_context, (*node_iterator)->world_pos.get_floor_x(), (*node_iterator)->world_pos.get_floor_y());
 		const bool node_selected = (selection->nodes.count(this_node) == 1);
-		this_node->draw_node(draw_context, node_selected);
+		this_node->draw_node(draw_context, node_selected, selected_node);
 		nvgRestore(draw_context);
 	}
 
@@ -402,12 +403,6 @@ void CyclesShaderEditor::EditGraphView::select_label(const std::weak_ptr<NodeSoc
 	const std::shared_ptr<NodeSocket> selected_socket_ptr = selection->socket.lock();
 	if (selected_socket_ptr == label.lock()) {
 		return;
-	}
-	if (selected_socket_ptr) {
-		selected_socket_ptr->selected = false;
-	}
-	if (auto label_ptr = label.lock()) {
-		label_ptr->selected = true;
 	}
 	selection->socket = label;
 }

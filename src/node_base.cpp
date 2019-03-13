@@ -43,7 +43,7 @@ std::string CyclesShaderEditor::EditorNode::get_title() const
 	return title;
 }
 
-void CyclesShaderEditor::EditorNode::draw_node(NVGcontext* const draw_context, const bool selected)
+void CyclesShaderEditor::EditorNode::draw_node(NVGcontext* const draw_context, const bool selected, const std::shared_ptr<CyclesShaderEditor::NodeSocket> selected_socket)
 {
 	float draw_pos_x = 0.0f;
 	float draw_pos_y = 0.0f;
@@ -157,7 +157,7 @@ void CyclesShaderEditor::EditorNode::draw_node(NVGcontext* const draw_context, c
 		}
 
 		// Draw highlight if this node is selected
-		if (this_socket->selected) {
+		if (this_socket == selected_socket) {
 			nvgBeginPath(draw_context);
 			nvgRoundedRect(draw_context, 4.0f, next_draw_y, content_width - 8.0f, UI_NODE_SOCKET_ROW_HEIGHT, 0.0f);
 			nvgFillColor(draw_context, nvgRGBA(210, 210, 210, 255));

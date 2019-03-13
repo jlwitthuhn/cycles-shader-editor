@@ -163,7 +163,6 @@ namespace CyclesShaderEditor {
 		bool draw_socket = true;
 
 		bool selectable = false;
-		bool selected = false;
 
 		// World position where this socket was drawn last frame
 		FloatPos world_draw_position;

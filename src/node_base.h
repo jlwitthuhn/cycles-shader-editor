@@ -33,7 +33,7 @@ namespace CyclesShaderEditor {
 
 		virtual std::string get_title() const;
 
-		virtual void draw_node(NVGcontext* draw_context, bool selected);
+		virtual void draw_node(NVGcontext* draw_context, bool selected, std::shared_ptr<NodeSocket> selected_socket);
 
 		virtual bool is_under_point(FloatPos check_world_pos) const;
 		virtual std::weak_ptr<NodeSocket> get_socket_connector_under_point(FloatPos check_world_pos) const;
