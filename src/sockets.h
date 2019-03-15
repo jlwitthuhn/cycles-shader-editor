@@ -10,7 +10,7 @@
 
 namespace cse {
 
-	class EditorNode;
+	class EditableNode;
 
 	struct Float3Holder {
 		float x = 0.0f;
@@ -147,13 +147,13 @@ namespace cse {
 
 	class NodeSocket {
 	public:
-		NodeSocket(EditorNode* parent, SocketIOType io_type, SocketType socket_type, std::string display_name, std::string internal_name);
+		NodeSocket(EditableNode* parent, SocketIOType io_type, SocketType socket_type, std::string display_name, std::string internal_name);
 
 		void set_float_val(float float_in);
 		void set_float3_val(float x_in, float y_in, float z_in);
 		void set_string_val(StringEnumPair string_in);
 
-		EditorNode* parent = nullptr;
+		EditableNode* parent = nullptr;
 
 		SocketIOType io_type;
 		SocketType socket_type;

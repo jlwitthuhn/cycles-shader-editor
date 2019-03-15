@@ -23,7 +23,7 @@ bool cse::NodeConnection::is_valid() const
 	return !(begin_socket.expired() || end_socket.expired());
 }
 
-bool cse::NodeConnection::includes_node(EditorNode* const node) const
+bool cse::NodeConnection::includes_node(EditableNode* const node) const
 {
 	if (auto begin_socket_ptr = begin_socket.lock()) {
 		if (begin_socket_ptr->parent == node) {
@@ -38,12 +38,12 @@ bool cse::NodeConnection::includes_node(EditorNode* const node) const
 	return false;
 }
 
-std::string cse::EditorNode::get_title() const
+std::string cse::EditableNode::get_title() const
 {
 	return title;
 }
 
-void cse::EditorNode::draw_node(NVGcontext* const draw_context, const bool selected, const std::shared_ptr<cse::NodeSocket> selected_socket)
+void cse::EditableNode::draw_node(NVGcontext* const draw_context, const bool selected, const std::shared_ptr<cse::NodeSocket> selected_socket)
 {
 	float draw_pos_x = 0.0f;
 	float draw_pos_y = 0.0f;
@@ -289,7 +289,7 @@ void cse::EditorNode::draw_node(NVGcontext* const draw_context, const bool selec
 	}
 }
 
-bool cse::EditorNode::is_under_point(const FloatPos check_world_pos) const
+bool cse::EditableNode::is_under_point(const FloatPos check_world_pos) const
 {
 	const FloatPos local_pos = get_local_pos(check_world_pos);
 	return (
@@ -300,7 +300,7 @@ bool cse::EditorNode::is_under_point(const FloatPos check_world_pos) const
 	);
 }
 
-std::weak_ptr<cse::NodeSocket> cse::EditorNode::get_socket_connector_under_point(const FloatPos check_world_pos) const
+std::weak_ptr<cse::NodeSocket> cse::EditableNode::get_socket_connector_under_point(const FloatPos check_world_pos) const
 {
 	const FloatPos local_pos = get_local_pos(check_world_pos);
 	for (const auto click_target : socket_targets) {
@@ -311,7 +311,7 @@ std::weak_ptr<cse::NodeSocket> cse::EditorNode::get_socket_connector_under_point
 	return std::weak_ptr<NodeSocket>();
 }
 
-std::weak_ptr<cse::NodeSocket> cse::EditorNode::get_socket_label_under_point(const FloatPos check_world_pos) const
+std::weak_ptr<cse::NodeSocket> cse::EditableNode::get_socket_label_under_point(const FloatPos check_world_pos) const
 {
 	if (is_under_point(check_world_pos) == false) {
 		// Nothing will match if the node is not under the given point
@@ -326,7 +326,7 @@ std::weak_ptr<cse::NodeSocket> cse::EditorNode::get_socket_label_under_point(con
 	return std::weak_ptr<NodeSocket>();
 }
 
-std::weak_ptr<cse::NodeSocket> cse::EditorNode::get_socket_by_display_name(const SocketIOType in_out, const std::string& socket_name)
+std::weak_ptr<cse::NodeSocket> cse::EditableNode::get_socket_by_display_name(const SocketIOType in_out, const std::string& socket_name)
 {
 	for (const auto socket : sockets) {
 		if (socket->display_name == socket_name && socket->io_type == in_out) {
@@ -336,7 +336,7 @@ std::weak_ptr<cse::NodeSocket> cse::EditorNode::get_socket_by_display_name(const
 	return std::weak_ptr<NodeSocket>();
 }
 
-std::weak_ptr<cse::NodeSocket> cse::EditorNode::get_socket_by_internal_name(const SocketIOType in_out, const std::string& socket_name)
+std::weak_ptr<cse::NodeSocket> cse::EditableNode::get_socket_by_internal_name(const SocketIOType in_out, const std::string& socket_name)
 {
 	for (const auto socket : sockets) {
 		if (socket->internal_name == socket_name && socket->io_type == in_out) {
@@ -346,17 +346,17 @@ std::weak_ptr<cse::NodeSocket> cse::EditorNode::get_socket_by_internal_name(cons
 	return std::weak_ptr<NodeSocket>();
 }
 
-cse::FloatPos cse::EditorNode::get_dimensions()
+cse::FloatPos cse::EditableNode::get_dimensions()
 {
 	return cse::FloatPos(content_width, content_height + UI_NODE_HEADER_HEIGHT);
 }
 
-bool cse::EditorNode::can_be_deleted()
+bool cse::EditableNode::can_be_deleted()
 {
 	return true;
 }
 
-void cse::EditorNode::update_output_node(OutputNode& output)
+void cse::EditableNode::update_output_node(OutputNode& output)
 {
 	output.type = type;
 
@@ -435,7 +435,7 @@ void cse::EditorNode::update_output_node(OutputNode& output)
 	}
 }
 
-cse::FloatPos cse::EditorNode::get_local_pos(FloatPos world_pos_in) const
+cse::FloatPos cse::EditableNode::get_local_pos(FloatPos world_pos_in) const
 {
 	return world_pos_in - world_pos;
 }

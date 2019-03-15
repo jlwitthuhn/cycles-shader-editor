@@ -7,7 +7,7 @@
 
 namespace cse {
 
-	class EditorNode;
+	class EditableNode;
 	class FloatPos;
 	class NodeSocket;
 
@@ -22,7 +22,7 @@ namespace cse {
 	public:
 		void move_nodes(FloatPos delta);
 
-		void modify_selection(SelectMode mode, std::weak_ptr<EditorNode> node);
+		void modify_selection(SelectMode mode, std::weak_ptr<EditableNode> node);
 
 		void clear();
 

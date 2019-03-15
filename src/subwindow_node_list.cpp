@@ -30,22 +30,22 @@ bool cse::NodeCreationHelper::is_ready() const
 	return current_node != nullptr;
 }
 
-void cse::NodeCreationHelper::set_node(const std::shared_ptr<EditorNode>& new_node)
+void cse::NodeCreationHelper::set_node(const std::shared_ptr<EditableNode>& new_node)
 {
 	current_node = new_node;
 }
 
 void cse::NodeCreationHelper::clear()
 {
-	current_node = std::shared_ptr<EditorNode>();
+	current_node = std::shared_ptr<EditableNode>();
 }
 
-std::shared_ptr<cse::EditorNode> cse::NodeCreationHelper::take()
+std::shared_ptr<cse::EditableNode> cse::NodeCreationHelper::take()
 {
 	if (current_node) {
 		return std::move(current_node);
 	}
-	return std::unique_ptr<EditorNode>();
+	return std::unique_ptr<EditableNode>();
 }
 
 cse::NodeListSubwindow::NodeListSubwindow(const std::weak_ptr<NodeCreationHelper> node_creation_helper, const FloatPos screen_position) :

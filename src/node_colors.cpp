@@ -218,7 +218,7 @@ cse::RGBCurvesNode::RGBCurvesNode(FloatPos position)
 
 void cse::RGBCurvesNode::update_output_node(OutputNode& output)
 {
-	EditorNode::update_output_node(output);
+	EditableNode::update_output_node(output);
 
 	// Special case for RGB curves, we need to calculate the final output for the red, green, and blue channels
 	// This is a combination of the channel-specific curves and the RGB curve which applies to all channels

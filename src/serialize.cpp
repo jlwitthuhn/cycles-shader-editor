@@ -254,14 +254,14 @@ static std::string serialize_connection(const cse::OutputConnection& connection)
 }
 
 void cse::generate_output_lists(
-	const std::list<std::shared_ptr<EditorNode>>& node_list,
+	const std::list<std::shared_ptr<EditableNode>>& node_list,
 	const std::list<NodeConnection>& connection_list,
 	std::vector<OutputNode>& out_node_list,
 	std::vector<OutputConnection>& out_connection_list)
 {
 	using namespace cse;
 
-	std::map<EditorNode*, std::string> node_to_name_map;
+	std::map<EditableNode*, std::string> node_to_name_map;
 
 	for (const auto this_node : node_list) {
 		OutputNode this_out_node;
@@ -311,7 +311,7 @@ std::string cse::serialize_graph(std::vector<OutputNode> &nodes, std::vector<Out
 	return output_stream.str();
 }
 
-static std::shared_ptr<cse::EditorNode> create_node_from_type(cse::CyclesNodeType type) {
+static std::shared_ptr<cse::EditableNode> create_node_from_type(cse::CyclesNodeType type) {
 	using namespace cse;
 	const FloatPos pos(0.0f, 0.0f);
 	switch (type) {
@@ -569,7 +569,7 @@ static std::shared_ptr<cse::EditorNode> create_node_from_type(cse::CyclesNodeTyp
 	return nullptr;
 }
 
-static std::shared_ptr<cse::EditorNode> deserialize_node(std::list<std::string>& tokens, std::map<std::string, cse::EditorNode*>& nodes_by_name)
+static std::shared_ptr<cse::EditableNode> deserialize_node(std::list<std::string>& tokens, std::map<std::string, cse::EditableNode*>& nodes_by_name)
 {
 	using namespace cse;
 
@@ -603,7 +603,7 @@ static std::shared_ptr<cse::EditorNode> deserialize_node(std::list<std::string>&
 
 	CyclesNodeType type = code_to_type[type_code];
 
-	std::shared_ptr<EditorNode> result = create_node_from_type(type);
+	std::shared_ptr<EditableNode> result = create_node_from_type(type);
 	result->world_pos = FloatPos(x_position, y_position);
 
 	if (result == nullptr) {
@@ -682,10 +682,10 @@ static std::shared_ptr<cse::EditorNode> deserialize_node(std::list<std::string>&
 
 void cse::deserialize_graph(
 	const std::string& graph,
-	std::list<std::shared_ptr<cse::EditorNode>>& nodes,
+	std::list<std::shared_ptr<cse::EditableNode>>& nodes,
 	std::list<NodeConnection>& connections )
 {
-	std::map<std::string, EditorNode*> nodes_by_name;
+	std::map<std::string, EditableNode*> nodes_by_name;
 
 	std::list<std::string> graph_tokens = tokenize_string(graph, SEPARATOR);
 
@@ -715,7 +715,7 @@ void cse::deserialize_graph(
 			++token_iter;
 		}
 
-		std::shared_ptr<EditorNode> node = deserialize_node(node_tokens, nodes_by_name);
+		std::shared_ptr<EditableNode> node = deserialize_node(node_tokens, nodes_by_name);
 		if (node) {
 			nodes.push_back(node);
 		}

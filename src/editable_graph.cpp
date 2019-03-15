@@ -9,7 +9,7 @@ cse::EditableGraph::EditableGraph(const ShaderGraphType type)
 	reset(type);
 }
 
-void cse::EditableGraph::add_node(std::shared_ptr<EditorNode>& node, const FloatPos world_pos)
+void cse::EditableGraph::add_node(std::shared_ptr<EditableNode>& node, const FloatPos world_pos)
 {
 	if (node.get() == nullptr) {
 		return;
@@ -22,7 +22,7 @@ void cse::EditableGraph::add_node(std::shared_ptr<EditorNode>& node, const Float
 
 void cse::EditableGraph::add_connection(const std::weak_ptr<NodeSocket> socket_begin, const std::weak_ptr<NodeSocket> socket_end)
 {
-	EditorNode* source_node = nullptr;
+	EditableNode* source_node = nullptr;
 	if (const auto socket_begin_ptr = socket_begin.lock()) {
 		if (socket_begin_ptr->io_type != SocketIOType::OUTPUT) {
 			return;
@@ -105,14 +105,14 @@ bool cse::EditableGraph::is_node_under_point(const FloatPos world_pos) const
 	return false;
 }
 
-std::weak_ptr<cse::EditorNode> cse::EditableGraph::get_node_under_point(const FloatPos world_pos) const
+std::weak_ptr<cse::EditableNode> cse::EditableGraph::get_node_under_point(const FloatPos world_pos) const
 {
 	for (const auto this_node : nodes) {
 		if (this_node->is_under_point(world_pos)) {
 			return this_node;
 		}
 	}
-	return std::weak_ptr<EditorNode>();
+	return std::weak_ptr<EditableNode>();
 }
 
 std::weak_ptr<cse::NodeSocket> cse::EditableGraph::get_socket_under_point(const FloatPos world_pos) const
@@ -139,9 +139,9 @@ std::weak_ptr<cse::NodeSocket> cse::EditableGraph::get_connector_under_point(con
 	return std::weak_ptr<NodeSocket>();
 }
 
-void cse::EditableGraph::raise_node(const std::weak_ptr<cse::EditorNode> weak_node)
+void cse::EditableGraph::raise_node(const std::weak_ptr<cse::EditableNode> weak_node)
 {
-	const std::shared_ptr<EditorNode> node_to_raise = weak_node.lock();
+	const std::shared_ptr<EditableNode> node_to_raise = weak_node.lock();
 
 	if (node_to_raise.get() == nullptr) {
 		return;
@@ -153,7 +153,7 @@ void cse::EditableGraph::raise_node(const std::weak_ptr<cse::EditorNode> weak_no
 	}
 
 	for (auto iter = nodes.begin(); iter != nodes.end(); iter++) {
-		const std::shared_ptr<EditorNode> this_node = *iter;
+		const std::shared_ptr<EditableNode> this_node = *iter;
 		if (this_node == node_to_raise) {
 			nodes.erase(iter);
 			nodes.push_front(this_node);

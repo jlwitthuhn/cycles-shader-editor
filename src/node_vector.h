@@ -6,17 +6,17 @@ namespace cse {
 
 	class FloatPos;
 
-	class BumpNode : public EditorNode {
+	class BumpNode : public EditableNode {
 	public:
 		BumpNode(FloatPos position);
 	};
 
-	class NormalMapNode : public EditorNode {
+	class NormalMapNode : public EditableNode {
 	public:
 		NormalMapNode(FloatPos position);
 	};
 
-	class VectorTransformNode : public EditorNode {
+	class VectorTransformNode : public EditableNode {
 	public:
 		VectorTransformNode(FloatPos position);
 	};

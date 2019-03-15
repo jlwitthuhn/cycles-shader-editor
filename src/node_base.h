@@ -14,22 +14,22 @@ struct NVGcontext;
 namespace cse {
 
 	class NodeSocket;
-	class EditorNode;
+	class EditableNode;
 
 	class NodeConnection {
 	public:
 		NodeConnection(std::weak_ptr<NodeSocket> begin_socket, std::weak_ptr<NodeSocket> end_socket);
 
 		bool is_valid() const;
-		bool includes_node(EditorNode* node) const;
+		bool includes_node(EditableNode* node) const;
 
 		const std::weak_ptr<NodeSocket> begin_socket;
 		const std::weak_ptr<NodeSocket> end_socket;
 	};
 
-	class EditorNode {
+	class EditableNode {
 	public:
-		virtual ~EditorNode() {}
+		virtual ~EditableNode() {}
 
 		virtual std::string get_title() const;
 

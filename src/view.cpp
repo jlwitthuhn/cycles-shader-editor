@@ -162,7 +162,7 @@ void cse::EditGraphView::draw(NVGcontext* draw_context)
 	// Nodes
 	const std::shared_ptr<NodeSocket> selected_node = selection->socket.lock();
 	for (auto node_iterator = graph->nodes.rbegin(); node_iterator != graph->nodes.rend(); ++node_iterator) {
-		const std::shared_ptr<EditorNode> this_node = *node_iterator;
+		const std::shared_ptr<EditableNode> this_node = *node_iterator;
 		nvgSave(draw_context);
 		nvgTranslate(draw_context, this_node->world_pos.get_floor_x(), this_node->world_pos.get_floor_y());
 		const bool node_selected = (selection->nodes.count(this_node) == 1);
@@ -207,7 +207,7 @@ void cse::EditGraphView::draw(NVGcontext* draw_context)
 
 void cse::EditGraphView::handle_mouse_button(const int button, const int action, const int mods)
 {
-	const std::weak_ptr<EditorNode> weak_focused_node = graph->get_node_under_point(mouse_world_position);
+	const std::weak_ptr<EditableNode> weak_focused_node = graph->get_node_under_point(mouse_world_position);
 	const auto focused_label_ptr = graph->get_socket_under_point(mouse_world_position).lock();
 	const auto focused_connector_in_ptr = graph->get_connector_under_point(mouse_world_position, SocketIOType::INPUT).lock();
 	const auto focused_connector_out_ptr = graph->get_connector_under_point(mouse_world_position, SocketIOType::OUTPUT).lock();
@@ -235,7 +235,7 @@ void cse::EditGraphView::handle_mouse_button(const int button, const int action,
 
 		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
 			// Raise the node under the mouse and add it to the selection, then begin moving entire selection
-			const std::weak_ptr<EditorNode> node_to_select = graph->get_node_under_point(mouse_world_position);
+			const std::weak_ptr<EditableNode> node_to_select = graph->get_node_under_point(mouse_world_position);
 			graph->raise_node(node_to_select);
 			if (mods == GLFW_MOD_CONTROL) {
 				selection->modify_selection(SelectMode::ADD, node_to_select);
@@ -259,7 +259,7 @@ void cse::EditGraphView::handle_mouse_button(const int button, const int action,
 		}
 		else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
 			if (const auto node_creation_helper = this->node_creation_helper.lock()) {
-				std::shared_ptr<EditorNode> new_node = node_creation_helper->take();
+				std::shared_ptr<EditableNode> new_node = node_creation_helper->take();
 				if (new_node) {
 					graph->add_node(new_node, mouse_world_position);
 					selection->nodes.clear();

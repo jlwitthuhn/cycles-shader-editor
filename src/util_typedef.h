@@ -5,8 +5,8 @@
 #include <set>
 
 namespace cse {
-	class EditorNode;
+	class EditableNode;
 
-	typedef std::set<std::weak_ptr<EditorNode>, std::owner_less<std::weak_ptr<EditorNode>>> WeakNodeSet;
-	typedef std::set<std::shared_ptr<EditorNode>, std::owner_less<std::shared_ptr<EditorNode>>> SharedNodeSet;
+	typedef std::set<std::weak_ptr<EditableNode>, std::owner_less<std::weak_ptr<EditableNode>>> WeakNodeSet;
+	typedef std::set<std::shared_ptr<EditableNode>, std::owner_less<std::shared_ptr<EditableNode>>> SharedNodeSet;
 }

@@ -6,97 +6,97 @@ namespace cse {
 
 	class FloatPos;
 
-	class AmbientOcculsionNode : public EditorNode {
+	class AmbientOcculsionNode : public EditableNode {
 	public:
 		AmbientOcculsionNode(FloatPos position);
 	};
 
-	class PrincipledBSDFNode : public EditorNode {
+	class PrincipledBSDFNode : public EditableNode {
 	public:
 		PrincipledBSDFNode(FloatPos position);
 	};
 
-	class MixShaderNode : public EditorNode {
+	class MixShaderNode : public EditableNode {
 	public:
 		MixShaderNode(FloatPos position);
 	};
 
-	class AddShaderNode : public EditorNode {
+	class AddShaderNode : public EditableNode {
 	public:
 		AddShaderNode(FloatPos position);
 	};
 
-	class DiffuseBSDFNode : public EditorNode {
+	class DiffuseBSDFNode : public EditableNode {
 	public:
 		DiffuseBSDFNode(FloatPos position);
 	};
 
-	class GlossyBSDFNode : public EditorNode {
+	class GlossyBSDFNode : public EditableNode {
 	public:
 		GlossyBSDFNode(FloatPos position);
 	};
 
-	class TransparentBSDFNode : public EditorNode {
+	class TransparentBSDFNode : public EditableNode {
 	public:
 		TransparentBSDFNode(FloatPos position);
 	};
 
-	class RefractionBSDFNode : public EditorNode {
+	class RefractionBSDFNode : public EditableNode {
 	public:
 		RefractionBSDFNode(FloatPos position);
 	};
 
-	class GlassBSDFNode : public EditorNode {
+	class GlassBSDFNode : public EditableNode {
 	public:
 		GlassBSDFNode(FloatPos position);
 	};
 
-	class TranslucentBSDFNode : public EditorNode {
+	class TranslucentBSDFNode : public EditableNode {
 	public:
 		TranslucentBSDFNode(FloatPos position);
 	};
 
-	class AnisotropicBSDFNode : public EditorNode {
+	class AnisotropicBSDFNode : public EditableNode {
 	public:
 		AnisotropicBSDFNode(FloatPos position);
 	};
 
-	class VelvetBSDFNode : public EditorNode {
+	class VelvetBSDFNode : public EditableNode {
 	public:
 		VelvetBSDFNode(FloatPos position);
 	};
 
-	class ToonBSDFNode : public EditorNode {
+	class ToonBSDFNode : public EditableNode {
 	public:
 		ToonBSDFNode(FloatPos position);
 	};
 
-	class SubsurfaceScatteringNode : public EditorNode {
+	class SubsurfaceScatteringNode : public EditableNode {
 	public:
 		SubsurfaceScatteringNode(FloatPos position);
 	};
 
-	class EmissionNode : public EditorNode {
+	class EmissionNode : public EditableNode {
 	public:
 		EmissionNode(FloatPos position);
 	};
 
-	class HairBSDFNode : public EditorNode {
+	class HairBSDFNode : public EditableNode {
 	public:
 		HairBSDFNode(FloatPos position);
 	};
 
-	class HoldoutNode : public EditorNode {
+	class HoldoutNode : public EditableNode {
 	public:
 		HoldoutNode(FloatPos position);
 	};
 
-	class VolumeAbsorptionNode : public EditorNode {
+	class VolumeAbsorptionNode : public EditableNode {
 	public:
 		VolumeAbsorptionNode(FloatPos position);
 	};
 
-	class VolumeScatterNode : public EditorNode {
+	class VolumeScatterNode : public EditableNode {
 	public:
 		VolumeScatterNode(FloatPos position);
 	};

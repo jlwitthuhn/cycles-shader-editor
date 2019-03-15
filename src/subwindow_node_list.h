@@ -20,12 +20,12 @@ namespace cse {
 
 		bool is_ready() const;
 
-		void set_node(const std::shared_ptr<EditorNode>& new_node);
+		void set_node(const std::shared_ptr<EditableNode>& new_node);
 		void clear();
-		std::shared_ptr<EditorNode> take();
+		std::shared_ptr<EditableNode> take();
 
 	private:
-		std::shared_ptr<EditorNode> current_node;
+		std::shared_ptr<EditableNode> current_node;
 	};
 
 	class NodeListSubwindow : public NodeEditorSubwindow {

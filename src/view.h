@@ -14,7 +14,7 @@ struct NVGcontext;
 namespace cse {
 
 	class EditableGraph;
-	class EditorNode;
+	class EditableNode;
 	class NodeCreationHelper;
 	class NodeSocket;
 	class ViewUIRequests;

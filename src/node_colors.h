@@ -8,37 +8,37 @@ namespace cse {
 
 	struct OutputNode;
 
-	class MixRGBNode : public EditorNode {
+	class MixRGBNode : public EditableNode {
 	public:
 		MixRGBNode(FloatPos position);
 	};
 
-	class InvertNode : public EditorNode {
+	class InvertNode : public EditableNode {
 	public:
 		InvertNode(FloatPos position);
 	};
 
-	class LightFalloffNode : public EditorNode {
+	class LightFalloffNode : public EditableNode {
 	public:
 		LightFalloffNode(FloatPos position);
 	};
 
-	class HSVNode : public EditorNode {
+	class HSVNode : public EditableNode {
 	public:
 		HSVNode(FloatPos position);
 	};
 
-	class GammaNode : public EditorNode {
+	class GammaNode : public EditableNode {
 	public:
 		GammaNode(FloatPos position);
 	};
 
-	class BrightnessContrastNode : public EditorNode {
+	class BrightnessContrastNode : public EditableNode {
 	public:
 		BrightnessContrastNode(FloatPos position);
 	};
 
-	class RGBCurvesNode : public EditorNode {
+	class RGBCurvesNode : public EditableNode {
 	public:
 		RGBCurvesNode(FloatPos position);
 

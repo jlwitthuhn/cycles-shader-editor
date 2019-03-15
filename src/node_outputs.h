@@ -6,7 +6,7 @@ namespace cse {
 
 	class FloatPos;
 
-	class MaterialOutputNode : public EditorNode {
+	class MaterialOutputNode : public EditableNode {
 	public:
 		MaterialOutputNode(FloatPos position);
 

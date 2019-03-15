@@ -286,7 +286,7 @@ cse::FloatRGBColor cse::ColorSocketValue::get_value()
 	return value;
 }
 
-cse::NodeSocket::NodeSocket(EditorNode* parent, SocketIOType io_type, SocketType socket_type, std::string display_name, std::string internal_name)
+cse::NodeSocket::NodeSocket(EditableNode* parent, SocketIOType io_type, SocketType socket_type, std::string display_name, std::string internal_name)
 {
 	this->parent = parent;
 	this->io_type = io_type;

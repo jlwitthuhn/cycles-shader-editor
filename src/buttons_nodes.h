@@ -9,7 +9,7 @@ struct NVGcontext;
 
 namespace cse {
 
-	class EditorNode;
+	class EditableNode;
 
 	class NodeCreationButton {
 	public:
@@ -18,7 +18,7 @@ namespace cse {
 		virtual float draw(NVGcontext* draw_context, FloatPos draw_origin, FloatPos parent_local_mouse_pos, float parent_width);
 		virtual bool is_mouse_over_button();
 
-		virtual std::shared_ptr<EditorNode> create_node() = 0;
+		virtual std::shared_ptr<EditableNode> create_node() = 0;
 
 		bool pressed = false;
 
@@ -41,7 +41,7 @@ namespace cse {
 			this->label = tmp_node.get_title();
 		}
 
-		virtual std::shared_ptr<EditorNode> create_node() override {
+		virtual std::shared_ptr<EditableNode> create_node() override {
 			const FloatPos irrelevant_position(0.0f, 0.0f);
 			return std::make_shared<T>(irrelevant_position);
 		}
