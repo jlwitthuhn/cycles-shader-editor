@@ -160,12 +160,11 @@ void CyclesShaderEditor::EditGraphView::draw(NVGcontext* draw_context)
 	nvgStroke(draw_context);
 
 	// Nodes
-	std::list<EditorNode*>::reverse_iterator node_iterator;
 	const std::shared_ptr<NodeSocket> selected_node = selection->socket.lock();
-	for (node_iterator = graph->nodes.rbegin(); node_iterator != graph->nodes.rend(); ++node_iterator) {
-		EditorNode* const this_node = *node_iterator;
+	for (auto node_iterator = graph->nodes.rbegin(); node_iterator != graph->nodes.rend(); ++node_iterator) {
+		const std::shared_ptr<EditorNode> this_node = *node_iterator;
 		nvgSave(draw_context);
-		nvgTranslate(draw_context, (*node_iterator)->world_pos.get_floor_x(), (*node_iterator)->world_pos.get_floor_y());
+		nvgTranslate(draw_context, this_node->world_pos.get_floor_x(), this_node->world_pos.get_floor_y());
 		const bool node_selected = (selection->nodes.count(this_node) == 1);
 		this_node->draw_node(draw_context, node_selected, selected_node);
 		nvgRestore(draw_context);
@@ -208,7 +207,7 @@ void CyclesShaderEditor::EditGraphView::draw(NVGcontext* draw_context)
 
 void CyclesShaderEditor::EditGraphView::handle_mouse_button(const int button, const int action, const int mods)
 {
-	EditorNode* const focused_node = graph->get_node_under_point(mouse_world_position);
+	const std::weak_ptr<EditorNode> weak_focused_node = graph->get_node_under_point(mouse_world_position);
 	const auto focused_label_ptr = graph->get_socket_under_point(mouse_world_position).lock();
 	const auto focused_connector_in_ptr = graph->get_connector_under_point(mouse_world_position, SocketIOType::INPUT).lock();
 	const auto focused_connector_out_ptr = graph->get_connector_under_point(mouse_world_position, SocketIOType::OUTPUT).lock();
@@ -226,7 +225,7 @@ void CyclesShaderEditor::EditGraphView::handle_mouse_button(const int button, co
 			complete_connection(focused_connector_in_ptr);
 		}
 	}
-	else if (focused_node) {
+	else if (const auto focused_node = weak_focused_node.lock()) {
 		// If the user clicked a label, select it
 		if (focused_label_ptr) {
 			if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
@@ -236,7 +235,7 @@ void CyclesShaderEditor::EditGraphView::handle_mouse_button(const int button, co
 
 		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
 			// Raise the node under the mouse and add it to the selection, then begin moving entire selection
-			EditorNode* const node_to_select = graph->get_node_under_point(mouse_world_position);
+			const std::weak_ptr<EditorNode> node_to_select = graph->get_node_under_point(mouse_world_position);
 			graph->raise_node(node_to_select);
 			if (mods == GLFW_MOD_CONTROL) {
 				selection->modify_selection(SelectMode::ADD, node_to_select);
@@ -260,7 +259,7 @@ void CyclesShaderEditor::EditGraphView::handle_mouse_button(const int button, co
 		}
 		else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
 			if (const auto node_creation_helper = this->node_creation_helper.lock()) {
-				std::unique_ptr<EditorNode> new_node = node_creation_helper->take();
+				std::shared_ptr<EditorNode> new_node = node_creation_helper->take();
 				if (new_node) {
 					graph->add_node(new_node, mouse_world_position);
 					selection->nodes.clear();
@@ -407,9 +406,9 @@ void CyclesShaderEditor::EditGraphView::select_label(const std::weak_ptr<NodeSoc
 	selection->socket = label;
 }
 
-std::set<CyclesShaderEditor::EditorNode*> CyclesShaderEditor::EditGraphView::get_boxed_nodes()
+CyclesShaderEditor::WeakNodeSet CyclesShaderEditor::EditGraphView::get_boxed_nodes()
 {
-	std::set<EditorNode*> result;
+	WeakNodeSet result;
 
 	if (box_select_active == false) {
 		assert(false);
@@ -443,7 +442,7 @@ std::set<CyclesShaderEditor::EditorNode*> CyclesShaderEditor::EditGraphView::get
 	CyclesShaderEditor::FloatPos min_position(min_x_pos, min_y_pos);
 	CyclesShaderEditor::FloatPos max_position(max_x_pos, max_y_pos);
 
-	for (EditorNode* this_node : graph->nodes) {
+	for (const auto& this_node : graph->nodes) {
 		if (do_rectangles_overlap(min_position, max_position, this_node->world_pos, this_node->world_pos + this_node->get_dimensions())) {
 			result.insert(this_node);
 		}
@@ -492,7 +491,7 @@ void CyclesShaderEditor::EditGraphView::box_select_end(SelectMode mode)
 		return;
 	}
 
-	std::set<EditorNode*> boxed_nodes = get_boxed_nodes();
+	WeakNodeSet boxed_nodes = get_boxed_nodes();
 
 	switch (mode) {
 	case SelectMode::NORMAL:
@@ -503,7 +502,7 @@ void CyclesShaderEditor::EditGraphView::box_select_end(SelectMode mode)
 		selection->nodes.insert(boxed_nodes.begin(), boxed_nodes.end());
 		break;
 	case SelectMode::TOGGLE:
-		for (EditorNode* this_node : boxed_nodes) {
+		for (const auto& this_node : boxed_nodes) {
 			if (selection->nodes.count(this_node) == 1) {
 				selection->nodes.erase(this_node);
 			}

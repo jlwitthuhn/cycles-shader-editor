@@ -253,20 +253,24 @@ static std::string serialize_connection(const CyclesShaderEditor::OutputConnecti
 	return connection_stream.str();
 }
 
-void CyclesShaderEditor::generate_output_lists(std::list<EditorNode*>& node_list, std::list<NodeConnection>& connection_list, std::vector<OutputNode>& out_node_list, std::vector<OutputConnection>& out_connection_list)
+void CyclesShaderEditor::generate_output_lists(
+	const std::list<std::shared_ptr<EditorNode>>& node_list,
+	const std::list<NodeConnection>& connection_list,
+	std::vector<OutputNode>& out_node_list,
+	std::vector<OutputConnection>& out_connection_list)
 {
 	using namespace CyclesShaderEditor;
 
 	std::map<EditorNode*, std::string> node_to_name_map;
 
-	for (EditorNode* this_node : node_list) {
+	for (const auto this_node : node_list) {
 		OutputNode this_out_node;
 		this_out_node.name = create_node_name();
 
 		this_node->update_output_node(this_out_node);
 
 		out_node_list.push_back(this_out_node);
-		node_to_name_map[this_node] = this_out_node.name;
+		node_to_name_map[this_node.get()] = this_out_node.name;
 	}
 
 	for (NodeConnection this_connection : connection_list) {
@@ -307,252 +311,253 @@ std::string CyclesShaderEditor::serialize_graph(std::vector<OutputNode> &nodes, 
 	return output_stream.str();
 }
 
-static CyclesShaderEditor::EditorNode* create_node_from_type(CyclesShaderEditor::CyclesNodeType type, CyclesShaderEditor::FloatPos pos) {
+static std::shared_ptr<CyclesShaderEditor::EditorNode> create_node_from_type(CyclesShaderEditor::CyclesNodeType type) {
 	using namespace CyclesShaderEditor;
+	const FloatPos pos(0.0f, 0.0f);
 	switch (type) {
 		case CyclesNodeType::AmbientOcclusion:
 		{
-			return new AmbientOcculsionNode(pos);
+			return std::make_shared<AmbientOcculsionNode>(pos);
 		}
 		case CyclesNodeType::PrincipledBSDF:
 		{
-			return new PrincipledBSDFNode(pos);
+			return std::make_shared<PrincipledBSDFNode>(pos);
 		}
 		case CyclesNodeType::MixShader:
 		{
-			return new MixShaderNode(pos);
+			return std::make_shared<MixShaderNode>(pos);
 		}
 		case CyclesNodeType::AddShader:
 		{
-			return new AddShaderNode(pos);
+			return std::make_shared<AddShaderNode>(pos);
 		}
 		case CyclesNodeType::DiffuseBSDF:
 		{
-			return new DiffuseBSDFNode(pos);
+			return std::make_shared<DiffuseBSDFNode>(pos);
 		}
 		case CyclesNodeType::GlossyBSDF:
 		{
-			return new GlossyBSDFNode(pos);
+			return std::make_shared<GlossyBSDFNode>(pos);
 		}
 		case CyclesNodeType::TransparentBSDF:
 		{
-			return new TransparentBSDFNode(pos);
+			return std::make_shared<TransparentBSDFNode>(pos);
 		}
 		case CyclesNodeType::RefractionBSDF:
 		{
-			return new RefractionBSDFNode(pos);
+			return std::make_shared<RefractionBSDFNode>(pos);
 		}
 		case CyclesNodeType::GlassBSDF:
 		{
-			return new GlassBSDFNode(pos);
+			return std::make_shared<GlassBSDFNode>(pos);
 		}
 		case CyclesNodeType::TranslucentBSDF:
 		{
-			return new TranslucentBSDFNode(pos);
+			return std::make_shared<TranslucentBSDFNode>(pos);
 		}
 		case CyclesNodeType::AnisotropicBSDF:
 		{
-			return new AnisotropicBSDFNode(pos);
+			return std::make_shared<AnisotropicBSDFNode>(pos);
 		}
 		case CyclesNodeType::VelvetBSDF:
 		{
-			return new VelvetBSDFNode(pos);
+			return std::make_shared<VelvetBSDFNode>(pos);
 		}
 		case CyclesNodeType::ToonBSDF:
 		{
-			return new ToonBSDFNode(pos);
+			return std::make_shared<ToonBSDFNode>(pos);
 		}
 		case CyclesNodeType::SubsurfaceScattering:
 		{
-			return new SubsurfaceScatteringNode(pos);
+			return std::make_shared<SubsurfaceScatteringNode>(pos);
 		}
 		case CyclesNodeType::Emission:
 		{
-			return new EmissionNode(pos);
+			return std::make_shared<EmissionNode>(pos);
 		}
 		case CyclesNodeType::HairBSDF:
 		{
-			return new HairBSDFNode(pos);
+			return std::make_shared<HairBSDFNode>(pos);
 		}
 		case CyclesNodeType::Holdout:
 		{
-			return new HoldoutNode(pos);
+			return std::make_shared<HoldoutNode>(pos);
 		}
 		case CyclesNodeType::VolAbsorption:
 		{
-			return new VolumeAbsorptionNode(pos);
+			return std::make_shared<VolumeAbsorptionNode>(pos);
 		}
 		case CyclesNodeType::VolScatter:
 		{
-			return new VolumeScatterNode(pos);
+			return std::make_shared<VolumeScatterNode>(pos);
 		}
 		case CyclesNodeType::BrickTex:
 		{
-			return new BrickTextureNode(pos);
+			return std::make_shared<BrickTextureNode>(pos);
 		}
 		case CyclesNodeType::NoiseTex:
 		{
-			return new NoiseTextureNode(pos);
+			return std::make_shared<NoiseTextureNode>(pos);
 		}
 		case CyclesNodeType::WaveTex:
 		{
-			return new WaveTextureNode(pos);
+			return std::make_shared<WaveTextureNode>(pos);
 		}
 		case CyclesNodeType::VoronoiTex:
 		{
-			return new VoronoiTextureNode(pos);
+			return std::make_shared<VoronoiTextureNode>(pos);
 		}
 		case CyclesNodeType::MusgraveTex:
 		{
-			return new MusgraveTextureNode(pos);
+			return std::make_shared<MusgraveTextureNode>(pos);
 		}
 		case CyclesNodeType::GradientTex:
 		{
-			return new GradientTextureNode(pos);
+			return std::make_shared<GradientTextureNode>(pos);
 		}
 		case CyclesNodeType::MagicTex:
 		{
-			return new MagicTextureNode(pos);
+			return std::make_shared<MagicTextureNode>(pos);
 		}
 		case CyclesNodeType::CheckerTex:
 		{
-			return new CheckerTextureNode(pos);
+			return std::make_shared<CheckerTextureNode>(pos);
 		}
 		case CyclesNodeType::MaxTex:
 		{
-			return new MaxTexmapShaderNode(pos);
+			return std::make_shared<MaxTexmapShaderNode>(pos);
 		}
 		case CyclesNodeType::LightPath:
 		{
-			return new LightPathNode(pos);
+			return std::make_shared<LightPathNode>(pos);
 		}
 		case CyclesNodeType::Fresnel:
 		{
-			return new FresnelNode(pos);
+			return std::make_shared<FresnelNode>(pos);
 		}
 		case CyclesNodeType::LayerWeight:
 		{
-			return new LayerWeightNode(pos);
+			return std::make_shared<LayerWeightNode>(pos);
 		}
 		case CyclesNodeType::CameraData:
 		{
-			return new CameraDataNode(pos);
+			return std::make_shared<CameraDataNode>(pos);
 		}
 		case CyclesNodeType::Tangent:
 		{
-			return new TangentNode(pos);
+			return std::make_shared<TangentNode>(pos);
 		}
 		case CyclesNodeType::TextureCoordinate:
 		{
-			return new TextureCoordinateNode(pos);
+			return std::make_shared<TextureCoordinateNode>(pos);
 		}
 		case CyclesNodeType::Geometry:
 		{
-			return new GeometryNode(pos);
+			return std::make_shared<GeometryNode>(pos);
 		}
 		case CyclesNodeType::ObjectInfo:
 		{
-			return new ObjectInfoNode(pos);
+			return std::make_shared<ObjectInfoNode>(pos);
 		}
 		case CyclesNodeType::RGB:
 		{
-			return new RGBNode(pos);
+			return std::make_shared<RGBNode>(pos);
 		}
 		case CyclesNodeType::Wireframe:
 		{
-			return new WireframeNode(pos);
+			return std::make_shared<WireframeNode>(pos);
 		}
 		case CyclesNodeType::Value:
 		{
-			return new ValueNode(pos);
+			return std::make_shared<ValueNode>(pos);
 		}
 		case CyclesNodeType::MixRGB:
 		{
-			return new MixRGBNode(pos);
+			return std::make_shared<MixRGBNode>(pos);
 		}
 		case CyclesNodeType::Invert:
 		{
-			return new InvertNode(pos);
+			return std::make_shared<InvertNode>(pos);
 		}
 		case CyclesNodeType::LightFalloff:
 		{
-			return new LightFalloffNode(pos);
+			return std::make_shared<LightFalloffNode>(pos);
 		}
 		case CyclesNodeType::HSV:
 		{
-			return new HSVNode(pos);
+			return std::make_shared<HSVNode>(pos);
 		}
 		case CyclesNodeType::Gamma:
 		{
-			return new GammaNode(pos);
+			return std::make_shared<GammaNode>(pos);
 		}
 		case CyclesNodeType::BrightnessContrast:
 		{
-			return new BrightnessContrastNode(pos);
+			return std::make_shared<BrightnessContrastNode>(pos);
 		}
 		case CyclesNodeType::RGBCurves:
 		{
-			return new RGBCurvesNode(pos);
+			return std::make_shared<RGBCurvesNode>(pos);
 		}
 		case CyclesNodeType::Bump:
 		{
-			return new BumpNode(pos);
+			return std::make_shared<BumpNode>(pos);
 		}
 		case CyclesNodeType::NormalMap:
 		{
-			return new NormalMapNode(pos);
+			return std::make_shared<NormalMapNode>(pos);
 		}
 		case CyclesNodeType::VectorTransform:
 		{
-			return new VectorTransformNode(pos);
+			return std::make_shared<VectorTransformNode>(pos);
 		}
 		case CyclesNodeType::Blackbody:
 		{
-			return new BlackbodyNode(pos);
+			return std::make_shared<BlackbodyNode>(pos);
 		}
 		case CyclesNodeType::CombineHSV:
 		{
-			return new CombineHSVNode(pos);
+			return std::make_shared<CombineHSVNode>(pos);
 		}
 		case CyclesNodeType::CombineRGB:
 		{
-			return new CombineRGBNode(pos);
+			return std::make_shared<CombineRGBNode>(pos);
 		}
 		case CyclesNodeType::CombineXYZ:
 		{
-			return new CombineXYZNode(pos);
+			return std::make_shared<CombineXYZNode>(pos);
 		}
 		case CyclesNodeType::Math:
 		{
-			return new MathNode(pos);
+			return std::make_shared<MathNode>(pos);
 		}
 		case CyclesNodeType::RGBtoBW:
 		{
-			return new RGBToBWNode(pos);
+			return std::make_shared<RGBToBWNode>(pos);
 		}
 		case CyclesNodeType::SeparateHSV:
 		{
-			return new SeparateHSVNode(pos);
+			return std::make_shared<SeparateHSVNode>(pos);
 		}
 		case CyclesNodeType::SeparateRGB:
 		{
-			return new SeparateRGBNode(pos);
+			return std::make_shared<SeparateRGBNode>(pos);
 		}
 		case CyclesNodeType::SeparateXYZ:
 		{
-			return new SeparateXYZNode(pos);
+			return std::make_shared<SeparateXYZNode>(pos);
 		}
 		case CyclesNodeType::VectorMath:
 		{
-			return new VectorMathNode(pos);
+			return std::make_shared<VectorMathNode>(pos);
 		}
 		case CyclesNodeType::Wavelength:
 		{
-			return new WavelengthNode(pos);
+			return std::make_shared<WavelengthNode>(pos);
 		}
 		case CyclesNodeType::MaterialOutput:
 		{
-			return new MaterialOutputNode(pos);
+			return std::make_shared<MaterialOutputNode>(pos);
 		}
 		case CyclesNodeType::Unknown:
 		case CyclesNodeType::Count:
@@ -564,7 +569,7 @@ static CyclesShaderEditor::EditorNode* create_node_from_type(CyclesShaderEditor:
 	return nullptr;
 }
 
-static CyclesShaderEditor::EditorNode* deserialize_node(std::list<std::string>& tokens, std::map<std::string, CyclesShaderEditor::EditorNode*>& nodes_by_name)
+static std::shared_ptr<CyclesShaderEditor::EditorNode> deserialize_node(std::list<std::string>& tokens, std::map<std::string, CyclesShaderEditor::EditorNode*>& nodes_by_name)
 {
 	using namespace CyclesShaderEditor;
 
@@ -598,7 +603,8 @@ static CyclesShaderEditor::EditorNode* deserialize_node(std::list<std::string>& 
 
 	CyclesNodeType type = code_to_type[type_code];
 
-	EditorNode* result = create_node_from_type(type, FloatPos(x_position, y_position));
+	std::shared_ptr<EditorNode> result = create_node_from_type(type);
+	result->world_pos = FloatPos(x_position, y_position);
 
 	if (result == nullptr) {
 		return nullptr;
@@ -669,12 +675,15 @@ static CyclesShaderEditor::EditorNode* deserialize_node(std::list<std::string>& 
 		}
 	}
 
-	nodes_by_name[name] = result;
+	nodes_by_name[name] = result.get();
 
 	return result;
 }
 
-void CyclesShaderEditor::deserialize_graph(const std::string& graph, std::list<EditorNode*>& nodes, std::list<NodeConnection>& connections)
+void CyclesShaderEditor::deserialize_graph(
+	const std::string& graph,
+	std::list<std::shared_ptr<CyclesShaderEditor::EditorNode>>& nodes,
+	std::list<NodeConnection>& connections )
 {
 	std::map<std::string, EditorNode*> nodes_by_name;
 
@@ -706,8 +715,8 @@ void CyclesShaderEditor::deserialize_graph(const std::string& graph, std::list<E
 			++token_iter;
 		}
 
-		EditorNode* node = deserialize_node(node_tokens, nodes_by_name);
-		if (node != nullptr) {
+		std::shared_ptr<EditorNode> node = deserialize_node(node_tokens, nodes_by_name);
+		if (node) {
 			nodes.push_back(node);
 		}
 
@@ -760,7 +769,7 @@ void CyclesShaderEditor::deserialize_graph(const std::string& graph, std::list<E
 	}
 
 	// Mark all nodes as unchanged so an undo push isn't triggered
-	for (EditorNode* const node : nodes) {
+	for (const auto node : nodes) {
 		node->changed = false;
 	}
 }

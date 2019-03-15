@@ -6,6 +6,7 @@
 
 #include "float_pos.h"
 #include "selection.h"
+#include "util_typedef.h"
 #include "zoom.h"
 
 struct NVGcontext;
@@ -64,7 +65,7 @@ namespace CyclesShaderEditor {
 
 		void select_label(std::weak_ptr<NodeSocket> label);
 
-		std::set<EditorNode*> get_boxed_nodes();
+		WeakNodeSet get_boxed_nodes();
 
 		void node_move_begin();
 		void node_move_end();

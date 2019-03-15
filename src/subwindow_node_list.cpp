@@ -30,17 +30,17 @@ bool CyclesShaderEditor::NodeCreationHelper::is_ready() const
 	return current_node != nullptr;
 }
 
-void CyclesShaderEditor::NodeCreationHelper::set_node(std::unique_ptr<EditorNode>& new_node)
+void CyclesShaderEditor::NodeCreationHelper::set_node(const std::shared_ptr<EditorNode>& new_node)
 {
-	current_node = std::move(new_node);
+	current_node = new_node;
 }
 
 void CyclesShaderEditor::NodeCreationHelper::clear()
 {
-	current_node = std::unique_ptr<EditorNode>();
+	current_node = std::shared_ptr<EditorNode>();
 }
 
-std::unique_ptr<CyclesShaderEditor::EditorNode> CyclesShaderEditor::NodeCreationHelper::take()
+std::shared_ptr<CyclesShaderEditor::EditorNode> CyclesShaderEditor::NodeCreationHelper::take()
 {
 	if (current_node) {
 		return std::move(current_node);

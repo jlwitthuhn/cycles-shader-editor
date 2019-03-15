@@ -5,14 +5,16 @@
 
 void CyclesShaderEditor::Selection::move_nodes(const FloatPos delta)
 {
-	for (auto* const this_node : nodes) {
-		this_node->world_pos += delta;
+	for (const auto weak_node : nodes) {
+		if (const auto this_node = weak_node.lock()) {
+			this_node->world_pos += delta;
+		}
 	}
 }
 
-void CyclesShaderEditor::Selection::modify_selection(SelectMode mode, EditorNode* node)
+void CyclesShaderEditor::Selection::modify_selection(SelectMode mode, std::weak_ptr<EditorNode> node)
 {
-	if (node == nullptr) {
+	if (node.lock().get() == nullptr) {
 		return;
 	}
 

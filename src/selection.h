@@ -3,6 +3,8 @@
 #include <memory>
 #include <set>
 
+#include "util_typedef.h"
+
 namespace CyclesShaderEditor {
 
 	class EditorNode;
@@ -20,11 +22,11 @@ namespace CyclesShaderEditor {
 	public:
 		void move_nodes(FloatPos delta);
 
-		void modify_selection(SelectMode mode, EditorNode* node);
+		void modify_selection(SelectMode mode, std::weak_ptr<EditorNode> node);
 
 		void clear();
 
-		std::set<EditorNode*> nodes;
+		WeakNodeSet nodes;
 		std::weak_ptr<NodeSocket> socket;
 	};
 }

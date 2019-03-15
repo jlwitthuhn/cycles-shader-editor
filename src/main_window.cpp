@@ -520,9 +520,6 @@ void CyclesShaderEditor::EditorMainWindow::release_resources()
 	subwindows.clear();
 
 	main_graph->connections.clear();
-	for (EditorNode* const this_node : main_graph->nodes) {
-		delete this_node;
-	}
 	main_graph->nodes.clear();
 
 	toolbar.reset();

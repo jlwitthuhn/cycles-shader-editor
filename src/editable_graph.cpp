@@ -9,15 +9,14 @@ CyclesShaderEditor::EditableGraph::EditableGraph(const ShaderGraphType type)
 	reset(type);
 }
 
-void CyclesShaderEditor::EditableGraph::add_node(std::unique_ptr<EditorNode>& node, const FloatPos world_pos)
+void CyclesShaderEditor::EditableGraph::add_node(std::shared_ptr<EditorNode>& node, const FloatPos world_pos)
 {
 	if (node.get() == nullptr) {
 		return;
 	}
 
-	EditorNode* const node_ptr = node.release();
-	node_ptr->world_pos = world_pos;
-	nodes.push_front(node_ptr);
+	node->world_pos = world_pos;
+	nodes.push_front(node);
 	should_push_undo_state = true;
 }
 
@@ -72,14 +71,19 @@ CyclesShaderEditor::NodeConnection CyclesShaderEditor::EditableGraph::remove_con
 	return default_result;
 }
 
-void CyclesShaderEditor::EditableGraph::remove_node_set(const std::set<EditorNode*>& nodes_to_remove)
+void CyclesShaderEditor::EditableGraph::remove_node_set(const CyclesShaderEditor::WeakNodeSet& weak_nodes_to_remove)
 {
+	// Create a set of shared_ptrs from the weak_ptrs
+	SharedNodeSet shared_nodes_to_remove;
+	for (auto weak_node : weak_nodes_to_remove) {
+		shared_nodes_to_remove.insert(weak_node.lock());
+	}
+
 	// Remove all nodes in the set
-	std::list<EditorNode*>::iterator node_iter = nodes.begin();
+	auto node_iter = nodes.begin();
 	while (node_iter != nodes.end()) {
-		EditorNode* const this_node = *node_iter;
-		if (this_node->can_be_deleted() && nodes_to_remove.count(this_node) == 1) {
-			delete this_node;
+		auto this_node = *node_iter;
+		if (this_node->can_be_deleted() && shared_nodes_to_remove.count(this_node) == 1) {
 			node_iter = nodes.erase(node_iter);
 			should_push_undo_state = true;
 		}
@@ -101,14 +105,14 @@ bool CyclesShaderEditor::EditableGraph::is_node_under_point(const FloatPos world
 	return false;
 }
 
-CyclesShaderEditor::EditorNode* CyclesShaderEditor::EditableGraph::get_node_under_point(const FloatPos world_pos) const
+std::weak_ptr<CyclesShaderEditor::EditorNode> CyclesShaderEditor::EditableGraph::get_node_under_point(const FloatPos world_pos) const
 {
 	for (const auto this_node : nodes) {
 		if (this_node->is_under_point(world_pos)) {
 			return this_node;
 		}
 	}
-	return nullptr;
+	return std::weak_ptr<EditorNode>();
 }
 
 std::weak_ptr<CyclesShaderEditor::NodeSocket> CyclesShaderEditor::EditableGraph::get_socket_under_point(const FloatPos world_pos) const
@@ -135,16 +139,22 @@ std::weak_ptr<CyclesShaderEditor::NodeSocket> CyclesShaderEditor::EditableGraph:
 	return std::weak_ptr<NodeSocket>();
 }
 
-void CyclesShaderEditor::EditableGraph::raise_node(EditorNode* const node)
+void CyclesShaderEditor::EditableGraph::raise_node(const std::weak_ptr<CyclesShaderEditor::EditorNode> weak_node)
 {
-	// Exit early if this is already the top node
-	if (nodes.front() == node) {
+	const std::shared_ptr<EditorNode> node_to_raise = weak_node.lock();
+
+	if (node_to_raise.get() == nullptr) {
 		return;
 	}
-	std::list<EditorNode*>::iterator iter;
-	for (iter = nodes.begin(); iter != nodes.end(); iter++) {
-		EditorNode* const this_node = *iter;
-		if (this_node == node) {
+
+	// Exit early if this is already the top node
+	if (nodes.front() == node_to_raise) {
+		return;
+	}
+
+	for (auto iter = nodes.begin(); iter != nodes.end(); iter++) {
+		const std::shared_ptr<EditorNode> this_node = *iter;
+		if (this_node == node_to_raise) {
 			nodes.erase(iter);
 			nodes.push_front(this_node);
 			return;
@@ -171,27 +181,17 @@ bool CyclesShaderEditor::EditableGraph::needs_undo_push()
 void CyclesShaderEditor::EditableGraph::reset(const ShaderGraphType type)
 {
 	connections.clear();
-	clear_nodes();
+	nodes.clear();
 
 	switch (type) {
-	case ShaderGraphType::EMPTY:
-		// Do nothing
-		break;
-	case ShaderGraphType::MATERIAL:
+		case ShaderGraphType::EMPTY:
+			// Do nothing
+			break;
+		case ShaderGraphType::MATERIAL:
 		{
-			EditorNode* const output_node = new MaterialOutputNode(CyclesShaderEditor::FloatPos(0.0f, 0.0f));
-			nodes.push_back(output_node);
+			nodes.push_back(std::make_shared<MaterialOutputNode>(FloatPos(0.0f, 0.0f)));
 		}
 	}
-}
-
-// TODO: Remove this once nodes use smart pointers
-void CyclesShaderEditor::EditableGraph::clear_nodes()
-{
-	for (const auto* this_node : nodes) {
-		delete this_node;
-	}
-	nodes.clear();
 }
 
 void CyclesShaderEditor::EditableGraph::remove_invalid_connections()
