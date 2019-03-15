@@ -2,7 +2,7 @@
 
 struct GLFWwindow;
 
-namespace CyclesShaderEditor {
+namespace cse {
 
 	class EditorMainWindow;
 

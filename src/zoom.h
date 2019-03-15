@@ -2,7 +2,7 @@
 
 #include <vector>
 
-namespace CyclesShaderEditor {
+namespace cse {
 
 	class ZoomManager {
 	public:

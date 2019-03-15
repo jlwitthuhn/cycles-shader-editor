@@ -2,7 +2,7 @@
 
 #include "node_base.h"
 
-namespace CyclesShaderEditor {
+namespace cse {
 
 	class FloatPos;
 

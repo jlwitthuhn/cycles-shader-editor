@@ -12,7 +12,7 @@
 #include "output.h"
 #include "sockets.h"
 
-CyclesShaderEditor::MixRGBNode::MixRGBNode(FloatPos position)
+cse::MixRGBNode::MixRGBNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -62,7 +62,7 @@ CyclesShaderEditor::MixRGBNode::MixRGBNode(FloatPos position)
 	type = CyclesNodeType::MixRGB;
 }
 
-CyclesShaderEditor::InvertNode::InvertNode(FloatPos position)
+cse::InvertNode::InvertNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -83,7 +83,7 @@ CyclesShaderEditor::InvertNode::InvertNode(FloatPos position)
 	type = CyclesNodeType::Invert;
 }
 
-CyclesShaderEditor::LightFalloffNode::LightFalloffNode(FloatPos position)
+cse::LightFalloffNode::LightFalloffNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -108,7 +108,7 @@ CyclesShaderEditor::LightFalloffNode::LightFalloffNode(FloatPos position)
 	type = CyclesNodeType::LightFalloff;
 }
 
-CyclesShaderEditor::HSVNode::HSVNode(FloatPos position)
+cse::HSVNode::HSVNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -138,7 +138,7 @@ CyclesShaderEditor::HSVNode::HSVNode(FloatPos position)
 	type = CyclesNodeType::HSV;
 }
 
-CyclesShaderEditor::GammaNode::GammaNode(FloatPos position)
+cse::GammaNode::GammaNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -159,7 +159,7 @@ CyclesShaderEditor::GammaNode::GammaNode(FloatPos position)
 	type = CyclesNodeType::Gamma;
 }
 
-CyclesShaderEditor::BrightnessContrastNode::BrightnessContrastNode(FloatPos position)
+cse::BrightnessContrastNode::BrightnessContrastNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -183,7 +183,7 @@ CyclesShaderEditor::BrightnessContrastNode::BrightnessContrastNode(FloatPos posi
 	type = CyclesNodeType::BrightnessContrast;
 }
 
-CyclesShaderEditor::RGBCurvesNode::RGBCurvesNode(FloatPos position)
+cse::RGBCurvesNode::RGBCurvesNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -216,7 +216,7 @@ CyclesShaderEditor::RGBCurvesNode::RGBCurvesNode(FloatPos position)
 	type = CyclesNodeType::RGBCurves;
 }
 
-void CyclesShaderEditor::RGBCurvesNode::update_output_node(OutputNode& output)
+void cse::RGBCurvesNode::update_output_node(OutputNode& output)
 {
 	EditorNode::update_output_node(output);
 

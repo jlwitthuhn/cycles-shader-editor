@@ -9,7 +9,7 @@
 #include "output.h"
 #include "sockets.h"
 
-CyclesShaderEditor::BlackbodyNode::BlackbodyNode(FloatPos position)
+cse::BlackbodyNode::BlackbodyNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -29,7 +29,7 @@ CyclesShaderEditor::BlackbodyNode::BlackbodyNode(FloatPos position)
 	content_width = 164.0f;
 }
 
-CyclesShaderEditor::CombineHSVNode::CombineHSVNode(FloatPos position)
+cse::CombineHSVNode::CombineHSVNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -53,7 +53,7 @@ CyclesShaderEditor::CombineHSVNode::CombineHSVNode(FloatPos position)
 	type = CyclesNodeType::CombineHSV;
 }
 
-CyclesShaderEditor::CombineRGBNode::CombineRGBNode(FloatPos position)
+cse::CombineRGBNode::CombineRGBNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -77,7 +77,7 @@ CyclesShaderEditor::CombineRGBNode::CombineRGBNode(FloatPos position)
 	type = CyclesNodeType::CombineRGB;
 }
 
-CyclesShaderEditor::CombineXYZNode::CombineXYZNode(FloatPos position)
+cse::CombineXYZNode::CombineXYZNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -101,7 +101,7 @@ CyclesShaderEditor::CombineXYZNode::CombineXYZNode(FloatPos position)
 	type = CyclesNodeType::CombineXYZ;
 }
 
-CyclesShaderEditor::MathNode::MathNode(FloatPos position)
+cse::MathNode::MathNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -149,7 +149,7 @@ CyclesShaderEditor::MathNode::MathNode(FloatPos position)
 	type = CyclesNodeType::Math;
 }
 
-CyclesShaderEditor::RGBToBWNode::RGBToBWNode(FloatPos position)
+cse::RGBToBWNode::RGBToBWNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -167,7 +167,7 @@ CyclesShaderEditor::RGBToBWNode::RGBToBWNode(FloatPos position)
 	type = CyclesNodeType::RGBtoBW;
 }
 
-CyclesShaderEditor::SeparateHSVNode::SeparateHSVNode(FloatPos position)
+cse::SeparateHSVNode::SeparateHSVNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -189,7 +189,7 @@ CyclesShaderEditor::SeparateHSVNode::SeparateHSVNode(FloatPos position)
 	type = CyclesNodeType::SeparateHSV;
 }
 
-CyclesShaderEditor::SeparateRGBNode::SeparateRGBNode(FloatPos position)
+cse::SeparateRGBNode::SeparateRGBNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -211,7 +211,7 @@ CyclesShaderEditor::SeparateRGBNode::SeparateRGBNode(FloatPos position)
 	type = CyclesNodeType::SeparateRGB;
 }
 
-CyclesShaderEditor::SeparateXYZNode::SeparateXYZNode(FloatPos position)
+cse::SeparateXYZNode::SeparateXYZNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -234,7 +234,7 @@ CyclesShaderEditor::SeparateXYZNode::SeparateXYZNode(FloatPos position)
 	type = CyclesNodeType::SeparateXYZ;
 }
 
-CyclesShaderEditor::VectorMathNode::VectorMathNode(FloatPos position)
+cse::VectorMathNode::VectorMathNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -270,7 +270,7 @@ CyclesShaderEditor::VectorMathNode::VectorMathNode(FloatPos position)
 	type = CyclesNodeType::VectorMath;
 }
 
-CyclesShaderEditor::WavelengthNode::WavelengthNode(FloatPos position)
+cse::WavelengthNode::WavelengthNode(FloatPos position)
 {
 	world_pos = position;
 

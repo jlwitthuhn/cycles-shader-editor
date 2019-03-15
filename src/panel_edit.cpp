@@ -1,22 +1,22 @@
 #include "panel_edit.h"
 
-CyclesShaderEditor::ParamEditorPanel::ParamEditorPanel(const float width) :
+cse::ParamEditorPanel::ParamEditorPanel(const float width) :
 	panel_width(width)
 {
 
 }
 
-void CyclesShaderEditor::ParamEditorPanel::pre_draw()
+void cse::ParamEditorPanel::pre_draw()
 {
 	// Stub
 }
 
-void CyclesShaderEditor::ParamEditorPanel::set_mouse_local_position(const FloatPos local_pos)
+void cse::ParamEditorPanel::set_mouse_local_position(const FloatPos local_pos)
 {
 	mouse_local_pos = local_pos;
 }
 
-bool CyclesShaderEditor::ParamEditorPanel::is_mouse_over()
+bool cse::ParamEditorPanel::is_mouse_over()
 {
 	if (is_active() == false) {
 		return false;
@@ -38,37 +38,37 @@ bool CyclesShaderEditor::ParamEditorPanel::is_mouse_over()
 	return false;
 }
 
-bool CyclesShaderEditor::ParamEditorPanel::should_capture_input() const
+bool cse::ParamEditorPanel::should_capture_input() const
 {
 	return false;
 }
 
-void CyclesShaderEditor::ParamEditorPanel::handle_mouse_button(int, int, int)
+void cse::ParamEditorPanel::handle_mouse_button(int, int, int)
 {
 	// Stub
 }
 
-void CyclesShaderEditor::ParamEditorPanel::handle_key(int, int, int, int)
+void cse::ParamEditorPanel::handle_key(int, int, int, int)
 {
 	// Stub
 }
 
-void CyclesShaderEditor::ParamEditorPanel::handle_character(unsigned int)
+void cse::ParamEditorPanel::handle_character(unsigned int)
 {
 	// Stub
 }
 
-void CyclesShaderEditor::ParamEditorPanel::deselect_input_box()
+void cse::ParamEditorPanel::deselect_input_box()
 {
 	// Stub
 }
 
-bool CyclesShaderEditor::ParamEditorPanel::should_push_undo_state()
+bool cse::ParamEditorPanel::should_push_undo_state()
 {
 	return false;
 }
 
-void CyclesShaderEditor::ParamEditorPanel::reset()
+void cse::ParamEditorPanel::reset()
 {
 	// Stub
 }

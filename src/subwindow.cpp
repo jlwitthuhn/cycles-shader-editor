@@ -4,33 +4,33 @@
 
 #include "gui_sizes.h"
 
-CyclesShaderEditor::NodeEditorSubwindow::NodeEditorSubwindow(FloatPos screen_position, std::string title)
+cse::NodeEditorSubwindow::NodeEditorSubwindow(FloatPos screen_position, std::string title)
 {
 	subwindow_screen_pos = screen_position;
 	this->title = title;
 }
 
-CyclesShaderEditor::FloatPos CyclesShaderEditor::NodeEditorSubwindow::get_screen_pos() const
+cse::FloatPos cse::NodeEditorSubwindow::get_screen_pos() const
 {
 	return subwindow_screen_pos;
 }
 
-float CyclesShaderEditor::NodeEditorSubwindow::get_width() const
+float cse::NodeEditorSubwindow::get_width() const
 {
 	return subwindow_width;
 }
 
-float CyclesShaderEditor::NodeEditorSubwindow::get_height() const
+float cse::NodeEditorSubwindow::get_height() const
 {
 	return content_height + UI_SUBWIN_HEADER_HEIGHT + 3.0f;
 }
 
-void CyclesShaderEditor::NodeEditorSubwindow::pre_draw()
+void cse::NodeEditorSubwindow::pre_draw()
 {
 	// Do nothing by default
 }
 
-void CyclesShaderEditor::NodeEditorSubwindow::draw(NVGcontext* draw_context)
+void cse::NodeEditorSubwindow::draw(NVGcontext* draw_context)
 {
 	if (is_active() == false) {
 		return;
@@ -83,7 +83,7 @@ void CyclesShaderEditor::NodeEditorSubwindow::draw(NVGcontext* draw_context)
 	nvgRestore(draw_context);
 }
 
-bool CyclesShaderEditor::NodeEditorSubwindow::is_mouse_over() const
+bool cse::NodeEditorSubwindow::is_mouse_over() const
 {
 	if (subwindow_moving) {
 		return true;
@@ -99,7 +99,7 @@ bool CyclesShaderEditor::NodeEditorSubwindow::is_mouse_over() const
 		);
 }
 
-bool CyclesShaderEditor::NodeEditorSubwindow::is_mouse_over_header() const
+bool cse::NodeEditorSubwindow::is_mouse_over_header() const
 {
 	if (subwindow_moving) {
 		return true;
@@ -113,7 +113,7 @@ bool CyclesShaderEditor::NodeEditorSubwindow::is_mouse_over_header() const
 		mouse_local_pos.get_y() < UI_SUBWIN_HEADER_HEIGHT);
 }
 
-void CyclesShaderEditor::NodeEditorSubwindow::set_mouse_position(FloatPos local_position, float max_safe_pos_y)
+void cse::NodeEditorSubwindow::set_mouse_position(FloatPos local_position, float max_safe_pos_y)
 {
 	if (subwindow_moving) {
 		subwindow_screen_pos = subwindow_screen_pos + (local_position - mouse_local_begin_move_pos);
@@ -128,48 +128,48 @@ void CyclesShaderEditor::NodeEditorSubwindow::set_mouse_position(FloatPos local_
 	mouse_content_pos = mouse_local_pos - FloatPos(0.0f, UI_SUBWIN_HEADER_HEIGHT + 3.0f);
 }
 
-bool CyclesShaderEditor::NodeEditorSubwindow::should_capture_input() const
+bool cse::NodeEditorSubwindow::should_capture_input() const
 {
 	return false;
 }
 
-void CyclesShaderEditor::NodeEditorSubwindow::deselect_input_box()
+void cse::NodeEditorSubwindow::deselect_input_box()
 {
 
 }
 
-void CyclesShaderEditor::NodeEditorSubwindow::handle_mouse_button(int /*button*/, int /*action*/, int /*mods*/)
+void cse::NodeEditorSubwindow::handle_mouse_button(int /*button*/, int /*action*/, int /*mods*/)
 {
 
 }
 
-void CyclesShaderEditor::NodeEditorSubwindow::handle_key(int /*key*/, int /*scancode*/, int /*action*/, int /*mods*/)
+void cse::NodeEditorSubwindow::handle_key(int /*key*/, int /*scancode*/, int /*action*/, int /*mods*/)
 {
 
 }
 
-void CyclesShaderEditor::NodeEditorSubwindow::handle_character(unsigned int /*codepoint*/)
+void cse::NodeEditorSubwindow::handle_character(unsigned int /*codepoint*/)
 {
 
 }
 
-void CyclesShaderEditor::NodeEditorSubwindow::move_window_begin()
+void cse::NodeEditorSubwindow::move_window_begin()
 {
 	subwindow_moving = true;
 	mouse_local_begin_move_pos = mouse_local_pos;
 }
 
-void CyclesShaderEditor::NodeEditorSubwindow::move_window_end()
+void cse::NodeEditorSubwindow::move_window_end()
 {
 	subwindow_moving = false;
 }
 
-bool CyclesShaderEditor::NodeEditorSubwindow::needs_undo_push()
+bool cse::NodeEditorSubwindow::needs_undo_push()
 {
 	return false;
 }
 
-void CyclesShaderEditor::NodeEditorSubwindow::update_selection(std::weak_ptr<const Selection> /*selection*/)
+void cse::NodeEditorSubwindow::update_selection(std::weak_ptr<const Selection> /*selection*/)
 {
 	// Do nothing
 }

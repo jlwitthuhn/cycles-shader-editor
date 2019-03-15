@@ -5,7 +5,7 @@
 #include <memory>
 #include <string>
 
-namespace CyclesShaderEditor {
+namespace cse {
 #ifdef _WIN32
 	typedef std::wstring PathString;
 #else

@@ -18,7 +18,7 @@
 #include "selection.h"
 #include "sockets.h"
 
-CyclesShaderEditor::ParamEditorSubwindow::ParamEditorSubwindow(FloatPos screen_position) :
+cse::ParamEditorSubwindow::ParamEditorSubwindow(FloatPos screen_position) :
 	NodeEditorSubwindow(screen_position, "Parameter Editor"),
 	int_input_box(UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH_SMALL, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT),
 	float_input_box(UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH_SMALL, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT),
@@ -31,7 +31,7 @@ CyclesShaderEditor::ParamEditorSubwindow::ParamEditorSubwindow(FloatPos screen_p
 	panels.push_back(std::make_shared<EditCurvePanel>(UI_SUBWIN_PARAM_EDIT_WIDTH));
 }
 
-void CyclesShaderEditor::ParamEditorSubwindow::pre_draw()
+void cse::ParamEditorSubwindow::pre_draw()
 {
 	if (auto selected_param_ptr = selected_param.lock()) {
 		for (const auto& this_panel : panels) {
@@ -43,7 +43,7 @@ void CyclesShaderEditor::ParamEditorSubwindow::pre_draw()
 	}
 }
 
-void CyclesShaderEditor::ParamEditorSubwindow::set_mouse_position(FloatPos local_position, float max_pos_y)
+void cse::ParamEditorSubwindow::set_mouse_position(FloatPos local_position, float max_pos_y)
 {
 	NodeEditorSubwindow::set_mouse_position(local_position, max_pos_y);
 	for (const auto& this_panel : panels) {
@@ -53,7 +53,7 @@ void CyclesShaderEditor::ParamEditorSubwindow::set_mouse_position(FloatPos local
 	}
 }
 
-void CyclesShaderEditor::ParamEditorSubwindow::handle_mouse_button(int button, int action, int mods)
+void cse::ParamEditorSubwindow::handle_mouse_button(int button, int action, int mods)
 {
 	bool mouse_is_over_panel = false;
 	for (const auto& this_panel : panels) {
@@ -127,7 +127,7 @@ void CyclesShaderEditor::ParamEditorSubwindow::handle_mouse_button(int button, i
 	}
 }
 
-void CyclesShaderEditor::ParamEditorSubwindow::handle_key(const int key, const int scancode, const int action, const int mods)
+void cse::ParamEditorSubwindow::handle_key(const int key, const int scancode, const int action, const int mods)
 {
 	if (selected_input != nullptr) {
 		if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
@@ -148,7 +148,7 @@ void CyclesShaderEditor::ParamEditorSubwindow::handle_key(const int key, const i
 	}
 }
 
-void CyclesShaderEditor::ParamEditorSubwindow::handle_character(unsigned int codepoint)
+void cse::ParamEditorSubwindow::handle_character(unsigned int codepoint)
 {
 	if (selected_input != nullptr) {
 		if (selected_input->should_capture_input()) {
@@ -162,7 +162,7 @@ void CyclesShaderEditor::ParamEditorSubwindow::handle_character(unsigned int cod
 	}
 }
 
-void CyclesShaderEditor::ParamEditorSubwindow::deselect_input_box()
+void cse::ParamEditorSubwindow::deselect_input_box()
 {
 	select_input_box(nullptr);
 	for (const auto& this_panel : panels) {
@@ -170,12 +170,12 @@ void CyclesShaderEditor::ParamEditorSubwindow::deselect_input_box()
 	}
 }
 
-bool CyclesShaderEditor::ParamEditorSubwindow::is_active() const
+bool cse::ParamEditorSubwindow::is_active() const
 {
 	return (selected_param.use_count() > 0);
 }
 
-bool CyclesShaderEditor::ParamEditorSubwindow::needs_undo_push()
+bool cse::ParamEditorSubwindow::needs_undo_push()
 {
 	bool result = false;
 	if (request_undo_stack_push) {
@@ -190,7 +190,7 @@ bool CyclesShaderEditor::ParamEditorSubwindow::needs_undo_push()
 	return result;
 }
 
-void CyclesShaderEditor::ParamEditorSubwindow::update_selection(const std::weak_ptr<const Selection> selection)
+void cse::ParamEditorSubwindow::update_selection(const std::weak_ptr<const Selection> selection)
 {
 	const auto selection_ptr = selection.lock();
 	if (selection_ptr) {
@@ -201,7 +201,7 @@ void CyclesShaderEditor::ParamEditorSubwindow::update_selection(const std::weak_
 	}
 }
 
-bool CyclesShaderEditor::ParamEditorSubwindow::should_capture_input() const
+bool cse::ParamEditorSubwindow::should_capture_input() const
 {
 	if (selected_input != nullptr && selected_input->should_capture_input()) {
 		return true;
@@ -214,7 +214,7 @@ bool CyclesShaderEditor::ParamEditorSubwindow::should_capture_input() const
 	return false;
 }
 
-void CyclesShaderEditor::ParamEditorSubwindow::draw_content(NVGcontext* draw_context)
+void cse::ParamEditorSubwindow::draw_content(NVGcontext* draw_context)
 {
 	float height_drawn = 0.0f;
 
@@ -531,7 +531,7 @@ void CyclesShaderEditor::ParamEditorSubwindow::draw_content(NVGcontext* draw_con
 	content_height = height_drawn + 4.0f;
 }
 
-void CyclesShaderEditor::ParamEditorSubwindow::select_input_box(BaseInputBox* const input)
+void cse::ParamEditorSubwindow::select_input_box(BaseInputBox* const input)
 {
 	if (selected_input != nullptr) {
 		selected_input->complete_edit();
@@ -542,7 +542,7 @@ void CyclesShaderEditor::ParamEditorSubwindow::select_input_box(BaseInputBox* co
 	}
 }
 
-bool CyclesShaderEditor::ParamEditorSubwindow::is_bool_target_under_mouse()
+bool cse::ParamEditorSubwindow::is_bool_target_under_mouse()
 {
 	for (BoolValueArea& this_target : bool_targets) {
 		if (this_target.is_under_point(mouse_content_pos)) {
@@ -553,7 +553,7 @@ bool CyclesShaderEditor::ParamEditorSubwindow::is_bool_target_under_mouse()
 	return false;
 }
 
-bool CyclesShaderEditor::ParamEditorSubwindow::is_enum_target_under_mouse()
+bool cse::ParamEditorSubwindow::is_enum_target_under_mouse()
 {
 	for (StringEnumArea& this_target : enum_targets) {
 		if (this_target.is_under_point(mouse_content_pos)) {
@@ -564,7 +564,7 @@ bool CyclesShaderEditor::ParamEditorSubwindow::is_enum_target_under_mouse()
 	return false;
 }
 
-void CyclesShaderEditor::ParamEditorSubwindow::click_bool_target_under_mouse()
+void cse::ParamEditorSubwindow::click_bool_target_under_mouse()
 {
 	for (BoolValueArea& this_target : bool_targets) {
 		if (this_target.is_under_point(mouse_content_pos)) {
@@ -574,7 +574,7 @@ void CyclesShaderEditor::ParamEditorSubwindow::click_bool_target_under_mouse()
 	}
 }
 
-void CyclesShaderEditor::ParamEditorSubwindow::click_enum_target_under_mouse()
+void cse::ParamEditorSubwindow::click_enum_target_under_mouse()
 {
 	for (StringEnumArea& this_target : enum_targets) {
 		if (this_target.is_under_point(mouse_content_pos)) {

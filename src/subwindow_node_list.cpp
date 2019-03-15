@@ -20,27 +20,27 @@
 #include "node_textures.h"
 #include "node_vector.h"
 
-CyclesShaderEditor::NodeCreationHelper::NodeCreationHelper()
+cse::NodeCreationHelper::NodeCreationHelper()
 {
 
 }
 
-bool CyclesShaderEditor::NodeCreationHelper::is_ready() const
+bool cse::NodeCreationHelper::is_ready() const
 {
 	return current_node != nullptr;
 }
 
-void CyclesShaderEditor::NodeCreationHelper::set_node(const std::shared_ptr<EditorNode>& new_node)
+void cse::NodeCreationHelper::set_node(const std::shared_ptr<EditorNode>& new_node)
 {
 	current_node = new_node;
 }
 
-void CyclesShaderEditor::NodeCreationHelper::clear()
+void cse::NodeCreationHelper::clear()
 {
 	current_node = std::shared_ptr<EditorNode>();
 }
 
-std::shared_ptr<CyclesShaderEditor::EditorNode> CyclesShaderEditor::NodeCreationHelper::take()
+std::shared_ptr<cse::EditorNode> cse::NodeCreationHelper::take()
 {
 	if (current_node) {
 		return std::move(current_node);
@@ -48,7 +48,7 @@ std::shared_ptr<CyclesShaderEditor::EditorNode> CyclesShaderEditor::NodeCreation
 	return std::unique_ptr<EditorNode>();
 }
 
-CyclesShaderEditor::NodeListSubwindow::NodeListSubwindow(const std::weak_ptr<NodeCreationHelper> node_creation_helper, const FloatPos screen_position) :
+cse::NodeListSubwindow::NodeListSubwindow(const std::weak_ptr<NodeCreationHelper> node_creation_helper, const FloatPos screen_position) :
 	NodeEditorSubwindow(screen_position, "Create Node"),
 	node_creation_helper(node_creation_helper)
 {
@@ -227,7 +227,7 @@ CyclesShaderEditor::NodeListSubwindow::NodeListSubwindow(const std::weak_ptr<Nod
 	category_buttons.push_back(std::move(cat_converter_button));
 }
 
-void CyclesShaderEditor::NodeListSubwindow::handle_mouse_button(int button, int action, int /*mods*/) {
+void cse::NodeListSubwindow::handle_mouse_button(int button, int action, int /*mods*/) {
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
 		if (is_mouse_over_header()) {
 			move_window_begin();
@@ -249,7 +249,7 @@ void CyclesShaderEditor::NodeListSubwindow::handle_mouse_button(int button, int 
 	}
 }
 
-void CyclesShaderEditor::NodeListSubwindow::draw_content(NVGcontext* const draw_context)
+void cse::NodeListSubwindow::draw_content(NVGcontext* const draw_context)
 {
 	float height_drawn = 0.0f;
 
@@ -273,7 +273,7 @@ void CyclesShaderEditor::NodeListSubwindow::draw_content(NVGcontext* const draw_
 	content_height = height_drawn + UI_SUBWIN_NODE_LIST_BUTTON_VPADDING;
 }
 
-const std::list<std::unique_ptr<CyclesShaderEditor::NodeCreationButton>>& CyclesShaderEditor::NodeListSubwindow::get_active_creation_buttons() const
+const std::list<std::unique_ptr<cse::NodeCreationButton>>& cse::NodeListSubwindow::get_active_creation_buttons() const
 {
 	for (const auto& this_category : category_buttons) {
 		if (this_category->selected) {
@@ -283,7 +283,7 @@ const std::list<std::unique_ptr<CyclesShaderEditor::NodeCreationButton>>& Cycles
 	return empty_creation_button_list;
 }
 
-bool CyclesShaderEditor::NodeListSubwindow::is_category_button_under_mouse() const
+bool cse::NodeListSubwindow::is_category_button_under_mouse() const
 {
 	for (const auto& this_category : category_buttons) {
 		if (this_category->is_mouse_over_button()) {
@@ -293,7 +293,7 @@ bool CyclesShaderEditor::NodeListSubwindow::is_category_button_under_mouse() con
 	return false;
 }
 
-bool CyclesShaderEditor::NodeListSubwindow::is_creation_button_under_mouse() const
+bool cse::NodeListSubwindow::is_creation_button_under_mouse() const
 {
 	for (const auto& creation_button : get_active_creation_buttons()) {
 		if (creation_button->is_mouse_over_button()) {
@@ -303,14 +303,14 @@ bool CyclesShaderEditor::NodeListSubwindow::is_creation_button_under_mouse() con
 	return false;
 }
 
-void CyclesShaderEditor::NodeListSubwindow::select_category_button_under_mouse()
+void cse::NodeListSubwindow::select_category_button_under_mouse()
 {
 	for (const auto& this_category : category_buttons) {
 		this_category->selected = this_category->is_mouse_over_button();
 	}
 }
 
-void CyclesShaderEditor::NodeListSubwindow::select_creation_button_under_mouse()
+void cse::NodeListSubwindow::select_creation_button_under_mouse()
 {
 	if (const auto node_creation_helper = this->node_creation_helper.lock()) {
 		for (const auto& creation_button : get_active_creation_buttons()) {
@@ -324,7 +324,7 @@ void CyclesShaderEditor::NodeListSubwindow::select_creation_button_under_mouse()
 	}
 }
 
-void CyclesShaderEditor::NodeListSubwindow::reset_creation_buttons()
+void cse::NodeListSubwindow::reset_creation_buttons()
 {
 	for (const auto& this_button : get_active_creation_buttons()) {
 		this_button->pressed = false;

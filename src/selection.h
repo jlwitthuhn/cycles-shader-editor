@@ -5,7 +5,7 @@
 
 #include "util_typedef.h"
 
-namespace CyclesShaderEditor {
+namespace cse {
 
 	class EditorNode;
 	class FloatPos;

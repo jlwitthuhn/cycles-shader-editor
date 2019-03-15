@@ -3,7 +3,7 @@
 #include <list>
 #include <string>
 
-namespace CyclesShaderEditor {
+namespace cse {
 
 	class UndoStack {
 	public:

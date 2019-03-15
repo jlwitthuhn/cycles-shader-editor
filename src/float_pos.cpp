@@ -2,69 +2,69 @@
 
 #include <cmath>
 
-CyclesShaderEditor::FloatPos::FloatPos()
+cse::FloatPos::FloatPos()
 {
 	pos_x = 0.0f;
 	pos_y = 0.0f;
 }
 
-CyclesShaderEditor::FloatPos::FloatPos(float x, float y)
+cse::FloatPos::FloatPos(float x, float y)
 {
 	pos_x = x;
 	pos_y = y;
 }
 
-float CyclesShaderEditor::FloatPos::get_x() const
+float cse::FloatPos::get_x() const
 {
 	return pos_x;
 }
 
-float CyclesShaderEditor::FloatPos::get_y() const
+float cse::FloatPos::get_y() const
 {
 	return pos_y;
 }
 
-float CyclesShaderEditor::FloatPos::get_floor_x() const
+float cse::FloatPos::get_floor_x() const
 {
 	return floor(pos_x);
 }
 
-float CyclesShaderEditor::FloatPos::get_floor_y() const
+float cse::FloatPos::get_floor_y() const
 {
 	return floor(pos_y);
 }
 
-float CyclesShaderEditor::FloatPos::get_round_x() const
+float cse::FloatPos::get_round_x() const
 {
 	return roundf(pos_x);
 }
 
-float CyclesShaderEditor::FloatPos::get_round_y() const
+float cse::FloatPos::get_round_y() const
 {
 	return roundf(pos_y);
 }
 
-int CyclesShaderEditor::FloatPos::get_x_as_int() const
+int cse::FloatPos::get_x_as_int() const
 {
 	return static_cast<int>(floor(pos_x));
 }
 
-int CyclesShaderEditor::FloatPos::get_y_as_int() const
+int cse::FloatPos::get_y_as_int() const
 {
 	return static_cast<int>(floor(pos_y));
 }
 
-float CyclesShaderEditor::FloatPos::get_magnitude_squared() const
+float cse::FloatPos::get_magnitude_squared() const
 {
 	return pos_x * pos_x + pos_y * pos_y;
 }
 
-bool CyclesShaderEditor::FloatPos::is_nonzero() const
+bool cse::FloatPos::is_nonzero() const
 {
 	return (pos_x != 0.0f || pos_y != 0.0f);
 }
 
-void CyclesShaderEditor::FloatPos::clamp_to(const FloatPos& begin, const FloatPos& end)
+void cse::FloatPos::clamp_to(const FloatPos& begin, const FloatPos& end)
 {
 	if (pos_x < begin.get_x()) {
 		pos_x = begin.pos_x;
@@ -84,38 +84,38 @@ void CyclesShaderEditor::FloatPos::clamp_to(const FloatPos& begin, const FloatPo
 	}
 }
 
-CyclesShaderEditor::FloatPos CyclesShaderEditor::FloatPos::operator+(const FloatPos& other) const
+cse::FloatPos cse::FloatPos::operator+(const FloatPos& other) const
 {
 	return FloatPos(pos_x + other.get_x(), pos_y + other.get_y());
 }
 
-CyclesShaderEditor::FloatPos CyclesShaderEditor::FloatPos::operator-(const FloatPos& other) const
+cse::FloatPos cse::FloatPos::operator-(const FloatPos& other) const
 {
 	return FloatPos(pos_x - other.get_x(), pos_y - other.get_y());
 }
 
-void CyclesShaderEditor::FloatPos::operator+=(const FloatPos& other)
+void cse::FloatPos::operator+=(const FloatPos& other)
 {
 	pos_x += other.pos_x;
 	pos_y += other.pos_y;
 }
 
-CyclesShaderEditor::FloatPos CyclesShaderEditor::FloatPos::operator*(const float& other) const
+cse::FloatPos cse::FloatPos::operator*(const float& other) const
 {
 	return FloatPos(pos_x * other, pos_y * other);
 }
 
-CyclesShaderEditor::FloatPos CyclesShaderEditor::FloatPos::operator/(const float& other) const
+cse::FloatPos cse::FloatPos::operator/(const float& other) const
 {
 	return FloatPos(pos_x / other, pos_y / other);
 }
 
-bool CyclesShaderEditor::FloatPos::operator==(const FloatPos& other) const
+bool cse::FloatPos::operator==(const FloatPos& other) const
 {
 	return (pos_x == other.pos_x && pos_y == other.pos_y);
 }
 
-bool CyclesShaderEditor::FloatPos::operator!=(const FloatPos& other) const
+bool cse::FloatPos::operator!=(const FloatPos& other) const
 {
 	return !(operator==(other));
 }

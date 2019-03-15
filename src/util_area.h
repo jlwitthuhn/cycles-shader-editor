@@ -6,7 +6,7 @@
 #include "float_pos.h"
 #include "sockets.h"
 
-namespace CyclesShaderEditor {
+namespace cse {
 
 	class Area {
 	public:

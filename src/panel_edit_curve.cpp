@@ -9,15 +9,15 @@
 #include "gui_sizes.h"
 #include "sockets.h"
 
-static CyclesShaderEditor::FloatPos get_panel_space_point(const CyclesShaderEditor::FloatPos normalized_point, const float hpad, const float vpad, const float width, const float height)
+static cse::FloatPos get_panel_space_point(const cse::FloatPos normalized_point, const float hpad, const float vpad, const float width, const float height)
 {
 	const float out_x = hpad + normalized_point.get_x() * width;
 	const float out_y = vpad + (1.0f - normalized_point.get_y()) * height;
 
-	return CyclesShaderEditor::FloatPos(out_x, out_y);
+	return cse::FloatPos(out_x, out_y);
 }
 
-CyclesShaderEditor::EditCurvePanel::EditCurvePanel(float width) :
+cse::EditCurvePanel::EditCurvePanel(float width) :
 	ParamEditorPanel(width),
 	target_view(FloatPos(), FloatPos()),
 	target_edit_mode_move(FloatPos(), FloatPos(), EditCurveMode::MOVE, &edit_mode),
@@ -29,12 +29,12 @@ CyclesShaderEditor::EditCurvePanel::EditCurvePanel(float width) :
 
 }
 
-bool CyclesShaderEditor::EditCurvePanel::is_active() const
+bool cse::EditCurvePanel::is_active() const
 {
 	return static_cast<bool>(attached_curve.lock());
 }
 
-void CyclesShaderEditor::EditCurvePanel::pre_draw()
+void cse::EditCurvePanel::pre_draw()
 {
 	if (is_active() == false) {
 		return;
@@ -52,7 +52,7 @@ void CyclesShaderEditor::EditCurvePanel::pre_draw()
 	}
 }
 
-float CyclesShaderEditor::EditCurvePanel::draw(NVGcontext* draw_context)
+float cse::EditCurvePanel::draw(NVGcontext* draw_context)
 {
 	float height_drawn = 0.0f;
 
@@ -336,7 +336,7 @@ float CyclesShaderEditor::EditCurvePanel::draw(NVGcontext* draw_context)
 	return height_drawn;
 }
 
-void CyclesShaderEditor::EditCurvePanel::handle_mouse_button(int button, int action, int /*mods*/)
+void cse::EditCurvePanel::handle_mouse_button(int button, int action, int /*mods*/)
 {
 	if (is_active() == false) {
 		return;
@@ -406,7 +406,7 @@ void CyclesShaderEditor::EditCurvePanel::handle_mouse_button(int button, int act
 	}
 }
 
-void CyclesShaderEditor::EditCurvePanel::set_attached_value(const std::weak_ptr<SocketValue> socket_value)
+void cse::EditCurvePanel::set_attached_value(const std::weak_ptr<SocketValue> socket_value)
 {
 	if (auto socket_value_ptr = socket_value.lock()) {
 		if (socket_value_ptr->get_type() == SocketType::CURVE) {
@@ -421,20 +421,20 @@ void CyclesShaderEditor::EditCurvePanel::set_attached_value(const std::weak_ptr<
 	attached_curve = std::weak_ptr<CurveSocketValue>();
 }
 
-bool CyclesShaderEditor::EditCurvePanel::should_push_undo_state()
+bool cse::EditCurvePanel::should_push_undo_state()
 {
 	bool result = request_undo_push;
 	request_undo_push = false;
 	return result;
 }
 
-void CyclesShaderEditor::EditCurvePanel::reset()
+void cse::EditCurvePanel::reset()
 {
 	edit_mode = EditCurveMode::MOVE;
 	selected_point_valid = false;
 }
 
-void CyclesShaderEditor::EditCurvePanel::move_selected_point(const FloatPos new_pos)
+void cse::EditCurvePanel::move_selected_point(const FloatPos new_pos)
 {
 	if (auto attached_curve_ptr = attached_curve.lock()) {
 		if (selected_point_valid) {

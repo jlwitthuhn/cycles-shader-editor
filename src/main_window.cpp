@@ -27,7 +27,7 @@
 #include "wrapper_nvg_context.h"
 #include "wrapper_nvg_func.h"
 
-CyclesShaderEditor::EditorMainWindow::EditorMainWindow() :
+cse::EditorMainWindow::EditorMainWindow() :
 	main_graph(std::make_shared<EditableGraph>(ShaderGraphType::MATERIAL))
 {
 	window_width = UI_WINDOW_WIDTH;
@@ -38,18 +38,18 @@ CyclesShaderEditor::EditorMainWindow::EditorMainWindow() :
 	node_creation_helper = std::make_shared<NodeCreationHelper>();
 }
 
-CyclesShaderEditor::EditorMainWindow::~EditorMainWindow()
+cse::EditorMainWindow::~EditorMainWindow()
 {
 	release_resources();
 	glfwTerminate();
 }
 
-void CyclesShaderEditor::EditorMainWindow::set_font_search_path(const PathString& path)
+void cse::EditorMainWindow::set_font_search_path(const PathString& path)
 {
 	font_search_path = path;
 }
 
-bool CyclesShaderEditor::EditorMainWindow::create_window()
+bool cse::EditorMainWindow::create_window()
 {
 	if (!glfwInit()) {
 		return false;
@@ -95,9 +95,9 @@ bool CyclesShaderEditor::EditorMainWindow::create_window()
 	status_bar = std::make_unique<NodeEditorStatusBar>();
 
 	std::unique_ptr<NodeEditorSubwindow> node_list_window =
-		std::make_unique<NodeListSubwindow>(node_creation_helper, CyclesShaderEditor::FloatPos(15.0f, NodeEditorToolbar::get_toolbar_height() + 15.0f));
+		std::make_unique<NodeListSubwindow>(node_creation_helper, cse::FloatPos(15.0f, NodeEditorToolbar::get_toolbar_height() + 15.0f));
 	std::unique_ptr<NodeEditorSubwindow> param_editor_window =
-		std::make_unique<ParamEditorSubwindow>(CyclesShaderEditor::FloatPos(15.0f * 2.0f + UI_SUBWIN_NODE_LIST_WIDTH, NodeEditorToolbar::get_toolbar_height() + 15.0f));
+		std::make_unique<ParamEditorSubwindow>(cse::FloatPos(15.0f * 2.0f + UI_SUBWIN_NODE_LIST_WIDTH, NodeEditorToolbar::get_toolbar_height() + 15.0f));
 	subwindows.push_back(std::move(node_list_window));
 	subwindows.push_back(std::move(param_editor_window));
 
@@ -108,7 +108,7 @@ bool CyclesShaderEditor::EditorMainWindow::create_window()
 	return true;
 }
 
-bool CyclesShaderEditor::EditorMainWindow::run_window_loop_iteration()
+bool cse::EditorMainWindow::run_window_loop_iteration()
 {
 	if (glfwWindowShouldClose(glfw_window)) {
 		return false;
@@ -134,12 +134,12 @@ bool CyclesShaderEditor::EditorMainWindow::run_window_loop_iteration()
 	return true;
 }
 
-void CyclesShaderEditor::EditorMainWindow::set_target_frame_rate(const double fps)
+void cse::EditorMainWindow::set_target_frame_rate(const double fps)
 {
 	target_frame_rate = fps;
 }
 
-void CyclesShaderEditor::EditorMainWindow::handle_mouse_button(const int button, const int action, const int mods)
+void cse::EditorMainWindow::handle_mouse_button(const int button, const int action, const int mods)
 {
 	// Clicking anywhere will deselect any input box
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
@@ -171,7 +171,7 @@ void CyclesShaderEditor::EditorMainWindow::handle_mouse_button(const int button,
 	}
 }
 
-void CyclesShaderEditor::EditorMainWindow::handle_key(const int key, const int scancode, const int action, const int mods)
+void cse::EditorMainWindow::handle_key(const int key, const int scancode, const int action, const int mods)
 {
 	// Global shortcuts that should be handled with greater priority than anything else
 	if (mods == GLFW_MOD_CONTROL && action == GLFW_PRESS) {
@@ -218,12 +218,12 @@ void CyclesShaderEditor::EditorMainWindow::handle_key(const int key, const int s
 	view->handle_key(key, scancode, action, mods);
 }
 
-void CyclesShaderEditor::EditorMainWindow::handle_character(const unsigned int codepoint)
+void cse::EditorMainWindow::handle_character(const unsigned int codepoint)
 {
 	forward_character_to_subwindow(codepoint);
 }
 
-void CyclesShaderEditor::EditorMainWindow::handle_scroll(const double /*xoffset*/, const double yoffset)
+void cse::EditorMainWindow::handle_scroll(const double /*xoffset*/, const double yoffset)
 {
 	if (yoffset > 0.1) {
 		requests.view.zoom_in = true;
@@ -233,14 +233,14 @@ void CyclesShaderEditor::EditorMainWindow::handle_scroll(const double /*xoffset*
 	}
 }
 
-void CyclesShaderEditor::EditorMainWindow::load_serialized_graph(const std::string& graph_str)
+void cse::EditorMainWindow::load_serialized_graph(const std::string& graph_str)
 {
 	clear_graph(true);
 	deserialize_graph(graph_str, this->main_graph->nodes, this->main_graph->connections);
 	update_serialized_state();
 }
 
-bool CyclesShaderEditor::EditorMainWindow::get_serialized_output(std::string& graph) {
+bool cse::EditorMainWindow::get_serialized_output(std::string& graph) {
 	graph = serialized_output;
 	if (serialized_output_updated) {
 		serialized_output_updated = false;
@@ -251,7 +251,7 @@ bool CyclesShaderEditor::EditorMainWindow::get_serialized_output(std::string& gr
 	}
 }
 
-void CyclesShaderEditor::EditorMainWindow::pre_draw()
+void cse::EditorMainWindow::pre_draw()
 {
 	// Check nodes to see if we should save current state
 	{
@@ -276,7 +276,7 @@ void CyclesShaderEditor::EditorMainWindow::pre_draw()
 	double mx, my;
 	glfwGetCursorPos(glfw_window, &mx, &my);
 	glfwGetWindowSize(glfw_window, &window_width, &window_height);
-	update_mouse_position(CyclesShaderEditor::FloatPos(static_cast<float>(mx), static_cast<float>(my)));
+	update_mouse_position(cse::FloatPos(static_cast<float>(mx), static_cast<float>(my)));
 
 	// Handle window events
 	glfwPollEvents();
@@ -306,16 +306,16 @@ void CyclesShaderEditor::EditorMainWindow::pre_draw()
 
 	// Update toolbar button state
 	if (undo_stack.undo_available()) {
-		toolbar->set_button_enabled(CyclesShaderEditor::ToolbarButtonType::UNDO, true);
+		toolbar->set_button_enabled(cse::ToolbarButtonType::UNDO, true);
 	}
 	else {
-		toolbar->set_button_enabled(CyclesShaderEditor::ToolbarButtonType::UNDO, false);
+		toolbar->set_button_enabled(cse::ToolbarButtonType::UNDO, false);
 	}
 	if (undo_stack.redo_available()) {
-		toolbar->set_button_enabled(CyclesShaderEditor::ToolbarButtonType::REDO, true);
+		toolbar->set_button_enabled(cse::ToolbarButtonType::REDO, true);
 	}
 	else {
-		toolbar->set_button_enabled(CyclesShaderEditor::ToolbarButtonType::REDO, false);
+		toolbar->set_button_enabled(cse::ToolbarButtonType::REDO, false);
 	}
 
 	// Mark all connected input sockets
@@ -330,7 +330,7 @@ void CyclesShaderEditor::EditorMainWindow::pre_draw()
 	}
 }
 
-void CyclesShaderEditor::EditorMainWindow::draw()
+void cse::EditorMainWindow::draw()
 {
 	NVGcontext* const nvg_ctx_pointer = nvg_context->context_ptr;
 
@@ -364,7 +364,7 @@ void CyclesShaderEditor::EditorMainWindow::draw()
 	}
 }
 
-void CyclesShaderEditor::EditorMainWindow::swap_buffers()
+void cse::EditorMainWindow::swap_buffers()
 {
 	if (target_frame_rate > 0.0) {
 		const auto current_time = std::chrono::steady_clock::now();
@@ -383,7 +383,7 @@ void CyclesShaderEditor::EditorMainWindow::swap_buffers()
 	glfwSwapBuffers(glfw_window);
 }
 
-void CyclesShaderEditor::EditorMainWindow::service_requests()
+void cse::EditorMainWindow::service_requests()
 {
 	if (requests.save) {
 		do_output();
@@ -400,13 +400,13 @@ void CyclesShaderEditor::EditorMainWindow::service_requests()
 	view->handle_requests(requests.view);
 }
 
-void CyclesShaderEditor::EditorMainWindow::update_mouse_position(CyclesShaderEditor::FloatPos screen_position)
+void cse::EditorMainWindow::update_mouse_position(cse::FloatPos screen_position)
 {
-	screen_position.clamp_to(CyclesShaderEditor::FloatPos(0.0f, 0.0f), CyclesShaderEditor::FloatPos(window_width - 1.0f, window_height - 1.0f));
+	screen_position.clamp_to(cse::FloatPos(0.0f, 0.0f), cse::FloatPos(window_width - 1.0f, window_height - 1.0f));
 	mouse_screen_pos = screen_position;
 }
 
-bool CyclesShaderEditor::EditorMainWindow::forward_mouse_to_subwindow(const int button, const int action, const int mods)
+bool cse::EditorMainWindow::forward_mouse_to_subwindow(const int button, const int action, const int mods)
 {
 	std::list<std::unique_ptr<NodeEditorSubwindow>>::iterator iter;
 	for (iter = subwindows.begin(); iter != subwindows.end(); ++iter) {
@@ -422,7 +422,7 @@ bool CyclesShaderEditor::EditorMainWindow::forward_mouse_to_subwindow(const int 
 	return false;
 }
 
-bool CyclesShaderEditor::EditorMainWindow::forward_key_to_subwindow(const int key, const int scancode, const int action, const int mods)
+bool cse::EditorMainWindow::forward_key_to_subwindow(const int key, const int scancode, const int action, const int mods)
 {
 	for (auto& this_subwindow : subwindows) {
 		if (this_subwindow->should_capture_input()) {
@@ -433,7 +433,7 @@ bool CyclesShaderEditor::EditorMainWindow::forward_key_to_subwindow(const int ke
 	return false;
 }
 
-bool CyclesShaderEditor::EditorMainWindow::forward_character_to_subwindow(const unsigned int codepoint)
+bool cse::EditorMainWindow::forward_character_to_subwindow(const unsigned int codepoint)
 {
 	for (auto& this_subwindow : subwindows) {
 		if (this_subwindow->should_capture_input()) {
@@ -444,7 +444,7 @@ bool CyclesShaderEditor::EditorMainWindow::forward_character_to_subwindow(const 
 	return false;
 }
 
-void CyclesShaderEditor::EditorMainWindow::update_serialized_state()
+void cse::EditorMainWindow::update_serialized_state()
 {
 	std::vector<OutputNode> out_nodes;
 	std::vector<OutputConnection> out_connections;
@@ -452,14 +452,14 @@ void CyclesShaderEditor::EditorMainWindow::update_serialized_state()
 	serialized_state = serialize_graph(out_nodes, out_connections);
 }
 
-void CyclesShaderEditor::EditorMainWindow::push_undo_state()
+void cse::EditorMainWindow::push_undo_state()
 {
 	undo_stack.push_undo_state(serialized_state);
 	update_serialized_state();
 	status_bar->set_status_text("Graph contains unsaved changes");
 }
 
-void CyclesShaderEditor::EditorMainWindow::undo()
+void cse::EditorMainWindow::undo()
 {
 	if (undo_stack.undo_available() == false) {
 		return;
@@ -472,7 +472,7 @@ void CyclesShaderEditor::EditorMainWindow::undo()
 	status_bar->set_status_text("Graph contains unsaved changes");
 }
 
-void CyclesShaderEditor::EditorMainWindow::redo()
+void cse::EditorMainWindow::redo()
 {
 	if (undo_stack.redo_available() == false) {
 		return;
@@ -485,7 +485,7 @@ void CyclesShaderEditor::EditorMainWindow::redo()
 	status_bar->set_status_text("Graph contains unsaved changes");
 }
 
-void CyclesShaderEditor::EditorMainWindow::clear_graph(const bool reset_undo)
+void cse::EditorMainWindow::clear_graph(const bool reset_undo)
 {
 	if (reset_undo) {
 		undo_stack.clear();
@@ -496,7 +496,7 @@ void CyclesShaderEditor::EditorMainWindow::clear_graph(const bool reset_undo)
 	update_serialized_state();
 }
 
-void CyclesShaderEditor::EditorMainWindow::do_output()
+void cse::EditorMainWindow::do_output()
 {
 	std::vector<OutputNode> out_nodes;
 	std::vector<OutputConnection> out_connections;
@@ -515,7 +515,7 @@ void CyclesShaderEditor::EditorMainWindow::do_output()
 	status_bar->set_status_text("Saved");
 }
 
-void CyclesShaderEditor::EditorMainWindow::release_resources()
+void cse::EditorMainWindow::release_resources()
 {
 	subwindows.clear();
 

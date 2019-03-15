@@ -7,12 +7,12 @@
 #include "gui_sizes.h"
 #include "ui_requests.h"
 
-CyclesShaderEditor::ToolbarButton::ToolbarButton(const ToolbarButtonType type)
+cse::ToolbarButton::ToolbarButton(const ToolbarButtonType type)
 {
 	this->type = type;
 }
 
-std::string CyclesShaderEditor::ToolbarButton::get_label() const
+std::string cse::ToolbarButton::get_label() const
 {
 	switch (type) {
 	case ToolbarButtonType::SAVE:
@@ -30,14 +30,14 @@ std::string CyclesShaderEditor::ToolbarButton::get_label() const
 	}
 }
 
-void CyclesShaderEditor::ToolbarButton::set_geometry(const FloatPos pos_in, const float width_in, const float height_in)
+void cse::ToolbarButton::set_geometry(const FloatPos pos_in, const float width_in, const float height_in)
 {
 	pos = pos_in;
 	width = width_in;
 	height = height_in;
 }
 
-bool CyclesShaderEditor::ToolbarButton::is_under_point(const FloatPos point) const
+bool cse::ToolbarButton::is_under_point(const FloatPos point) const
 {
 	const float min_x = pos.get_x();
 	const float max_x = pos.get_x() + width;
@@ -51,7 +51,7 @@ bool CyclesShaderEditor::ToolbarButton::is_under_point(const FloatPos point) con
 	);
 }
 
-CyclesShaderEditor::NodeEditorToolbar::NodeEditorToolbar()
+cse::NodeEditorToolbar::NodeEditorToolbar()
 {
 	buttons.push_back(ToolbarButton(ToolbarButtonType::SAVE));
 	buttons.push_back(ToolbarButton(ToolbarButtonType::SPACER));
@@ -62,7 +62,7 @@ CyclesShaderEditor::NodeEditorToolbar::NodeEditorToolbar()
 	buttons.push_back(ToolbarButton(ToolbarButtonType::ZOOM_OUT));
 }
 
-void CyclesShaderEditor::NodeEditorToolbar::draw(NVGcontext* const draw_context, const float toolbar_width)
+void cse::NodeEditorToolbar::draw(NVGcontext* const draw_context, const float toolbar_width)
 {
 	nvgSave(draw_context);
 
@@ -103,7 +103,7 @@ void CyclesShaderEditor::NodeEditorToolbar::draw(NVGcontext* const draw_context,
 	nvgRestore(draw_context);
 }
 
-void CyclesShaderEditor::NodeEditorToolbar::set_button_enabled(const ToolbarButtonType type, const bool enabled)
+void cse::NodeEditorToolbar::set_button_enabled(const ToolbarButtonType type, const bool enabled)
 {
 	for (ToolbarButton& this_button : buttons) {
 		if (this_button.type == type) {
@@ -113,7 +113,7 @@ void CyclesShaderEditor::NodeEditorToolbar::set_button_enabled(const ToolbarButt
 	}
 }
 
-bool CyclesShaderEditor::NodeEditorToolbar::is_mouse_over()
+bool cse::NodeEditorToolbar::is_mouse_over()
 {
 	return (
 		mouse_screen_pos.get_y() > 0.0f &&
@@ -121,12 +121,12 @@ bool CyclesShaderEditor::NodeEditorToolbar::is_mouse_over()
 		);
 }
 
-void CyclesShaderEditor::NodeEditorToolbar::set_mouse_position(FloatPos screen_position)
+void cse::NodeEditorToolbar::set_mouse_position(FloatPos screen_position)
 {
 	mouse_screen_pos = screen_position;
 }
 
-void CyclesShaderEditor::NodeEditorToolbar::handle_mouse_button(int button, int action, int /*mods*/)
+void cse::NodeEditorToolbar::handle_mouse_button(int button, int action, int /*mods*/)
 {
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
 		press_button_under_mouse();
@@ -139,14 +139,14 @@ void CyclesShaderEditor::NodeEditorToolbar::handle_mouse_button(int button, int 
 	}
 }
 
-CyclesShaderEditor::UIRequests CyclesShaderEditor::NodeEditorToolbar::consume_ui_requests()
+cse::UIRequests cse::NodeEditorToolbar::consume_ui_requests()
 {
 	const UIRequests result = requests;
 	requests.clear();
 	return result;
 }
 
-void CyclesShaderEditor::NodeEditorToolbar::press_button_under_mouse()
+void cse::NodeEditorToolbar::press_button_under_mouse()
 {
 	for (ToolbarButton& button : buttons) {
 		if (button.is_under_point(mouse_screen_pos)) {
@@ -155,7 +155,7 @@ void CyclesShaderEditor::NodeEditorToolbar::press_button_under_mouse()
 	}
 }
 
-void CyclesShaderEditor::NodeEditorToolbar::release_button_under_mouse()
+void cse::NodeEditorToolbar::release_button_under_mouse()
 {
 	for (ToolbarButton& button : buttons) {
 		if (button.is_under_point(mouse_screen_pos)) {
@@ -167,7 +167,7 @@ void CyclesShaderEditor::NodeEditorToolbar::release_button_under_mouse()
 	}
 }
 
-void CyclesShaderEditor::NodeEditorToolbar::set_request(ToolbarButtonType button_type)
+void cse::NodeEditorToolbar::set_request(ToolbarButtonType button_type)
 {
 	switch (button_type) {
 	case ToolbarButtonType::SAVE:

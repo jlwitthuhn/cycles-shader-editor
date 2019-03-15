@@ -3,11 +3,11 @@
 #include "drawing.h"
 #include "gui_sizes.h"
 
-float CyclesShaderEditor::NodeCreationButton::draw(NVGcontext* const draw_context, const FloatPos draw_origin, const FloatPos parent_local_mouse_pos, const float parent_width)
+float cse::NodeCreationButton::draw(NVGcontext* const draw_context, const FloatPos draw_origin, const FloatPos parent_local_mouse_pos, const float parent_width)
 {
 	// Coordinates to draw the actual button at
 	// This is the input draw_origin adjusted to account for padding
-	draw_pos = draw_origin + CyclesShaderEditor::FloatPos(UI_SUBWIN_NODE_LIST_NODE_BUTTON_HPADDING, UI_SUBWIN_NODE_LIST_BUTTON_VPADDING);
+	draw_pos = draw_origin + cse::FloatPos(UI_SUBWIN_NODE_LIST_NODE_BUTTON_HPADDING, UI_SUBWIN_NODE_LIST_BUTTON_VPADDING);
 
 	this->mouse_parent_pos = parent_local_mouse_pos;
 
@@ -21,7 +21,7 @@ float CyclesShaderEditor::NodeCreationButton::draw(NVGcontext* const draw_contex
 	return UI_SUBWIN_NODE_LIST_NODE_BUTTON_HEIGHT + UI_SUBWIN_NODE_LIST_BUTTON_VPADDING * 2;
 }
 
-bool CyclesShaderEditor::NodeCreationButton::is_mouse_over_button()
+bool cse::NodeCreationButton::is_mouse_over_button()
 {
 	if (mouse_parent_pos.get_x() > draw_pos.get_x() &&
 		mouse_parent_pos.get_x() < draw_pos.get_x() + button_width &&

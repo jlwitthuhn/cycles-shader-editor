@@ -9,7 +9,7 @@
 #include "output.h"
 #include "sockets.h"
 
-CyclesShaderEditor::BumpNode::BumpNode(FloatPos position)
+cse::BumpNode::BumpNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -38,7 +38,7 @@ CyclesShaderEditor::BumpNode::BumpNode(FloatPos position)
 	type = CyclesNodeType::Bump;
 }
 
-CyclesShaderEditor::NormalMapNode::NormalMapNode(FloatPos position)
+cse::NormalMapNode::NormalMapNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -67,7 +67,7 @@ CyclesShaderEditor::NormalMapNode::NormalMapNode(FloatPos position)
 	type = CyclesNodeType::NormalMap;
 }
 
-CyclesShaderEditor::VectorTransformNode::VectorTransformNode(FloatPos position)
+cse::VectorTransformNode::VectorTransformNode(FloatPos position)
 {
 	world_pos = position;
 

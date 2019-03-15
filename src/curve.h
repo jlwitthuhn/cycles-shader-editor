@@ -5,7 +5,7 @@
 
 #include "float_pos.h"
 
-namespace CyclesShaderEditor {
+namespace cse {
 	class CurveSocketValue;
 
 	// This class is used to store the output of some curve in a format that allows for quick evaluation

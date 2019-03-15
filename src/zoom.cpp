@@ -2,7 +2,7 @@
 
 #include <cassert>
 
-CyclesShaderEditor::ZoomManager::ZoomManager()
+cse::ZoomManager::ZoomManager()
 {
 	zooms.push_back(0.20f);
 	zooms.push_back(0.25f);
@@ -35,12 +35,12 @@ CyclesShaderEditor::ZoomManager::ZoomManager()
 	}
 }
 
-float CyclesShaderEditor::ZoomManager::get_world_scale() const
+float cse::ZoomManager::get_world_scale() const
 {
 	return zooms[zoom_level];
 }
 
-void CyclesShaderEditor::ZoomManager::zoom_in()
+void cse::ZoomManager::zoom_in()
 {
 	if (zoom_level == static_cast<int>(zooms.size() - 1)) {
 		return;
@@ -48,7 +48,7 @@ void CyclesShaderEditor::ZoomManager::zoom_in()
 	zoom_level++;
 }
 
-void CyclesShaderEditor::ZoomManager::zoom_out()
+void cse::ZoomManager::zoom_out()
 {
 	if (zoom_level == 0) {
 		return;

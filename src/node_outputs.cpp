@@ -9,7 +9,7 @@
 #include "output.h"
 #include "sockets.h"
 
-CyclesShaderEditor::MaterialOutputNode::MaterialOutputNode(FloatPos position)
+cse::MaterialOutputNode::MaterialOutputNode(FloatPos position)
 {
 	world_pos = position;
 
@@ -29,7 +29,7 @@ CyclesShaderEditor::MaterialOutputNode::MaterialOutputNode(FloatPos position)
 	changed = false;
 }
 
-bool CyclesShaderEditor::MaterialOutputNode::can_be_deleted()
+bool cse::MaterialOutputNode::can_be_deleted()
 {
 	return false;
 }

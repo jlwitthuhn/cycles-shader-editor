@@ -2,7 +2,7 @@
 
 struct GLFWwindow;
 
-namespace CyclesShaderEditor {
+namespace cse {
 
 	// Class to safely wrap glfwCreateWindow and glfwDestroyWindow
 	class GlfwWindow {

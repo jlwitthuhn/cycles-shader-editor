@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-namespace CyclesShaderEditor {
+namespace cse {
 
 	struct OutputConnection;
 	struct OutputNode;

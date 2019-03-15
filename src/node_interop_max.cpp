@@ -9,7 +9,7 @@
 #include "output.h"
 #include "sockets.h"
 
-CyclesShaderEditor::MaxTexmapShaderNode::MaxTexmapShaderNode(FloatPos position)
+cse::MaxTexmapShaderNode::MaxTexmapShaderNode(FloatPos position)
 {
 	world_pos = position;
 

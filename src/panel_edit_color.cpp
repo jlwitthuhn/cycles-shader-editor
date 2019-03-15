@@ -11,7 +11,7 @@
 #include "gui_sizes.h"
 #include "sockets.h"
 
-CyclesShaderEditor::EditColorPanel::EditColorPanel(float width) :
+cse::EditColorPanel::EditColorPanel(float width) :
 	ParamEditorPanel(width),
 	color_r_input_box(UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH_BIG, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT),
 	color_g_input_box(UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH_BIG, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT),
@@ -25,12 +25,12 @@ CyclesShaderEditor::EditColorPanel::EditColorPanel(float width) :
 	color_b_input_box.displayed = true;
 }
 
-bool CyclesShaderEditor::EditColorPanel::is_active() const
+bool cse::EditColorPanel::is_active() const
 {
 	return static_cast<bool>(attached_color.lock());
 }
 
-float CyclesShaderEditor::EditColorPanel::draw(NVGcontext* const draw_context)
+float cse::EditColorPanel::draw(NVGcontext* const draw_context)
 {
 	float height_drawn = 0.0f;
 
@@ -207,7 +207,7 @@ float CyclesShaderEditor::EditColorPanel::draw(NVGcontext* const draw_context)
 	return height_drawn;
 }
 
-bool CyclesShaderEditor::EditColorPanel::should_capture_input() const
+bool cse::EditColorPanel::should_capture_input() const
 {
 	if (selected_input != nullptr) {
 		return selected_input->should_capture_input();
@@ -215,7 +215,7 @@ bool CyclesShaderEditor::EditColorPanel::should_capture_input() const
 	return false;
 }
 
-void CyclesShaderEditor::EditColorPanel::handle_mouse_button(int button, int action, int /*mods*/)
+void cse::EditColorPanel::handle_mouse_button(int button, int action, int /*mods*/)
 {
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
 		if (color_rect_click_target.is_under_point(mouse_local_pos)) {
@@ -248,7 +248,7 @@ void CyclesShaderEditor::EditColorPanel::handle_mouse_button(int button, int act
 	}
 }
 
-void CyclesShaderEditor::EditColorPanel::handle_key(const int key, int /*scancode*/, const int action, int /*mods*/)
+void cse::EditColorPanel::handle_key(const int key, int /*scancode*/, const int action, int /*mods*/)
 {
 	if (selected_input != nullptr) {
 		if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
@@ -264,7 +264,7 @@ void CyclesShaderEditor::EditColorPanel::handle_key(const int key, int /*scancod
 	}
 }
 
-void CyclesShaderEditor::EditColorPanel::handle_character(const unsigned int codepoint)
+void cse::EditColorPanel::handle_character(const unsigned int codepoint)
 {
 	if (selected_input != nullptr) {
 		if (selected_input->should_capture_input()) {
@@ -273,7 +273,7 @@ void CyclesShaderEditor::EditColorPanel::handle_character(const unsigned int cod
 	}
 }
 
-void CyclesShaderEditor::EditColorPanel::set_attached_value(const std::weak_ptr<SocketValue> socket_value)
+void cse::EditColorPanel::set_attached_value(const std::weak_ptr<SocketValue> socket_value)
 {
 	if (auto socket_value_ptr = socket_value.lock()) {
 		if (socket_value_ptr->get_type() == SocketType::COLOR) {
@@ -288,12 +288,12 @@ void CyclesShaderEditor::EditColorPanel::set_attached_value(const std::weak_ptr<
 	attached_color = std::weak_ptr<ColorSocketValue>();
 }
 
-void CyclesShaderEditor::EditColorPanel::deselect_input_box()
+void cse::EditColorPanel::deselect_input_box()
 {
 	select_input(nullptr);
 }
 
-bool CyclesShaderEditor::EditColorPanel::should_push_undo_state()
+bool cse::EditColorPanel::should_push_undo_state()
 {
 	if (value_has_changed) {
 		value_has_changed = false;
@@ -302,12 +302,12 @@ bool CyclesShaderEditor::EditColorPanel::should_push_undo_state()
 	return false;
 }
 
-void CyclesShaderEditor::EditColorPanel::reset()
+void cse::EditColorPanel::reset()
 {
 	last_hue = 0.0f;
 }
 
-CyclesShaderEditor::HueSatVal CyclesShaderEditor::EditColorPanel::get_hsv()
+cse::HueSatVal cse::EditColorPanel::get_hsv()
 {
 	RedGreenBlue rgb;
 	rgb.r = color_r_input_box.get_float_value();
@@ -322,7 +322,7 @@ CyclesShaderEditor::HueSatVal CyclesShaderEditor::EditColorPanel::get_hsv()
 	return hsv;
 }
 
-void CyclesShaderEditor::EditColorPanel::set_hsv(HueSatVal hsv)
+void cse::EditColorPanel::set_hsv(HueSatVal hsv)
 {
 	RedGreenBlue rgb = rgb_from_hsv(hsv);
 
@@ -331,7 +331,7 @@ void CyclesShaderEditor::EditColorPanel::set_hsv(HueSatVal hsv)
 	color_b_input_box.set_float_value(rgb.b);
 }
 
-void CyclesShaderEditor::EditColorPanel::set_hue_from_mouse()
+void cse::EditColorPanel::set_hue_from_mouse()
 {
 	float new_hue = hue_bar_click_target.get_normalized_mouse_pos(mouse_local_pos).get_x();
 	if (new_hue < 0.0f) {
@@ -347,7 +347,7 @@ void CyclesShaderEditor::EditColorPanel::set_hue_from_mouse()
 	last_hue = new_hue;
 }
 
-void CyclesShaderEditor::EditColorPanel::set_sat_val_from_mouse()
+void cse::EditColorPanel::set_sat_val_from_mouse()
 {
 	FloatPos mouse_pos_normalized = color_rect_click_target.get_normalized_mouse_pos(mouse_local_pos);
 	const float new_sat = mouse_pos_normalized.get_x();
@@ -359,7 +359,7 @@ void CyclesShaderEditor::EditColorPanel::set_sat_val_from_mouse()
 	set_hsv(hsv);
 }
 
-void CyclesShaderEditor::EditColorPanel::select_input(FloatInputBox* const input)
+void cse::EditColorPanel::select_input(FloatInputBox* const input)
 {
 	if (selected_input != nullptr) {
 		selected_input->complete_edit();

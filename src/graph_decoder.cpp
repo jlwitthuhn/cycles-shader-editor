@@ -6,7 +6,7 @@
 #include "node_base.h"
 #include "serialize.h"
 
-CyclesShaderEditor::CyclesNodeGraph::CyclesNodeGraph(const std::string& encoded_graph)
+cse::CyclesNodeGraph::CyclesNodeGraph(const std::string& encoded_graph)
 {
 	// Temporary storage to fill during deserialization
 	std::list<std::shared_ptr<EditorNode>> tmp_nodes;

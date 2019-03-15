@@ -1,6 +1,6 @@
 #pragma once
 
-namespace CyclesShaderEditor {
+namespace cse {
 
 	enum class ShaderGraphType {
 		EMPTY,

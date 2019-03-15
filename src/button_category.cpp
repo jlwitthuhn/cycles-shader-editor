@@ -4,7 +4,7 @@
 
 #include "drawing.h"
 
-CyclesShaderEditor::NodeCategoryButtonPlacer::NodeCategoryButtonPlacer(const FloatPos draw_origin, const float parent_width, const float vertical_padding)
+cse::NodeCategoryButtonPlacer::NodeCategoryButtonPlacer(const FloatPos draw_origin, const float parent_width, const float vertical_padding)
 {
 	this->draw_origin = draw_origin;
 	this->parent_width = parent_width;
@@ -16,7 +16,7 @@ CyclesShaderEditor::NodeCategoryButtonPlacer::NodeCategoryButtonPlacer(const Flo
 	positions_made = 0;
 }
 
-CyclesShaderEditor::FloatPos CyclesShaderEditor::NodeCategoryButtonPlacer::next_button_position()
+cse::FloatPos cse::NodeCategoryButtonPlacer::next_button_position()
 {
 	// Find horizontal position
 	float x;
@@ -40,30 +40,30 @@ CyclesShaderEditor::FloatPos CyclesShaderEditor::NodeCategoryButtonPlacer::next_
 	return draw_origin + result;
 }
 
-float CyclesShaderEditor::NodeCategoryButtonPlacer::get_draw_height()
+float cse::NodeCategoryButtonPlacer::get_draw_height()
 {
 	const int row_count = (positions_made + 1) / 2;
 
 	return row_count * (2 * vertical_padding + button_height);
 }
 
-CyclesShaderEditor::NodeCategoryButton::NodeCategoryButton(const std::string& label)
+cse::NodeCategoryButton::NodeCategoryButton(const std::string& label)
 {
 	this->label = label;
 }
 
-void CyclesShaderEditor::NodeCategoryButton::draw(const FloatPos draw_position, NVGcontext* const draw_context)
+void cse::NodeCategoryButton::draw(const FloatPos draw_position, NVGcontext* const draw_context)
 {
 	constexpr bool BUTTON_ENABLED = true;
 	Drawing::draw_button(draw_context, draw_position, get_button_width(), get_button_height(), label, BUTTON_ENABLED, selected);
 }
 
-void CyclesShaderEditor::NodeCategoryButton::update_mouse_position(const FloatPos local_position)
+void cse::NodeCategoryButton::update_mouse_position(const FloatPos local_position)
 {
 	mouse_local_pos = local_position;
 }
 
-bool CyclesShaderEditor::NodeCategoryButton::is_mouse_over_button() const
+bool cse::NodeCategoryButton::is_mouse_over_button() const
 {
 	return (
 		mouse_local_pos.get_x() > 0.0f &&

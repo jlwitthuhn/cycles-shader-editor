@@ -7,7 +7,7 @@
 #include "float_pos.h"
 #include "gui_sizes.h"
 
-void CyclesShaderEditor::Drawing::draw_button(
+void cse::Drawing::draw_button(
 	NVGcontext* const draw_context,
 	const FloatPos pos,
 	const float width,
@@ -60,7 +60,7 @@ void CyclesShaderEditor::Drawing::draw_button(
 	nvgText(draw_context, x_pos + width / 2, y_pos + height / 2, label.c_str(), nullptr);
 }
 
-void CyclesShaderEditor::Drawing::draw_color_pick_cursor(NVGcontext* const draw_context, const FloatPos pos)
+void cse::Drawing::draw_color_pick_cursor(NVGcontext* const draw_context, const FloatPos pos)
 {
 	constexpr float CURSOR_LENGTH_SHORT = 3.0f;
 	constexpr float CURSOR_LENGTH_LONG = 8.0f;
@@ -101,7 +101,7 @@ void CyclesShaderEditor::Drawing::draw_color_pick_cursor(NVGcontext* const draw_
 	nvgStroke(draw_context);
 }
 
-void CyclesShaderEditor::Drawing::draw_node_connection_curve(
+void cse::Drawing::draw_node_connection_curve(
 	NVGcontext* const draw_context,
 	const FloatPos begin_pos,
 	const FloatPos end_pos,

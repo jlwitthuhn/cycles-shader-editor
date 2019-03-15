@@ -47,7 +47,7 @@ You will need just a few headers to be able to use this library's functionality.
 * output.h
 * util_platform.h
 
-All types defined in these headers are a part of the CyclesShaderEditor namespace. `graph_decoder.h` and `graph_editor.h` are the only two you will need to #include directly, the others define types used by graph_decoder and graph_editor. 
+All types defined in these headers are a part of the `cse` namespace. `graph_decoder.h` and `graph_editor.h` are the only two you will need to #include directly, the others define types used by graph_decoder and graph_editor. 
 
 ### Creating a Window
 
@@ -61,7 +61,7 @@ The included example program is close to the smallest program possible to make w
 
 int main()
 {
-	CyclesShaderEditor::GraphEditor node_window;
+	cse::GraphEditor node_window;
 
 	node_window.create_window();
 	
@@ -78,7 +78,7 @@ int main()
 
 You will use largely the same basic flow when using this library. The key points here are:
 
-* CyclesShaderEditor::GraphEditor is the main class used to represent a Node Graph Editor window.
+* cse::GraphEditor is the main class used to represent a Node Graph Editor window.
 * Calling GraphEditor::create_window() will cause the window to appear.
 * Once a window exists, loop calling GraphEditor::run_window_loop_iteration() until it returns false.
   * This method is responsible for handling user input and drawing.
@@ -90,7 +90,7 @@ You will use largely the same basic flow when using this library. The key points
 
 Now you can create a window and get a serialized graph from it, but that string is not very useful on its own.
 
-To help with this, you can use the CyclesShaderEditor::CyclesNodeGraph class defined in `graph_decoder.h`. This class has a single constructor that takes a serialized graph string as an argument. Once the object construction is complete, the 'nodes' and 'connections' member variables will be populated with relevant information.
+To help with this, you can use the cse::CyclesNodeGraph class defined in `graph_decoder.h`. This class has a single constructor that takes a serialized graph string as an argument. Once the object construction is complete, the 'nodes' and 'connections' member variables will be populated with relevant information.
 
 ### Constructing a ccl::ShaderGraph
 

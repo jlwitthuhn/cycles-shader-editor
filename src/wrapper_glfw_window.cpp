@@ -4,13 +4,13 @@
 
 #include <GLFW/glfw3.h>
 
-CyclesShaderEditor::GlfwWindow::GlfwWindow(const int width, const int height, const char* const title) :
+cse::GlfwWindow::GlfwWindow(const int width, const int height, const char* const title) :
 	window_ptr(glfwCreateWindow(width, height, title, nullptr, nullptr))
 {
 
 }
 
-CyclesShaderEditor::GlfwWindow::~GlfwWindow()
+cse::GlfwWindow::~GlfwWindow()
 {
 	if (window_ptr != nullptr) {
 		unregister_window_for_callbacks(window_ptr);
@@ -18,7 +18,7 @@ CyclesShaderEditor::GlfwWindow::~GlfwWindow()
 	}
 }
 
-bool CyclesShaderEditor::GlfwWindow::is_valid() const
+bool cse::GlfwWindow::is_valid() const
 {
 	return window_ptr != nullptr;
 }

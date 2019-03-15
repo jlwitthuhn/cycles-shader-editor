@@ -11,19 +11,19 @@
 #include "gui_sizes.h"
 #include "sockets.h"
 
-CyclesShaderEditor::NodeConnection::NodeConnection(const std::weak_ptr<NodeSocket> begin_socket, const std::weak_ptr<NodeSocket> end_socket) :
+cse::NodeConnection::NodeConnection(const std::weak_ptr<NodeSocket> begin_socket, const std::weak_ptr<NodeSocket> end_socket) :
 	begin_socket(begin_socket),
 	end_socket(end_socket)
 {
 
 }
 
-bool CyclesShaderEditor::NodeConnection::is_valid() const
+bool cse::NodeConnection::is_valid() const
 {
 	return !(begin_socket.expired() || end_socket.expired());
 }
 
-bool CyclesShaderEditor::NodeConnection::includes_node(EditorNode* const node) const
+bool cse::NodeConnection::includes_node(EditorNode* const node) const
 {
 	if (auto begin_socket_ptr = begin_socket.lock()) {
 		if (begin_socket_ptr->parent == node) {
@@ -38,12 +38,12 @@ bool CyclesShaderEditor::NodeConnection::includes_node(EditorNode* const node) c
 	return false;
 }
 
-std::string CyclesShaderEditor::EditorNode::get_title() const
+std::string cse::EditorNode::get_title() const
 {
 	return title;
 }
 
-void CyclesShaderEditor::EditorNode::draw_node(NVGcontext* const draw_context, const bool selected, const std::shared_ptr<CyclesShaderEditor::NodeSocket> selected_socket)
+void cse::EditorNode::draw_node(NVGcontext* const draw_context, const bool selected, const std::shared_ptr<cse::NodeSocket> selected_socket)
 {
 	float draw_pos_x = 0.0f;
 	float draw_pos_y = 0.0f;
@@ -233,19 +233,19 @@ void CyclesShaderEditor::EditorNode::draw_node(NVGcontext* const draw_context, c
 
 		if (this_socket->selectable) {
 			// Add label click target
-			const CyclesShaderEditor::FloatPos click_target_begin(0, next_draw_y - draw_pos_y);
-			const CyclesShaderEditor::FloatPos click_target_end(content_width, next_draw_y - draw_pos_y + UI_NODE_SOCKET_ROW_HEIGHT);
+			const cse::FloatPos click_target_begin(0, next_draw_y - draw_pos_y);
+			const cse::FloatPos click_target_end(content_width, next_draw_y - draw_pos_y + UI_NODE_SOCKET_ROW_HEIGHT);
 			const SocketArea label_target(click_target_begin, click_target_end, this_socket);
 			label_targets.push_back(label_target);
 		}
 
 		if (this_socket->draw_socket) {
-			CyclesShaderEditor::FloatPos socket_position;
+			cse::FloatPos socket_position;
 			if (this_socket->io_type == SocketIOType::INPUT) {
-				socket_position = CyclesShaderEditor::FloatPos(draw_pos_x, next_draw_y + UI_NODE_SOCKET_ROW_HEIGHT / 2);
+				socket_position = cse::FloatPos(draw_pos_x, next_draw_y + UI_NODE_SOCKET_ROW_HEIGHT / 2);
 			}
 			else {
-				socket_position = CyclesShaderEditor::FloatPos(draw_pos_x + content_width, next_draw_y + UI_NODE_SOCKET_ROW_HEIGHT / 2);
+				socket_position = cse::FloatPos(draw_pos_x + content_width, next_draw_y + UI_NODE_SOCKET_ROW_HEIGHT / 2);
 			}
 			nvgBeginPath(draw_context);
 			nvgCircle(draw_context, socket_position.get_x(), socket_position.get_y(), UI_NODE_SOCKET_RADIUS);
@@ -253,9 +253,9 @@ void CyclesShaderEditor::EditorNode::draw_node(NVGcontext* const draw_context, c
 			this_socket->world_draw_position = world_pos + socket_position;
 
 			// Add click target for this socket
-			CyclesShaderEditor::FloatPos local_socket_position(socket_position.get_x() - draw_pos_x, socket_position.get_y() - draw_pos_y);
-			CyclesShaderEditor::FloatPos click_target_begin(local_socket_position.get_x() - 7.0f, local_socket_position.get_y() - 7.0f);
-			CyclesShaderEditor::FloatPos click_target_end(local_socket_position.get_x() + 7.0f, local_socket_position.get_y() + 7.0f);
+			cse::FloatPos local_socket_position(socket_position.get_x() - draw_pos_x, socket_position.get_y() - draw_pos_y);
+			cse::FloatPos click_target_begin(local_socket_position.get_x() - 7.0f, local_socket_position.get_y() - 7.0f);
+			cse::FloatPos click_target_end(local_socket_position.get_x() + 7.0f, local_socket_position.get_y() + 7.0f);
 			SocketArea socket_target(click_target_begin, click_target_end, this_socket);
 			socket_targets.push_back(socket_target);
 
@@ -289,7 +289,7 @@ void CyclesShaderEditor::EditorNode::draw_node(NVGcontext* const draw_context, c
 	}
 }
 
-bool CyclesShaderEditor::EditorNode::is_under_point(const FloatPos check_world_pos) const
+bool cse::EditorNode::is_under_point(const FloatPos check_world_pos) const
 {
 	const FloatPos local_pos = get_local_pos(check_world_pos);
 	return (
@@ -300,7 +300,7 @@ bool CyclesShaderEditor::EditorNode::is_under_point(const FloatPos check_world_p
 	);
 }
 
-std::weak_ptr<CyclesShaderEditor::NodeSocket> CyclesShaderEditor::EditorNode::get_socket_connector_under_point(const FloatPos check_world_pos) const
+std::weak_ptr<cse::NodeSocket> cse::EditorNode::get_socket_connector_under_point(const FloatPos check_world_pos) const
 {
 	const FloatPos local_pos = get_local_pos(check_world_pos);
 	for (const auto click_target : socket_targets) {
@@ -311,7 +311,7 @@ std::weak_ptr<CyclesShaderEditor::NodeSocket> CyclesShaderEditor::EditorNode::ge
 	return std::weak_ptr<NodeSocket>();
 }
 
-std::weak_ptr<CyclesShaderEditor::NodeSocket> CyclesShaderEditor::EditorNode::get_socket_label_under_point(const FloatPos check_world_pos) const
+std::weak_ptr<cse::NodeSocket> cse::EditorNode::get_socket_label_under_point(const FloatPos check_world_pos) const
 {
 	if (is_under_point(check_world_pos) == false) {
 		// Nothing will match if the node is not under the given point
@@ -326,7 +326,7 @@ std::weak_ptr<CyclesShaderEditor::NodeSocket> CyclesShaderEditor::EditorNode::ge
 	return std::weak_ptr<NodeSocket>();
 }
 
-std::weak_ptr<CyclesShaderEditor::NodeSocket> CyclesShaderEditor::EditorNode::get_socket_by_display_name(const SocketIOType in_out, const std::string& socket_name)
+std::weak_ptr<cse::NodeSocket> cse::EditorNode::get_socket_by_display_name(const SocketIOType in_out, const std::string& socket_name)
 {
 	for (const auto socket : sockets) {
 		if (socket->display_name == socket_name && socket->io_type == in_out) {
@@ -336,7 +336,7 @@ std::weak_ptr<CyclesShaderEditor::NodeSocket> CyclesShaderEditor::EditorNode::ge
 	return std::weak_ptr<NodeSocket>();
 }
 
-std::weak_ptr<CyclesShaderEditor::NodeSocket> CyclesShaderEditor::EditorNode::get_socket_by_internal_name(const SocketIOType in_out, const std::string& socket_name)
+std::weak_ptr<cse::NodeSocket> cse::EditorNode::get_socket_by_internal_name(const SocketIOType in_out, const std::string& socket_name)
 {
 	for (const auto socket : sockets) {
 		if (socket->internal_name == socket_name && socket->io_type == in_out) {
@@ -346,17 +346,17 @@ std::weak_ptr<CyclesShaderEditor::NodeSocket> CyclesShaderEditor::EditorNode::ge
 	return std::weak_ptr<NodeSocket>();
 }
 
-CyclesShaderEditor::FloatPos CyclesShaderEditor::EditorNode::get_dimensions()
+cse::FloatPos cse::EditorNode::get_dimensions()
 {
-	return CyclesShaderEditor::FloatPos(content_width, content_height + UI_NODE_HEADER_HEIGHT);
+	return cse::FloatPos(content_width, content_height + UI_NODE_HEADER_HEIGHT);
 }
 
-bool CyclesShaderEditor::EditorNode::can_be_deleted()
+bool cse::EditorNode::can_be_deleted()
 {
 	return true;
 }
 
-void CyclesShaderEditor::EditorNode::update_output_node(OutputNode& output)
+void cse::EditorNode::update_output_node(OutputNode& output)
 {
 	output.type = type;
 
@@ -435,7 +435,7 @@ void CyclesShaderEditor::EditorNode::update_output_node(OutputNode& output)
 	}
 }
 
-CyclesShaderEditor::FloatPos CyclesShaderEditor::EditorNode::get_local_pos(FloatPos world_pos_in) const
+cse::FloatPos cse::EditorNode::get_local_pos(FloatPos world_pos_in) const
 {
 	return world_pos_in - world_pos;
 }

@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-namespace CyclesShaderEditor {
+namespace cse {
 
 	enum class CyclesNodeType {
 		// Shader

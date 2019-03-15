@@ -9,7 +9,7 @@
 
 struct NVGcontext;
 
-namespace CyclesShaderEditor {
+namespace cse {
 	class ColorSocketValue;
 	class SocketValue;
 

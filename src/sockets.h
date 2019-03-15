@@ -8,7 +8,7 @@
 #include "common_enums.h"
 #include "float_pos.h"
 
-namespace CyclesShaderEditor {
+namespace cse {
 
 	class EditorNode;
 

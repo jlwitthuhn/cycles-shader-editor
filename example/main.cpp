@@ -5,7 +5,7 @@
 
 int main()
 {
-	CyclesShaderEditor::GraphEditor node_window;
+	cse::GraphEditor node_window;
 
 	node_window.create_window();
 	

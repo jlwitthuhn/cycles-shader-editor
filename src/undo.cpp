@@ -2,7 +2,7 @@
 
 static const int UNDO_LIMIT = 50;
 
-void CyclesShaderEditor::UndoStack::push_undo_state(std::string state)
+void cse::UndoStack::push_undo_state(std::string state)
 {
 	redo_state.clear();
 	undo_state.push_front(state);
@@ -11,7 +11,7 @@ void CyclesShaderEditor::UndoStack::push_undo_state(std::string state)
 	}
 }
 
-std::string CyclesShaderEditor::UndoStack::pop_undo_state(std::string current_state)
+std::string cse::UndoStack::pop_undo_state(std::string current_state)
 {
 	if (undo_state.size() == 0) {
 		return current_state;
@@ -22,7 +22,7 @@ std::string CyclesShaderEditor::UndoStack::pop_undo_state(std::string current_st
 	return result_state;
 }
 
-std::string CyclesShaderEditor::UndoStack::pop_redo_state(std::string current_state)
+std::string cse::UndoStack::pop_redo_state(std::string current_state)
 {
 	if (redo_state.size() == 0) {
 		return current_state;
@@ -33,17 +33,17 @@ std::string CyclesShaderEditor::UndoStack::pop_redo_state(std::string current_st
 	return result_state;
 }
 
-bool CyclesShaderEditor::UndoStack::undo_available()
+bool cse::UndoStack::undo_available()
 {
 	return (undo_state.size() > 0);
 }
 
-bool CyclesShaderEditor::UndoStack::redo_available()
+bool cse::UndoStack::redo_available()
 {
 	return (redo_state.size() > 0);
 }
 
-void CyclesShaderEditor::UndoStack::clear()
+void cse::UndoStack::clear()
 {
 	undo_state.clear();
 	redo_state.clear();

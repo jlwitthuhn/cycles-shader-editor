@@ -10,7 +10,7 @@
 #include "util_platform.h"
 #include "undo.h"
 
-namespace CyclesShaderEditor {
+namespace cse {
 
 	class EditableGraph;
 	class EditGraphView;

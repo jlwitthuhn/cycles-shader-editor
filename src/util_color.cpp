@@ -2,9 +2,9 @@
 
 // RGB/HSV conversion algorithms adapted from https://stackoverflow.com/questions/3018313
 
-CyclesShaderEditor::HueSatVal CyclesShaderEditor::hsv_from_rgb(RedGreenBlue rgb)
+cse::HueSatVal cse::hsv_from_rgb(RedGreenBlue rgb)
 {
-	CyclesShaderEditor::HueSatVal hsv;
+	cse::HueSatVal hsv;
 
 	// Calculate Val
 	float max = rgb.r;
@@ -62,9 +62,9 @@ CyclesShaderEditor::HueSatVal CyclesShaderEditor::hsv_from_rgb(RedGreenBlue rgb)
 	return hsv;
 }
 
-CyclesShaderEditor::RedGreenBlue CyclesShaderEditor::rgb_from_hsv(HueSatVal hsv)
+cse::RedGreenBlue cse::rgb_from_hsv(HueSatVal hsv)
 {
-	CyclesShaderEditor::RedGreenBlue rgb;
+	cse::RedGreenBlue rgb;
 
 	// Special fast case for monochromatic colors
 	if (hsv.sat <= 0.0) {

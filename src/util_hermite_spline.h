@@ -1,6 +1,6 @@
 #pragma once
 
-namespace CyclesShaderEditor {
+namespace cse {
 	class CubicHermiteSplineInterpolator {
 	public:
 		CubicHermiteSplineInterpolator(float A, float B, float C, float D);

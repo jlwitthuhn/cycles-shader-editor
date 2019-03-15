@@ -6,7 +6,7 @@
 
 struct NVGcontext;
 
-namespace CyclesShaderEditor {
+namespace cse {
 
 	class NodeEditorStatusBar {
 	public:

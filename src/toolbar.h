@@ -9,7 +9,7 @@
 
 struct NVGcontext;
 
-namespace CyclesShaderEditor {
+namespace cse {
 
 	enum class ToolbarButtonType {
 		SAVE,

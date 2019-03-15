@@ -4,7 +4,7 @@
 #include <memory>
 #include <set>
 
-namespace CyclesShaderEditor {
+namespace cse {
 	class EditorNode;
 
 	typedef std::set<std::weak_ptr<EditorNode>, std::owner_less<std::weak_ptr<EditorNode>>> WeakNodeSet;

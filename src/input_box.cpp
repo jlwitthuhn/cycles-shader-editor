@@ -12,13 +12,13 @@
 
 const float INPUT_CORNER_RADIUS = 3.0f;
 
-CyclesShaderEditor::BaseInputBox::BaseInputBox(const float width, const float height)
+cse::BaseInputBox::BaseInputBox(const float width, const float height)
 {
 	this->width = width;
 	this->height = height;
 }
 
-void CyclesShaderEditor::BaseInputBox::draw(NVGcontext* const draw_context, const bool hightlight)
+void cse::BaseInputBox::draw(NVGcontext* const draw_context, const bool hightlight)
 {
 	// Back fill
 	nvgBeginPath(draw_context);
@@ -58,12 +58,12 @@ void CyclesShaderEditor::BaseInputBox::draw(NVGcontext* const draw_context, cons
 	}
 }
 
-void CyclesShaderEditor::BaseInputBox::set_position(const FloatPos parent_position)
+void cse::BaseInputBox::set_position(const FloatPos parent_position)
 {
 	this->position = parent_position;
 }
 
-bool CyclesShaderEditor::BaseInputBox::is_under_point(const FloatPos parent_local_pos)
+bool cse::BaseInputBox::is_under_point(const FloatPos parent_local_pos)
 {
 	if (displayed == false) {
 		return false;
@@ -77,7 +77,7 @@ bool CyclesShaderEditor::BaseInputBox::is_under_point(const FloatPos parent_loca
 		local_pos.get_y() < height);
 }
 
-void CyclesShaderEditor::BaseInputBox::handle_character(const unsigned int codepoint)
+void cse::BaseInputBox::handle_character(const unsigned int codepoint)
 {
 	const char as_char = static_cast<char>(codepoint);
 	const unsigned char as_uchar = static_cast<unsigned char>(as_char);
@@ -89,7 +89,7 @@ void CyclesShaderEditor::BaseInputBox::handle_character(const unsigned int codep
 	}
 }
 
-void CyclesShaderEditor::BaseInputBox::backspace()
+void cse::BaseInputBox::backspace()
 {
 	std::string full_string = input_stream.str();
 	if (full_string.size() == 0) {
@@ -100,13 +100,13 @@ void CyclesShaderEditor::BaseInputBox::backspace()
 	input_stream << full_string.substr(0, full_string.size() - 1);
 }
 
-void CyclesShaderEditor::BaseInputBox::begin_edit()
+void cse::BaseInputBox::begin_edit()
 {
 	input_stream = std::stringstream();
 	selected = true;
 }
 
-void CyclesShaderEditor::BaseInputBox::complete_edit()
+void cse::BaseInputBox::complete_edit()
 {
 	const std::string user_input = input_stream.str();
 	selected = false;
@@ -117,28 +117,28 @@ void CyclesShaderEditor::BaseInputBox::complete_edit()
 	set_value_from_input_stream();
 }
 
-void CyclesShaderEditor::BaseInputBox::cancel_edit()
+void cse::BaseInputBox::cancel_edit()
 {
 	input_stream = std::stringstream();
 	selected = false;
 }
 
-bool CyclesShaderEditor::BaseInputBox::should_capture_input() const
+bool cse::BaseInputBox::should_capture_input() const
 {
 	return selected;
 }
 
-CyclesShaderEditor::IntInputBox::IntInputBox(const float width, const float height) : BaseInputBox(width, height)
+cse::IntInputBox::IntInputBox(const float width, const float height) : BaseInputBox(width, height)
 {
 
 }
 
-void CyclesShaderEditor::IntInputBox::set_int_value(const std::weak_ptr<IntSocketValue> socket_value_in)
+void cse::IntInputBox::set_int_value(const std::weak_ptr<IntSocketValue> socket_value_in)
 {
 	socket_value = socket_value_in;
 }
 
-std::string CyclesShaderEditor::IntInputBox::get_value_as_string()
+std::string cse::IntInputBox::get_value_as_string()
 {
 	if (auto socket_value_ptr = socket_value.lock()) {
 		std::stringstream value_stream;
@@ -148,7 +148,7 @@ std::string CyclesShaderEditor::IntInputBox::get_value_as_string()
 	return std::string();
 }
 
-void CyclesShaderEditor::IntInputBox::set_value_from_input_stream()
+void cse::IntInputBox::set_value_from_input_stream()
 {
 	if (auto socket_value_ptr = socket_value.lock()) {
 		const std::string user_input = input_stream.str();
@@ -161,24 +161,24 @@ void CyclesShaderEditor::IntInputBox::set_value_from_input_stream()
 	}
 }
 
-CyclesShaderEditor::FloatInputBox::FloatInputBox(const float width, const float height) : BaseInputBox(width, height)
+cse::FloatInputBox::FloatInputBox(const float width, const float height) : BaseInputBox(width, height)
 {
 
 }
 
-void CyclesShaderEditor::FloatInputBox::set_float_value(const std::weak_ptr<FloatSocketValue> socket_value_in)
+void cse::FloatInputBox::set_float_value(const std::weak_ptr<FloatSocketValue> socket_value_in)
 {
 	socket_value = socket_value_in;
 }
 
-void CyclesShaderEditor::FloatInputBox::set_float_value(const float value)
+void cse::FloatInputBox::set_float_value(const float value)
 {
 	if (auto socket_value_ptr = socket_value.lock()) {
 		socket_value_ptr->set_value(value);
 	}
 }
 
-float CyclesShaderEditor::FloatInputBox::get_float_value()
+float cse::FloatInputBox::get_float_value()
 {
 	if (auto socket_value_ptr = socket_value.lock()) {
 		return socket_value_ptr->get_value();
@@ -186,7 +186,7 @@ float CyclesShaderEditor::FloatInputBox::get_float_value()
 	return 0.0f;
 }
 
-std::string CyclesShaderEditor::FloatInputBox::get_value_as_string()
+std::string cse::FloatInputBox::get_value_as_string()
 {
 	if (auto socket_value_ptr = socket_value.lock()) {
 		std::stringstream value_stream;
@@ -196,7 +196,7 @@ std::string CyclesShaderEditor::FloatInputBox::get_value_as_string()
 	return std::string();
 }
 
-void CyclesShaderEditor::FloatInputBox::set_value_from_input_stream()
+void cse::FloatInputBox::set_value_from_input_stream()
 {
 	if (auto socket_value_ptr = socket_value.lock()) {
 		const std::string user_input = input_stream.str();

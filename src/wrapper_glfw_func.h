@@ -9,7 +9,7 @@
 
 #include "wrapper_glfw_window.h"
 
-namespace CyclesShaderEditor {
+namespace cse {
 
 	// Context setup
 	inline void glfwMakeContextCurrent(const std::unique_ptr<GlfwWindow>& glfw_window) {

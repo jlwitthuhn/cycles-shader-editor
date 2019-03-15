@@ -5,7 +5,7 @@
 
 #include "output.h"
 
-namespace CyclesShaderEditor {
+namespace cse {
 
 	// Description of a Cycles shader graph
 	class CyclesNodeGraph {

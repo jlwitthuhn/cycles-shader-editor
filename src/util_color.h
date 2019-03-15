@@ -1,6 +1,6 @@
 #pragma once
 
-namespace CyclesShaderEditor {
+namespace cse {
 
 	class RedGreenBlue {
 	public:

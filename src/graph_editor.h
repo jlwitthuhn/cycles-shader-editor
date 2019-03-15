@@ -5,7 +5,7 @@
 
 #include "util_platform.h"
 
-namespace CyclesShaderEditor {
+namespace cse {
 
 	class EditorMainWindow;
 

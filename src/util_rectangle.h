@@ -2,7 +2,7 @@
 
 //#include "float_pos.h"
 
-namespace CyclesShaderEditor {
+namespace cse {
 
 	class FloatPos;
 

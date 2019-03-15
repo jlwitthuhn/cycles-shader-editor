@@ -8,7 +8,7 @@
 #include "node_base.h"
 #include "util_typedef.h"
 
-namespace CyclesShaderEditor {
+namespace cse {
 
 	class FloatPos;
 	class NodeSocket;

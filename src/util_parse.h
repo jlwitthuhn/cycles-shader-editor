@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace CyclesShaderEditor {
+namespace cse {
 
 	// This will parse a string using the default locale rather than the application locale
 	// It should be used for loading files

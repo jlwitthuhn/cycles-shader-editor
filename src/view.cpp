@@ -22,7 +22,7 @@
 static constexpr int GRID_SIZE_INT = 32;
 static constexpr float GRID_SIZE_FL = static_cast<float>(GRID_SIZE_INT);
 
-CyclesShaderEditor::EditGraphView::ViewBorders::ViewBorders(
+cse::EditGraphView::ViewBorders::ViewBorders(
 	const FloatPos view_center,
 	const int viewport_width,
 	const int viewport_height,
@@ -36,13 +36,13 @@ CyclesShaderEditor::EditGraphView::ViewBorders::ViewBorders(
 
 }
 
-CyclesShaderEditor::EditGraphView::EditGraphView(const std::shared_ptr<EditableGraph> graph, const std::weak_ptr<NodeCreationHelper> node_creation_helper)
+cse::EditGraphView::EditGraphView(const std::shared_ptr<EditableGraph> graph, const std::weak_ptr<NodeCreationHelper> node_creation_helper)
 	: graph(graph), node_creation_helper(node_creation_helper), selection(std::make_shared<Selection>())
 {
 	view_center = FloatPos(0.0f, 0.0f);
 }
 
-void CyclesShaderEditor::EditGraphView::set_mouse_position(const FloatPos view_local_mouse_pos, const int viewport_width, const int viewport_height)
+void cse::EditGraphView::set_mouse_position(const FloatPos view_local_mouse_pos, const int viewport_width, const int viewport_height)
 {
 	widget_width = viewport_width;
 	widget_height = viewport_height;
@@ -79,14 +79,14 @@ void CyclesShaderEditor::EditGraphView::set_mouse_position(const FloatPos view_l
 	}
 }
 
-void CyclesShaderEditor::EditGraphView::update()
+void cse::EditGraphView::update()
 {
 	if (box_select_active) {
 		world_box_select_end = mouse_world_position;
 	}
 }
 
-void CyclesShaderEditor::EditGraphView::draw(NVGcontext* draw_context)
+void cse::EditGraphView::draw(NVGcontext* draw_context)
 {
 	const float zoom_scale = zoom_level.get_world_scale();
 	const ViewBorders borders(view_center, widget_width, widget_height, zoom_scale);
@@ -205,7 +205,7 @@ void CyclesShaderEditor::EditGraphView::draw(NVGcontext* draw_context)
 	nvgRestore(draw_context);
 }
 
-void CyclesShaderEditor::EditGraphView::handle_mouse_button(const int button, const int action, const int mods)
+void cse::EditGraphView::handle_mouse_button(const int button, const int action, const int mods)
 {
 	const std::weak_ptr<EditorNode> weak_focused_node = graph->get_node_under_point(mouse_world_position);
 	const auto focused_label_ptr = graph->get_socket_under_point(mouse_world_position).lock();
@@ -292,7 +292,7 @@ void CyclesShaderEditor::EditGraphView::handle_mouse_button(const int button, co
 	}
 }
 
-void CyclesShaderEditor::EditGraphView::handle_key(const int key, int /*scancode*/, const int action, int /*mods*/)
+void cse::EditGraphView::handle_key(const int key, int /*scancode*/, const int action, int /*mods*/)
 {
 	const int delete_key = Platform::get_delete_key();
 	if (key == delete_key && action == GLFW_PRESS) {
@@ -300,7 +300,7 @@ void CyclesShaderEditor::EditGraphView::handle_key(const int key, int /*scancode
 	}
 }
 
-void CyclesShaderEditor::EditGraphView::handle_requests(ViewUIRequests& requests)
+void cse::EditGraphView::handle_requests(ViewUIRequests& requests)
 {
 	if (requests.pan_left) {
 		pan(-1, 0);
@@ -331,7 +331,7 @@ void CyclesShaderEditor::EditGraphView::handle_requests(ViewUIRequests& requests
 	}
 }
 
-bool CyclesShaderEditor::EditGraphView::needs_undo_push()
+bool cse::EditGraphView::needs_undo_push()
 {
 	bool result = false;
 	if (should_push_undo_state) {
@@ -341,17 +341,17 @@ bool CyclesShaderEditor::EditGraphView::needs_undo_push()
 	return result;
 }
 
-std::weak_ptr<const CyclesShaderEditor::Selection> CyclesShaderEditor::EditGraphView::get_const_selection() const
+std::weak_ptr<const cse::Selection> cse::EditGraphView::get_const_selection() const
 {
 	return selection;
 }
 
-void CyclesShaderEditor::EditGraphView::clear_selection()
+void cse::EditGraphView::clear_selection()
 {
 	selection->clear();
 }
 
-std::string CyclesShaderEditor::EditGraphView::get_zoom_string() const
+std::string cse::EditGraphView::get_zoom_string() const
 {
 	constexpr unsigned char BUFFER_SIZE = 24;
 	char buf[BUFFER_SIZE];
@@ -363,7 +363,7 @@ std::string CyclesShaderEditor::EditGraphView::get_zoom_string() const
 	return std::string(buf);
 }
 
-void CyclesShaderEditor::EditGraphView::begin_connection(const std::weak_ptr<NodeSocket> socket_begin)
+void cse::EditGraphView::begin_connection(const std::weak_ptr<NodeSocket> socket_begin)
 {
 	if (const auto socket_begin_ptr = socket_begin.lock()) {
 		if (socket_begin_ptr->io_type == SocketIOType::OUTPUT) {
@@ -375,7 +375,7 @@ void CyclesShaderEditor::EditGraphView::begin_connection(const std::weak_ptr<Nod
 	cancel_connection();
 }
 
-void CyclesShaderEditor::EditGraphView::complete_connection(const std::weak_ptr<NodeSocket> socket_end)
+void cse::EditGraphView::complete_connection(const std::weak_ptr<NodeSocket> socket_end)
 {
 	if (connection_in_progress_start.expired()) {
 		return;
@@ -386,18 +386,18 @@ void CyclesShaderEditor::EditGraphView::complete_connection(const std::weak_ptr<
 	cancel_connection();
 }
 
-void CyclesShaderEditor::EditGraphView::reroute_connection(const std::weak_ptr<NodeSocket> socket_end)
+void cse::EditGraphView::reroute_connection(const std::weak_ptr<NodeSocket> socket_end)
 {
 	NodeConnection removed_connection = graph->remove_connection_with_end(socket_end);
 	connection_in_progress_start = removed_connection.begin_socket;
 }
 
-void CyclesShaderEditor::EditGraphView::cancel_connection()
+void cse::EditGraphView::cancel_connection()
 {
 	connection_in_progress_start = std::weak_ptr<NodeSocket>();
 }
 
-void CyclesShaderEditor::EditGraphView::select_label(const std::weak_ptr<NodeSocket> label)
+void cse::EditGraphView::select_label(const std::weak_ptr<NodeSocket> label)
 {
 	const std::shared_ptr<NodeSocket> selected_socket_ptr = selection->socket.lock();
 	if (selected_socket_ptr == label.lock()) {
@@ -406,7 +406,7 @@ void CyclesShaderEditor::EditGraphView::select_label(const std::weak_ptr<NodeSoc
 	selection->socket = label;
 }
 
-CyclesShaderEditor::WeakNodeSet CyclesShaderEditor::EditGraphView::get_boxed_nodes()
+cse::WeakNodeSet cse::EditGraphView::get_boxed_nodes()
 {
 	WeakNodeSet result;
 
@@ -439,8 +439,8 @@ CyclesShaderEditor::WeakNodeSet CyclesShaderEditor::EditGraphView::get_boxed_nod
 	}
 	assert(min_y_pos <= max_y_pos);
 
-	CyclesShaderEditor::FloatPos min_position(min_x_pos, min_y_pos);
-	CyclesShaderEditor::FloatPos max_position(max_x_pos, max_y_pos);
+	cse::FloatPos min_position(min_x_pos, min_y_pos);
+	cse::FloatPos max_position(max_x_pos, max_y_pos);
 
 	for (const auto& this_node : graph->nodes) {
 		if (do_rectangles_overlap(min_position, max_position, this_node->world_pos, this_node->world_pos + this_node->get_dimensions())) {
@@ -451,13 +451,13 @@ CyclesShaderEditor::WeakNodeSet CyclesShaderEditor::EditGraphView::get_boxed_nod
 	return result;
 }
 
-void CyclesShaderEditor::EditGraphView::node_move_begin()
+void cse::EditGraphView::node_move_begin()
 {
 	node_move_active = true;
 	node_move_did_something = false;
 }
 
-void CyclesShaderEditor::EditGraphView::node_move_end()
+void cse::EditGraphView::node_move_end()
 {
 	if (node_move_active && node_move_did_something) {
 		should_push_undo_state = true;
@@ -466,26 +466,26 @@ void CyclesShaderEditor::EditGraphView::node_move_end()
 	node_move_did_something = false;
 }
 
-void CyclesShaderEditor::EditGraphView::pan(const int horizontal_ticks, const int vertical_ticks)
+void cse::EditGraphView::pan(const int horizontal_ticks, const int vertical_ticks)
 {
 	view_center = view_center + FloatPos(GRID_SIZE_FL * horizontal_ticks, GRID_SIZE_FL * vertical_ticks);
 }
 
-void CyclesShaderEditor::EditGraphView::snap_view_center()
+void cse::EditGraphView::snap_view_center()
 {
 	// Snap view to nearest whole number (x, y) coordinate
 	// This is to avoid blurry text and lines after a user has panned around while zoomed in
 	view_center = FloatPos(view_center.get_round_x(), view_center.get_round_y());
 }
 
-void CyclesShaderEditor::EditGraphView::box_select_begin()
+void cse::EditGraphView::box_select_begin()
 {
 	box_select_active = true;
 	world_box_select_begin = mouse_world_position;
 	world_box_select_end = mouse_world_position;
 }
 
-void CyclesShaderEditor::EditGraphView::box_select_end(SelectMode mode)
+void cse::EditGraphView::box_select_end(SelectMode mode)
 {
 	if (box_select_active == false) {
 		return;
@@ -516,12 +516,12 @@ void CyclesShaderEditor::EditGraphView::box_select_end(SelectMode mode)
 	box_select_active = false;
 }
 
-void CyclesShaderEditor::EditGraphView::select_label_under_mouse()
+void cse::EditGraphView::select_label_under_mouse()
 {
 	select_label(graph->get_socket_under_point(mouse_world_position));
 }
 
-void CyclesShaderEditor::EditGraphView::deselect_label()
+void cse::EditGraphView::deselect_label()
 {
 	select_label(std::weak_ptr<NodeSocket>());
 }

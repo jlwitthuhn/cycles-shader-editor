@@ -1,12 +1,12 @@
 #include "util_area.h"
 
-CyclesShaderEditor::Area::Area(const FloatPos begin_pos, const FloatPos end_pos)
+cse::Area::Area(const FloatPos begin_pos, const FloatPos end_pos)
 {
 	begin = begin_pos;
 	end = end_pos;
 }
 
-bool CyclesShaderEditor::Area::is_under_point(const FloatPos pos) const
+bool cse::Area::is_under_point(const FloatPos pos) const
 {
 	return (pos.get_x() > begin.get_x() &&
 		pos.get_x() < end.get_x() &&
@@ -14,7 +14,7 @@ bool CyclesShaderEditor::Area::is_under_point(const FloatPos pos) const
 		pos.get_y() < end.get_y());
 }
 
-CyclesShaderEditor::FloatPos CyclesShaderEditor::Area::get_normalized_mouse_pos(const CyclesShaderEditor::FloatPos mouse_pos)
+cse::FloatPos cse::Area::get_normalized_mouse_pos(const cse::FloatPos mouse_pos)
 {
 	const float width = end.get_x() - begin.get_x();
 	const float height = end.get_y() - begin.get_y();
@@ -26,7 +26,7 @@ CyclesShaderEditor::FloatPos CyclesShaderEditor::Area::get_normalized_mouse_pos(
 	return result;
 }
 
-CyclesShaderEditor::BoolValueArea::BoolValueArea(
+cse::BoolValueArea::BoolValueArea(
 	const FloatPos begin_pos,
 	const FloatPos end_pos,
 	const bool bool_value,
@@ -39,14 +39,14 @@ CyclesShaderEditor::BoolValueArea::BoolValueArea(
 
 }
 
-void CyclesShaderEditor::BoolValueArea::click()
+void cse::BoolValueArea::click()
 {
 	if (const auto socket_value_ptr = socket_value.lock()) {
 		socket_value_ptr->value = bool_value;
 	}
 }
 
-CyclesShaderEditor::StringEnumArea::StringEnumArea(const FloatPos begin_pos, const FloatPos end_pos, const StringEnumPair& str_pair, const std::weak_ptr<StringEnumSocketValue> enum_value) :
+cse::StringEnumArea::StringEnumArea(const FloatPos begin_pos, const FloatPos end_pos, const StringEnumPair& str_pair, const std::weak_ptr<StringEnumSocketValue> enum_value) :
 	Area(begin_pos, end_pos),
 	str_pair_value(str_pair),
 	enum_value(enum_value)
@@ -54,14 +54,14 @@ CyclesShaderEditor::StringEnumArea::StringEnumArea(const FloatPos begin_pos, con
 
 }
 
-void CyclesShaderEditor::StringEnumArea::click()
+void cse::StringEnumArea::click()
 {
 	if (const auto enum_value_ptr = enum_value.lock()) {
 		enum_value_ptr->value = str_pair_value;
 	}
 }
 
-CyclesShaderEditor::CurveEditModeArea::CurveEditModeArea(const FloatPos begin_pos, const FloatPos end_pos, const EditCurveMode this_mode, EditCurveMode* const mode_enum) :
+cse::CurveEditModeArea::CurveEditModeArea(const FloatPos begin_pos, const FloatPos end_pos, const EditCurveMode this_mode, EditCurveMode* const mode_enum) :
 	Area(begin_pos, end_pos),
 	this_mode(this_mode),
 	mode_enum(mode_enum)
@@ -69,12 +69,12 @@ CyclesShaderEditor::CurveEditModeArea::CurveEditModeArea(const FloatPos begin_po
 
 }
 
-void CyclesShaderEditor::CurveEditModeArea::click()
+void cse::CurveEditModeArea::click()
 {
 	*mode_enum = this_mode;
 }
 
-CyclesShaderEditor::CurveInterpModeArea::CurveInterpModeArea(const FloatPos begin_pos, const FloatPos end_pos, const CurveInterpolation this_interp, CurveInterpolation* const interp_enum) :
+cse::CurveInterpModeArea::CurveInterpModeArea(const FloatPos begin_pos, const FloatPos end_pos, const CurveInterpolation this_interp, CurveInterpolation* const interp_enum) :
 	Area(begin_pos, end_pos),
 	this_interp(this_interp),
 	interp_enum(interp_enum)
@@ -82,12 +82,12 @@ CyclesShaderEditor::CurveInterpModeArea::CurveInterpModeArea(const FloatPos begi
 
 }
 
-void CyclesShaderEditor::CurveInterpModeArea::click()
+void cse::CurveInterpModeArea::click()
 {
 	*interp_enum = this_interp;
 }
 
-CyclesShaderEditor::SocketArea::SocketArea(const FloatPos begin_pos, const FloatPos end_pos, const std::weak_ptr<NodeSocket> socket) :
+cse::SocketArea::SocketArea(const FloatPos begin_pos, const FloatPos end_pos, const std::weak_ptr<NodeSocket> socket) :
 	Area(begin_pos, end_pos),
 	socket(socket)
 {

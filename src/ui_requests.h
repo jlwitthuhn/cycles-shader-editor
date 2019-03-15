@@ -1,6 +1,6 @@
 #pragma once
 
-namespace CyclesShaderEditor {
+namespace cse {
 
 	// Every frame, requests from several UI components will be combined with operator|=
 	// For each flag that is true, the main window will take some action

@@ -3,7 +3,7 @@
 #include "float_pos.h"
 #include "node_base.h"
 
-void CyclesShaderEditor::Selection::move_nodes(const FloatPos delta)
+void cse::Selection::move_nodes(const FloatPos delta)
 {
 	for (const auto weak_node : nodes) {
 		if (const auto this_node = weak_node.lock()) {
@@ -12,7 +12,7 @@ void CyclesShaderEditor::Selection::move_nodes(const FloatPos delta)
 	}
 }
 
-void CyclesShaderEditor::Selection::modify_selection(SelectMode mode, std::weak_ptr<EditorNode> node)
+void cse::Selection::modify_selection(SelectMode mode, std::weak_ptr<EditorNode> node)
 {
 	if (node.lock().get() == nullptr) {
 		return;
@@ -49,7 +49,7 @@ void CyclesShaderEditor::Selection::modify_selection(SelectMode mode, std::weak_
 	}
 }
 
-void CyclesShaderEditor::Selection::clear()
+void cse::Selection::clear()
 {
 	nodes.clear();
 	socket = std::weak_ptr<NodeSocket>();

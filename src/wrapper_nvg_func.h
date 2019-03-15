@@ -9,7 +9,7 @@
 
 #include "wrapper_nvg_context.h"
 
-namespace CyclesShaderEditor {
+namespace cse {
 
 	// Frame begin/end control
 	inline void nvgBeginFrame(const std::unique_ptr<NvgContext>& ctx, const float windowWidth, const float windowHeight, const float devicePixelRatio) {

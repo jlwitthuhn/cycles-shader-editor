@@ -2,7 +2,7 @@
 
 #include <sstream>
 
-float CyclesShaderEditor::locale_safe_stof(std::string input)
+float cse::locale_safe_stof(std::string input)
 {
 	std::stringstream stream(input);
 	float result = 0.0f;

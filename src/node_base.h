@@ -11,7 +11,7 @@
 
 struct NVGcontext;
 
-namespace CyclesShaderEditor {
+namespace cse {
 
 	class NodeSocket;
 	class EditorNode;

@@ -32,8 +32,8 @@ static const char* SECTION_LABEL_CONNECTION = "section_connections";
 
 static const char* NODE_END = "node_end";
 
-std::map<CyclesShaderEditor::CyclesNodeType, std::string> type_to_code;
-std::map<std::string, CyclesShaderEditor::CyclesNodeType> code_to_type;
+std::map<cse::CyclesNodeType, std::string> type_to_code;
+std::map<std::string, cse::CyclesNodeType> code_to_type;
 
 static std::string create_node_name()
 {
@@ -43,7 +43,7 @@ static std::string create_node_name()
 
 static void initialize_maps()
 {
-	using namespace CyclesShaderEditor;
+	using namespace cse;
 
 	if (!type_to_code.empty()) {
 		// Map is already inialized
@@ -144,12 +144,12 @@ static std::list<std::string> tokenize_string(const std::string& input, const ch
 	return output;
 }
 
-static std::string serialize_curve(const CyclesShaderEditor::OutputCurve& curve)
+static std::string serialize_curve(const cse::OutputCurve& curve)
 {
 	constexpr char CURVE_SEPARATOR = ',';
 	std::stringstream curve_stream;
 	curve_stream << "curve00" << CURVE_SEPARATOR;
-	if (curve.enum_curve_interp == static_cast<int>(CyclesShaderEditor::CurveInterpolation::CUBIC_HERMITE)) {
+	if (curve.enum_curve_interp == static_cast<int>(cse::CurveInterpolation::CUBIC_HERMITE)) {
 		curve_stream << "cubic_hermite" << CURVE_SEPARATOR;
 	}
 	else {
@@ -158,14 +158,14 @@ static std::string serialize_curve(const CyclesShaderEditor::OutputCurve& curve)
 	curve_stream << curve.control_points.size();
 
 	curve_stream.precision(6);
-	for (const CyclesShaderEditor::Float2& this_point : curve.control_points) {
+	for (const cse::Float2& this_point : curve.control_points) {
 		curve_stream << CURVE_SEPARATOR << this_point.x << CURVE_SEPARATOR << this_point.y ;
 	}
 
 	return curve_stream.str();
 }
 
-static void deserialize_curve(std::string serialized_curve, std::shared_ptr<CyclesShaderEditor::CurveSocketValue> curve_value)
+static void deserialize_curve(std::string serialized_curve, std::shared_ptr<cse::CurveSocketValue> curve_value)
 {
 	curve_value->reset_value();
 	constexpr char CURVE_SEPARATOR = ',';
@@ -194,24 +194,24 @@ static void deserialize_curve(std::string serialized_curve, std::shared_ptr<Cycl
 
 	curve_value->curve_points.clear();
 	for (std::size_t points_copied = 0; points_copied < control_point_count; points_copied++) {
-		const float x = CyclesShaderEditor::locale_safe_stof(*(input_iter++));
-		const float y = CyclesShaderEditor::locale_safe_stof(*(input_iter++));
-		CyclesShaderEditor::FloatPos this_point(x, y);
+		const float x = cse::locale_safe_stof(*(input_iter++));
+		const float y = cse::locale_safe_stof(*(input_iter++));
+		cse::FloatPos this_point(x, y);
 		curve_value->curve_points.push_back(this_point);
 	}
 	curve_value->sort_curve_points();
 
 	if (interpolation_str == "cubic_hermite") {
-		curve_value->curve_interp = CyclesShaderEditor::CurveInterpolation::CUBIC_HERMITE;
+		curve_value->curve_interp = cse::CurveInterpolation::CUBIC_HERMITE;
 	}
 	else {
-		curve_value->curve_interp = CyclesShaderEditor::CurveInterpolation::LINEAR;
+		curve_value->curve_interp = cse::CurveInterpolation::LINEAR;
 	}
 }
 
-static std::string serialize_node(const CyclesShaderEditor::OutputNode& node)
+static std::string serialize_node(const cse::OutputNode& node)
 {
-	using namespace CyclesShaderEditor;
+	using namespace cse;
 
 	if (type_to_code.count(node.type) == 0) {
 		return std::string();
@@ -246,20 +246,20 @@ static std::string serialize_node(const CyclesShaderEditor::OutputNode& node)
 	return node_stream.str();
 }
 
-static std::string serialize_connection(const CyclesShaderEditor::OutputConnection& connection)
+static std::string serialize_connection(const cse::OutputConnection& connection)
 {
 	std::stringstream connection_stream;
 	connection_stream << connection.source_node << SEPARATOR << connection.source_socket << SEPARATOR << connection.dest_node << SEPARATOR << connection.dest_socket << SEPARATOR;
 	return connection_stream.str();
 }
 
-void CyclesShaderEditor::generate_output_lists(
+void cse::generate_output_lists(
 	const std::list<std::shared_ptr<EditorNode>>& node_list,
 	const std::list<NodeConnection>& connection_list,
 	std::vector<OutputNode>& out_node_list,
 	std::vector<OutputConnection>& out_connection_list)
 {
-	using namespace CyclesShaderEditor;
+	using namespace cse;
 
 	std::map<EditorNode*, std::string> node_to_name_map;
 
@@ -287,7 +287,7 @@ void CyclesShaderEditor::generate_output_lists(
 	}
 }
 
-std::string CyclesShaderEditor::serialize_graph(std::vector<OutputNode> &nodes, std::vector<OutputConnection> &connections)
+std::string cse::serialize_graph(std::vector<OutputNode> &nodes, std::vector<OutputConnection> &connections)
 {
 	initialize_maps();
 
@@ -311,8 +311,8 @@ std::string CyclesShaderEditor::serialize_graph(std::vector<OutputNode> &nodes, 
 	return output_stream.str();
 }
 
-static std::shared_ptr<CyclesShaderEditor::EditorNode> create_node_from_type(CyclesShaderEditor::CyclesNodeType type) {
-	using namespace CyclesShaderEditor;
+static std::shared_ptr<cse::EditorNode> create_node_from_type(cse::CyclesNodeType type) {
+	using namespace cse;
 	const FloatPos pos(0.0f, 0.0f);
 	switch (type) {
 		case CyclesNodeType::AmbientOcclusion:
@@ -569,9 +569,9 @@ static std::shared_ptr<CyclesShaderEditor::EditorNode> create_node_from_type(Cyc
 	return nullptr;
 }
 
-static std::shared_ptr<CyclesShaderEditor::EditorNode> deserialize_node(std::list<std::string>& tokens, std::map<std::string, CyclesShaderEditor::EditorNode*>& nodes_by_name)
+static std::shared_ptr<cse::EditorNode> deserialize_node(std::list<std::string>& tokens, std::map<std::string, cse::EditorNode*>& nodes_by_name)
 {
-	using namespace CyclesShaderEditor;
+	using namespace cse;
 
 	initialize_maps();
 
@@ -583,8 +583,8 @@ static std::shared_ptr<CyclesShaderEditor::EditorNode> deserialize_node(std::lis
 
 	std::string type_code = *(token_iter++);
 	std::string name = *(token_iter++);
-	float x_position = CyclesShaderEditor::locale_safe_stof(*(token_iter++));
-	float y_position = CyclesShaderEditor::locale_safe_stof(*(token_iter++));
+	float x_position = cse::locale_safe_stof(*(token_iter++));
+	float y_position = cse::locale_safe_stof(*(token_iter++));
 
 	std::map<std::string, std::string> params;
 	while (token_iter != tokens.end()) {
@@ -617,7 +617,7 @@ static std::shared_ptr<CyclesShaderEditor::EditorNode> deserialize_node(std::lis
 			switch (this_socket_ptr->socket_type) {
 
 			case SocketType::FLOAT:
-				this_socket_ptr->set_float_val(CyclesShaderEditor::locale_safe_stof(this_param.second));
+				this_socket_ptr->set_float_val(cse::locale_safe_stof(this_param.second));
 				break;
 
 			case SocketType::COLOR:
@@ -631,7 +631,7 @@ static std::shared_ptr<CyclesShaderEditor::EditorNode> deserialize_node(std::lis
 				std::string x = *(float_iter++);
 				std::string y = *(float_iter++);
 				std::string z = *(float_iter++);
-				this_socket_ptr->set_float3_val(CyclesShaderEditor::locale_safe_stof(x), CyclesShaderEditor::locale_safe_stof(y), CyclesShaderEditor::locale_safe_stof(z));
+				this_socket_ptr->set_float3_val(cse::locale_safe_stof(x), cse::locale_safe_stof(y), cse::locale_safe_stof(z));
 				break;
 			}
 
@@ -680,9 +680,9 @@ static std::shared_ptr<CyclesShaderEditor::EditorNode> deserialize_node(std::lis
 	return result;
 }
 
-void CyclesShaderEditor::deserialize_graph(
+void cse::deserialize_graph(
 	const std::string& graph,
-	std::list<std::shared_ptr<CyclesShaderEditor::EditorNode>>& nodes,
+	std::list<std::shared_ptr<cse::EditorNode>>& nodes,
 	std::list<NodeConnection>& connections )
 {
 	std::map<std::string, EditorNode*> nodes_by_name;

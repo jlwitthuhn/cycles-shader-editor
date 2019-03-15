@@ -2,7 +2,7 @@
 
 struct NVGcontext;
 
-namespace CyclesShaderEditor {
+namespace cse {
 
 	// Class to safely wrap nvgCreate and nvgDelete
 	class NvgContext {

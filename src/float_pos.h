@@ -1,6 +1,6 @@
 #pragma once
 
-namespace CyclesShaderEditor {
+namespace cse {
 
 	// Represents some position in 2d space
 	class FloatPos {

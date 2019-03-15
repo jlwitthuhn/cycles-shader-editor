@@ -2,7 +2,7 @@
 
 #include "float_pos.h"
 
-namespace CyclesShaderEditor {
+namespace cse {
 	// Widget that can accept input for multiple socket values
 	class MultiInputWidget {
 	public:
