@@ -8,7 +8,7 @@ cse::ParamEditorPanel::ParamEditorPanel(const float width) :
 
 void cse::ParamEditorPanel::pre_draw()
 {
-	// Stub
+	// Stub so subclasses can optionally override
 }
 
 void cse::ParamEditorPanel::set_mouse_local_position(const FloatPos local_pos)

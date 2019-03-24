@@ -133,7 +133,7 @@ cse::IntInputBox::IntInputBox(const float width, const float height) : BaseInput
 
 }
 
-void cse::IntInputBox::set_int_value(const std::weak_ptr<IntSocketValue> socket_value_in)
+void cse::IntInputBox::attach_int_value(const std::weak_ptr<IntSocketValue> socket_value_in)
 {
 	socket_value = socket_value_in;
 }
@@ -166,7 +166,7 @@ cse::FloatInputBox::FloatInputBox(const float width, const float height) : BaseI
 
 }
 
-void cse::FloatInputBox::set_float_value(const std::weak_ptr<FloatSocketValue> socket_value_in)
+void cse::FloatInputBox::attach_float_value(const std::weak_ptr<FloatSocketValue> socket_value_in)
 {
 	socket_value = socket_value_in;
 }

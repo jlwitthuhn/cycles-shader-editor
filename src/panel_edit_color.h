@@ -18,6 +18,8 @@ namespace cse {
 		EditColorPanel(float width);
 
 		virtual bool is_active() const override;
+
+		virtual void pre_draw() override;
 		virtual float draw(NVGcontext* draw_context) override;
 
 		virtual bool should_capture_input() const override;

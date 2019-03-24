@@ -30,6 +30,27 @@ bool cse::EditColorPanel::is_active() const
 	return static_cast<bool>(attached_color.lock());
 }
 
+void cse::EditColorPanel::pre_draw()
+{
+	if (is_active() == false) {
+		return;
+	}
+
+	if (const auto attached_color_ptr = attached_color.lock()) {
+		color_r_input_box.attach_float_value(attached_color_ptr->red_socket_val);
+		color_g_input_box.attach_float_value(attached_color_ptr->green_socket_val);
+		color_b_input_box.attach_float_value(attached_color_ptr->blue_socket_val);
+	}
+
+	// If color selection is active, update the color here
+	if (mouse_sat_val_selection_active) {
+		set_sat_val_from_mouse();
+	}
+	if (mouse_hue_selection_active) {
+		set_hue_from_mouse();
+	}
+}
+
 float cse::EditColorPanel::draw(NVGcontext* const draw_context)
 {
 	float height_drawn = 0.0f;
@@ -164,7 +185,6 @@ float cse::EditColorPanel::draw(NVGcontext* const draw_context)
 
 	const bool highlight_r = color_r_input_box.is_under_point(mouse_local_pos);
 	color_r_input_box.set_position(FloatPos(input_x_draw, input_y_draw));
-	color_r_input_box.set_float_value(attached_color_ptr->red_socket_val);
 	color_r_input_box.draw(draw_context, highlight_r);
 
 	height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
@@ -177,7 +197,6 @@ float cse::EditColorPanel::draw(NVGcontext* const draw_context)
 
 	const bool highlight_g = color_g_input_box.is_under_point(mouse_local_pos);
 	color_g_input_box.set_position(FloatPos(input_x_draw, input_y_draw));
-	color_g_input_box.set_float_value(attached_color_ptr->green_socket_val);
 	color_g_input_box.draw(draw_context, highlight_g);
 
 	height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
@@ -190,18 +209,9 @@ float cse::EditColorPanel::draw(NVGcontext* const draw_context)
 
 	const bool highlight_b = color_b_input_box.is_under_point(mouse_local_pos);
 	color_b_input_box.set_position(FloatPos(input_x_draw, input_y_draw));
-	color_b_input_box.set_float_value(attached_color_ptr->blue_socket_val);
 	color_b_input_box.draw(draw_context, highlight_b);
 
 	height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
-
-	// If color selection is active, update the color here
-	if (mouse_sat_val_selection_active) {
-		set_sat_val_from_mouse();
-	}
-	if (mouse_hue_selection_active) {
-		set_hue_from_mouse();
-	}
 
 	panel_height = height_drawn;
 	return height_drawn;
@@ -219,10 +229,10 @@ void cse::EditColorPanel::handle_mouse_button(int button, int action, int /*mods
 {
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
 		if (color_rect_click_target.is_under_point(mouse_local_pos)) {
-				mouse_sat_val_selection_active = true;
+			mouse_sat_val_selection_active = true;
 		}
 		else if (hue_bar_click_target.is_under_point(mouse_local_pos)) {
-				mouse_hue_selection_active = true;
+			mouse_hue_selection_active = true;
 		}
 		else if (color_r_input_box.is_under_point(mouse_local_pos)) {
 			select_input(&color_r_input_box);

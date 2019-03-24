@@ -308,7 +308,7 @@ void cse::ParamEditorSubwindow::draw_content(NVGcontext* draw_context)
 
 			const bool highlight = int_input_box.is_under_point(mouse_content_pos);
 			int_input_box.set_position(FloatPos(input_x_draw, input_y_draw));
-			int_input_box.set_int_value(std::dynamic_pointer_cast<IntSocketValue>(selected_param_ptr->value));
+			int_input_box.attach_int_value(std::dynamic_pointer_cast<IntSocketValue>(selected_param_ptr->value));
 			int_input_box.draw(draw_context, highlight);
 
 			height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
@@ -330,7 +330,7 @@ void cse::ParamEditorSubwindow::draw_content(NVGcontext* draw_context)
 
 			const bool highlight = float_input_box.is_under_point(mouse_content_pos);
 			float_input_box.set_position(FloatPos(input_x_draw, input_y_draw));
-			float_input_box.set_float_value(std::dynamic_pointer_cast<FloatSocketValue>(selected_param_ptr->value));
+			float_input_box.attach_float_value(std::dynamic_pointer_cast<FloatSocketValue>(selected_param_ptr->value));
 			float_input_box.draw(draw_context, highlight);
 
 			height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
@@ -356,7 +356,7 @@ void cse::ParamEditorSubwindow::draw_content(NVGcontext* draw_context)
 
 			const bool highlight_x = vector_x_input_box.is_under_point(mouse_content_pos);
 			vector_x_input_box.set_position(FloatPos(input_x_draw, input_y_draw));
-			vector_x_input_box.set_float_value(float3_socket_val->x_socket_val);
+			vector_x_input_box.attach_float_value(float3_socket_val->x_socket_val);
 			vector_x_input_box.draw(draw_context, highlight_x);
 
 			height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
@@ -368,7 +368,7 @@ void cse::ParamEditorSubwindow::draw_content(NVGcontext* draw_context)
 
 			const bool highlight_y = vector_y_input_box.is_under_point(mouse_content_pos);
 			vector_y_input_box.set_position(FloatPos(input_x_draw, input_y_draw));
-			vector_y_input_box.set_float_value(float3_socket_val->y_socket_val);
+			vector_y_input_box.attach_float_value(float3_socket_val->y_socket_val);
 			vector_y_input_box.draw(draw_context, highlight_y);
 
 			height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
@@ -380,7 +380,7 @@ void cse::ParamEditorSubwindow::draw_content(NVGcontext* draw_context)
 
 			const bool highlight_z = vector_z_input_box.is_under_point(mouse_content_pos);
 			vector_z_input_box.set_position(FloatPos(input_x_draw, input_y_draw));
-			vector_z_input_box.set_float_value(float3_socket_val->z_socket_val);
+			vector_z_input_box.attach_float_value(float3_socket_val->z_socket_val);
 			vector_z_input_box.draw(draw_context, highlight_z);
 
 			height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;

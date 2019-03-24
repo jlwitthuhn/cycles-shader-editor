@@ -51,7 +51,7 @@ namespace cse {
 	public:
 		IntInputBox(float width, float height);
 
-		void set_int_value(std::weak_ptr<IntSocketValue> socket_value);
+		void attach_int_value(std::weak_ptr<IntSocketValue> socket_value);
 
 	private:
 		virtual std::string get_value_as_string();
@@ -64,7 +64,7 @@ namespace cse {
 	public:
 		FloatInputBox(float width, float height);
 
-		void set_float_value(std::weak_ptr<FloatSocketValue> socket_value);
+		void attach_float_value(std::weak_ptr<FloatSocketValue> socket_value);
 		void set_float_value(float value);
 		float get_float_value();
 
