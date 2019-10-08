@@ -45,6 +45,13 @@ cse::PrincipledBSDFNode::PrincipledBSDFNode(FloatPos position)
 	dist_input->value = dist_value;
 	const auto base_color_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::COLOR, "Base Color", "base_color");
 	base_color_input->value = std::make_shared<ColorSocketValue>(0.8f, 0.8f, 0.8f);
+
+	const auto sss_method_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::STRING_ENUM, "Subsurface Method", "subsurface_method");
+	const auto sss_method_value = std::make_shared<StringEnumSocketValue>();
+	sss_method_value->enum_values.push_back(StringEnumPair("Burley", "burley"));
+	sss_method_value->enum_values.push_back(StringEnumPair("Random Walk", "random_walk"));
+	sss_method_value->set_from_internal_name("burley");
+	sss_method_input->value = sss_method_value;
 	const auto ss_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Subsurface", "subsurface");
 	ss_input->value = std::make_shared<FloatSocketValue>(0.0f, 0.0f, 1.0f);
 	const auto ss_radius_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::VECTOR, "Subsurface Radius", "subsurface_radius");
@@ -54,6 +61,7 @@ cse::PrincipledBSDFNode::PrincipledBSDFNode(FloatPos position)
 		1.0f, 0.0f, 100.0f);
 	const auto ss_color_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::COLOR, "Subsurface Color", "subsurface_color");
 	ss_color_input->value = std::make_shared<ColorSocketValue>(0.7f, 0.1f, 0.1f);
+
 	const auto metallic_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Metallic", "metallic");
 	metallic_input->value = std::make_shared<FloatSocketValue>(0.0f, 0.0f, 1.0f);
 	const auto spec_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Specular", "specular");
@@ -62,28 +70,39 @@ cse::PrincipledBSDFNode::PrincipledBSDFNode(FloatPos position)
 	spec_tint_input->value = std::make_shared<FloatSocketValue>(0.0f, 0.0f, 1.0f);
 	const auto roughness_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Roughness", "roughness");
 	roughness_input->value = std::make_shared<FloatSocketValue>(0.5f, 0.0f, 1.0f);
+
 	const auto anisotropic_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Anisotropic", "anisotropic");
 	anisotropic_input->value = std::make_shared<FloatSocketValue>(0.0f, 0.0f, 1.0f);
 	const auto anisotropic_rot_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Rotation", "anisotropic_rotation");
 	anisotropic_rot_input->value = std::make_shared<FloatSocketValue>(0.0f, 0.0f, 1.0f);
+
 	const auto sheen_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Sheen", "sheen");
 	sheen_input->value = std::make_shared<FloatSocketValue>(0.0f, 0.0f, 1.0f);
 	const auto sheen_tint_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Sheen Tint", "sheen_tint");
 	sheen_tint_input->value = std::make_shared<FloatSocketValue>(0.5f, 0.0f, 1.0f);
+
 	const auto cc_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Clearcoat", "clearcoat");
 	cc_input->value = std::make_shared<FloatSocketValue>(0.0f, 0.0f, 1.0f);
 	const auto cc_roughness_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Clearcoat Roughness", "clearcoat_roughness");
 	cc_roughness_input->value = std::make_shared<FloatSocketValue>(0.0f, 0.0f, 1.0f);
+
 	const auto ior_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "IOR", "ior");
 	ior_input->value = std::make_shared<FloatSocketValue>(1.45f, 0.0f, 100.0f);
 	const auto transmission_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Transmission", "transmission");
 	transmission_input->value = std::make_shared<FloatSocketValue>(0.0f, 0.0f, 1.0f);
+
+	const auto emission_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::COLOR, "Emission", "emission");
+	emission_input->value = std::make_shared<ColorSocketValue>(0.0f, 0.0f, 0.0f);
+	const auto alpha_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Alpha", "alpha");
+	alpha_input->value = std::make_shared<FloatSocketValue>(1.0f, 0.0f, 1.0f);
+
 	const auto normal_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::NORMAL, "Normal", "normal");
 	const auto cc_normal_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::NORMAL, "Clearcoat Normal", "clearcoat_normal");
 	const auto tangent_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::VECTOR, "Tangent", "tangent");
 
 	sockets.push_back(dist_input);
 	sockets.push_back(base_color_input);
+	sockets.push_back(sss_method_input);
 	sockets.push_back(ss_input);
 	sockets.push_back(ss_radius_input);
 	sockets.push_back(ss_color_input);
@@ -99,6 +118,8 @@ cse::PrincipledBSDFNode::PrincipledBSDFNode(FloatPos position)
 	sockets.push_back(cc_roughness_input);
 	sockets.push_back(ior_input);
 	sockets.push_back(transmission_input);
+	sockets.push_back(emission_input);
+	sockets.push_back(alpha_input);
 	sockets.push_back(normal_input);
 	sockets.push_back(cc_normal_input);
 	sockets.push_back(tangent_input);
@@ -424,6 +445,7 @@ cse::SubsurfaceScatteringNode::SubsurfaceScatteringNode(FloatPos position)
 	comp_value->enum_values.push_back(StringEnumPair("Christensen-Burley", "burley"));
 	comp_value->enum_values.push_back(StringEnumPair("Gaussian", "gaussian"));
 	comp_value->enum_values.push_back(StringEnumPair("Cubic", "cubic"));
+	comp_value->enum_values.push_back(StringEnumPair("Random Walk", "random_walk"));
 	comp_value->set_from_internal_name("burley");
 	comp_input->value = comp_value;
 	const auto color_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::COLOR, "Color", "color");
