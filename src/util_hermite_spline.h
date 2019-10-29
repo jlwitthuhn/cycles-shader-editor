@@ -8,9 +8,9 @@ namespace cse {
 		float eval(float t) const;
 
 	private:
-		float a;
-		float b;
-		float c;
-		float d;
+		const float a;
+		const float b;
+		const float c;
+		const float d;
 	};
 }
