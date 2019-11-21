@@ -14,13 +14,16 @@ namespace cse {
 		ParamEditorPanel(float width);
 		virtual ~ParamEditorPanel() {}
 
+		float get_width() const;
+		float get_height() const;
+
 		virtual bool is_active() const = 0;
 
 		virtual void pre_draw();
 		virtual float draw(NVGcontext* draw_context) = 0;
 
 		virtual void set_mouse_local_position(FloatPos local_pos);
-		virtual bool is_mouse_over();
+		virtual bool is_mouse_over() const;
 
 		virtual bool should_capture_input() const;
 		virtual void handle_mouse_button(int button, int action, int mods);
@@ -35,9 +38,11 @@ namespace cse {
 	protected:
 		virtual void reset();
 
-		float panel_width;
+		const float panel_width;
 		float panel_height = 1.0f;
 
 		FloatPos mouse_local_pos;
+
+		bool request_undo_push = false;
 	};
 }

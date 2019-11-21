@@ -15,6 +15,7 @@
 #include "panel_edit.h"
 #include "panel_edit_color.h"
 #include "panel_edit_curve.h"
+#include "panel_edit_int.h"
 #include "selection.h"
 #include "sockets.h"
 
@@ -29,6 +30,7 @@ cse::ParamEditorSubwindow::ParamEditorSubwindow(FloatPos screen_position) :
 	subwindow_width = UI_SUBWIN_PARAM_EDIT_WIDTH;
 	panels.push_back(std::make_shared<EditColorPanel>(UI_SUBWIN_PARAM_EDIT_WIDTH));
 	panels.push_back(std::make_shared<EditCurvePanel>(UI_SUBWIN_PARAM_EDIT_WIDTH));
+	panels.push_back(std::make_shared<EditIntPanel>(UI_SUBWIN_PARAM_EDIT_WIDTH));
 }
 
 void cse::ParamEditorSubwindow::pre_draw()
@@ -291,29 +293,7 @@ void cse::ParamEditorSubwindow::draw_content(NVGcontext* draw_context)
 
 		panel_start_y = height_drawn;
 
-		if (selected_param_ptr->socket_type == SocketType::INT) {
-			int_input_box.displayed = true;
-
-			nvgFontSize(draw_context, UI_FONT_SIZE_NORMAL);
-			nvgFontFace(draw_context, "sans");
-			nvgTextAlign(draw_context, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-			nvgFontBlur(draw_context, 0.0f);
-			nvgFillColor(draw_context, nvgRGBA(0, 0, 0, 255));
-
-			const std::string value_text = "Value:";
-			nvgText(draw_context, subwindow_width / 3, height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT / 2, value_text.c_str(), nullptr);
-
-			const float input_x_draw = (2.0f * subwindow_width / 3) - (float_input_box.width / 2);
-			const float input_y_draw = height_drawn + (UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT - float_input_box.height) / 2;
-
-			const bool highlight = int_input_box.is_under_point(mouse_content_pos);
-			int_input_box.set_position(FloatPos(input_x_draw, input_y_draw));
-			int_input_box.attach_int_value(std::dynamic_pointer_cast<IntSocketValue>(selected_param_ptr->value));
-			int_input_box.draw(draw_context, highlight);
-
-			height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
-		}
-		else if (selected_param_ptr->socket_type == SocketType::FLOAT) {
+		if (selected_param_ptr->socket_type == SocketType::FLOAT) {
 			float_input_box.displayed = true;
 
 			nvgFontSize(draw_context, UI_FONT_SIZE_NORMAL);
@@ -510,6 +490,7 @@ void cse::ParamEditorSubwindow::draw_content(NVGcontext* draw_context)
 				if (this_panel->is_active()) {
 					nvgSave(draw_context);
 					nvgTranslate(draw_context, 0.0f, panel_start_y);
+					nvgScissor(draw_context, 0.0f, 0.0f, this_panel->get_width(), this_panel->get_height());
 					height_drawn += this_panel->draw(draw_context);
 					nvgRestore(draw_context);
 					ui_drawn = true;

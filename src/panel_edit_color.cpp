@@ -11,7 +11,7 @@
 #include "gui_sizes.h"
 #include "sockets.h"
 
-cse::EditColorPanel::EditColorPanel(float width) :
+cse::EditColorPanel::EditColorPanel(const float width) :
 	ParamEditorPanel(width),
 	color_r_input_box(UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH_BIG, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT),
 	color_g_input_box(UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH_BIG, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT),
@@ -214,7 +214,7 @@ float cse::EditColorPanel::draw(NVGcontext* const draw_context)
 	height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
 
 	panel_height = height_drawn;
-	return height_drawn;
+	return panel_height;
 }
 
 bool cse::EditColorPanel::should_capture_input() const
@@ -249,11 +249,11 @@ void cse::EditColorPanel::handle_mouse_button(int button, int action, int /*mods
 		// End any click+drag in progress
 		if (mouse_hue_selection_active) {
 			mouse_hue_selection_active = false;
-			value_has_changed = true;
+			request_undo_push = true;
 		}
 		if (mouse_sat_val_selection_active) {
 			mouse_sat_val_selection_active = false;
-			value_has_changed = true;
+			request_undo_push = true;
 		}
 	}
 }
@@ -266,7 +266,7 @@ void cse::EditColorPanel::handle_key(const int key, int /*scancode*/, const int 
 		}
 		else if (key == GLFW_KEY_ENTER && action == GLFW_PRESS) {
 			selected_input->complete_edit();
-			value_has_changed = true;
+			request_undo_push = true;
 		}
 		else if (key == GLFW_KEY_BACKSPACE && action == GLFW_PRESS) {
 			selected_input->backspace();
@@ -301,15 +301,6 @@ void cse::EditColorPanel::set_attached_value(const std::weak_ptr<SocketValue> so
 void cse::EditColorPanel::deselect_input_box()
 {
 	select_input(nullptr);
-}
-
-bool cse::EditColorPanel::should_push_undo_state()
-{
-	if (value_has_changed) {
-		value_has_changed = false;
-		return true;
-	}
-	return false;
 }
 
 void cse::EditColorPanel::reset()
@@ -371,8 +362,9 @@ void cse::EditColorPanel::set_sat_val_from_mouse()
 
 void cse::EditColorPanel::select_input(FloatInputBox* const input)
 {
-	if (selected_input != nullptr) {
+	if (selected_input != nullptr && selected_input->should_capture_input()) {
 		selected_input->complete_edit();
+		request_undo_push = true;
 	}
 	selected_input = input;
 	if (selected_input != nullptr) {

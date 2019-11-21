@@ -6,6 +6,16 @@ cse::ParamEditorPanel::ParamEditorPanel(const float width) :
 
 }
 
+float cse::ParamEditorPanel::get_width() const
+{
+	return panel_width;
+}
+
+float cse::ParamEditorPanel::get_height() const
+{
+	return panel_height;
+}
+
 void cse::ParamEditorPanel::pre_draw()
 {
 	// Stub so subclasses can optionally override
@@ -16,7 +26,7 @@ void cse::ParamEditorPanel::set_mouse_local_position(const FloatPos local_pos)
 	mouse_local_pos = local_pos;
 }
 
-bool cse::ParamEditorPanel::is_mouse_over()
+bool cse::ParamEditorPanel::is_mouse_over() const
 {
 	if (is_active() == false) {
 		return false;
@@ -63,9 +73,12 @@ void cse::ParamEditorPanel::deselect_input_box()
 	// Stub
 }
 
+
 bool cse::ParamEditorPanel::should_push_undo_state()
 {
-	return false;
+	bool result = request_undo_push;
+	request_undo_push = false;
+	return result;
 }
 
 void cse::ParamEditorPanel::reset()

@@ -115,6 +115,7 @@ void cse::BaseInputBox::complete_edit()
 	}
 
 	set_value_from_input_stream();
+	input_stream = std::stringstream();
 }
 
 void cse::BaseInputBox::cancel_edit()

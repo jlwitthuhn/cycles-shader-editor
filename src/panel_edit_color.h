@@ -30,8 +30,6 @@ namespace cse {
 		virtual void set_attached_value(std::weak_ptr<SocketValue> socket_value) override;
 		virtual void deselect_input_box() override;
 
-		virtual bool should_push_undo_state() override;
-
 	protected:
 		virtual void reset() override;
 
@@ -52,8 +50,6 @@ namespace cse {
 		FloatInputBox color_r_input_box;
 		FloatInputBox color_g_input_box;
 		FloatInputBox color_b_input_box;
-
-		bool value_has_changed = false;
 
 		bool mouse_sat_val_selection_active = false;
 		bool mouse_hue_selection_active = false;

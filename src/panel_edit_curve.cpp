@@ -17,7 +17,7 @@ static cse::FloatPos get_panel_space_point(const cse::FloatPos normalized_point,
 	return cse::FloatPos(out_x, out_y);
 }
 
-cse::EditCurvePanel::EditCurvePanel(float width) :
+cse::EditCurvePanel::EditCurvePanel(const float width) :
 	ParamEditorPanel(width),
 	target_view(FloatPos(), FloatPos()),
 	target_edit_mode_move(FloatPos(), FloatPos(), EditCurveMode::MOVE, &edit_mode),
@@ -333,7 +333,7 @@ float cse::EditCurvePanel::draw(NVGcontext* draw_context)
 	}
 
 	panel_height = height_drawn;
-	return height_drawn;
+	return panel_height;
 }
 
 void cse::EditCurvePanel::handle_mouse_button(int button, int action, int /*mods*/)
@@ -419,13 +419,6 @@ void cse::EditCurvePanel::set_attached_value(const std::weak_ptr<SocketValue> so
 		}
 	}
 	attached_curve = std::weak_ptr<CurveSocketValue>();
-}
-
-bool cse::EditCurvePanel::should_push_undo_state()
-{
-	bool result = request_undo_push;
-	request_undo_push = false;
-	return result;
 }
 
 void cse::EditCurvePanel::reset()

@@ -26,8 +26,6 @@ namespace cse {
 
 		virtual void set_attached_value(std::weak_ptr<SocketValue> socket_value) override;
 
-		virtual bool should_push_undo_state() override;
-
 	protected:
 		virtual void reset() override;
 
@@ -50,7 +48,5 @@ namespace cse {
 		bool moving_selected_point = false;
 		bool mouse_has_moved = false;
 		FloatPos move_selected_point_begin_mouse_pos;
-
-		bool request_undo_push = false;
 	};
 }
