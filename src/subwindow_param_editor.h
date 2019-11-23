@@ -14,7 +14,7 @@ namespace cse {
 
 	class FloatPos;
 	class NodeSocket;
-	class ParamEditorPanel;
+	class EditParamPanel;
 	class Selection;
 
 	class ParamEditorSubwindow : public NodeEditorSubwindow {
@@ -53,13 +53,7 @@ namespace cse {
 		float panel_start_y = 0;
 
 		// Panels
-		std::list<std::shared_ptr<ParamEditorPanel>> panels;
-
-		// Int stuff
-		IntInputBox int_input_box;
-
-		// Float stuff
-		FloatInputBox float_input_box;
+		std::list<std::shared_ptr<EditParamPanel>> panels;
 
 		// Vector stuff
 		FloatInputBox vector_x_input_box;

@@ -18,7 +18,7 @@ static cse::FloatPos get_panel_space_point(const cse::FloatPos normalized_point,
 }
 
 cse::EditCurvePanel::EditCurvePanel(const float width) :
-	ParamEditorPanel(width),
+	EditParamPanel(width),
 	target_view(FloatPos(), FloatPos()),
 	target_edit_mode_move(FloatPos(), FloatPos(), EditCurveMode::MOVE, &edit_mode),
 	target_edit_mode_create(FloatPos(), FloatPos(), EditCurveMode::CREATE, &edit_mode),

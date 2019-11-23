@@ -15,21 +15,21 @@
 #include "panel_edit.h"
 #include "panel_edit_color.h"
 #include "panel_edit_curve.h"
+#include "panel_edit_float.h"
 #include "panel_edit_int.h"
 #include "selection.h"
 #include "sockets.h"
 
 cse::ParamEditorSubwindow::ParamEditorSubwindow(const FloatPos screen_position) :
 	NodeEditorSubwindow(screen_position, "Parameter Editor"),
-	int_input_box(UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH_SMALL, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT),
-	float_input_box(UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH_SMALL, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT),
-	vector_x_input_box(UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH_BIG, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT),
-	vector_y_input_box(UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH_BIG, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT),
-	vector_z_input_box(UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH_BIG, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT)
+	vector_x_input_box(UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT),
+	vector_y_input_box(UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT),
+	vector_z_input_box(UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT)
 {
 	subwindow_width = UI_SUBWIN_PARAM_EDIT_WIDTH;
 	panels.push_back(std::make_shared<EditColorPanel>(UI_SUBWIN_PARAM_EDIT_WIDTH));
 	panels.push_back(std::make_shared<EditCurvePanel>(UI_SUBWIN_PARAM_EDIT_WIDTH));
+	panels.push_back(std::make_shared<EditFloatPanel>(UI_SUBWIN_PARAM_EDIT_WIDTH));
 	panels.push_back(std::make_shared<EditIntPanel>(UI_SUBWIN_PARAM_EDIT_WIDTH));
 }
 
@@ -79,16 +79,6 @@ void cse::ParamEditorSubwindow::handle_mouse_button(const int button, const int 
 			if (this_panel->is_active() && this_panel->is_mouse_over()) {
 				this_panel->handle_mouse_button(button, action, mods);
 			}
-		}
-	}
-	else if (int_input_box.is_under_point(mouse_content_pos)) {
-		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-			select_input_box(&int_input_box);
-		}
-	}
-	else if (float_input_box.is_under_point(mouse_content_pos)) {
-		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-			select_input_box(&float_input_box);
 		}
 	}
 	else if (vector_x_input_box.is_under_point(mouse_content_pos)) {
@@ -223,8 +213,6 @@ void cse::ParamEditorSubwindow::draw_content(NVGcontext* const draw_context)
 
 	auto selected_param_ptr = selected_param.lock();
 	if (selected_param_ptr && selected_param_ptr->io_type == SocketIOType::INPUT) {
-		int_input_box.active = false;
-		float_input_box.active = false;
 		vector_x_input_box.active = false;
 		vector_y_input_box.active = false;
 		vector_z_input_box.active = false;
@@ -294,29 +282,7 @@ void cse::ParamEditorSubwindow::draw_content(NVGcontext* const draw_context)
 
 		panel_start_y = height_drawn;
 
-		if (selected_param_ptr->socket_type == SocketType::FLOAT) {
-			float_input_box.active = true;
-
-			nvgFontSize(draw_context, UI_FONT_SIZE_NORMAL);
-			nvgFontFace(draw_context, "sans");
-			nvgTextAlign(draw_context, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-			nvgFontBlur(draw_context, 0.0f);
-			nvgFillColor(draw_context, nvgRGBA(0, 0, 0, 255));
-
-			const std::string value_text = "Value:";
-			nvgText(draw_context, subwindow_width / 3, height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT / 2, value_text.c_str(), nullptr);
-
-			const float input_x_draw = (2.0f * subwindow_width / 3) - (float_input_box.width / 2);
-			const float input_y_draw = height_drawn + (UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT - float_input_box.height) / 2;
-
-			const bool highlight = float_input_box.is_under_point(mouse_content_pos);
-			float_input_box.set_position(FloatPos(input_x_draw, input_y_draw));
-			float_input_box.attach_float_value(std::dynamic_pointer_cast<FloatSocketValue>(selected_param_ptr->value));
-			float_input_box.draw(draw_context, highlight);
-
-			height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
-		}
-		else if (selected_param_ptr->socket_type == SocketType::VECTOR) {
+		if (selected_param_ptr->socket_type == SocketType::VECTOR) {
 			vector_x_input_box.active = true;
 			vector_y_input_box.active = true;
 			vector_z_input_box.active = true;

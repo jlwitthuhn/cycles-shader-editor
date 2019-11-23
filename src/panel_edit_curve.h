@@ -14,7 +14,7 @@ namespace cse {
 	class CurveSocketValue;
 	class SocketValue;
 
-	class EditCurvePanel : public ParamEditorPanel {
+	class EditCurvePanel : public EditParamPanel {
 	public:
 		EditCurvePanel(float width);
 

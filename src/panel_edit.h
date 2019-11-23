@@ -9,10 +9,10 @@ struct NVGcontext;
 namespace cse {
 	class SocketValue;
 
-	class ParamEditorPanel {
+	class EditParamPanel {
 	public:
-		ParamEditorPanel(float width);
-		virtual ~ParamEditorPanel() {}
+		EditParamPanel(float width);
+		virtual ~EditParamPanel() {}
 
 		float get_width() const;
 		float get_height() const;

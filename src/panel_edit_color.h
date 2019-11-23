@@ -13,7 +13,7 @@ namespace cse {
 	class ColorSocketValue;
 	class SocketValue;
 
-	class EditColorPanel : public ParamEditorPanel {
+	class EditColorPanel : public EditParamPanel {
 	public:
 		EditColorPanel(float width);
 

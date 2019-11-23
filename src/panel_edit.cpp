@@ -1,32 +1,32 @@
 #include "panel_edit.h"
 
-cse::ParamEditorPanel::ParamEditorPanel(const float width) :
+cse::EditParamPanel::EditParamPanel(const float width) :
 	panel_width(width)
 {
 
 }
 
-float cse::ParamEditorPanel::get_width() const
+float cse::EditParamPanel::get_width() const
 {
 	return panel_width;
 }
 
-float cse::ParamEditorPanel::get_height() const
+float cse::EditParamPanel::get_height() const
 {
 	return panel_height;
 }
 
-void cse::ParamEditorPanel::pre_draw()
+void cse::EditParamPanel::pre_draw()
 {
 	// Stub so subclasses can optionally override
 }
 
-void cse::ParamEditorPanel::set_mouse_local_position(const FloatPos local_pos)
+void cse::EditParamPanel::set_mouse_local_position(const FloatPos local_pos)
 {
 	mouse_local_pos = local_pos;
 }
 
-bool cse::ParamEditorPanel::is_mouse_over() const
+bool cse::EditParamPanel::is_mouse_over() const
 {
 	if (is_active() == false) {
 		return false;
@@ -48,40 +48,40 @@ bool cse::ParamEditorPanel::is_mouse_over() const
 	return false;
 }
 
-bool cse::ParamEditorPanel::should_capture_input() const
+bool cse::EditParamPanel::should_capture_input() const
 {
 	return false;
 }
 
-void cse::ParamEditorPanel::handle_mouse_button(int, int, int)
+void cse::EditParamPanel::handle_mouse_button(int, int, int)
 {
 	// Stub
 }
 
-void cse::ParamEditorPanel::handle_key(int, int, int, int)
+void cse::EditParamPanel::handle_key(int, int, int, int)
 {
 	// Stub
 }
 
-void cse::ParamEditorPanel::handle_character(unsigned int)
+void cse::EditParamPanel::handle_character(unsigned int)
 {
 	// Stub
 }
 
-void cse::ParamEditorPanel::deselect_input_box()
+void cse::EditParamPanel::deselect_input_box()
 {
 	// Stub
 }
 
 
-bool cse::ParamEditorPanel::should_push_undo_state()
+bool cse::EditParamPanel::should_push_undo_state()
 {
 	bool result = request_undo_push;
 	request_undo_push = false;
 	return result;
 }
 
-void cse::ParamEditorPanel::reset()
+void cse::EditParamPanel::reset()
 {
 	// Stub
 }

@@ -7,11 +7,11 @@
 #include "widget_multi_input.h"
 
 namespace cse {
-	class IntSocketValue;
+	class FloatSocketValue;
 
-	class EditIntPanel : public EditParamPanel {
+	class EditFloatPanel : public EditParamPanel {
 	public:
-		EditIntPanel(float width);
+		EditFloatPanel(float width);
 
 		virtual bool is_active() const override;
 
@@ -31,7 +31,7 @@ namespace cse {
 		virtual bool should_push_undo_state() override;
 
 	private:
-		std::weak_ptr<IntSocketValue> attached_int;
+		std::weak_ptr<FloatSocketValue> attached_float;
 
 		float input_widget_pos = 0.0f;
 		MultiInputWidget input_widget;

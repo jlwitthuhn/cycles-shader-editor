@@ -1,4 +1,4 @@
-#include "panel_edit_int.h"
+#include "panel_edit_float.h"
 
 #include <GLFW/glfw3.h>
 #include <nanovg.h>
@@ -6,24 +6,24 @@
 #include "gui_sizes.h"
 #include "sockets.h"
 
-cse::EditIntPanel::EditIntPanel(const float width) :
+cse::EditFloatPanel::EditFloatPanel(const float width) :
 	EditParamPanel(width),
 	input_widget(width)
 {
 
 }
 
-bool cse::EditIntPanel::is_active() const
+bool cse::EditFloatPanel::is_active() const
 {
-	return static_cast<bool>(attached_int.lock());
+	return static_cast<bool>(attached_float.lock());
 }
 
-void cse::EditIntPanel::pre_draw()
+void cse::EditFloatPanel::pre_draw()
 {
 
 }
 
-float cse::EditIntPanel::draw(NVGcontext* const draw_context)
+float cse::EditFloatPanel::draw(NVGcontext* const draw_context)
 {
 	float height_drawn = 0.0f;
 
@@ -41,7 +41,7 @@ float cse::EditIntPanel::draw(NVGcontext* const draw_context)
 	return panel_height;
 }
 
-void cse::EditIntPanel::set_mouse_local_position(const FloatPos local_pos)
+void cse::EditFloatPanel::set_mouse_local_position(const FloatPos local_pos)
 {
 	EditParamPanel::set_mouse_local_position(local_pos);
 
@@ -50,56 +50,56 @@ void cse::EditIntPanel::set_mouse_local_position(const FloatPos local_pos)
 	input_widget.set_mouse_local_position(input_widget_pos);
 }
 
-bool cse::EditIntPanel::should_capture_input() const
+bool cse::EditFloatPanel::should_capture_input() const
 {
 	bool result = false;
 	result = result || input_widget.should_capture_input();
 	return result;
 }
 
-void cse::EditIntPanel::handle_mouse_button(const int button, const int action, const int mods)
+void cse::EditFloatPanel::handle_mouse_button(const int button, const int action, const int mods)
 {
 	input_widget.handle_mouse_button(button, action, mods);
 }
 
-void cse::EditIntPanel::handle_key(const int key, int scancode, const int action, const int mods)
+void cse::EditFloatPanel::handle_key(const int key, int scancode, const int action, const int mods)
 {
 	if (input_widget.should_capture_input()) {
 		input_widget.handle_key(key, scancode, action, mods);
 	}
 }
 
-void cse::EditIntPanel::handle_character(const unsigned int codepoint)
+void cse::EditFloatPanel::handle_character(const unsigned int codepoint)
 {
 	if (input_widget.should_capture_input()) {
 		input_widget.handle_character(codepoint);
 	}
 }
 
-void cse::EditIntPanel::set_attached_value(const std::weak_ptr<SocketValue> socket_value)
+void cse::EditFloatPanel::set_attached_value(const std::weak_ptr<SocketValue> socket_value)
 {
 	if (auto socket_value_ptr = socket_value.lock()) {
-		if (socket_value_ptr->get_type() == SocketType::INT) {
-			const auto int_value_ptr = std::dynamic_pointer_cast<IntSocketValue>(socket_value_ptr);
-			if (attached_int.lock() != int_value_ptr) {
+		if (socket_value_ptr->get_type() == SocketType::FLOAT) {
+			const auto float_value_ptr = std::dynamic_pointer_cast<FloatSocketValue>(socket_value_ptr);
+			if (attached_float.lock() != float_value_ptr) {
 				reset();
-				attached_int = int_value_ptr;
+				attached_float = float_value_ptr;
 				input_widget.clear_sockets();
-				input_widget.add_socket_input(attached_int);
+				input_widget.add_socket_input(attached_float);
 			}
 			return;
 		}
 	}
-	attached_int = std::weak_ptr<IntSocketValue>();
+	attached_float = std::weak_ptr<FloatSocketValue>();
 	input_widget.clear_sockets();
 }
 
-void cse::EditIntPanel::deselect_input_box()
+void cse::EditFloatPanel::deselect_input_box()
 {
 	request_undo_push = request_undo_push || input_widget.complete_input();
 }
 
-bool cse::EditIntPanel::should_push_undo_state()
+bool cse::EditFloatPanel::should_push_undo_state()
 {
 	bool result = false;
 	result = result || EditParamPanel::should_push_undo_state();

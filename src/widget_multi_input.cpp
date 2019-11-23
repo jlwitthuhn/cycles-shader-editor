@@ -8,12 +8,19 @@
 static std::shared_ptr<cse::BaseInputBox> get_input_box_for_value(const std::shared_ptr<cse::SocketValue>& socket_value)
 {
 	if (const auto as_int = std::dynamic_pointer_cast<cse::IntSocketValue>(socket_value)) {
-		const auto result = std::make_shared<cse::IntInputBox>(UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH_SMALL, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT);
+		const auto result = std::make_shared<cse::IntInputBox>(UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT);
 		result->attach_int_value(as_int);
 		return result;
 	}
-	// Unsupported type, return empty ptr
-	return std::shared_ptr<cse::BaseInputBox>();
+	else if (const auto as_float = std::dynamic_pointer_cast<cse::FloatSocketValue>(socket_value)) {
+		const auto result = std::make_shared<cse::FloatInputBox>(UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT);
+		result->attach_float_value(as_float);
+		return result;
+	}
+	else {
+		// Unsupported type, return empty ptr
+		return std::shared_ptr<cse::BaseInputBox>();
+	}
 }
 
 cse::MultiInputWidget::MultiInputWidget(const float width) : width(width)
