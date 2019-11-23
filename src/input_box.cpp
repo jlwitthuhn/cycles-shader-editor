@@ -7,10 +7,11 @@
 
 #include <nanovg.h>
 
+#include "gui_sizes.h"
 #include "sockets.h"
 #include "util_parse.h"
 
-const float INPUT_CORNER_RADIUS = 3.0f;
+const float INPUT_CORNER_RADIUS = 1.0f;
 
 cse::BaseInputBox::BaseInputBox(const float width, const float height)
 {
@@ -24,15 +25,15 @@ void cse::BaseInputBox::draw(NVGcontext* const draw_context, const bool hightlig
 	nvgBeginPath(draw_context);
 	nvgRoundedRect(draw_context, position.get_x(), position.get_y(), width, height, INPUT_CORNER_RADIUS);
 	if (hightlight) {
-		nvgFillColor(draw_context, nvgRGBA(235, 235, 235, 255));
+		nvgFillColor(draw_context, nvgRGBA(230, 230, 230, 255));
 	}
 	else {
-		nvgFillColor(draw_context, nvgRGBA(225, 225, 225, 255));
+		nvgFillColor(draw_context, nvgRGBA(205, 205, 205, 255));
 	}
 	nvgFill(draw_context);
 
 	// Font settings
-	nvgFontSize(draw_context, 18.0f);
+	nvgFontSize(draw_context, UI_FONT_SIZE_NORMAL);
 	nvgFontFace(draw_context, "sans");
 	nvgTextAlign(draw_context, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
 	nvgFontBlur(draw_context, 0.0f);
@@ -48,14 +49,17 @@ void cse::BaseInputBox::draw(NVGcontext* const draw_context, const bool hightlig
 	}
 	nvgText(draw_context, position.get_x() + width / 2, position.get_y() + height / 2, socket_text_stream.str().c_str(), nullptr);
 
+	// Outline
+	nvgBeginPath(draw_context);
+	nvgRoundedRect(draw_context, position.get_x(), position.get_y(), width, height, INPUT_CORNER_RADIUS);
 	if (selected) {
-		// Outline
-		nvgBeginPath(draw_context);
-		nvgRoundedRect(draw_context, position.get_x(), position.get_y(), width, height, INPUT_CORNER_RADIUS);
-		nvgStrokeColor(draw_context, nvgRGBA(0, 0, 0, 255));
-		nvgStrokeWidth(draw_context, 1.0f);
-		nvgStroke(draw_context);
+		nvgStrokeColor(draw_context, nvgRGBA(255, 255, 255, 255));
 	}
+	else {
+		nvgStrokeColor(draw_context, nvgRGBA(20, 20, 20, 255));
+	}
+	nvgStrokeWidth(draw_context, 1.0f);
+	nvgStroke(draw_context);
 }
 
 void cse::BaseInputBox::set_position(const FloatPos parent_position)

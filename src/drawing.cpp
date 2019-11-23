@@ -17,9 +17,9 @@ void cse::Drawing::draw_button(
 	const bool pressed
 	)
 {
-	const unsigned char gradient_alpha = enabled ? 31 : 15;
-	const unsigned char button_alpha = enabled ? 127 : 63;
-	const unsigned char label_alpha = enabled ? 255 : 127;
+	const unsigned char gradient_alpha = enabled ? 41 : 20;
+	const unsigned char button_alpha = enabled ? 170 : 95;
+	const unsigned char label_alpha = enabled ? 255 : 100;
 
 	const float x_pos = pos.get_x();
 	const float y_pos = pos.get_y();
