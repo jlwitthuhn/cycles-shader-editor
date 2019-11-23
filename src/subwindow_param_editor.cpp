@@ -199,6 +199,7 @@ void cse::ParamEditorSubwindow::update_selection(const std::weak_ptr<const Selec
 		if (selected_param.lock() != selection_ptr->socket.lock()) {
 			deselect_input_box();
 			selected_param = selection_ptr->socket;
+			content_height = 0.0f;
 		}
 	}
 }
