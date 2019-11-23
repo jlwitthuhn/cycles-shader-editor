@@ -8,9 +8,9 @@
 
 cse::EditIntPanel::EditIntPanel(const float width) :
 	ParamEditorPanel(width),
-	int_input_box(UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH_SMALL, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT)
+	input_widget(width)
 {
-	int_input_box.displayed = true;
+
 }
 
 bool cse::EditIntPanel::is_active() const
@@ -20,16 +20,10 @@ bool cse::EditIntPanel::is_active() const
 
 void cse::EditIntPanel::pre_draw()
 {
-	if (is_active() == false) {
-		return;
-	}
 
-	if (const auto attached_int_ptr = attached_int.lock()) {
-		int_input_box.attach_int_value(attached_int_ptr);
-	}
 }
 
-float cse::EditIntPanel::draw(NVGcontext* draw_context)
+float cse::EditIntPanel::draw(NVGcontext* const draw_context)
 {
 	float height_drawn = 0.0f;
 
@@ -37,69 +31,52 @@ float cse::EditIntPanel::draw(NVGcontext* draw_context)
 		return height_drawn;
 	}
 
-	nvgFontSize(draw_context, UI_FONT_SIZE_NORMAL);
-	nvgFontFace(draw_context, "sans");
-	nvgTextAlign(draw_context, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-	nvgFontBlur(draw_context, 0.0f);
-	nvgFillColor(draw_context, nvgRGBA(0, 0, 0, 255));
-
-	const std::string value_text = "Value:";
-	nvgText(draw_context, panel_width / 3, height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT / 2, value_text.c_str(), nullptr);
-
-	const float input_x_draw = (2.0f * panel_width / 3) - (int_input_box.width / 2);
-	const float input_y_draw = height_drawn + (UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT - int_input_box.height) / 2;
-
-	const bool highlight = int_input_box.is_under_point(mouse_local_pos);
-	int_input_box.set_position(FloatPos(input_x_draw, input_y_draw));
-	int_input_box.draw(draw_context, highlight);
-
-	height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
+	nvgSave(draw_context);
+	nvgTranslate(draw_context, 0.0f, height_drawn);
+	input_widget_pos = height_drawn;
+	height_drawn += input_widget.draw(draw_context);
+	nvgRestore(draw_context);
 
 	panel_height = height_drawn;
 	return panel_height;
 }
 
+void cse::EditIntPanel::set_mouse_local_position(const FloatPos local_pos)
+{
+	ParamEditorPanel::set_mouse_local_position(local_pos);
+
+	const float input_widget_y = input_widget_pos;
+	const FloatPos input_widget_pos = local_pos - FloatPos(0.0f, input_widget_y);
+	input_widget.set_mouse_local_position(input_widget_pos);
+}
+
 bool cse::EditIntPanel::should_capture_input() const
 {
-	return int_input_box.should_capture_input();
+	bool result = false;
+	result = result || input_widget.should_capture_input();
+	return result;
 }
 
-void cse::EditIntPanel::handle_mouse_button(int button, int action, int /*mods*/)
+void cse::EditIntPanel::handle_mouse_button(const int button, const int action, const int mods)
 {
-	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-		if (int_input_box.is_under_point(mouse_local_pos)) {
-			deselect_input_box();
-			int_input_box.begin_edit();
-		}
-		else {
-			int_input_box.complete_edit();
-		}
-	}
+	input_widget.handle_mouse_button(button, action, mods);
 }
 
-void cse::EditIntPanel::handle_key(const int key, int /*scancode*/, const int action, int /*mods*/)
+void cse::EditIntPanel::handle_key(const int key, int scancode, const int action, const int mods)
 {
-	if (int_input_box.should_capture_input()) {
-		if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-			int_input_box.cancel_edit();
-		}
-		else if (key == GLFW_KEY_ENTER && action == GLFW_PRESS) {
-			deselect_input_box();
-		}
-		else if (key == GLFW_KEY_BACKSPACE && action == GLFW_PRESS) {
-			int_input_box.backspace();
-		}
+	if (input_widget.should_capture_input()) {
+		input_widget.handle_key(key, scancode, action, mods);
 	}
 }
 
 void cse::EditIntPanel::handle_character(const unsigned int codepoint)
 {
-	if (int_input_box.should_capture_input()) {
-		int_input_box.handle_character(codepoint);
+	if (input_widget.should_capture_input()) {
+		input_widget.handle_character(codepoint);
 	}
 }
 
-void cse::EditIntPanel::set_attached_value(std::weak_ptr<SocketValue> socket_value)
+void cse::EditIntPanel::set_attached_value(const std::weak_ptr<SocketValue> socket_value)
 {
 	if (auto socket_value_ptr = socket_value.lock()) {
 		if (socket_value_ptr->get_type() == SocketType::INT) {
@@ -107,17 +84,24 @@ void cse::EditIntPanel::set_attached_value(std::weak_ptr<SocketValue> socket_val
 			if (attached_int.lock() != int_value_ptr) {
 				reset();
 				attached_int = int_value_ptr;
+				input_widget.clear_sockets();
+				input_widget.add_socket_input(attached_int);
 			}
 			return;
 		}
 	}
 	attached_int = std::weak_ptr<IntSocketValue>();
+	input_widget.clear_sockets();
 }
 
 void cse::EditIntPanel::deselect_input_box()
 {
-	if (int_input_box.should_capture_input()) {
-		int_input_box.complete_edit();
-		request_undo_push = true;
-	}
+	request_undo_push = request_undo_push || input_widget.complete_input();
+}
+
+bool cse::EditIntPanel::should_push_undo_state()
+{
+	bool result = ParamEditorPanel::should_push_undo_state();
+	result = result || input_widget.should_push_undo_state();
+	return result;
 }

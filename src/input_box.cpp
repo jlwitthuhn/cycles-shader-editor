@@ -65,7 +65,7 @@ void cse::BaseInputBox::set_position(const FloatPos parent_position)
 
 bool cse::BaseInputBox::is_under_point(const FloatPos parent_local_pos)
 {
-	if (displayed == false) {
+	if (active == false) {
 		return false;
 	}
 
@@ -106,16 +106,17 @@ void cse::BaseInputBox::begin_edit()
 	selected = true;
 }
 
-void cse::BaseInputBox::complete_edit()
+bool cse::BaseInputBox::complete_edit()
 {
 	const std::string user_input = input_stream.str();
 	selected = false;
 	if (user_input == "") {
-		return;
+		return false;
 	}
 
-	set_value_from_input_stream();
+	const bool result = set_value_from_input_stream();
 	input_stream = std::stringstream();
+	return result;
 }
 
 void cse::BaseInputBox::cancel_edit()
@@ -149,17 +150,22 @@ std::string cse::IntInputBox::get_value_as_string()
 	return std::string();
 }
 
-void cse::IntInputBox::set_value_from_input_stream()
+bool cse::IntInputBox::set_value_from_input_stream()
 {
 	if (auto socket_value_ptr = socket_value.lock()) {
 		const std::string user_input = input_stream.str();
 		try {
-			int val = std::stoi(user_input);
-			socket_value_ptr->set_value(val);
+			const int old_val = socket_value_ptr->get_value();
+			const int new_val = std::stoi(user_input);
+			if (old_val != new_val) {
+				socket_value_ptr->set_value(new_val);
+				return true;
+			}
 		}
 		catch (std::invalid_argument&) {}
 		catch (std::out_of_range&) {}
 	}
+	return false;
 }
 
 cse::FloatInputBox::FloatInputBox(const float width, const float height) : BaseInputBox(width, height)
@@ -197,16 +203,21 @@ std::string cse::FloatInputBox::get_value_as_string()
 	return std::string();
 }
 
-void cse::FloatInputBox::set_value_from_input_stream()
+bool cse::FloatInputBox::set_value_from_input_stream()
 {
 	if (auto socket_value_ptr = socket_value.lock()) {
 		const std::string user_input = input_stream.str();
-
 		try {
-			float val = locale_safe_stof(user_input);
-			socket_value_ptr->set_value(val);
+			const float old_val = socket_value_ptr->get_value();
+			const float new_val = locale_safe_stof(user_input);
+			socket_value_ptr->set_value(new_val);
+			if (old_val != new_val) {
+				socket_value_ptr->set_value(new_val);
+				return true;
+			}
 		}
 		catch (std::invalid_argument&) {}
 		catch (std::out_of_range&) {}
 	}
+	return false;
 }

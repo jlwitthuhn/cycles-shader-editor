@@ -25,7 +25,7 @@ namespace cse {
 		void backspace();
 
 		void begin_edit();
-		void complete_edit();
+		bool complete_edit();
 		void cancel_edit();
 
 		bool should_capture_input() const;
@@ -33,11 +33,11 @@ namespace cse {
 		float width;
 		float height;
 
-		bool displayed = false;
+		bool active = false;
 
 	protected:
 		virtual std::string get_value_as_string() = 0;
-		virtual void set_value_from_input_stream() = 0;
+		virtual bool set_value_from_input_stream() = 0;
 
 		// Position of this UI element, relative to parent component
 		FloatPos position;
@@ -54,8 +54,8 @@ namespace cse {
 		void attach_int_value(std::weak_ptr<IntSocketValue> socket_value);
 
 	private:
-		virtual std::string get_value_as_string();
-		virtual void set_value_from_input_stream();
+		virtual std::string get_value_as_string() override;
+		virtual bool set_value_from_input_stream() override;
 
 		std::weak_ptr<IntSocketValue> socket_value;
 	};
@@ -69,8 +69,8 @@ namespace cse {
 		float get_float_value();
 
 	private:
-		virtual std::string get_value_as_string();
-		virtual void set_value_from_input_stream();
+		virtual std::string get_value_as_string() override;
+		virtual bool set_value_from_input_stream() override;
 
 		std::weak_ptr<FloatSocketValue> socket_value;
 	};

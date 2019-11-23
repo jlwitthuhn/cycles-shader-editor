@@ -20,9 +20,9 @@ cse::EditColorPanel::EditColorPanel(const float width) :
 	hue_bar_click_target(FloatPos(), FloatPos())
 {
 	// These are always displayed within this panel
-	color_r_input_box.displayed = true;
-	color_g_input_box.displayed = true;
-	color_b_input_box.displayed = true;
+	color_r_input_box.active = true;
+	color_g_input_box.active = true;
+	color_b_input_box.active = true;
 }
 
 bool cse::EditColorPanel::is_active() const

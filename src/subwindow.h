@@ -26,7 +26,7 @@ namespace cse {
 
 		virtual bool is_mouse_over() const;
 		virtual bool is_mouse_over_header() const;
-		virtual void set_mouse_position(FloatPos screen_position, float max_pos_y);
+		virtual void set_mouse_position(FloatPos local_position, float max_pos_y);
 
 		// Returns true if this subwindow wants to capture keyboard input
 		virtual bool should_capture_input() const;

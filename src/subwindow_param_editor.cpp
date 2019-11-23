@@ -19,7 +19,7 @@
 #include "selection.h"
 #include "sockets.h"
 
-cse::ParamEditorSubwindow::ParamEditorSubwindow(FloatPos screen_position) :
+cse::ParamEditorSubwindow::ParamEditorSubwindow(const FloatPos screen_position) :
 	NodeEditorSubwindow(screen_position, "Parameter Editor"),
 	int_input_box(UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH_SMALL, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT),
 	float_input_box(UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH_SMALL, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT),
@@ -45,7 +45,7 @@ void cse::ParamEditorSubwindow::pre_draw()
 	}
 }
 
-void cse::ParamEditorSubwindow::set_mouse_position(FloatPos local_position, float max_pos_y)
+void cse::ParamEditorSubwindow::set_mouse_position(const FloatPos local_position, const float max_pos_y)
 {
 	NodeEditorSubwindow::set_mouse_position(local_position, max_pos_y);
 	for (const auto& this_panel : panels) {
@@ -55,7 +55,7 @@ void cse::ParamEditorSubwindow::set_mouse_position(FloatPos local_position, floa
 	}
 }
 
-void cse::ParamEditorSubwindow::handle_mouse_button(int button, int action, int mods)
+void cse::ParamEditorSubwindow::handle_mouse_button(const int button, const int action, const int mods)
 {
 	bool mouse_is_over_panel = false;
 	for (const auto& this_panel : panels) {
@@ -150,7 +150,7 @@ void cse::ParamEditorSubwindow::handle_key(const int key, const int scancode, co
 	}
 }
 
-void cse::ParamEditorSubwindow::handle_character(unsigned int codepoint)
+void cse::ParamEditorSubwindow::handle_character(const unsigned int codepoint)
 {
 	if (selected_input != nullptr) {
 		if (selected_input->should_capture_input()) {
@@ -216,17 +216,17 @@ bool cse::ParamEditorSubwindow::should_capture_input() const
 	return false;
 }
 
-void cse::ParamEditorSubwindow::draw_content(NVGcontext* draw_context)
+void cse::ParamEditorSubwindow::draw_content(NVGcontext* const draw_context)
 {
 	float height_drawn = 0.0f;
 
 	auto selected_param_ptr = selected_param.lock();
 	if (selected_param_ptr && selected_param_ptr->io_type == SocketIOType::INPUT) {
-		int_input_box.displayed = false;
-		float_input_box.displayed = false;
-		vector_x_input_box.displayed = false;
-		vector_y_input_box.displayed = false;
-		vector_z_input_box.displayed = false;
+		int_input_box.active = false;
+		float_input_box.active = false;
+		vector_x_input_box.active = false;
+		vector_y_input_box.active = false;
+		vector_z_input_box.active = false;
 		enum_targets.clear();
 		bool_targets.clear();
 
@@ -294,7 +294,7 @@ void cse::ParamEditorSubwindow::draw_content(NVGcontext* draw_context)
 		panel_start_y = height_drawn;
 
 		if (selected_param_ptr->socket_type == SocketType::FLOAT) {
-			float_input_box.displayed = true;
+			float_input_box.active = true;
 
 			nvgFontSize(draw_context, UI_FONT_SIZE_NORMAL);
 			nvgFontFace(draw_context, "sans");
@@ -316,9 +316,9 @@ void cse::ParamEditorSubwindow::draw_content(NVGcontext* draw_context)
 			height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
 		}
 		else if (selected_param_ptr->socket_type == SocketType::VECTOR) {
-			vector_x_input_box.displayed = true;
-			vector_y_input_box.displayed = true;
-			vector_z_input_box.displayed = true;
+			vector_x_input_box.active = true;
+			vector_y_input_box.active = true;
+			vector_z_input_box.active = true;
 
 			const std::shared_ptr<Float3SocketValue> float3_socket_val = std::dynamic_pointer_cast<Float3SocketValue>(selected_param_ptr->value);
 
