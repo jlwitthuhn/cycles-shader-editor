@@ -14,7 +14,7 @@ namespace cse {
 	public:
 		MultiInputWidget(float width);
 
-		bool add_socket_input(std::weak_ptr<SocketValue> socket_value);
+		bool add_socket_input(std::string label, std::weak_ptr<SocketValue> socket_value);
 		void clear_sockets();
 
 		bool complete_input();
@@ -33,9 +33,16 @@ namespace cse {
 	private:
 		const float width;
 
-		typedef std::pair<std::weak_ptr<SocketValue>, std::shared_ptr<BaseInputBox>> socket_box_pair;
+		class InputRow {
+		public:
+			InputRow(std::string label, std::weak_ptr<SocketValue> socket_value, std::shared_ptr<cse::BaseInputBox> input_box);
 
-		std::vector<socket_box_pair> sockets;
+			const std::string label;
+			const std::weak_ptr<SocketValue> socket_value;
+			const std::shared_ptr<cse::BaseInputBox> input_box;
+		};
+
+		std::vector<InputRow> sockets;
 
 		FloatPos mouse_local_pos;
 

@@ -82,10 +82,9 @@ void cse::EditFloatPanel::set_attached_value(const std::weak_ptr<SocketValue> so
 		if (socket_value_ptr->get_type() == SocketType::FLOAT) {
 			const auto float_value_ptr = std::dynamic_pointer_cast<FloatSocketValue>(socket_value_ptr);
 			if (attached_float.lock() != float_value_ptr) {
-				reset();
 				attached_float = float_value_ptr;
 				input_widget.clear_sockets();
-				input_widget.add_socket_input(attached_float);
+				input_widget.add_socket_input("Value:", attached_float);
 			}
 			return;
 		}

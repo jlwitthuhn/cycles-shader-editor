@@ -29,8 +29,9 @@ static constexpr float UI_SUBWIN_NODE_LIST_NODE_BUTTON_HEIGHT = 20.0f;
 
 static constexpr float UI_SUBWIN_PARAM_EDIT_WIDTH = 240.0f;
 static constexpr float UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT = 22.0f;
-static constexpr float UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH = 96.0f;
+static constexpr float UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH = 80.0f;
 static constexpr float UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT = 18.0f;
+static constexpr float UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HPAD = 12.0f;
 static constexpr float UI_SUBWIN_PARAM_EDIT_SEPARATOR_HPAD = 8.0f;
 static constexpr float UI_SUBWIN_PARAM_EDIT_SEPARATOR_VPAD = 4.0f;
 static constexpr float UI_SUBWIN_PARAM_EDIT_SLIDER_HPAD = 8.0f;

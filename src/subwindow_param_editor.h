@@ -40,25 +40,17 @@ namespace cse {
 	protected:
 		virtual void draw_content(NVGcontext* draw_context) override;
 
-		void select_input_box(BaseInputBox* input);
-
 		bool is_bool_target_under_mouse();
 		bool is_enum_target_under_mouse();
 		void click_bool_target_under_mouse();
 		void click_enum_target_under_mouse();
 
 		std::weak_ptr<NodeSocket> selected_param;
-		BaseInputBox* selected_input = nullptr;
 
 		float panel_start_y = 0;
 
 		// Panels
 		std::list<std::shared_ptr<EditParamPanel>> panels;
-
-		// Vector stuff
-		FloatInputBox vector_x_input_box;
-		FloatInputBox vector_y_input_box;
-		FloatInputBox vector_z_input_box;
 
 		// Enum stuff
 		std::vector<StringEnumArea> enum_targets;

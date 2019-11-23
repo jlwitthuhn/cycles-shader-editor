@@ -17,20 +17,19 @@
 #include "panel_edit_curve.h"
 #include "panel_edit_float.h"
 #include "panel_edit_int.h"
+#include "panel_edit_vector.h"
 #include "selection.h"
 #include "sockets.h"
 
 cse::ParamEditorSubwindow::ParamEditorSubwindow(const FloatPos screen_position) :
-	NodeEditorSubwindow(screen_position, "Parameter Editor"),
-	vector_x_input_box(UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT),
-	vector_y_input_box(UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT),
-	vector_z_input_box(UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT)
+	NodeEditorSubwindow(screen_position, "Parameter Editor")
 {
 	subwindow_width = UI_SUBWIN_PARAM_EDIT_WIDTH;
 	panels.push_back(std::make_shared<EditColorPanel>(UI_SUBWIN_PARAM_EDIT_WIDTH));
 	panels.push_back(std::make_shared<EditCurvePanel>(UI_SUBWIN_PARAM_EDIT_WIDTH));
 	panels.push_back(std::make_shared<EditFloatPanel>(UI_SUBWIN_PARAM_EDIT_WIDTH));
 	panels.push_back(std::make_shared<EditIntPanel>(UI_SUBWIN_PARAM_EDIT_WIDTH));
+	panels.push_back(std::make_shared<EditVectorPanel>(UI_SUBWIN_PARAM_EDIT_WIDTH));
 }
 
 void cse::ParamEditorSubwindow::pre_draw()
@@ -81,21 +80,6 @@ void cse::ParamEditorSubwindow::handle_mouse_button(const int button, const int 
 			}
 		}
 	}
-	else if (vector_x_input_box.is_under_point(mouse_content_pos)) {
-		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-			select_input_box(&vector_x_input_box);
-		}
-	}
-	else if (vector_y_input_box.is_under_point(mouse_content_pos)) {
-		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-			select_input_box(&vector_y_input_box);
-		}
-	}
-	else if (vector_z_input_box.is_under_point(mouse_content_pos)) {
-		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-			select_input_box(&vector_z_input_box);
-		}
-	}
 	else if (is_enum_target_under_mouse()) {
 		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
 			click_enum_target_under_mouse();
@@ -107,7 +91,7 @@ void cse::ParamEditorSubwindow::handle_mouse_button(const int button, const int 
 		}
 	}
 	else {
-		if (action == GLFW_PRESS) {
+		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
 			deselect_input_box();
 		}
 	}
@@ -121,18 +105,6 @@ void cse::ParamEditorSubwindow::handle_mouse_button(const int button, const int 
 
 void cse::ParamEditorSubwindow::handle_key(const int key, const int scancode, const int action, const int mods)
 {
-	if (selected_input != nullptr) {
-		if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-			selected_input->cancel_edit();
-		}
-		else if (key == GLFW_KEY_ENTER && action == GLFW_PRESS) {
-			selected_input->complete_edit();
-			request_undo_stack_push = true;
-		}
-		else if (key == GLFW_KEY_BACKSPACE && action == GLFW_PRESS) {
-			selected_input->backspace();
-		}
-	}
 	for (const auto& this_panel : panels) {
 		if (this_panel->should_capture_input()) {
 			this_panel->handle_key(key, scancode, action, mods);
@@ -142,11 +114,6 @@ void cse::ParamEditorSubwindow::handle_key(const int key, const int scancode, co
 
 void cse::ParamEditorSubwindow::handle_character(const unsigned int codepoint)
 {
-	if (selected_input != nullptr) {
-		if (selected_input->should_capture_input()) {
-			selected_input->handle_character(codepoint);
-		}
-	}
 	for (const auto& this_panel : panels) {
 		if (this_panel->should_capture_input()) {
 			this_panel->handle_character(codepoint);
@@ -156,7 +123,6 @@ void cse::ParamEditorSubwindow::handle_character(const unsigned int codepoint)
 
 void cse::ParamEditorSubwindow::deselect_input_box()
 {
-	select_input_box(nullptr);
 	for (const auto& this_panel : panels) {
 		this_panel->deselect_input_box();
 	}
@@ -196,9 +162,6 @@ void cse::ParamEditorSubwindow::update_selection(const std::weak_ptr<const Selec
 
 bool cse::ParamEditorSubwindow::should_capture_input() const
 {
-	if (selected_input != nullptr && selected_input->should_capture_input()) {
-		return true;
-	}
 	for (const auto& this_panel : panels) {
 		if (this_panel->should_capture_input()) {
 			return true;
@@ -213,9 +176,6 @@ void cse::ParamEditorSubwindow::draw_content(NVGcontext* const draw_context)
 
 	auto selected_param_ptr = selected_param.lock();
 	if (selected_param_ptr && selected_param_ptr->io_type == SocketIOType::INPUT) {
-		vector_x_input_box.active = false;
-		vector_y_input_box.active = false;
-		vector_z_input_box.active = false;
 		enum_targets.clear();
 		bool_targets.clear();
 
@@ -282,57 +242,7 @@ void cse::ParamEditorSubwindow::draw_content(NVGcontext* const draw_context)
 
 		panel_start_y = height_drawn;
 
-		if (selected_param_ptr->socket_type == SocketType::VECTOR) {
-			vector_x_input_box.active = true;
-			vector_y_input_box.active = true;
-			vector_z_input_box.active = true;
-
-			const std::shared_ptr<Float3SocketValue> float3_socket_val = std::dynamic_pointer_cast<Float3SocketValue>(selected_param_ptr->value);
-
-			nvgFontSize(draw_context, UI_FONT_SIZE_NORMAL);
-			nvgFontFace(draw_context, "sans");
-			nvgTextAlign(draw_context, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-			nvgFontBlur(draw_context, 0.0f);
-			nvgFillColor(draw_context, nvgRGBA(0, 0, 0, 255));
-
-			const std::string x_label_text = "X:";
-			nvgText(draw_context, subwindow_width / 3, height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT / 2, x_label_text.c_str(), nullptr);
-
-			const float input_x_draw = (2.0f * subwindow_width / 3) - (vector_x_input_box.width / 2);
-			float input_y_draw = height_drawn + (UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT - vector_x_input_box.height) / 2;
-
-			const bool highlight_x = vector_x_input_box.is_under_point(mouse_content_pos);
-			vector_x_input_box.set_position(FloatPos(input_x_draw, input_y_draw));
-			vector_x_input_box.attach_float_value(float3_socket_val->x_socket_val);
-			vector_x_input_box.draw(draw_context, highlight_x);
-
-			height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
-
-			const std::string y_label_text = "Y:";
-			nvgText(draw_context, subwindow_width / 3, height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT / 2, y_label_text.c_str(), nullptr);
-
-			input_y_draw = height_drawn + (UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT - vector_y_input_box.height) / 2;
-
-			const bool highlight_y = vector_y_input_box.is_under_point(mouse_content_pos);
-			vector_y_input_box.set_position(FloatPos(input_x_draw, input_y_draw));
-			vector_y_input_box.attach_float_value(float3_socket_val->y_socket_val);
-			vector_y_input_box.draw(draw_context, highlight_y);
-
-			height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
-
-			const std::string z_label_text = "Z:";
-			nvgText(draw_context, subwindow_width / 3, height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT / 2, z_label_text.c_str(), nullptr);
-
-			input_y_draw = height_drawn + (UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT - vector_z_input_box.height) / 2;
-
-			const bool highlight_z = vector_z_input_box.is_under_point(mouse_content_pos);
-			vector_z_input_box.set_position(FloatPos(input_x_draw, input_y_draw));
-			vector_z_input_box.attach_float_value(float3_socket_val->z_socket_val);
-			vector_z_input_box.draw(draw_context, highlight_z);
-
-			height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
-		}
-		else if (selected_param_ptr->socket_type == SocketType::STRING_ENUM) {
+		if (selected_param_ptr->socket_type == SocketType::STRING_ENUM) {
 			const auto str_enum_value = std::dynamic_pointer_cast<StringEnumSocketValue>(selected_param_ptr->value);
 
 			nvgFontSize(draw_context, UI_FONT_SIZE_NORMAL);
@@ -477,17 +387,6 @@ void cse::ParamEditorSubwindow::draw_content(NVGcontext* const draw_context)
 	}
 
 	content_height = height_drawn + 4.0f;
-}
-
-void cse::ParamEditorSubwindow::select_input_box(BaseInputBox* const input)
-{
-	if (selected_input != nullptr) {
-		selected_input->complete_edit();
-	}
-	selected_input = input;
-	if (selected_input != nullptr) {
-		selected_input->begin_edit();
-	}
 }
 
 bool cse::ParamEditorSubwindow::is_bool_target_under_mouse()
