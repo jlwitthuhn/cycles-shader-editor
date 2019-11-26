@@ -135,15 +135,11 @@ bool cse::ParamEditorSubwindow::is_active() const
 
 bool cse::ParamEditorSubwindow::needs_undo_push()
 {
-	bool result = false;
-	if (request_undo_stack_push) {
-		request_undo_stack_push = false;
-		result = true;
-	}
+	bool result = request_undo_stack_push;
+	request_undo_stack_push = false;
+
 	for (const auto& this_panel : panels) {
-		if (this_panel->should_push_undo_state()) {
-			result = true;
-		}
+		result = this_panel->should_push_undo_state() || result;
 	}
 	return result;
 }
