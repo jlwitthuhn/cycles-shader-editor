@@ -33,7 +33,6 @@ bool cse::MultiInputWidget::add_socket_input(const std::string label, std::weak_
 	if (const auto locked = socket_value.lock()) {
 		const std::shared_ptr<cse::BaseInputBox> input_box = get_input_box_for_value(locked);
 		if (input_box) {
-			input_box->active = true;
 			sockets.push_back(InputRow(label, socket_value, input_box));
 			return true;
 		}
@@ -50,7 +49,7 @@ bool cse::MultiInputWidget::complete_input()
 {
 	bool value_has_changed = false;
 	for (const auto& this_socket : sockets) {
-		value_has_changed = value_has_changed || this_socket.input_box->complete_edit();
+		value_has_changed = this_socket.input_box->complete_edit() || value_has_changed;
 	}
 	return value_has_changed;
 }
@@ -76,7 +75,7 @@ float cse::MultiInputWidget::draw(NVGcontext* const draw_context)
 		// Iterate through and draw all sockets
 		for (auto this_socket : sockets) {
 			const std::shared_ptr<SocketValue> this_val = this_socket.socket_value.lock();
-			if (this_val.get() == nullptr) {
+			if (this_val.use_count() == 0) {
 				continue;
 			}
 
@@ -112,7 +111,7 @@ bool cse::MultiInputWidget::should_capture_input() const
 {
 	bool result = false;
 	for (const auto& this_socket : sockets) {
-		result = result || this_socket.input_box->should_capture_input();
+		result = this_socket.input_box->should_capture_input() || result;
 	}
 	return result;
 }
@@ -126,7 +125,7 @@ void cse::MultiInputWidget::handle_mouse_button(const int button, const int acti
 				this_socket.input_box->begin_edit();
 			}
 			else {
-				request_undo_push = request_undo_push || this_socket.input_box->complete_edit();
+				request_undo_push = this_socket.input_box->complete_edit() || request_undo_push;
 			}
 		}
 	}
@@ -140,7 +139,7 @@ void cse::MultiInputWidget::handle_key(const int key, int /*scancode*/, const in
 				this_socket.input_box->cancel_edit();
 			}
 			else if (key == GLFW_KEY_ENTER && action == GLFW_PRESS) {
-				request_undo_push = request_undo_push || this_socket.input_box->complete_edit();
+				request_undo_push = this_socket.input_box->complete_edit() || request_undo_push;
 			}
 			else if (key == GLFW_KEY_BACKSPACE && action == GLFW_PRESS) {
 				this_socket.input_box->backspace();

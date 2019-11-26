@@ -45,16 +45,13 @@ void cse::EditFloatPanel::set_mouse_local_position(const FloatPos local_pos)
 {
 	EditParamPanel::set_mouse_local_position(local_pos);
 
-	const float input_widget_y = input_widget_pos;
-	const FloatPos input_widget_pos = local_pos - FloatPos(0.0f, input_widget_y);
-	input_widget.set_mouse_local_position(input_widget_pos);
+	const FloatPos input_widget_offset = local_pos - FloatPos(0.0f, input_widget_pos);
+	input_widget.set_mouse_local_position(input_widget_offset);
 }
 
 bool cse::EditFloatPanel::should_capture_input() const
 {
-	bool result = false;
-	result = result || input_widget.should_capture_input();
-	return result;
+	return input_widget.should_capture_input();
 }
 
 void cse::EditFloatPanel::handle_mouse_button(const int button, const int action, const int mods)
@@ -95,13 +92,13 @@ void cse::EditFloatPanel::set_attached_value(const std::weak_ptr<SocketValue> so
 
 void cse::EditFloatPanel::deselect_input_box()
 {
-	request_undo_push = request_undo_push || input_widget.complete_input();
+	request_undo_push = input_widget.complete_input() || request_undo_push;
 }
 
 bool cse::EditFloatPanel::should_push_undo_state()
 {
 	bool result = false;
-	result = result || EditParamPanel::should_push_undo_state();
-	result = result || input_widget.should_push_undo_state();
+	result = EditParamPanel::should_push_undo_state() || result;
+	result = input_widget.should_push_undo_state() || result;
 	return result;
 }

@@ -99,7 +99,7 @@ void cse::EditableNode::draw_node(NVGcontext* const draw_context, const bool sel
 		// Generate the text that will be used on this socket's label
 		std::string label_text;
 		std::string text_before_crossout; // For measuring text size later
-		if (this_socket->value != nullptr) {
+		if (this_socket->value.use_count() > 0) {
 			text_before_crossout = this_socket->display_name + ":";
 			if (this_socket->socket_type == SocketType::FLOAT) {
 				const std::shared_ptr<FloatSocketValue> float_val = std::dynamic_pointer_cast<FloatSocketValue>(this_socket->value);
@@ -171,7 +171,7 @@ void cse::EditableNode::draw_node(NVGcontext* const draw_context, const bool sel
 		nvgFillColor(draw_context, nvgRGBA(0, 0, 0, 255));
 		nvgFontFace(draw_context, "sans");
 
-		if (this_socket->value != nullptr && this_socket->socket_type == SocketType::COLOR) {
+		if (this_socket->value.use_count() > 0 && this_socket->socket_type == SocketType::COLOR) {
 			const float SWATCH_HEIGHT = 14.0f;
 			const float SWATCH_WIDTH = 24.0f;
 			const float SWATCH_CORNER_RADIUS = 8.0f;
@@ -197,7 +197,7 @@ void cse::EditableNode::draw_node(NVGcontext* const draw_context, const bool sel
 			nvgStrokeColor(draw_context, nvgRGBA(0, 0, 0, 255));
 			nvgStroke(draw_context);
 
-			if (this_socket->input_connected_this_frame && this_socket->value != nullptr) {
+			if (this_socket->input_connected_this_frame && this_socket->value.use_count() > 0) {
 				const float x1 = swatch_pos_x - 3.0f;
 				const float x2 = swatch_pos_x  + SWATCH_WIDTH + 3.0f;
 				const float y = swatch_pos_y + SWATCH_HEIGHT / 2.0f;
@@ -213,7 +213,7 @@ void cse::EditableNode::draw_node(NVGcontext* const draw_context, const bool sel
 			const float text_pos_x = draw_pos_x + content_width / 2;
 			const float text_pos_y = next_draw_y + UI_NODE_SOCKET_ROW_HEIGHT / 2;
 			nvgText(draw_context, text_pos_x, text_pos_y, label_text.c_str(), nullptr);
-			if (this_socket->input_connected_this_frame && this_socket->value != nullptr) {
+			if (this_socket->input_connected_this_frame && this_socket->value.use_count() > 0) {
 				// Output is [xmin, ymin, xmax, ymax]
 				float full_size[4];
 				float short_size[4];

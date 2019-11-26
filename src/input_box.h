@@ -33,8 +33,6 @@ namespace cse {
 		float width;
 		float height;
 
-		bool active = false;
-
 	protected:
 		virtual std::string get_value_as_string() = 0;
 		virtual bool set_value_from_input_stream() = 0;

@@ -27,7 +27,7 @@ cse::NodeCreationHelper::NodeCreationHelper()
 
 bool cse::NodeCreationHelper::is_ready() const
 {
-	return current_node != nullptr;
+	return current_node.use_count() > 0;
 }
 
 void cse::NodeCreationHelper::set_node(const std::shared_ptr<EditableNode>& new_node)

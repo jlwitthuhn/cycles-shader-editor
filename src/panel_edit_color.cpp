@@ -13,16 +13,11 @@
 
 cse::EditColorPanel::EditColorPanel(const float width) :
 	EditParamPanel(width),
-	color_r_input_box(UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT),
-	color_g_input_box(UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT),
-	color_b_input_box(UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT),
 	color_rect_click_target(FloatPos(), FloatPos()),
-	hue_bar_click_target(FloatPos(), FloatPos())
+	hue_bar_click_target(FloatPos(), FloatPos()),
+	input_widget(width)
 {
-	// These are always displayed within this panel
-	color_r_input_box.active = true;
-	color_g_input_box.active = true;
-	color_b_input_box.active = true;
+
 }
 
 bool cse::EditColorPanel::is_active() const
@@ -34,12 +29,6 @@ void cse::EditColorPanel::pre_draw()
 {
 	if (is_active() == false) {
 		return;
-	}
-
-	if (const auto attached_color_ptr = attached_color.lock()) {
-		color_r_input_box.attach_float_value(attached_color_ptr->red_socket_val);
-		color_g_input_box.attach_float_value(attached_color_ptr->green_socket_val);
-		color_b_input_box.attach_float_value(attached_color_ptr->blue_socket_val);
 	}
 
 	// If color selection is active, update the color here
@@ -170,62 +159,30 @@ float cse::EditColorPanel::draw(NVGcontext* const draw_context)
 		height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
 	}
 
-	// Draw RGB input boxes
-	nvgFontSize(draw_context, UI_FONT_SIZE_NORMAL);
-	nvgFontFace(draw_context, "sans");
-	nvgFontBlur(draw_context, 0.0f);
-	nvgFillColor(draw_context, nvgRGBA(0, 0, 0, 255));
-
-	std::string red_label_text = "Red:";
-	nvgTextAlign(draw_context, NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
-	nvgText(draw_context, panel_width / 2.6f, height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT / 2, red_label_text.c_str(), nullptr);
-
-	float input_x_draw = (2.0f * panel_width / 3) - (color_r_input_box.width / 2);
-	float input_y_draw = height_drawn + (UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT - color_r_input_box.height) / 2;
-
-	const bool highlight_r = color_r_input_box.is_under_point(mouse_local_pos);
-	color_r_input_box.set_position(FloatPos(input_x_draw, input_y_draw));
-	color_r_input_box.draw(draw_context, highlight_r);
-
-	height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
-
-	std::string green_label_text = "Green:";
-	nvgTextAlign(draw_context, NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
-	nvgText(draw_context, panel_width / 2.6f, height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT / 2, green_label_text.c_str(), nullptr);
-
-	input_y_draw = height_drawn + (UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT - color_g_input_box.height) / 2;
-
-	const bool highlight_g = color_g_input_box.is_under_point(mouse_local_pos);
-	color_g_input_box.set_position(FloatPos(input_x_draw, input_y_draw));
-	color_g_input_box.draw(draw_context, highlight_g);
-
-	height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
-
-	std::string blue_label_text = "Blue:";
-	nvgTextAlign(draw_context, NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
-	nvgText(draw_context, panel_width / 2.6f, height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT / 2, blue_label_text.c_str(), nullptr);
-
-	input_y_draw = height_drawn + (UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT - color_b_input_box.height) / 2;
-
-	const bool highlight_b = color_b_input_box.is_under_point(mouse_local_pos);
-	color_b_input_box.set_position(FloatPos(input_x_draw, input_y_draw));
-	color_b_input_box.draw(draw_context, highlight_b);
-
-	height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
+	nvgSave(draw_context);
+	nvgTranslate(draw_context, 0.0f, height_drawn);
+	input_widget_pos = height_drawn;
+	height_drawn += input_widget.draw(draw_context);
+	nvgRestore(draw_context);
 
 	panel_height = height_drawn;
 	return panel_height;
 }
 
-bool cse::EditColorPanel::should_capture_input() const
+void cse::EditColorPanel::set_mouse_local_position(FloatPos local_pos)
 {
-	if (selected_input != nullptr) {
-		return selected_input->should_capture_input();
-	}
-	return false;
+	EditParamPanel::set_mouse_local_position(local_pos);
+
+	const FloatPos input_widget_offset = local_pos - FloatPos(0.0f, input_widget_pos);
+	input_widget.set_mouse_local_position(input_widget_offset);
 }
 
-void cse::EditColorPanel::handle_mouse_button(int button, int action, int /*mods*/)
+bool cse::EditColorPanel::should_capture_input() const
+{
+	return input_widget.should_capture_input();
+}
+
+void cse::EditColorPanel::handle_mouse_button(int button, int action, int mods)
 {
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
 		if (color_rect_click_target.is_under_point(mouse_local_pos)) {
@@ -233,15 +190,6 @@ void cse::EditColorPanel::handle_mouse_button(int button, int action, int /*mods
 		}
 		else if (hue_bar_click_target.is_under_point(mouse_local_pos)) {
 			mouse_hue_selection_active = true;
-		}
-		else if (color_r_input_box.is_under_point(mouse_local_pos)) {
-			select_input(&color_r_input_box);
-		}
-		else if (color_g_input_box.is_under_point(mouse_local_pos)) {
-			select_input(&color_g_input_box);
-		}
-		else if (color_b_input_box.is_under_point(mouse_local_pos)) {
-			select_input(&color_b_input_box);
 		}
 	}
 
@@ -256,30 +204,21 @@ void cse::EditColorPanel::handle_mouse_button(int button, int action, int /*mods
 			request_undo_push = true;
 		}
 	}
+
+	input_widget.handle_mouse_button(button, action, mods);
 }
 
-void cse::EditColorPanel::handle_key(const int key, int /*scancode*/, const int action, int /*mods*/)
+void cse::EditColorPanel::handle_key(const int key, int scancode, const int action, int mods)
 {
-	if (selected_input != nullptr) {
-		if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-			selected_input->cancel_edit();
-		}
-		else if (key == GLFW_KEY_ENTER && action == GLFW_PRESS) {
-			selected_input->complete_edit();
-			request_undo_push = true;
-		}
-		else if (key == GLFW_KEY_BACKSPACE && action == GLFW_PRESS) {
-			selected_input->backspace();
-		}
+	if (input_widget.should_capture_input()) {
+		input_widget.handle_key(key, scancode, action, mods);
 	}
 }
 
 void cse::EditColorPanel::handle_character(const unsigned int codepoint)
 {
-	if (selected_input != nullptr) {
-		if (selected_input->should_capture_input()) {
-			selected_input->handle_character(codepoint);
-		}
+	if (input_widget.should_capture_input()) {
+		input_widget.handle_character(codepoint);
 	}
 }
 
@@ -291,16 +230,29 @@ void cse::EditColorPanel::set_attached_value(const std::weak_ptr<SocketValue> so
 			if (attached_color.lock() != color_value_ptr) {
 				reset();
 				attached_color = color_value_ptr;
+				input_widget.clear_sockets();
+				input_widget.add_socket_input("Red:", color_value_ptr->red_socket_val);
+				input_widget.add_socket_input("Green:", color_value_ptr->green_socket_val);
+				input_widget.add_socket_input("Blue:", color_value_ptr->blue_socket_val);
 			}
 			return;
 		}
 	}
 	attached_color = std::weak_ptr<ColorSocketValue>();
+	input_widget.clear_sockets();
 }
 
 void cse::EditColorPanel::deselect_input_box()
 {
-	select_input(nullptr);
+	request_undo_push = input_widget.complete_input() || request_undo_push;
+}
+
+bool cse::EditColorPanel::should_push_undo_state()
+{
+	bool result = false;
+	result = EditParamPanel::should_push_undo_state() || result;
+	result = input_widget.should_push_undo_state() || result;
+	return result;
 }
 
 void cse::EditColorPanel::reset()
@@ -311,9 +263,11 @@ void cse::EditColorPanel::reset()
 cse::HueSatVal cse::EditColorPanel::get_hsv()
 {
 	RedGreenBlue rgb;
-	rgb.r = color_r_input_box.get_float_value();
-	rgb.g = color_g_input_box.get_float_value();
-	rgb.b = color_b_input_box.get_float_value();
+	if (const auto locked = attached_color.lock()) {
+		rgb.r = locked->red_socket_val->get_value();
+		rgb.g = locked->green_socket_val->get_value();
+		rgb.b = locked->blue_socket_val->get_value();
+	}
 	HueSatVal hsv = hsv_from_rgb(rgb);
 	if (hsv.hue < 0.0f) {
 		// Negative hue indicates monochrome color
@@ -327,9 +281,11 @@ void cse::EditColorPanel::set_hsv(HueSatVal hsv)
 {
 	RedGreenBlue rgb = rgb_from_hsv(hsv);
 
-	color_r_input_box.set_float_value(rgb.r);
-	color_g_input_box.set_float_value(rgb.g);
-	color_b_input_box.set_float_value(rgb.b);
+	if (const auto locked = attached_color.lock()) {
+		locked->red_socket_val->set_value(rgb.r);
+		locked->green_socket_val->set_value(rgb.g);
+		locked->blue_socket_val->set_value(rgb.b);
+	}
 }
 
 void cse::EditColorPanel::set_hue_from_mouse()
@@ -358,16 +314,4 @@ void cse::EditColorPanel::set_sat_val_from_mouse()
 	hsv.sat = new_sat;
 	hsv.val = new_val;
 	set_hsv(hsv);
-}
-
-void cse::EditColorPanel::select_input(FloatInputBox* const input)
-{
-	if (selected_input != nullptr && selected_input->should_capture_input()) {
-		selected_input->complete_edit();
-		request_undo_push = true;
-	}
-	selected_input = input;
-	if (selected_input != nullptr) {
-		selected_input->begin_edit();
-	}
 }

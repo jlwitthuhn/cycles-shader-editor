@@ -11,7 +11,7 @@ cse::EditableGraph::EditableGraph(const ShaderGraphType type)
 
 void cse::EditableGraph::add_node(std::shared_ptr<EditableNode>& node, const FloatPos world_pos)
 {
-	if (node.get() == nullptr) {
+	if (node.use_count() == 0) {
 		return;
 	}
 
@@ -143,7 +143,7 @@ void cse::EditableGraph::raise_node(const std::weak_ptr<cse::EditableNode> weak_
 {
 	const std::shared_ptr<EditableNode> node_to_raise = weak_node.lock();
 
-	if (node_to_raise.get() == nullptr) {
+	if (node_to_raise.use_count() == 0) {
 		return;
 	}
 

@@ -14,7 +14,7 @@ void cse::Selection::move_nodes(const FloatPos delta)
 
 void cse::Selection::modify_selection(SelectMode mode, std::weak_ptr<EditableNode> node)
 {
-	if (node.lock().get() == nullptr) {
+	if (node.use_count() == 0) {
 		return;
 	}
 

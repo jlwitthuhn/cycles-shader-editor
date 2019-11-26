@@ -65,7 +65,7 @@ float cse::EditCurvePanel::draw(NVGcontext* draw_context)
 	}
 
 	const auto attached_curve_ptr = attached_curve.lock();
-	if (attached_curve_ptr == nullptr) {
+	if (attached_curve_ptr.use_count() == 0) {
 		return 0.0f;
 	}
 

@@ -606,7 +606,7 @@ static std::shared_ptr<cse::EditableNode> deserialize_node(std::list<std::string
 	std::shared_ptr<EditableNode> result = create_node_from_type(type);
 	result->world_pos = FloatPos(x_position, y_position);
 
-	if (result == nullptr) {
+	if (result.use_count() == 0) {
 		return nullptr;
 	}
 
