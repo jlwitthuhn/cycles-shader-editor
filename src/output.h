@@ -63,6 +63,7 @@ namespace cse {
 		VectorTransform,
 		// Converter
 		Blackbody,
+		ColorRamp,
 		CombineHSV,
 		CombineRGB,
 		CombineXYZ,

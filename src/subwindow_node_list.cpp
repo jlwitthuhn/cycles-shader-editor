@@ -194,6 +194,7 @@ cse::NodeListSubwindow::NodeListSubwindow(const std::weak_ptr<NodeCreationHelper
 	// Converter buttons
 	{
 		auto blackbody_button = std::make_unique<GenericNodeButton<BlackbodyNode>>();
+		auto color_ramp_button = std::make_unique<GenericNodeButton<ColorRampNode>>();
 		auto combine_hsv_button = std::make_unique<GenericNodeButton<CombineHSVNode>>();
 		auto combine_rgb_button = std::make_unique<GenericNodeButton<CombineRGBNode>>();
 		auto combine_xyz_button = std::make_unique<GenericNodeButton<CombineXYZNode>>();
@@ -206,6 +207,7 @@ cse::NodeListSubwindow::NodeListSubwindow(const std::weak_ptr<NodeCreationHelper
 		auto wavelength_button = std::make_unique<GenericNodeButton<WavelengthNode>>();
 
 		cat_converter_button->node_buttons.push_back(std::move(blackbody_button));
+		cat_converter_button->node_buttons.push_back(std::move(color_ramp_button));
 		cat_converter_button->node_buttons.push_back(std::move(combine_hsv_button));
 		cat_converter_button->node_buttons.push_back(std::move(combine_rgb_button));
 		cat_converter_button->node_buttons.push_back(std::move(combine_xyz_button));

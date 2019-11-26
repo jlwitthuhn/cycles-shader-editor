@@ -11,6 +11,11 @@ namespace cse {
 		BlackbodyNode(FloatPos position);
 	};
 
+	class ColorRampNode : public EditableNode {
+	public:
+		ColorRampNode(FloatPos position);
+	};
+
 	class CombineHSVNode : public EditableNode {
 	public:
 		CombineHSVNode(FloatPos position);

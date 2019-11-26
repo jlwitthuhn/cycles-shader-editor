@@ -105,6 +105,7 @@ static void initialize_maps()
 	type_to_code[CyclesNodeType::VectorTransform] = std::string("vector_transform");
 
 	type_to_code[CyclesNodeType::Blackbody] = std::string("blackbody");
+	type_to_code[CyclesNodeType::ColorRamp] = std::string("color_ramp");
 	type_to_code[CyclesNodeType::CombineHSV] = std::string("combine_hsv");
 	type_to_code[CyclesNodeType::CombineRGB] = std::string("combine_rgb");
 	type_to_code[CyclesNodeType::CombineXYZ] = std::string("combine_xyz");
@@ -514,6 +515,10 @@ static std::shared_ptr<cse::EditableNode> create_node_from_type(cse::CyclesNodeT
 		case CyclesNodeType::Blackbody:
 		{
 			return std::make_shared<BlackbodyNode>(pos);
+		}
+		case CyclesNodeType::ColorRamp:
+		{
+			return std::make_shared<ColorRampNode>(pos);
 		}
 		case CyclesNodeType::CombineHSV:
 		{

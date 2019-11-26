@@ -9,7 +9,7 @@
 #include "output.h"
 #include "sockets.h"
 
-cse::BlackbodyNode::BlackbodyNode(FloatPos position)
+cse::BlackbodyNode::BlackbodyNode(const FloatPos position)
 {
 	world_pos = position;
 
@@ -29,7 +29,30 @@ cse::BlackbodyNode::BlackbodyNode(FloatPos position)
 	content_width = 164.0f;
 }
 
-cse::CombineHSVNode::CombineHSVNode(FloatPos position)
+cse::ColorRampNode::ColorRampNode(const FloatPos position)
+{
+	world_pos = position;
+
+	title = "Color Ramp";
+
+	const auto color_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::COLOR, "Color", "color");
+	const auto alpha_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Alpha", "alpha");
+
+	sockets.push_back(color_output);
+	sockets.push_back(alpha_output);
+
+	const auto ramp_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::COLOR_RAMP, "Ramp", "ramp");
+	ramp_input->value = std::make_shared<ColorRampSocketValue>();
+	const auto fac_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Fac", "fac");
+	fac_input->value = std::make_shared<FloatSocketValue>(0.0f, 0.0f, 1.0f);
+
+	sockets.push_back(ramp_input);
+	sockets.push_back(fac_input);
+
+	type = CyclesNodeType::ColorRamp;
+}
+
+cse::CombineHSVNode::CombineHSVNode(const FloatPos position)
 {
 	world_pos = position;
 
@@ -53,7 +76,7 @@ cse::CombineHSVNode::CombineHSVNode(FloatPos position)
 	type = CyclesNodeType::CombineHSV;
 }
 
-cse::CombineRGBNode::CombineRGBNode(FloatPos position)
+cse::CombineRGBNode::CombineRGBNode(const FloatPos position)
 {
 	world_pos = position;
 
@@ -77,7 +100,7 @@ cse::CombineRGBNode::CombineRGBNode(FloatPos position)
 	type = CyclesNodeType::CombineRGB;
 }
 
-cse::CombineXYZNode::CombineXYZNode(FloatPos position)
+cse::CombineXYZNode::CombineXYZNode(const FloatPos position)
 {
 	world_pos = position;
 
@@ -101,7 +124,7 @@ cse::CombineXYZNode::CombineXYZNode(FloatPos position)
 	type = CyclesNodeType::CombineXYZ;
 }
 
-cse::MathNode::MathNode(FloatPos position)
+cse::MathNode::MathNode(const FloatPos position)
 {
 	world_pos = position;
 
@@ -149,7 +172,7 @@ cse::MathNode::MathNode(FloatPos position)
 	type = CyclesNodeType::Math;
 }
 
-cse::RGBToBWNode::RGBToBWNode(FloatPos position)
+cse::RGBToBWNode::RGBToBWNode(const FloatPos position)
 {
 	world_pos = position;
 
@@ -167,7 +190,7 @@ cse::RGBToBWNode::RGBToBWNode(FloatPos position)
 	type = CyclesNodeType::RGBtoBW;
 }
 
-cse::SeparateHSVNode::SeparateHSVNode(FloatPos position)
+cse::SeparateHSVNode::SeparateHSVNode(const FloatPos position)
 {
 	world_pos = position;
 
@@ -189,7 +212,7 @@ cse::SeparateHSVNode::SeparateHSVNode(FloatPos position)
 	type = CyclesNodeType::SeparateHSV;
 }
 
-cse::SeparateRGBNode::SeparateRGBNode(FloatPos position)
+cse::SeparateRGBNode::SeparateRGBNode(const FloatPos position)
 {
 	world_pos = position;
 
@@ -211,7 +234,7 @@ cse::SeparateRGBNode::SeparateRGBNode(FloatPos position)
 	type = CyclesNodeType::SeparateRGB;
 }
 
-cse::SeparateXYZNode::SeparateXYZNode(FloatPos position)
+cse::SeparateXYZNode::SeparateXYZNode(const FloatPos position)
 {
 	world_pos = position;
 
@@ -234,7 +257,7 @@ cse::SeparateXYZNode::SeparateXYZNode(FloatPos position)
 	type = CyclesNodeType::SeparateXYZ;
 }
 
-cse::VectorMathNode::VectorMathNode(FloatPos position)
+cse::VectorMathNode::VectorMathNode(const FloatPos position)
 {
 	world_pos = position;
 
@@ -270,7 +293,7 @@ cse::VectorMathNode::VectorMathNode(FloatPos position)
 	type = CyclesNodeType::VectorMath;
 }
 
-cse::WavelengthNode::WavelengthNode(FloatPos position)
+cse::WavelengthNode::WavelengthNode(const FloatPos position)
 {
 	world_pos = position;
 

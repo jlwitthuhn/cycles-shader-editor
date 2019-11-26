@@ -277,6 +277,16 @@ void cse::CurveSocketValue::sort_curve_points()
 	std::sort(curve_points.begin(), curve_points.end(), FloatPos_x_lt);
 }
 
+cse::ColorRampSocketValue::ColorRampSocketValue()
+{
+
+}
+
+cse::SocketType cse::ColorRampSocketValue::get_type() const
+{
+	return SocketType::COLOR_RAMP;
+}
+
 cse::FloatRGBColor cse::ColorSocketValue::get_value()
 {
 	FloatRGBColor value;
@@ -286,9 +296,9 @@ cse::FloatRGBColor cse::ColorSocketValue::get_value()
 	return value;
 }
 
-cse::NodeSocket::NodeSocket(EditableNode* parent, SocketIOType io_type, SocketType socket_type, std::string display_name, std::string internal_name)
+cse::NodeSocket::NodeSocket(EditableNode* parent, SocketIOType io_type, SocketType socket_type, std::string display_name, std::string internal_name) :
+	parent(parent)
 {
-	this->parent = parent;
 	this->io_type = io_type;
 	this->socket_type = socket_type;
 	this->display_name = display_name;
@@ -301,14 +311,20 @@ cse::NodeSocket::NodeSocket(EditableNode* parent, SocketIOType io_type, SocketTy
 			socket_type == SocketType::STRING_ENUM ||
 			socket_type == SocketType::INT ||
 			socket_type == SocketType::BOOLEAN ||
-			socket_type == SocketType::CURVE)
+			socket_type == SocketType::CURVE ||
+			socket_type == SocketType::COLOR_RAMP)
 		{
 			selectable = true;
 		}
 	}
 
 	// Set flag to not draw
-	if (socket_type == SocketType::STRING_ENUM || socket_type == SocketType::INT || socket_type == SocketType::BOOLEAN || socket_type == SocketType::CURVE) {
+	if (socket_type == SocketType::STRING_ENUM ||
+		socket_type == SocketType::INT ||
+		socket_type == SocketType::BOOLEAN ||
+		socket_type == SocketType::CURVE ||
+		socket_type == SocketType::COLOR_RAMP)
+	{
 		draw_socket = false;
 	}
 }

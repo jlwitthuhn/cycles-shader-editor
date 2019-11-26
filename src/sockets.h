@@ -145,6 +145,13 @@ namespace cse {
 		CurveInterpolation curve_interp = CurveInterpolation::CUBIC_HERMITE;
 	};
 
+	class ColorRampSocketValue : public SocketValue {
+	public:
+		ColorRampSocketValue();
+
+		virtual SocketType get_type() const override;
+	};
+
 	class NodeSocket {
 	public:
 		NodeSocket(EditableNode* parent, SocketIOType io_type, SocketType socket_type, std::string display_name, std::string internal_name);
@@ -153,7 +160,7 @@ namespace cse {
 		void set_float3_val(float x_in, float y_in, float z_in);
 		void set_string_val(StringEnumPair string_in);
 
-		EditableNode* parent = nullptr;
+		EditableNode* const parent;
 
 		SocketIOType io_type;
 		SocketType socket_type;

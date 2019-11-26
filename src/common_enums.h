@@ -34,5 +34,6 @@ namespace cse {
 		STRING_ENUM,
 		BOOLEAN,
 		CURVE,
+		COLOR_RAMP,
 	};
 }
