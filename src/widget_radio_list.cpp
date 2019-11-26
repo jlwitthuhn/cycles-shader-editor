@@ -1,5 +1,6 @@
 #include "widget_radio_list.h"
 
+#include <GLFW/glfw3.h>
 #include <nanovg.h>
 
 #include "gui_sizes.h"
@@ -77,11 +78,13 @@ void cse::RadioListWidget::set_mouse_local_position(const FloatPos local_pos)
 	mouse_local_pos = local_pos;
 }
 
-void cse::RadioListWidget::handle_mouse_button(const int, const int, const int)
+void cse::RadioListWidget::handle_mouse_button(const int button, const int action, const int /*mods*/)
 {
-	for (StringEnumArea& this_target : enum_targets) {
-		if (this_target.is_under_point(mouse_local_pos)) {
-			request_undo_push = this_target.click() || request_undo_push;
+	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+		for (StringEnumArea& this_target : enum_targets) {
+			if (this_target.is_under_point(mouse_local_pos)) {
+				request_undo_push = this_target.click() || request_undo_push;
+			}
 		}
 	}
 }

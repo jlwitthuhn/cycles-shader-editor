@@ -35,10 +35,9 @@ static const char* NODE_END = "node_end";
 std::map<cse::CyclesNodeType, std::string> type_to_code;
 std::map<std::string, cse::CyclesNodeType> code_to_type;
 
-static std::string create_node_name()
+static std::string create_node_name(const size_t number)
 {
-	static int number = 0;
-	return std::string("node") + std::to_string(number++);
+	return std::string("node") + std::to_string(number);
 }
 
 static void initialize_maps()
@@ -264,9 +263,10 @@ void cse::generate_output_lists(
 
 	std::map<EditableNode*, std::string> node_to_name_map;
 
+	size_t current_number = 0;
 	for (const auto this_node : node_list) {
 		OutputNode this_out_node;
-		this_out_node.name = create_node_name();
+		this_out_node.name = create_node_name(current_number++);
 
 		this_node->update_output_node(this_out_node);
 

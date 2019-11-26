@@ -290,7 +290,7 @@ void cse::EditColorPanel::set_hsv(HueSatVal hsv)
 
 void cse::EditColorPanel::set_hue_from_mouse()
 {
-	float new_hue = hue_bar_click_target.get_normalized_mouse_pos(mouse_local_pos).get_x();
+	float new_hue = hue_bar_click_target.get_normalized_pos(mouse_local_pos).get_x();
 	if (new_hue < 0.0f) {
 		new_hue = 0.0f;
 	}
@@ -306,7 +306,7 @@ void cse::EditColorPanel::set_hue_from_mouse()
 
 void cse::EditColorPanel::set_sat_val_from_mouse()
 {
-	FloatPos mouse_pos_normalized = color_rect_click_target.get_normalized_mouse_pos(mouse_local_pos);
+	FloatPos mouse_pos_normalized = color_rect_click_target.get_normalized_pos(mouse_local_pos);
 	const float new_sat = mouse_pos_normalized.get_x();
 	const float new_val = 1.0f - mouse_pos_normalized.get_y();
 

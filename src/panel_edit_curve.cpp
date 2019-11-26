@@ -45,7 +45,7 @@ void cse::EditCurvePanel::pre_draw()
 	}
 
 	if (selected_point_valid && moving_selected_point && mouse_has_moved) {
-		FloatPos normalized_pos = target_view.get_normalized_mouse_pos(mouse_local_pos);
+		FloatPos normalized_pos = target_view.get_normalized_pos(mouse_local_pos);
 		normalized_pos.clamp_to(FloatPos(0.0f, 0.0f), FloatPos(1.0f, 1.0f));
 		const FloatPos xy_pos = FloatPos(normalized_pos.get_x(), 1.0f - normalized_pos.get_y());
 		move_selected_point(xy_pos);
@@ -344,7 +344,7 @@ void cse::EditCurvePanel::handle_mouse_button(int button, int action, int /*mods
 	const auto attached_curve_ptr = attached_curve.lock();
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
 		if (target_view.is_under_point(mouse_local_pos)) {
-			FloatPos normalized_pos = target_view.get_normalized_mouse_pos(mouse_local_pos);
+			FloatPos normalized_pos = target_view.get_normalized_pos(mouse_local_pos);
 			FloatPos xy_pos = FloatPos(normalized_pos.get_x(), 1.0f - normalized_pos.get_y());
 			if (edit_mode == EditCurveMode::MOVE) {
 				size_t target_index;

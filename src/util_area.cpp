@@ -14,12 +14,12 @@ bool cse::Area::is_under_point(const FloatPos pos) const
 		pos.get_y() < end.get_y());
 }
 
-cse::FloatPos cse::Area::get_normalized_mouse_pos(const cse::FloatPos mouse_pos)
+cse::FloatPos cse::Area::get_normalized_pos(const cse::FloatPos pos) const
 {
 	const float width = end.get_x() - begin.get_x();
 	const float height = end.get_y() - begin.get_y();
-	const float pos_x = (mouse_pos.get_x() - begin.get_x()) / width;
-	const float pos_y = (mouse_pos.get_y() - begin.get_y()) / height;
+	const float pos_x = (pos.get_x() - begin.get_x()) / width;
+	const float pos_y = (pos.get_y() - begin.get_y()) / height;
 
 	FloatPos result(pos_x, pos_y);
 	result.clamp_to(FloatPos(0.0f, 0.0f), FloatPos(1.0f, 1.0f));
