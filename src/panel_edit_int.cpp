@@ -18,11 +18,6 @@ bool cse::EditIntPanel::is_active() const
 	return static_cast<bool>(attached_int.lock());
 }
 
-void cse::EditIntPanel::pre_draw()
-{
-
-}
-
 float cse::EditIntPanel::draw(NVGcontext* const draw_context)
 {
 	float height_drawn = 0.0f;

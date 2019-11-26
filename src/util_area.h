@@ -24,7 +24,7 @@ namespace cse {
 	public:
 		BoolValueArea(FloatPos begin_pos, FloatPos end_pos, bool bool_value, std::weak_ptr<BoolSocketValue> socket_value);
 
-		void click();
+		bool click();
 
 		const bool bool_value;
 		const std::weak_ptr<BoolSocketValue> socket_value;
@@ -34,7 +34,7 @@ namespace cse {
 	public:
 		StringEnumArea(FloatPos begin_pos, FloatPos end_pos, const StringEnumPair& str_pair, std::weak_ptr<StringEnumSocketValue> enum_value);
 
-		void click();
+		bool click();
 
 		const StringEnumPair str_pair_value;
 		const std::weak_ptr<StringEnumSocketValue> enum_value;
@@ -44,7 +44,7 @@ namespace cse {
 	public:
 		CurveEditModeArea(FloatPos begin_pos, FloatPos end_pos, EditCurveMode this_mode, EditCurveMode* mode_enum);
 
-		void click();
+		bool click();
 
 	private:
 		EditCurveMode this_mode;
@@ -55,7 +55,7 @@ namespace cse {
 	public:
 		CurveInterpModeArea(FloatPos begin_pos, FloatPos end_pos, CurveInterpolation this_interp, CurveInterpolation* interp_enum);
 
-		void click();
+		bool click();
 
 	private:
 		CurveInterpolation this_interp;

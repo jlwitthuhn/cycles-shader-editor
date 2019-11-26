@@ -39,11 +39,15 @@ cse::BoolValueArea::BoolValueArea(
 
 }
 
-void cse::BoolValueArea::click()
+bool cse::BoolValueArea::click()
 {
 	if (const auto socket_value_ptr = socket_value.lock()) {
-		socket_value_ptr->value = bool_value;
+		if (socket_value_ptr->value != bool_value) {
+			socket_value_ptr->value = bool_value;
+			return true;
+		}
 	}
+	return false;
 }
 
 cse::StringEnumArea::StringEnumArea(const FloatPos begin_pos, const FloatPos end_pos, const StringEnumPair& str_pair, const std::weak_ptr<StringEnumSocketValue> enum_value) :
@@ -54,11 +58,15 @@ cse::StringEnumArea::StringEnumArea(const FloatPos begin_pos, const FloatPos end
 
 }
 
-void cse::StringEnumArea::click()
+bool cse::StringEnumArea::click()
 {
 	if (const auto enum_value_ptr = enum_value.lock()) {
-		enum_value_ptr->value = str_pair_value;
+		if (enum_value_ptr->value.internal_value != str_pair_value.internal_value) {
+			enum_value_ptr->value = str_pair_value;
+			return true;
+		}
 	}
+	return false;
 }
 
 cse::CurveEditModeArea::CurveEditModeArea(const FloatPos begin_pos, const FloatPos end_pos, const EditCurveMode this_mode, EditCurveMode* const mode_enum) :
@@ -69,9 +77,13 @@ cse::CurveEditModeArea::CurveEditModeArea(const FloatPos begin_pos, const FloatP
 
 }
 
-void cse::CurveEditModeArea::click()
+bool cse::CurveEditModeArea::click()
 {
-	*mode_enum = this_mode;
+	if (*mode_enum != this_mode) {
+		*mode_enum = this_mode;
+		return true;
+	}
+	return false;
 }
 
 cse::CurveInterpModeArea::CurveInterpModeArea(const FloatPos begin_pos, const FloatPos end_pos, const CurveInterpolation this_interp, CurveInterpolation* const interp_enum) :
@@ -82,9 +94,13 @@ cse::CurveInterpModeArea::CurveInterpModeArea(const FloatPos begin_pos, const Fl
 
 }
 
-void cse::CurveInterpModeArea::click()
+bool cse::CurveInterpModeArea::click()
 {
-	*interp_enum = this_interp;
+	if (*interp_enum != this_interp) {
+		*interp_enum = this_interp;
+		return true;
+	}
+	return false;
 }
 
 cse::SocketArea::SocketArea(const FloatPos begin_pos, const FloatPos end_pos, const std::weak_ptr<NodeSocket> socket) :

@@ -15,6 +15,7 @@
 #include "panel_edit.h"
 #include "panel_edit_color.h"
 #include "panel_edit_curve.h"
+#include "panel_edit_enum.h"
 #include "panel_edit_float.h"
 #include "panel_edit_int.h"
 #include "panel_edit_vector.h"
@@ -27,6 +28,7 @@ cse::ParamEditorSubwindow::ParamEditorSubwindow(const FloatPos screen_position) 
 	subwindow_width = UI_SUBWIN_PARAM_EDIT_WIDTH;
 	panels.push_back(std::make_shared<EditColorPanel>(UI_SUBWIN_PARAM_EDIT_WIDTH));
 	panels.push_back(std::make_shared<EditCurvePanel>(UI_SUBWIN_PARAM_EDIT_WIDTH));
+	panels.push_back(std::make_shared<EditEnumPanel>(UI_SUBWIN_PARAM_EDIT_WIDTH));
 	panels.push_back(std::make_shared<EditFloatPanel>(UI_SUBWIN_PARAM_EDIT_WIDTH));
 	panels.push_back(std::make_shared<EditIntPanel>(UI_SUBWIN_PARAM_EDIT_WIDTH));
 	panels.push_back(std::make_shared<EditVectorPanel>(UI_SUBWIN_PARAM_EDIT_WIDTH));
@@ -78,11 +80,6 @@ void cse::ParamEditorSubwindow::handle_mouse_button(const int button, const int 
 			if (this_panel->is_active() && this_panel->is_mouse_over()) {
 				this_panel->handle_mouse_button(button, action, mods);
 			}
-		}
-	}
-	else if (is_enum_target_under_mouse()) {
-		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-			click_enum_target_under_mouse();
 		}
 	}
 	else if (is_bool_target_under_mouse()) {
@@ -172,7 +169,6 @@ void cse::ParamEditorSubwindow::draw_content(NVGcontext* const draw_context)
 
 	auto selected_param_ptr = selected_param.lock();
 	if (selected_param_ptr && selected_param_ptr->io_type == SocketIOType::INPUT) {
-		enum_targets.clear();
 		bool_targets.clear();
 
 		// Draw generic part
@@ -238,57 +234,7 @@ void cse::ParamEditorSubwindow::draw_content(NVGcontext* const draw_context)
 
 		panel_start_y = height_drawn;
 
-		if (selected_param_ptr->socket_type == SocketType::STRING_ENUM) {
-			const auto str_enum_value = std::dynamic_pointer_cast<StringEnumSocketValue>(selected_param_ptr->value);
-
-			nvgFontSize(draw_context, UI_FONT_SIZE_NORMAL);
-			nvgFontFace(draw_context, "sans");
-			nvgFontBlur(draw_context, 0.0f);
-			nvgFillColor(draw_context, nvgRGBA(0, 0, 0, 255));
-			nvgTextAlign(draw_context, NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE);
-
-			float max_label_width = 0;
-			for (StringEnumPair this_enum_value : str_enum_value->enum_values) {
-				float bounds[4];
-				nvgTextBounds(draw_context, 0, 0, this_enum_value.display_value.c_str(), nullptr, bounds);
-				float this_width = std::ceil(bounds[2]);
-				if (this_width > max_label_width) {
-					max_label_width = this_width;
-				}
-			}
-			float max_draw_width = max_label_width + UI_CHECKBOX_SPACING + UI_CHECKBOX_RADIUS * 2;
-
-			for (StringEnumPair this_enum_value : str_enum_value->enum_values) {
-				bool this_value_selected = (str_enum_value->value.internal_value == this_enum_value.internal_value);
-
-				float circle_pos_x = subwindow_width / 2.0f - max_draw_width / 2 + UI_CHECKBOX_RADIUS;
-				float circle_pos_y = height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT * 0.5f;
-				nvgBeginPath(draw_context);
-				nvgCircle(draw_context, circle_pos_x, circle_pos_y, UI_CHECKBOX_RADIUS);
-				nvgFillColor(draw_context, nvgRGBAf(0.1f, 0.1f, 0.1f, 1.0f));
-				nvgFill(draw_context);
-				if (this_value_selected) {
-					nvgBeginPath(draw_context);
-					nvgCircle(draw_context, circle_pos_x, circle_pos_y, UI_CHECKBOX_RADIUS * 0.666f);
-					nvgFillColor(draw_context, nvgRGBAf(0.9f, 0.9f, 0.9f, 1.0f));
-					nvgFill(draw_context);
-				}
-
-				float text_pos_x = subwindow_width / 2.0f - max_draw_width / 2 + UI_CHECKBOX_SPACING + UI_CHECKBOX_RADIUS * 2;
-				float text_pos_y = height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT * 0.7f;
-				nvgFillColor(draw_context, nvgRGBA(0, 0, 0, 255));
-				nvgText(draw_context, text_pos_x, text_pos_y, this_enum_value.display_value.c_str(), nullptr);
-
-				FloatPos click_area_begin(0.0f, height_drawn);
-				FloatPos click_area_end(subwindow_width, height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT);
-				StringEnumArea click_area(click_area_begin, click_area_end, this_enum_value, str_enum_value);
-
-				enum_targets.push_back(click_area);
-
-				height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
-			}
-		}
-		else if (selected_param_ptr->socket_type == SocketType::BOOLEAN) {
+		if (selected_param_ptr->socket_type == SocketType::BOOLEAN) {
 			const auto bool_value = std::dynamic_pointer_cast<BoolSocketValue>(selected_param_ptr->value);
 
 			const std::string true_label = "True";
@@ -396,30 +342,9 @@ bool cse::ParamEditorSubwindow::is_bool_target_under_mouse()
 	return false;
 }
 
-bool cse::ParamEditorSubwindow::is_enum_target_under_mouse()
-{
-	for (StringEnumArea& this_target : enum_targets) {
-		if (this_target.is_under_point(mouse_content_pos)) {
-			return true;
-		}
-	}
-
-	return false;
-}
-
 void cse::ParamEditorSubwindow::click_bool_target_under_mouse()
 {
 	for (BoolValueArea& this_target : bool_targets) {
-		if (this_target.is_under_point(mouse_content_pos)) {
-			this_target.click();
-			return;
-		}
-	}
-}
-
-void cse::ParamEditorSubwindow::click_enum_target_under_mouse()
-{
-	for (StringEnumArea& this_target : enum_targets) {
 		if (this_target.is_under_point(mouse_content_pos)) {
 			this_target.click();
 			return;

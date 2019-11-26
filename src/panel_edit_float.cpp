@@ -18,11 +18,6 @@ bool cse::EditFloatPanel::is_active() const
 	return static_cast<bool>(attached_float.lock());
 }
 
-void cse::EditFloatPanel::pre_draw()
-{
-
-}
-
 float cse::EditFloatPanel::draw(NVGcontext* const draw_context)
 {
 	float height_drawn = 0.0f;

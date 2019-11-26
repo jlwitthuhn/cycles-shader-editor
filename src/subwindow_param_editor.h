@@ -41,9 +41,7 @@ namespace cse {
 		virtual void draw_content(NVGcontext* draw_context) override;
 
 		bool is_bool_target_under_mouse();
-		bool is_enum_target_under_mouse();
 		void click_bool_target_under_mouse();
-		void click_enum_target_under_mouse();
 
 		std::weak_ptr<NodeSocket> selected_param;
 
@@ -51,9 +49,6 @@ namespace cse {
 
 		// Panels
 		std::list<std::shared_ptr<EditParamPanel>> panels;
-
-		// Enum stuff
-		std::vector<StringEnumArea> enum_targets;
 
 		// Bool stuff
 		std::vector<BoolValueArea> bool_targets;
