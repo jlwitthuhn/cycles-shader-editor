@@ -91,7 +91,7 @@ float cse::MultiInputWidget::draw(NVGcontext* const draw_context)
 
 			const float input_x_draw = width - this_socket.input_box->width - 2 * UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HPAD;
 			const float input_y_draw = height_drawn + (UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT - this_socket.input_box->height) / 2;
-			const bool highlight = this_socket.input_box->is_under_point(mouse_local_pos);
+			const bool highlight = this_socket.input_box->contains_point(mouse_local_pos);
 			this_socket.input_box->set_position(FloatPos(input_x_draw, input_y_draw));
 			this_socket.input_box->draw(draw_context, highlight);
 
@@ -120,7 +120,7 @@ void cse::MultiInputWidget::handle_mouse_button(const int button, const int acti
 {
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
 		for (const auto& this_socket : sockets) {
-			if (this_socket.input_box->is_under_point(mouse_local_pos)) {
+			if (this_socket.input_box->contains_point(mouse_local_pos)) {
 				this_socket.input_box->begin_edit();
 			}
 			else {

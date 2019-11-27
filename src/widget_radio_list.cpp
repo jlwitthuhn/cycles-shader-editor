@@ -81,7 +81,7 @@ void cse::RadioListWidget::handle_mouse_button(const int button, const int actio
 {
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
 		for (StringEnumArea& this_target : enum_targets) {
-			if (this_target.is_under_point(mouse_local_pos)) {
+			if (this_target.contains_point(mouse_local_pos)) {
 				request_undo_push = this_target.click() || request_undo_push;
 			}
 		}

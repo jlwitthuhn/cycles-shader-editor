@@ -12,7 +12,7 @@ namespace cse {
 	public:
 		Area(FloatPos begin_pos, FloatPos end_pos);
 
-		bool is_under_point(FloatPos pos) const;
+		bool contains_point(FloatPos pos) const;
 		FloatPos get_normalized_pos(FloatPos pos) const;
 
 	protected:

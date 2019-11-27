@@ -343,7 +343,7 @@ void cse::EditCurvePanel::handle_mouse_button(int button, int action, int /*mods
 	}
 	const auto attached_curve_ptr = attached_curve.lock();
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-		if (target_view.is_under_point(mouse_local_pos)) {
+		if (target_view.contains_point(mouse_local_pos)) {
 			FloatPos normalized_pos = target_view.get_normalized_pos(mouse_local_pos);
 			FloatPos xy_pos = FloatPos(normalized_pos.get_x(), 1.0f - normalized_pos.get_y());
 			if (edit_mode == EditCurveMode::MOVE) {
@@ -375,23 +375,23 @@ void cse::EditCurvePanel::handle_mouse_button(int button, int action, int /*mods
 				request_undo_push = true;
 			}
 		}
-		if (target_edit_mode_move.is_under_point(mouse_local_pos)) {
+		if (target_edit_mode_move.contains_point(mouse_local_pos)) {
 			target_edit_mode_move.click();
 			request_undo_push = true;
 		}
-		else if (target_edit_mode_create.is_under_point(mouse_local_pos)) {
+		else if (target_edit_mode_create.contains_point(mouse_local_pos)) {
 			target_edit_mode_create.click();
 			request_undo_push = true;
 		}
-		else if (target_edit_mode_delete.is_under_point(mouse_local_pos)) {
+		else if (target_edit_mode_delete.contains_point(mouse_local_pos)) {
 			target_edit_mode_delete.click();
 			request_undo_push = true;
 		}
-		else if (target_interp_linear.is_under_point(mouse_local_pos)) {
+		else if (target_interp_linear.contains_point(mouse_local_pos)) {
 			target_interp_linear.click();
 			request_undo_push = true;
 		}
-		else if (target_interp_hermite.is_under_point(mouse_local_pos)) {
+		else if (target_interp_hermite.contains_point(mouse_local_pos)) {
 			target_interp_hermite.click();
 			request_undo_push = true;
 		}

@@ -188,10 +188,10 @@ bool cse::EditColorPanel::should_capture_input() const
 void cse::EditColorPanel::handle_mouse_button(int button, int action, int mods)
 {
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-		if (color_rect_click_target.is_under_point(mouse_local_pos)) {
+		if (color_rect_click_target.contains_point(mouse_local_pos)) {
 			mouse_sat_val_selection_active = true;
 		}
-		else if (hue_bar_click_target.is_under_point(mouse_local_pos)) {
+		else if (hue_bar_click_target.contains_point(mouse_local_pos)) {
 			mouse_hue_selection_active = true;
 		}
 	}

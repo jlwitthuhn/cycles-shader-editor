@@ -6,7 +6,7 @@ cse::Area::Area(const FloatPos begin_pos, const FloatPos end_pos)
 	end = end_pos;
 }
 
-bool cse::Area::is_under_point(const FloatPos pos) const
+bool cse::Area::contains_point(const FloatPos pos) const
 {
 	return (pos.get_x() > begin.get_x() &&
 		pos.get_x() < end.get_x() &&

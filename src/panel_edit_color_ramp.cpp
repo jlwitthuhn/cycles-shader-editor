@@ -153,12 +153,12 @@ float cse::EditColorRampPanel::draw(NVGcontext* const draw_context)
 		// Draw input boxes
 		{
 			const FloatPos left_box_pos(x_left_box, y_box + height_drawn);
-			const bool highlight_left = this_row.box_pos.is_under_point(mouse_local_pos);
+			const bool highlight_left = this_row.box_pos.contains_point(mouse_local_pos);
 			this_row.box_pos.set_position(left_box_pos);
 			this_row.box_pos.draw(draw_context, highlight_left);
 
 			const FloatPos right_box_pos(x_right_box, y_box + height_drawn);
-			const bool highlight_right = this_row.box_alpha.is_under_point(mouse_local_pos);
+			const bool highlight_right = this_row.box_alpha.contains_point(mouse_local_pos);
 			this_row.box_alpha.set_position(right_box_pos);
 			this_row.box_alpha.draw(draw_context, highlight_right);
 		}
@@ -229,25 +229,25 @@ void cse::EditColorRampPanel::handle_mouse_button(const int button, const int ac
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
 		deselect_input_box();
 		for (auto& this_row : ramp_rows) {
-			if (this_row.box_pos.is_under_point(mouse_local_pos)) {
+			if (this_row.box_pos.contains_point(mouse_local_pos)) {
 				this_row.box_pos.begin_edit();
 			}
-			if (this_row.box_alpha.is_under_point(mouse_local_pos)) {
+			if (this_row.box_alpha.contains_point(mouse_local_pos)) {
 				this_row.box_alpha.begin_edit();
 			}
-			if (this_row.color_target.is_under_point(mouse_local_pos)) {
+			if (this_row.color_target.contains_point(mouse_local_pos)) {
 				this_row.color_selected = true;
 			}
-			if (this_row.delete_target.is_under_point(mouse_local_pos)) {
+			if (this_row.delete_target.contains_point(mouse_local_pos)) {
 				this_row.flagged_for_deletion = true;
 			}
 		}
-		if (new_point_button.is_under_point(mouse_local_pos)) {
+		if (new_point_button.contains_point(mouse_local_pos)) {
 			new_point_button_pressed = true;
 		}
 	}
 	else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
-		if (new_point_button.is_under_point(mouse_local_pos) && new_point_button_pressed) {
+		if (new_point_button.contains_point(mouse_local_pos) && new_point_button_pressed) {
 			ColorRampPoint new_point(1.0f, Float3(1.0f, 1.0f, 1.0f), 1.0f);
 			ramp_rows.push_back(new_point);
 		}

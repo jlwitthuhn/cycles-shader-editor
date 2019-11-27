@@ -37,7 +37,7 @@ void cse::ToolbarButton::set_geometry(const FloatPos pos_in, const float width_i
 	height = height_in;
 }
 
-bool cse::ToolbarButton::is_under_point(const FloatPos point) const
+bool cse::ToolbarButton::contains_point(const FloatPos point) const
 {
 	const float min_x = pos.get_x();
 	const float max_x = pos.get_x() + width;
@@ -149,7 +149,7 @@ cse::UIRequests cse::NodeEditorToolbar::consume_ui_requests()
 void cse::NodeEditorToolbar::press_button_under_mouse()
 {
 	for (ToolbarButton& button : buttons) {
-		if (button.is_under_point(mouse_screen_pos)) {
+		if (button.contains_point(mouse_screen_pos)) {
 			button.pressed = true;
 		}
 	}
@@ -158,7 +158,7 @@ void cse::NodeEditorToolbar::press_button_under_mouse()
 void cse::NodeEditorToolbar::release_button_under_mouse()
 {
 	for (ToolbarButton& button : buttons) {
-		if (button.is_under_point(mouse_screen_pos)) {
+		if (button.contains_point(mouse_screen_pos)) {
 			if (button.pressed) {
 				set_request(button.type);
 			}

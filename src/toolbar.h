@@ -28,7 +28,7 @@ namespace cse {
 
 		// Called from NodeEditorToolbar::draw to store the geometry of this button every draw
 		void set_geometry(FloatPos pos, float width, float height);
-		bool is_under_point(FloatPos point) const;
+		bool contains_point(FloatPos point) const;
 
 		ToolbarButtonType type = ToolbarButtonType::SPACER;
 		bool pressed = false;

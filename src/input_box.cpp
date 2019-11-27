@@ -67,7 +67,7 @@ void cse::BaseInputBox::set_position(const FloatPos parent_position)
 	this->position = parent_position;
 }
 
-bool cse::BaseInputBox::is_under_point(const FloatPos parent_local_pos)
+bool cse::BaseInputBox::contains_point(const FloatPos parent_local_pos)
 {
 	const FloatPos local_pos = parent_local_pos - position;
 

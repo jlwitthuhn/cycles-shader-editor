@@ -289,9 +289,9 @@ void cse::EditableNode::draw_node(NVGcontext* const draw_context, const bool sel
 	}
 }
 
-bool cse::EditableNode::is_under_point(const FloatPos check_world_pos) const
+bool cse::EditableNode::contains_point(const FloatPos world_pos) const
 {
-	const FloatPos local_pos = get_local_pos(check_world_pos);
+	const FloatPos local_pos = get_local_pos(world_pos);
 	return (
 		local_pos.get_x() >= 0.0f &&
 		local_pos.get_x() <= content_width &&
@@ -304,7 +304,7 @@ std::weak_ptr<cse::NodeSocket> cse::EditableNode::get_socket_connector_under_poi
 {
 	const FloatPos local_pos = get_local_pos(check_world_pos);
 	for (const auto click_target : socket_targets) {
-		if (click_target.is_under_point(local_pos)) {
+		if (click_target.contains_point(local_pos)) {
 			return click_target.socket;
 		}
 	}
@@ -313,13 +313,13 @@ std::weak_ptr<cse::NodeSocket> cse::EditableNode::get_socket_connector_under_poi
 
 std::weak_ptr<cse::NodeSocket> cse::EditableNode::get_socket_label_under_point(const FloatPos check_world_pos) const
 {
-	if (is_under_point(check_world_pos) == false) {
+	if (contains_point(check_world_pos) == false) {
 		// Nothing will match if the node is not under the given point
 		return std::weak_ptr<NodeSocket>();
 	}
 	const FloatPos local_pos = get_local_pos(check_world_pos);
 	for (const auto click_target : label_targets) {
-		if (click_target.is_under_point(local_pos)) {
+		if (click_target.contains_point(local_pos)) {
 			return click_target.socket;
 		}
 	}

@@ -98,7 +98,7 @@ void cse::EditableGraph::remove_node_set(const cse::WeakNodeSet& weak_nodes_to_r
 bool cse::EditableGraph::is_node_under_point(const FloatPos world_pos) const
 {
 	for (const auto this_node : nodes) {
-		if (this_node->is_under_point(world_pos)) {
+		if (this_node->contains_point(world_pos)) {
 			return true;
 		}
 	}
@@ -108,7 +108,7 @@ bool cse::EditableGraph::is_node_under_point(const FloatPos world_pos) const
 std::weak_ptr<cse::EditableNode> cse::EditableGraph::get_node_under_point(const FloatPos world_pos) const
 {
 	for (const auto this_node : nodes) {
-		if (this_node->is_under_point(world_pos)) {
+		if (this_node->contains_point(world_pos)) {
 			return this_node;
 		}
 	}

@@ -339,7 +339,7 @@ void cse::ParamEditorSubwindow::draw_content(NVGcontext* const draw_context)
 bool cse::ParamEditorSubwindow::is_bool_target_under_mouse()
 {
 	for (BoolValueArea& this_target : bool_targets) {
-		if (this_target.is_under_point(mouse_content_pos)) {
+		if (this_target.contains_point(mouse_content_pos)) {
 			return true;
 		}
 	}
@@ -350,7 +350,7 @@ bool cse::ParamEditorSubwindow::is_bool_target_under_mouse()
 void cse::ParamEditorSubwindow::click_bool_target_under_mouse()
 {
 	for (BoolValueArea& this_target : bool_targets) {
-		if (this_target.is_under_point(mouse_content_pos)) {
+		if (this_target.contains_point(mouse_content_pos)) {
 			this_target.click();
 			return;
 		}

@@ -19,7 +19,7 @@ namespace cse {
 
 		void draw(NVGcontext* draw_context, bool highlight);
 		void set_position(FloatPos parent_position);
-		bool is_under_point(FloatPos parent_local_pos);
+		bool contains_point(FloatPos parent_local_pos);
 
 		void handle_character(unsigned int codepoint);
 		void backspace();
