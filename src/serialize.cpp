@@ -254,8 +254,6 @@ static void deserialize_color_ramp(const std::string serialized_ramp, const std:
 		cse::ColorRampPoint point(pos, cse::Float3(r, g, b), alpha);
 		ramp_value->ramp_points.push_back(point);
 	}
-
-	const float x = cse::locale_safe_stof(*(input_iter++));
 }
 
 static std::string serialize_node(const cse::OutputNode& node)
