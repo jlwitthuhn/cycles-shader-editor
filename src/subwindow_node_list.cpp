@@ -67,6 +67,7 @@ cse::NodeListSubwindow::NodeListSubwindow(const std::weak_ptr<NodeCreationHelper
 	// Input buttons
 	{
 		auto ao_button = std::make_unique<GenericNodeButton<AmbientOcculsionNode>>();
+		auto bevel_button = std::make_unique<GenericNodeButton<BevelNode>>();
 		auto camera_data_button = std::make_unique<GenericNodeButton<CameraDataNode>>();
 		auto fresnel_button = std::make_unique<GenericNodeButton<FresnelNode>>();
 		auto geometry_button = std::make_unique<GenericNodeButton<GeometryNode>>();
@@ -80,6 +81,7 @@ cse::NodeListSubwindow::NodeListSubwindow(const std::weak_ptr<NodeCreationHelper
 		auto wireframe_button = std::make_unique<GenericNodeButton<WireframeNode>>();
 
 		cat_input_button->node_buttons.push_back(std::move(ao_button));
+		cat_input_button->node_buttons.push_back(std::move(bevel_button));
 		cat_input_button->node_buttons.push_back(std::move(camera_data_button));
 		cat_input_button->node_buttons.push_back(std::move(fresnel_button));
 		cat_input_button->node_buttons.push_back(std::move(geometry_button));

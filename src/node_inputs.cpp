@@ -9,7 +9,7 @@
 #include "output.h"
 #include "sockets.h"
 
-cse::AmbientOcculsionNode::AmbientOcculsionNode(FloatPos position)
+cse::AmbientOcculsionNode::AmbientOcculsionNode(const FloatPos position)
 {
 	world_pos = position;
 
@@ -30,7 +30,7 @@ cse::AmbientOcculsionNode::AmbientOcculsionNode(FloatPos position)
 	const auto color_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::COLOR, "Color", "color");
 	color_input->value = std::make_shared<ColorSocketValue>(1.0f, 1.0f, 1.0f);
 	const auto distance_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Distance", "distance");
-	distance_input->value = std::make_shared<FloatSocketValue>(1.0f, 0.0f, 5000.0f);
+	distance_input->value = std::make_shared<FloatSocketValue>(1.0f, 0.0f, 10000.0f);
 	const auto normal_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::NORMAL, "Normal", "normal");
 
 	sockets.push_back(samples_input);
@@ -43,7 +43,30 @@ cse::AmbientOcculsionNode::AmbientOcculsionNode(FloatPos position)
 	type = CyclesNodeType::AmbientOcclusion;
 }
 
-cse::CameraDataNode::CameraDataNode(FloatPos position)
+cse::BevelNode::BevelNode(const FloatPos position)
+{
+	world_pos = position;
+
+	title = "Bevel";
+
+	const auto normal_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::NORMAL, "Normal", "normal");
+
+	sockets.push_back(normal_output);
+
+	const auto samples_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::INT, "Samples", "samples");
+	samples_input->value = std::make_shared<IntSocketValue>(4, 2, 16);
+	const auto radius_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Radius", "radius");
+	radius_input->value = std::make_shared<FloatSocketValue>(0.05f, 0.0f, 5000.0f);
+	const auto normal_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::NORMAL, "Normal", "normal");
+
+	sockets.push_back(samples_input);
+	sockets.push_back(radius_input);
+	sockets.push_back(normal_input);
+
+	type = CyclesNodeType::Bevel;
+}
+
+cse::CameraDataNode::CameraDataNode(const FloatPos position)
 {
 	world_pos = position;
 
@@ -60,7 +83,7 @@ cse::CameraDataNode::CameraDataNode(FloatPos position)
 	type = CyclesNodeType::CameraData;
 }
 
-cse::FresnelNode::FresnelNode(FloatPos position)
+cse::FresnelNode::FresnelNode(const FloatPos position)
 {
 	world_pos = position;
 
@@ -80,7 +103,7 @@ cse::FresnelNode::FresnelNode(FloatPos position)
 	type = CyclesNodeType::Fresnel;
 }
 
-cse::GeometryNode::GeometryNode(FloatPos position)
+cse::GeometryNode::GeometryNode(const FloatPos position)
 {
 	world_pos = position;
 
@@ -107,7 +130,7 @@ cse::GeometryNode::GeometryNode(FloatPos position)
 	type = CyclesNodeType::Geometry;
 }
 
-cse::LayerWeightNode::LayerWeightNode(FloatPos position)
+cse::LayerWeightNode::LayerWeightNode(const FloatPos position)
 {
 	world_pos = position;
 
@@ -129,7 +152,7 @@ cse::LayerWeightNode::LayerWeightNode(FloatPos position)
 	type = CyclesNodeType::LayerWeight;
 }
 
-cse::LightPathNode::LightPathNode(FloatPos position)
+cse::LightPathNode::LightPathNode(const FloatPos position)
 {
 	world_pos = position;
 
@@ -164,7 +187,7 @@ cse::LightPathNode::LightPathNode(FloatPos position)
 	type = CyclesNodeType::LightPath;
 }
 
-cse::ObjectInfoNode::ObjectInfoNode(FloatPos position)
+cse::ObjectInfoNode::ObjectInfoNode(const FloatPos position)
 {
 	world_pos = position;
 
@@ -183,7 +206,7 @@ cse::ObjectInfoNode::ObjectInfoNode(FloatPos position)
 	type = CyclesNodeType::ObjectInfo;
 }
 
-cse::RGBNode::RGBNode(FloatPos position)
+cse::RGBNode::RGBNode(const FloatPos position)
 {
 	world_pos = position;
 
@@ -202,7 +225,7 @@ cse::RGBNode::RGBNode(FloatPos position)
 	type = CyclesNodeType::RGB;
 }
 
-cse::TangentNode::TangentNode(FloatPos position)
+cse::TangentNode::TangentNode(const FloatPos position)
 {
 	world_pos = position;
 
@@ -232,7 +255,7 @@ cse::TangentNode::TangentNode(FloatPos position)
 	type = CyclesNodeType::Tangent;
 }
 
-cse::TextureCoordinateNode::TextureCoordinateNode(FloatPos position)
+cse::TextureCoordinateNode::TextureCoordinateNode(const FloatPos position)
 {
 	world_pos = position;
 
@@ -257,7 +280,7 @@ cse::TextureCoordinateNode::TextureCoordinateNode(FloatPos position)
 	type = CyclesNodeType::TextureCoordinate;
 }
 
-cse::ValueNode::ValueNode(FloatPos position)
+cse::ValueNode::ValueNode(const FloatPos position)
 {
 	world_pos = position;
 
@@ -276,7 +299,7 @@ cse::ValueNode::ValueNode(FloatPos position)
 	type = CyclesNodeType::Value;
 }
 
-cse::WireframeNode::WireframeNode(FloatPos position)
+cse::WireframeNode::WireframeNode(const FloatPos position)
 {
 	world_pos = position;
 

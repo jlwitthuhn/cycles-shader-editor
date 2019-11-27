@@ -49,7 +49,6 @@ static void initialize_maps()
 		return;
 	}
 
-	type_to_code[CyclesNodeType::AmbientOcclusion] = std::string("ambient_occlusion");
 	type_to_code[CyclesNodeType::PrincipledBSDF] = std::string("principled_bsdf");
 	type_to_code[CyclesNodeType::MixShader] = std::string("mix_shader");
 	type_to_code[CyclesNodeType::AddShader] = std::string("add_shader");
@@ -79,6 +78,8 @@ static void initialize_maps()
 	type_to_code[CyclesNodeType::VoronoiTex] = std::string("voronoi_tex");
 	type_to_code[CyclesNodeType::WaveTex] = std::string("wave_tex");
 
+	type_to_code[CyclesNodeType::AmbientOcclusion] = std::string("ambient_occlusion");
+	type_to_code[CyclesNodeType::Bevel] = std::string("bevel");
 	type_to_code[CyclesNodeType::LightPath] = std::string("light_path");
 	type_to_code[CyclesNodeType::Fresnel] = std::string("fresnel");
 	type_to_code[CyclesNodeType::LayerWeight] = std::string("layer_weight");
@@ -366,10 +367,6 @@ static std::shared_ptr<cse::EditableNode> create_node_from_type(cse::CyclesNodeT
 	using namespace cse;
 	const FloatPos pos(0.0f, 0.0f);
 	switch (type) {
-		case CyclesNodeType::AmbientOcclusion:
-		{
-			return std::make_shared<AmbientOcculsionNode>(pos);
-		}
 		case CyclesNodeType::PrincipledBSDF:
 		{
 			return std::make_shared<PrincipledBSDFNode>(pos);
@@ -478,33 +475,33 @@ static std::shared_ptr<cse::EditableNode> create_node_from_type(cse::CyclesNodeT
 		{
 			return std::make_shared<MaxTexmapShaderNode>(pos);
 		}
-		case CyclesNodeType::LightPath:
+		case CyclesNodeType::AmbientOcclusion:
 		{
-			return std::make_shared<LightPathNode>(pos);
+			return std::make_shared<AmbientOcculsionNode>(pos);
 		}
-		case CyclesNodeType::Fresnel:
+		case CyclesNodeType::Bevel:
 		{
-			return std::make_shared<FresnelNode>(pos);
-		}
-		case CyclesNodeType::LayerWeight:
-		{
-			return std::make_shared<LayerWeightNode>(pos);
+			return std::make_shared<BevelNode>(pos);
 		}
 		case CyclesNodeType::CameraData:
 		{
 			return std::make_shared<CameraDataNode>(pos);
 		}
-		case CyclesNodeType::Tangent:
+		case CyclesNodeType::Fresnel:
 		{
-			return std::make_shared<TangentNode>(pos);
-		}
-		case CyclesNodeType::TextureCoordinate:
-		{
-			return std::make_shared<TextureCoordinateNode>(pos);
+			return std::make_shared<FresnelNode>(pos);
 		}
 		case CyclesNodeType::Geometry:
 		{
 			return std::make_shared<GeometryNode>(pos);
+		}
+		case CyclesNodeType::LightPath:
+		{
+			return std::make_shared<LightPathNode>(pos);
+		}
+		case CyclesNodeType::LayerWeight:
+		{
+			return std::make_shared<LayerWeightNode>(pos);
 		}
 		case CyclesNodeType::ObjectInfo:
 		{
@@ -514,13 +511,21 @@ static std::shared_ptr<cse::EditableNode> create_node_from_type(cse::CyclesNodeT
 		{
 			return std::make_shared<RGBNode>(pos);
 		}
-		case CyclesNodeType::Wireframe:
+		case CyclesNodeType::Tangent:
 		{
-			return std::make_shared<WireframeNode>(pos);
+			return std::make_shared<TangentNode>(pos);
+		}
+		case CyclesNodeType::TextureCoordinate:
+		{
+			return std::make_shared<TextureCoordinateNode>(pos);
 		}
 		case CyclesNodeType::Value:
 		{
 			return std::make_shared<ValueNode>(pos);
+		}
+		case CyclesNodeType::Wireframe:
+		{
+			return std::make_shared<WireframeNode>(pos);
 		}
 		case CyclesNodeType::MixRGB:
 		{

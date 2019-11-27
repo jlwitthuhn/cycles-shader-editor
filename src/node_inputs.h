@@ -4,11 +4,14 @@
 
 namespace cse {
 
-	class FloatPos;
-
 	class AmbientOcculsionNode : public EditableNode {
 	public:
 		AmbientOcculsionNode(FloatPos position);
+	};
+
+	class BevelNode : public EditableNode {
+	public:
+		BevelNode(FloatPos position);
 	};
 
 	class CameraDataNode : public EditableNode {

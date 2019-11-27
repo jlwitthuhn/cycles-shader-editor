@@ -8,7 +8,6 @@ namespace cse {
 
 	enum class CyclesNodeType {
 		// Shader
-		AmbientOcclusion,
 		PrincipledBSDF,
 		MixShader,
 		AddShader,
@@ -38,17 +37,19 @@ namespace cse {
 		VoronoiTex,
 		WaveTex,
 		// Input
-		LightPath,
-		Fresnel,
-		LayerWeight,
+		AmbientOcclusion,
+		Bevel,
 		CameraData,
-		Tangent,
-		TextureCoordinate,
+		Fresnel,
 		Geometry,
+		LayerWeight,
+		LightPath,
 		ObjectInfo,
 		RGB,
-		Wireframe,
+		Tangent,
+		TextureCoordinate,
 		Value,
+		Wireframe,
 		// Color
 		MixRGB,
 		Invert,
