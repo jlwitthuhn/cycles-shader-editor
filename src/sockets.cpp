@@ -279,7 +279,10 @@ void cse::CurveSocketValue::sort_curve_points()
 
 cse::ColorRampSocketValue::ColorRampSocketValue()
 {
-
+	ColorRampPoint p1(0.0f, Float3(0.0f, 0.0f, 0.0f), 1.0f);
+	ColorRampPoint p2(1.0f, Float3(1.0f, 1.0f, 1.0f), 1.0f);
+	ramp_points.push_back(p1);
+	ramp_points.push_back(p2);
 }
 
 cse::SocketType cse::ColorRampSocketValue::get_type() const

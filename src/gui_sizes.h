@@ -27,7 +27,7 @@ static constexpr float UI_SUBWIN_NODE_LIST_CAT_BUTTON_HGAP = 6.0f;
 static constexpr float UI_SUBWIN_NODE_LIST_NODE_BUTTON_HPADDING = 6.0f;
 static constexpr float UI_SUBWIN_NODE_LIST_NODE_BUTTON_HEIGHT = 20.0f;
 
-static constexpr float UI_SUBWIN_PARAM_EDIT_WIDTH = 240.0f;
+static constexpr float UI_SUBWIN_PARAM_EDIT_WIDTH = 268.0f;
 static constexpr float UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT = 22.0f;
 static constexpr float UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_WIDTH = 80.0f;
 static constexpr float UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT = 18.0f;
@@ -40,6 +40,12 @@ static constexpr float UI_SUBWIN_PARAM_EDIT_RECT_HEIGHT = 180.0f;
 static constexpr float UI_SUBWIN_PARAM_EDIT_RECT_HPAD = 8.0f;
 static constexpr float UI_SUBWIN_PARAM_EDIT_RECT_VPAD = 4.0f;
 static constexpr float UI_SUBWIN_PARAM_EDIT_CURVE_POINT_RADIUS = 4.0f;
+
+static constexpr float UI_SUBWIN_PARAM_EDIT_COLOR_RAMP_ROW_HEIGHT = 32.0f;
+static constexpr float UI_SUBWIN_PARAM_EDIT_COLOR_RAMP_TEXT_INPUT_WIDTH = 54.0f;
+static constexpr float UI_SUBWIN_PARAM_EDIT_ROW_HIGHLIGHT_VPAD = 2.0f;
+static constexpr float UI_SUBWIN_PARAM_EDIT_ROW_HIGHLIGHT_HPAD = 8.0f;
+static constexpr float UI_SUBWIN_PARAM_EDIT_ROW_HIGHLIGHT_CORNER_RADIUS = 6.0f;
 
 static constexpr float UI_NODE_HEADER_HEIGHT = 24.0f;
 static constexpr float UI_NODE_CORNER_RADIUS = 6.0f;

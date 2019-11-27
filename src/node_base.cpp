@@ -432,6 +432,20 @@ void cse::EditableNode::update_output_node(OutputNode& output)
 				output.curve_values[this_socket->internal_name] = out_curve;
 			}
 		}
+		else if (this_socket->socket_type == SocketType::COLOR_RAMP) {
+			const std::shared_ptr<ColorRampSocketValue> ramp_val = std::dynamic_pointer_cast<ColorRampSocketValue>(this_socket->value);
+			if (ramp_val) {
+				OutputColorRamp out_ramp;
+				for (const auto& this_point : ramp_val->ramp_points) {
+					OutputColorRampPoint new_point;
+					new_point.pos = this_point.position;
+					new_point.color = this_point.color;
+					new_point.alpha = this_point.alpha;
+					out_ramp.points.push_back(new_point);
+				}
+				output.ramp_values[this_socket->internal_name] = out_ramp;
+			}
+		}
 	}
 }
 

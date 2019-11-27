@@ -103,6 +103,16 @@ namespace cse {
 		std::vector<float> samples;
 	};
 
+	struct OutputColorRampPoint {
+		float pos;
+		Float3 color;
+		float alpha;
+	};
+
+	struct OutputColorRamp {
+		std::vector< OutputColorRampPoint> points;
+	};
+
 	struct OutputNode {
 		CyclesNodeType type;
 
@@ -117,6 +127,7 @@ namespace cse {
 		std::map<std::string, int> int_values;
 		std::map<std::string, bool> bool_values;
 		std::map<std::string, OutputCurve> curve_values;
+		std::map<std::string, OutputColorRamp> ramp_values;
 	};
 
 	struct OutputConnection {

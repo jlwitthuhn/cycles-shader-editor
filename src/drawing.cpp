@@ -60,6 +60,22 @@ void cse::Drawing::draw_button(
 	nvgText(draw_context, x_pos + width / 2, y_pos + height / 2, label.c_str(), nullptr);
 }
 
+void cse::Drawing::draw_color_swatch(NVGcontext* const draw_context, const FloatPos pos, const float width, const float height, const NVGcolor color, const bool selected)
+{
+	nvgBeginPath(draw_context);
+	nvgRoundedRect(draw_context, pos.get_x(), pos.get_y(), UI_SUBWIN_PARAM_EDIT_COLOR_RAMP_TEXT_INPUT_WIDTH, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT, UI_BUTTON_CORNER_RADIUS);
+	nvgFillColor(draw_context, color);
+	nvgFill(draw_context);
+	if (selected) {
+		nvgStrokeColor(draw_context, nvgRGBA(255, 255, 255, 255));
+	}
+	else {
+		nvgStrokeColor(draw_context, nvgRGBA(0, 0, 0, 255));
+	}
+	nvgStrokeWidth(draw_context, 1.5f);
+	nvgStroke(draw_context);
+}
+
 void cse::Drawing::draw_color_pick_cursor(NVGcontext* const draw_context, const FloatPos pos)
 {
 	constexpr float CURSOR_LENGTH_SHORT = 3.0f;

@@ -60,7 +60,6 @@ float cse::RadioListWidget::draw(NVGcontext* const draw_context)
 		nvgFillColor(draw_context, nvgRGBA(0, 0, 0, 255));
 		nvgText(draw_context, text_pos_x, text_pos_y, this_enum_value.display_value.c_str(), nullptr);
 
-		// TODO:
 		FloatPos click_area_begin(0.0f, height_drawn);
 		FloatPos click_area_end(width, height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT);
 		StringEnumArea click_area(click_area_begin, click_area_end, this_enum_value, attached_enum);

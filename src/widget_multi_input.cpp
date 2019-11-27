@@ -121,7 +121,6 @@ void cse::MultiInputWidget::handle_mouse_button(const int button, const int acti
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
 		for (const auto& this_socket : sockets) {
 			if (this_socket.input_box->is_under_point(mouse_local_pos)) {
-				this_socket.input_box->cancel_edit();
 				this_socket.input_box->begin_edit();
 			}
 			else {

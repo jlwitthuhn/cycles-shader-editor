@@ -61,6 +61,9 @@ float cse::EditColorPanel::draw(NVGcontext* const draw_context)
 		rgb_from_hue = rgb_from_hsv(hsv_tmp);
 	}
 
+	// Add a little top margin
+	height_drawn += 6.0f;
+
 	// Draw color rectangle
 	{
 		// Background

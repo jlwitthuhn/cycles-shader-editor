@@ -165,7 +165,7 @@ static std::string serialize_curve(const cse::OutputCurve& curve)
 	return curve_stream.str();
 }
 
-static void deserialize_curve(std::string serialized_curve, std::shared_ptr<cse::CurveSocketValue> curve_value)
+static void deserialize_curve(const std::string serialized_curve, const std::shared_ptr<cse::CurveSocketValue> curve_value)
 {
 	curve_value->reset_value();
 	constexpr char CURVE_SEPARATOR = ',';
@@ -209,6 +209,55 @@ static void deserialize_curve(std::string serialized_curve, std::shared_ptr<cse:
 	}
 }
 
+static std::string serialize_color_ramp(const cse::OutputColorRamp& color_ramp)
+{
+	constexpr char RAMP_SEPARATOR = ',';
+	std::stringstream out_stream;
+	out_stream << "ramp00";
+	for (const auto& this_point : color_ramp.points) {
+		const float a = this_point.pos;
+		const float b = this_point.color.x;
+		const float c = this_point.color.y;
+		const float d = this_point.color.z;
+		const float e = this_point.alpha;
+		out_stream << RAMP_SEPARATOR << a << RAMP_SEPARATOR << b << RAMP_SEPARATOR << c << RAMP_SEPARATOR << d << RAMP_SEPARATOR << e;
+	}
+
+	return out_stream.str();
+}
+
+static void deserialize_color_ramp(const std::string serialized_ramp, const std::shared_ptr<cse::ColorRampSocketValue> ramp_value)
+{
+	constexpr char RAMP_SEPARATOR = ',';
+	std::list<std::string> tokenized_input = tokenize_string(serialized_ramp, RAMP_SEPARATOR);
+
+	if ( ((tokenized_input.size() - 1) % 5) != 0) {
+		// There must be a multiple of 5, plus one, tokens
+		return;
+	}
+
+	std::list<std::string>::iterator input_iter = tokenized_input.begin();
+	const std::string identifier = *(input_iter++);
+	if (identifier != "ramp00") {
+		// Unrecognized ramp formap
+		return;
+	}
+
+	ramp_value->ramp_points.clear();
+	const size_t iterations = (tokenized_input.size() - 1) / 5;
+	for (size_t i = 0; i < iterations; i++) {
+		const float pos = cse::locale_safe_stof(*(input_iter++));
+		const float r = cse::locale_safe_stof(*(input_iter++));
+		const float g = cse::locale_safe_stof(*(input_iter++));
+		const float b = cse::locale_safe_stof(*(input_iter++));
+		const float alpha = cse::locale_safe_stof(*(input_iter++));
+		cse::ColorRampPoint point(pos, cse::Float3(r, g, b), alpha);
+		ramp_value->ramp_points.push_back(point);
+	}
+
+	const float x = cse::locale_safe_stof(*(input_iter++));
+}
+
 static std::string serialize_node(const cse::OutputNode& node)
 {
 	using namespace cse;
@@ -239,6 +288,9 @@ static std::string serialize_node(const cse::OutputNode& node)
 	}
 	for (std::pair<std::string, OutputCurve> this_pair : node.curve_values) {
 		node_stream << this_pair.first << SEPARATOR << serialize_curve(this_pair.second) << SEPARATOR;
+	}
+	for (std::pair<std::string, OutputColorRamp> this_pair : node.ramp_values) {
+		node_stream << this_pair.first << SEPARATOR << serialize_color_ramp(this_pair.second) << SEPARATOR;
 	}
 
 	node_stream << NODE_END << SEPARATOR;
@@ -673,7 +725,18 @@ static std::shared_ptr<cse::EditableNode> deserialize_node(std::list<std::string
 				if (curve_val) {
 					deserialize_curve(this_param.second, curve_val);
 				}
+				break;
 			}
+
+			case SocketType::COLOR_RAMP:
+			{
+				const auto ramp_val = std::dynamic_pointer_cast<ColorRampSocketValue>(this_socket_ptr->value);
+				if (ramp_val) {
+					deserialize_color_ramp(this_param.second, ramp_val);
+				}
+				break;
+			}
+
 			default:
 				break;
 			}

@@ -7,6 +7,7 @@
 
 #include "common_enums.h"
 #include "float_pos.h"
+#include "util_color_ramp.h"
 
 namespace cse {
 
@@ -150,6 +151,8 @@ namespace cse {
 		ColorRampSocketValue();
 
 		virtual SocketType get_type() const override;
+
+		std::vector<ColorRampPoint> ramp_points;
 	};
 
 	class NodeSocket {

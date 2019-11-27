@@ -102,7 +102,7 @@ void cse::BaseInputBox::backspace()
 
 void cse::BaseInputBox::begin_edit()
 {
-	input_stream = std::stringstream();
+	cancel_edit();
 	selected = true;
 }
 

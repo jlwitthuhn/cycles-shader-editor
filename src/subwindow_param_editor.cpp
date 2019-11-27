@@ -14,6 +14,7 @@
 #include "input_box.h"
 #include "panel_edit.h"
 #include "panel_edit_color.h"
+#include "panel_edit_color_ramp.h"
 #include "panel_edit_curve.h"
 #include "panel_edit_enum.h"
 #include "panel_edit_float.h"
@@ -27,6 +28,7 @@ cse::ParamEditorSubwindow::ParamEditorSubwindow(const FloatPos screen_position) 
 {
 	subwindow_width = UI_SUBWIN_PARAM_EDIT_WIDTH;
 	panels.push_back(std::make_shared<EditColorPanel>(UI_SUBWIN_PARAM_EDIT_WIDTH));
+	panels.push_back(std::make_shared<EditColorRampPanel>(UI_SUBWIN_PARAM_EDIT_WIDTH));
 	panels.push_back(std::make_shared<EditCurvePanel>(UI_SUBWIN_PARAM_EDIT_WIDTH));
 	panels.push_back(std::make_shared<EditEnumPanel>(UI_SUBWIN_PARAM_EDIT_WIDTH));
 	panels.push_back(std::make_shared<EditFloatPanel>(UI_SUBWIN_PARAM_EDIT_WIDTH));
@@ -213,6 +215,9 @@ void cse::ParamEditorSubwindow::draw_content(NVGcontext* const draw_context)
 			break;
 		case SocketType::CURVE:
 			parameter_type_text = "Type: Curve";
+			break;
+		case SocketType::COLOR_RAMP:
+			parameter_type_text = "Type: Color Ramp";
 			break;
 		default:
 			parameter_type_text = "Type: Error";
