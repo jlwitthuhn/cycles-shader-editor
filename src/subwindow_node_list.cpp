@@ -66,6 +66,7 @@ cse::NodeListSubwindow::NodeListSubwindow(const std::weak_ptr<NodeCreationHelper
 
 	// Input buttons
 	{
+		auto ao_button = std::make_unique<GenericNodeButton<AmbientOcculsionNode>>();
 		auto camera_data_button = std::make_unique<GenericNodeButton<CameraDataNode>>();
 		auto fresnel_button = std::make_unique<GenericNodeButton<FresnelNode>>();
 		auto geometry_button = std::make_unique<GenericNodeButton<GeometryNode>>();
@@ -78,6 +79,7 @@ cse::NodeListSubwindow::NodeListSubwindow(const std::weak_ptr<NodeCreationHelper
 		auto value_button = std::make_unique<GenericNodeButton<ValueNode>>();
 		auto wireframe_button = std::make_unique<GenericNodeButton<WireframeNode>>();
 
+		cat_input_button->node_buttons.push_back(std::move(ao_button));
 		cat_input_button->node_buttons.push_back(std::move(camera_data_button));
 		cat_input_button->node_buttons.push_back(std::move(fresnel_button));
 		cat_input_button->node_buttons.push_back(std::move(geometry_button));
@@ -94,7 +96,6 @@ cse::NodeListSubwindow::NodeListSubwindow(const std::weak_ptr<NodeCreationHelper
 	// Shaders buttons
 	{
 		auto add_button = std::make_unique<GenericNodeButton<AddShaderNode>>();
-		auto ao_button = std::make_unique<GenericNodeButton<AmbientOcculsionNode>>();
 		auto anisotropic_button = std::make_unique<GenericNodeButton<AnisotropicBSDFNode>>();
 		auto diffuse_button = std::make_unique<GenericNodeButton<DiffuseBSDFNode>>();
 		auto emission_button = std::make_unique<GenericNodeButton<EmissionNode>>();
@@ -114,7 +115,6 @@ cse::NodeListSubwindow::NodeListSubwindow(const std::weak_ptr<NodeCreationHelper
 		auto vol_scatter_button = std::make_unique<GenericNodeButton<VolumeScatterNode>>();
 
 		cat_shader_button->node_buttons.push_back(std::move(add_button));
-		cat_shader_button->node_buttons.push_back(std::move(ao_button));
 		cat_shader_button->node_buttons.push_back(std::move(anisotropic_button));
 		cat_shader_button->node_buttons.push_back(std::move(diffuse_button));
 		cat_shader_button->node_buttons.push_back(std::move(emission_button));

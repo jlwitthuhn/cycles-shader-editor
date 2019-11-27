@@ -9,24 +9,6 @@
 #include "output.h"
 #include "sockets.h"
 
-cse::AmbientOcculsionNode::AmbientOcculsionNode(FloatPos position)
-{
-	world_pos = position;
-
-	title = "Ambient Occlusion";
-
-	const auto ao_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::CLOSURE, "AO", "AO");
-
-	sockets.push_back(ao_output);
-
-	const auto color_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::COLOR, "Color", "color");
-	color_input->value = std::make_shared<ColorSocketValue>(1.0f, 1.0f, 1.0f);
-
-	sockets.push_back(color_input);
-
-	type = CyclesNodeType::AmbientOcclusion;
-}
-
 cse::PrincipledBSDFNode::PrincipledBSDFNode(FloatPos position)
 {
 	world_pos = position;

@@ -6,11 +6,6 @@ namespace cse {
 
 	class FloatPos;
 
-	class AmbientOcculsionNode : public EditableNode {
-	public:
-		AmbientOcculsionNode(FloatPos position);
-	};
-
 	class PrincipledBSDFNode : public EditableNode {
 	public:
 		PrincipledBSDFNode(FloatPos position);

@@ -9,6 +9,40 @@
 #include "output.h"
 #include "sockets.h"
 
+cse::AmbientOcculsionNode::AmbientOcculsionNode(FloatPos position)
+{
+	world_pos = position;
+
+	title = "Ambient Occlusion";
+
+	const auto color_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::COLOR, "Color", "color");
+	const auto ao_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "AO", "ao");
+
+	sockets.push_back(color_output);
+	sockets.push_back(ao_output);
+
+	const auto samples_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::INT, "Samples", "samples");
+	samples_input->value = std::make_shared<IntSocketValue>(16, 1, 128);
+	const auto inside_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::BOOLEAN, "Inside", "inside");
+	inside_input->value = std::make_shared<BoolSocketValue>(false);
+	const auto only_local_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::BOOLEAN, "Only Local", "only_local");
+	only_local_input->value = std::make_shared<BoolSocketValue>(false);
+	const auto color_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::COLOR, "Color", "color");
+	color_input->value = std::make_shared<ColorSocketValue>(1.0f, 1.0f, 1.0f);
+	const auto distance_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Distance", "distance");
+	distance_input->value = std::make_shared<FloatSocketValue>(1.0f, 0.0f, 5000.0f);
+	const auto normal_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::NORMAL, "Normal", "normal");
+
+	sockets.push_back(samples_input);
+	sockets.push_back(inside_input);
+	sockets.push_back(only_local_input);
+	sockets.push_back(color_input);
+	sockets.push_back(distance_input);
+	sockets.push_back(normal_input);
+
+	type = CyclesNodeType::AmbientOcclusion;
+}
+
 cse::CameraDataNode::CameraDataNode(FloatPos position)
 {
 	world_pos = position;
