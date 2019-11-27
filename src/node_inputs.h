@@ -6,9 +6,9 @@ namespace cse {
 
 	class FloatPos;
 
-	class LightPathNode : public EditableNode {
+	class CameraDataNode : public EditableNode {
 	public:
-		LightPathNode(FloatPos position);
+		CameraDataNode(FloatPos position);
 	};
 
 	class FresnelNode : public EditableNode {
@@ -16,29 +16,19 @@ namespace cse {
 		FresnelNode(FloatPos position);
 	};
 
+	class GeometryNode : public EditableNode {
+	public:
+		GeometryNode(FloatPos position);
+	};
+
 	class LayerWeightNode : public EditableNode {
 	public:
 		LayerWeightNode(FloatPos position);
 	};
 
-	class CameraDataNode : public EditableNode {
+	class LightPathNode : public EditableNode {
 	public:
-		CameraDataNode(FloatPos position);
-	};
-
-	class TangentNode : public EditableNode {
-	public:
-		TangentNode(FloatPos position);
-	};
-
-	class TextureCoordinateNode : public EditableNode {
-	public:
-		TextureCoordinateNode(FloatPos position);
-	};
-
-	class GeometryNode : public EditableNode {
-	public:
-		GeometryNode(FloatPos position);
+		LightPathNode(FloatPos position);
 	};
 
 	class ObjectInfoNode : public EditableNode {
@@ -49,6 +39,16 @@ namespace cse {
 	class RGBNode : public EditableNode {
 	public:
 		RGBNode(FloatPos position);
+	};
+
+	class TangentNode : public EditableNode {
+	public:
+		TangentNode(FloatPos position);
+	};
+
+	class TextureCoordinateNode : public EditableNode {
+	public:
+		TextureCoordinateNode(FloatPos position);
 	};
 
 	class ValueNode : public EditableNode {

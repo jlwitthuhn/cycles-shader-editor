@@ -9,6 +9,92 @@
 #include "output.h"
 #include "sockets.h"
 
+cse::CameraDataNode::CameraDataNode(FloatPos position)
+{
+	world_pos = position;
+
+	title = "Camera Data";
+
+	const auto vector_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::VECTOR, "View Vector", "view_vector");
+	const auto z_depth_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "View Z Depth", "view_z_depth");
+	const auto distance_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "View Distance", "view_distance");
+
+	sockets.push_back(vector_output);
+	sockets.push_back(z_depth_output);
+	sockets.push_back(distance_output);
+
+	type = CyclesNodeType::CameraData;
+}
+
+cse::FresnelNode::FresnelNode(FloatPos position)
+{
+	world_pos = position;
+
+	title = "Fresnel";
+
+	const auto fac_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Fac", "fac");
+
+	sockets.push_back(fac_output);
+
+	const auto ior_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "IOR", "IOR");
+	ior_input->value = std::make_shared<FloatSocketValue>(1.45f, 0.0f, 1000.0f);
+	const auto normal_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::NORMAL, "Normal", "normal");
+
+	sockets.push_back(ior_input);
+	sockets.push_back(normal_input);
+
+	type = CyclesNodeType::Fresnel;
+}
+
+cse::GeometryNode::GeometryNode(FloatPos position)
+{
+	world_pos = position;
+
+	title = "Geometry";
+
+	const auto position_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::VECTOR, "Position", "position");
+	const auto normal_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::NORMAL, "Normal", "normal");
+	const auto tangent_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::VECTOR, "Tangent", "tangent");
+	const auto true_normal_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::NORMAL, "True Normal", "true_normal");
+	const auto incoming_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::VECTOR, "Incoming", "incoming");
+	const auto parametric_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::VECTOR, "Parametric", "parametric");
+	const auto backfacing_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Backfacing", "backfacing");
+	const auto pointiness_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Pointiness", "pointiness");
+
+	sockets.push_back(position_output);
+	sockets.push_back(normal_output);
+	sockets.push_back(tangent_output);
+	sockets.push_back(true_normal_output);
+	sockets.push_back(incoming_output);
+	sockets.push_back(parametric_output);
+	sockets.push_back(backfacing_output);
+	sockets.push_back(pointiness_output);
+
+	type = CyclesNodeType::Geometry;
+}
+
+cse::LayerWeightNode::LayerWeightNode(FloatPos position)
+{
+	world_pos = position;
+
+	title = "Layer Weight";
+
+	const auto fresnel_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Fresnel", "fresnel");
+	const auto facing_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Facing", "facing");
+
+	sockets.push_back(fresnel_output);
+	sockets.push_back(facing_output);
+
+	const auto blend_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Blend", "blend");
+	blend_input->value = std::make_shared<FloatSocketValue>(0.5f, 0.0f, 1.0f);
+	const auto normal_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::NORMAL, "Normal", "normal");
+
+	sockets.push_back(blend_input);
+	sockets.push_back(normal_input);
+
+	type = CyclesNodeType::LayerWeight;
+}
+
 cse::LightPathNode::LightPathNode(FloatPos position)
 {
 	world_pos = position;
@@ -44,63 +130,42 @@ cse::LightPathNode::LightPathNode(FloatPos position)
 	type = CyclesNodeType::LightPath;
 }
 
-cse::FresnelNode::FresnelNode(FloatPos position)
+cse::ObjectInfoNode::ObjectInfoNode(FloatPos position)
 {
 	world_pos = position;
 
-	title = "Fresnel";
+	title = "Object Info";
 
-	const auto fac_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Fac", "fac");
+	const auto location_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::VECTOR, "Location", "location");
+	const auto object_index_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Object Index", "object_index");
+	const auto material_index_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Material Index", "material_index");
+	const auto random_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Random", "random");
 
-	sockets.push_back(fac_output);
+	sockets.push_back(location_output);
+	sockets.push_back(object_index_output);
+	sockets.push_back(material_index_output);
+	sockets.push_back(random_output);
 
-	const auto ior_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "IOR", "IOR");
-	ior_input->value = std::make_shared<FloatSocketValue>(1.45f, 0.0f, 1000.0f);
-	const auto normal_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::NORMAL, "Normal", "normal");
-
-	sockets.push_back(ior_input);
-	sockets.push_back(normal_input);
-
-	type = CyclesNodeType::Fresnel;
+	type = CyclesNodeType::ObjectInfo;
 }
 
-cse::LayerWeightNode::LayerWeightNode(FloatPos position)
+cse::RGBNode::RGBNode(FloatPos position)
 {
 	world_pos = position;
 
-	title = "Layer Weight";
+	title = "RGB";
 
-	const auto fresnel_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Fresnel", "fresnel");
-	const auto facing_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Facing", "facing");
+	const auto color_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::COLOR, "Color", "color");
 
-	sockets.push_back(fresnel_output);
-	sockets.push_back(facing_output);
+	sockets.push_back(color_output);
 
-	const auto blend_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Blend", "blend");
-	blend_input->value = std::make_shared<FloatSocketValue>(0.5f, 0.0f, 1.0f);
-	const auto normal_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::NORMAL, "Normal", "normal");
+	const auto value_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::COLOR, "Value", "value");
+	value_input->value = std::make_shared<ColorSocketValue>(1.0f, 1.0f, 1.0f);
+	value_input->draw_socket = false;
 
-	sockets.push_back(blend_input);
-	sockets.push_back(normal_input);
+	sockets.push_back(value_input);
 
-	type = CyclesNodeType::LayerWeight;
-}
-
-cse::CameraDataNode::CameraDataNode(FloatPos position)
-{
-	world_pos = position;
-
-	title = "Camera Data";
-
-	const auto vector_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::VECTOR, "View Vector", "view_vector");
-	const auto z_depth_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "View Z Depth", "view_z_depth");
-	const auto distance_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "View Distance", "view_distance");
-
-	sockets.push_back(vector_output);
-	sockets.push_back(z_depth_output);
-	sockets.push_back(distance_output);
-
-	type = CyclesNodeType::CameraData;
+	type = CyclesNodeType::RGB;
 }
 
 cse::TangentNode::TangentNode(FloatPos position)
@@ -156,71 +221,6 @@ cse::TextureCoordinateNode::TextureCoordinateNode(FloatPos position)
 	sockets.push_back(reflection_output);
 
 	type = CyclesNodeType::TextureCoordinate;
-}
-
-cse::GeometryNode::GeometryNode(FloatPos position)
-{
-	world_pos = position;
-
-	title = "Geometry";
-
-	const auto position_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::VECTOR, "Position", "position");
-	const auto normal_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::NORMAL, "Normal", "normal");
-	const auto tangent_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::VECTOR, "Tangent", "tangent");
-	const auto true_normal_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::NORMAL, "True Normal", "true_normal");
-	const auto incoming_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::VECTOR, "Incoming", "incoming");
-	const auto parametric_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::VECTOR, "Parametric", "parametric");
-	const auto backfacing_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Backfacing", "backfacing");
-	const auto pointiness_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Pointiness", "pointiness");
-
-	sockets.push_back(position_output);
-	sockets.push_back(normal_output);
-	sockets.push_back(tangent_output);
-	sockets.push_back(true_normal_output);
-	sockets.push_back(incoming_output);
-	sockets.push_back(parametric_output);
-	sockets.push_back(backfacing_output);
-	sockets.push_back(pointiness_output);
-
-	type = CyclesNodeType::Geometry;
-}
-
-cse::ObjectInfoNode::ObjectInfoNode(FloatPos position)
-{
-	world_pos = position;
-
-	title = "Object Info";
-
-	const auto location_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::VECTOR, "Location", "location");
-	const auto object_index_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Object Index", "object_index");
-	const auto material_index_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Material Index", "material_index");
-	const auto random_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Random", "random");
-
-	sockets.push_back(location_output);
-	sockets.push_back(object_index_output);
-	sockets.push_back(material_index_output);
-	sockets.push_back(random_output);
-
-	type = CyclesNodeType::ObjectInfo;
-}
-
-cse::RGBNode::RGBNode(FloatPos position)
-{
-	world_pos = position;
-
-	title = "RGB";
-
-	const auto color_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::COLOR, "Color", "color");
-
-	sockets.push_back(color_output);
-
-	const auto value_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::COLOR, "Value", "value");
-	value_input->value = std::make_shared<ColorSocketValue>(1.0f, 1.0f, 1.0f);
-	value_input->draw_socket = false;
-
-	sockets.push_back(value_input);
-
-	type = CyclesNodeType::RGB;
 }
 
 cse::ValueNode::ValueNode(FloatPos position)
