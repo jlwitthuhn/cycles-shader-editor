@@ -107,6 +107,7 @@ cse::NodeListSubwindow::NodeListSubwindow(const std::weak_ptr<NodeCreationHelper
 		auto holdout_button = std::make_unique<GenericNodeButton<HoldoutNode>>();
 		auto mix_button = std::make_unique<GenericNodeButton<MixShaderNode>>();
 		auto principled_button = std::make_unique<GenericNodeButton<PrincipledBSDFNode>>();
+		auto principled_volume_button = std::make_unique<GenericNodeButton<PrincipledVolumeNode>>();
 		auto refraction_button = std::make_unique<GenericNodeButton<RefractionBSDFNode>>();
 		auto sss_button = std::make_unique<GenericNodeButton<SubsurfaceScatteringNode>>();
 		auto toon_button = std::make_unique<GenericNodeButton<ToonBSDFNode>>();
@@ -126,6 +127,7 @@ cse::NodeListSubwindow::NodeListSubwindow(const std::weak_ptr<NodeCreationHelper
 		cat_shader_button->node_buttons.push_back(std::move(holdout_button));
 		cat_shader_button->node_buttons.push_back(std::move(mix_button));
 		cat_shader_button->node_buttons.push_back(std::move(principled_button));
+		cat_shader_button->node_buttons.push_back(std::move(principled_volume_button));
 		cat_shader_button->node_buttons.push_back(std::move(refraction_button));
 		cat_shader_button->node_buttons.push_back(std::move(sss_button));
 		cat_shader_button->node_buttons.push_back(std::move(toon_button));

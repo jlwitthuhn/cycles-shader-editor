@@ -50,6 +50,7 @@ static void initialize_maps()
 	}
 
 	type_to_code[CyclesNodeType::PrincipledBSDF] = std::string("principled_bsdf");
+	type_to_code[CyclesNodeType::PrincipledVolume] = std::string("principled_volume");
 	type_to_code[CyclesNodeType::MixShader] = std::string("mix_shader");
 	type_to_code[CyclesNodeType::AddShader] = std::string("add_shader");
 	type_to_code[CyclesNodeType::DiffuseBSDF] = std::string("diffuse_bsdf");
@@ -370,6 +371,10 @@ static std::shared_ptr<cse::EditableNode> create_node_from_type(cse::CyclesNodeT
 		case CyclesNodeType::PrincipledBSDF:
 		{
 			return std::make_shared<PrincipledBSDFNode>(pos);
+		}
+		case CyclesNodeType::PrincipledVolume:
+		{
+			return std::make_shared<PrincipledVolumeNode>(pos);
 		}
 		case CyclesNodeType::MixShader:
 		{

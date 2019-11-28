@@ -111,6 +111,51 @@ cse::PrincipledBSDFNode::PrincipledBSDFNode(FloatPos position)
 	content_width += 34.0f;
 }
 
+cse::PrincipledVolumeNode::PrincipledVolumeNode(FloatPos position)
+{
+	world_pos = position;
+
+	title = "Principled Volume";
+
+	const auto volume_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::CLOSURE, "Volume", "volume");
+
+	sockets.push_back(volume_output);
+
+	const auto color_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::COLOR, "Color", "color");
+	color_input->value = std::make_shared<ColorSocketValue>(0.5f, 0.5f, 0.5f);
+	const auto density_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Density", "density");
+	density_input->value = std::make_shared<FloatSocketValue>(1.0f, 0.0f, 5000.0f);
+	const auto anisotropy_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Anisotropy", "anisotropy");
+	anisotropy_input->value = std::make_shared<FloatSocketValue>(0.0f, -1.0f, 1.0f);
+
+	const auto absorption_color_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::COLOR, "Absorption Color", "absorption_color");
+	absorption_color_input->value = std::make_shared<ColorSocketValue>(0.0f, 0.0f, 0.0f);
+	const auto emission_strength_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Emission Strength", "emission_strength");
+	emission_strength_input->value = std::make_shared<FloatSocketValue>(0.0f, 0.0f, 5000.0f);
+	const auto emission_color_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::COLOR, "Emission Color", "emission_color");
+	emission_color_input->value = std::make_shared<ColorSocketValue>(1.0f, 1.0f, 1.0f);
+	const auto blackbody_intensity_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Blackbody Intensity", "blackbody_intensity");
+	blackbody_intensity_input->value = std::make_shared<FloatSocketValue>(0.0f, 0.0f, 1.0f);
+	const auto blackbody_tint_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::COLOR, "Blackbody Tint", "blackbody_tint");
+	blackbody_tint_input->value = std::make_shared<ColorSocketValue>(1.0f, 1.0f, 1.0f);
+	const auto temperature_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Temperature", "temperature");
+	temperature_input->value = std::make_shared<FloatSocketValue>(1500.0f, 0.0f, 5000.0f);
+
+	sockets.push_back(color_input);
+	sockets.push_back(density_input);
+	sockets.push_back(anisotropy_input);
+	sockets.push_back(absorption_color_input);
+	sockets.push_back(emission_strength_input);
+	sockets.push_back(emission_color_input);
+	sockets.push_back(blackbody_intensity_input);
+	sockets.push_back(blackbody_tint_input);
+	sockets.push_back(temperature_input);
+
+	type = CyclesNodeType::PrincipledVolume;
+
+	content_width += 28.0f;
+}
+
 cse::MixShaderNode::MixShaderNode(FloatPos position)
 {
 	world_pos = position;

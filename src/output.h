@@ -9,6 +9,7 @@ namespace cse {
 	enum class CyclesNodeType {
 		// Shader
 		PrincipledBSDF,
+		PrincipledVolume,
 		MixShader,
 		AddShader,
 		DiffuseBSDF,

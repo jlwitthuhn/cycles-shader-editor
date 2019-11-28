@@ -11,6 +11,11 @@ namespace cse {
 		PrincipledBSDFNode(FloatPos position);
 	};
 
+	class PrincipledVolumeNode : public EditableNode {
+	public:
+		PrincipledVolumeNode(FloatPos position);
+	};
+
 	class MixShaderNode : public EditableNode {
 	public:
 		MixShaderNode(FloatPos position);
