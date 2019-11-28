@@ -1,5 +1,6 @@
 #include "node_shaders.h"
 
+#include <cmath>
 #include <memory>
 #include <string>
 #include <vector>
@@ -154,6 +155,81 @@ cse::PrincipledVolumeNode::PrincipledVolumeNode(FloatPos position)
 	type = CyclesNodeType::PrincipledVolume;
 
 	content_width += 28.0f;
+}
+
+cse::PrincipledHairNode::PrincipledHairNode(FloatPos position)
+{
+	constexpr float PI = 3.14159f;
+
+	world_pos = position;
+
+	title = "Principled Hair";
+
+	const auto bsdf_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::CLOSURE, "BSDF", "BSDF");
+
+	sockets.push_back(bsdf_output);
+
+	const auto coloring_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::STRING_ENUM, "Coloring", "coloring");
+	const auto coloring_value = std::make_shared<StringEnumSocketValue>();
+	coloring_value->enum_values.push_back(StringEnumPair("Absorption coefficient", "absorption_coefficient"));
+	coloring_value->enum_values.push_back(StringEnumPair("Melanin concentration", "melanin_concentration"));
+	coloring_value->enum_values.push_back(StringEnumPair("Direct coloring", "direct_coloring"));
+	coloring_value->set_from_internal_name("direct_coloring");
+	coloring_input->value = coloring_value;
+
+	// Absorption coefficient
+	const auto absorption_coefficient_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::VECTOR, "Absorption Coefficient", "absorption_coefficient");
+	absorption_coefficient_input->value = std::make_shared<Float3SocketValue>(
+		0.245531f, 0.0f, 1000.0f,
+		0.52f,     0.0f, 1000.0f,
+		1.365f,    0.0f, 1000.0f);
+	absorption_coefficient_input->selectable = true;
+
+	// Melanin concentration
+	const auto melanin_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Melanin", "melanin");
+	melanin_input->value = std::make_shared<FloatSocketValue>(0.8f, 0.0f, 1.0f);
+	const auto melanin_redness_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Melanin Redness", "melanin_redness");
+	melanin_redness_input->value = std::make_shared<FloatSocketValue>(1.0f, 0.0f, 1.0f);
+	const auto tint_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::COLOR, "Tint", "tint");
+	tint_input->value = std::make_shared<ColorSocketValue>(1.0f, 1.0f, 1.0f);
+
+	// Direct coloring
+	const auto color_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::COLOR, "Color", "color");
+	color_input->value = std::make_shared<ColorSocketValue>(0.5f, 0.5f, 0.5f);
+
+	// General
+	const auto roughness_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Roughness", "roughness");
+	roughness_input->value = std::make_shared<FloatSocketValue>(0.3f, 0.0f, 1.0f);
+	const auto radial_roughness_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Roughness", "radial_roughness");
+	radial_roughness_input->value = std::make_shared<FloatSocketValue>(0.3f, 0.0f, 1.0f);
+	const auto coat_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Coat", "coat");
+	coat_input->value = std::make_shared<FloatSocketValue>(0.0f, 0.0f, 1.0f);
+	const auto ior_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "IOR", "ior");
+	ior_input->value = std::make_shared<FloatSocketValue>(1.55f, 0.0f, 1000.0f);
+	const auto offset_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Offset", "offset");
+	offset_input->value = std::make_shared<FloatSocketValue>(2.0f * PI / 180.f, 0.0f, PI / 2.0f);
+	const auto random_roughness_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Random Roughness", "random_roughness");
+	random_roughness_input->value = std::make_shared<FloatSocketValue>(0.0f, 0.0f, 1.0f);
+	const auto random_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Random", "random");
+	random_input->value = std::make_shared<FloatSocketValue>(1.0f, 0.0f, 1000.0f);
+
+	sockets.push_back(coloring_input);
+	sockets.push_back(absorption_coefficient_input);
+	sockets.push_back(melanin_input);
+	sockets.push_back(melanin_redness_input);
+	sockets.push_back(tint_input);
+	sockets.push_back(color_input);
+	sockets.push_back(roughness_input);
+	sockets.push_back(radial_roughness_input);
+	sockets.push_back(coat_input);
+	sockets.push_back(ior_input);
+	sockets.push_back(offset_input);
+	sockets.push_back(random_roughness_input);
+	sockets.push_back(random_input);
+
+	type = CyclesNodeType::PrincipledHair;
+
+	content_width += 62.0f;
 }
 
 cse::MixShaderNode::MixShaderNode(FloatPos position)

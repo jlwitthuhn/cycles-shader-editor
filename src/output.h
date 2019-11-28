@@ -10,6 +10,7 @@ namespace cse {
 		// Shader
 		PrincipledBSDF,
 		PrincipledVolume,
+		PrincipledHair,
 		MixShader,
 		AddShader,
 		DiffuseBSDF,

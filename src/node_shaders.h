@@ -16,6 +16,11 @@ namespace cse {
 		PrincipledVolumeNode(FloatPos position);
 	};
 
+	class PrincipledHairNode : public EditableNode {
+	public:
+		PrincipledHairNode(FloatPos position);
+	};
+
 	class MixShaderNode : public EditableNode {
 	public:
 		MixShaderNode(FloatPos position);
