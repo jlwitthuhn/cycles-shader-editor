@@ -100,6 +100,13 @@ namespace cse {
 		float x, y, z;
 	};
 
+	class Float4 {
+	public:
+		Float4(float x, float y, float z, float w);
+
+		float x, y, z, w;
+	};
+
 	struct OutputCurve {
 		std::vector<Float2> control_points;
 		int enum_curve_interp = 0;
@@ -113,7 +120,9 @@ namespace cse {
 	};
 
 	struct OutputColorRamp {
-		std::vector< OutputColorRampPoint> points;
+		std::vector<OutputColorRampPoint> points;
+		std::vector<Float3> samples_color;
+		std::vector<float> samples_alpha;
 	};
 
 	struct OutputNode {

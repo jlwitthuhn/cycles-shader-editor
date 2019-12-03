@@ -290,6 +290,77 @@ cse::SocketType cse::ColorRampSocketValue::get_type() const
 	return SocketType::COLOR_RAMP;
 }
 
+std::vector<cse::Float4> cse::ColorRampSocketValue::evaluate_samples() const
+{
+	constexpr size_t SAMPLE_COUNT = 256;
+	constexpr float POS_BEGIN = 0.0f;
+	constexpr float POS_END = 1.0f;
+	constexpr float POS_INCREMENT = (POS_END - POS_BEGIN) / (SAMPLE_COUNT - 1);
+
+	std::vector<Float4> result;
+
+	// Create a function-local copy of the control point vector so we can be sure it is sorted
+	std::vector<ColorRampPoint> ramp_points = this->ramp_points;
+	std::sort(
+		ramp_points.begin(),
+		ramp_points.end(),
+		[](const ColorRampPoint& lhs, const ColorRampPoint& rhs) {
+			return lhs.position < rhs.position;
+		}
+	);
+
+	if (ramp_points.size() == 0) {
+		// Invalid ramp, interpret as all black
+		result.push_back(Float4(0.0f, 0.0f, 0.0f, 1.0f));
+		result.push_back(Float4(0.0f, 0.0f, 0.0f, 1.0f));
+	}
+
+	const float pos_first_change = ramp_points[0].position;
+	const Float3 color_start = ramp_points[0].color;
+	const float alpha_start = ramp_points[0].alpha;
+
+	const float pos_last_change = ramp_points[ramp_points.size() - 1].position;
+	const Float3 color_end = ramp_points[ramp_points.size() - 1].color;
+	const float alpha_end = ramp_points[ramp_points.size() - 1].alpha;
+
+	{
+		size_t index_search_begin = 0;
+		for (size_t i = 0; i < SAMPLE_COUNT; i++) {
+			const float this_pos = POS_BEGIN + i * POS_INCREMENT;
+			if (this_pos <= pos_first_change) {
+				Float4 this_output(color_start.x, color_start.y, color_start.z, alpha_start);
+				result.push_back(this_output);
+			}
+			else if (this_pos >= pos_last_change) {
+				Float4 this_output(color_end.x, color_end.y, color_end.z, alpha_end);
+				result.push_back(this_output);
+			}
+			else {
+				while (ramp_points[index_search_begin + 1].position <= this_pos) {
+					index_search_begin++;
+				}
+
+				const ColorRampPoint low = ramp_points[index_search_begin];
+				const ColorRampPoint high = ramp_points[index_search_begin + 1];
+
+				const float segment_size = high.position - low.position;
+				const float relative_pos = this_pos - low.position;
+				const float lerp_val = relative_pos / segment_size;
+
+				const float out_r = low.color.x + (high.color.x - low.color.x) * lerp_val;
+				const float out_g = low.color.y + (high.color.y - low.color.y) * lerp_val;
+				const float out_b = low.color.z + (high.color.z - low.color.z) * lerp_val;
+				const float out_a = low.alpha + (high.alpha - low.alpha) * lerp_val;
+
+				result.push_back(Float4(out_r, out_g, out_b, out_a));
+			}
+		}
+	}
+
+
+	return result;
+}
+
 cse::FloatRGBColor cse::ColorSocketValue::get_value()
 {
 	FloatRGBColor value;

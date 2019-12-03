@@ -52,6 +52,11 @@ cse::ColorRampNode::ColorRampNode(const FloatPos position)
 	type = CyclesNodeType::ColorRamp;
 }
 
+void cse::ColorRampNode::update_output_node(OutputNode& output)
+{
+	EditableNode::update_output_node(output);
+}
+
 cse::CombineHSVNode::CombineHSVNode(const FloatPos position)
 {
 	world_pos = position;

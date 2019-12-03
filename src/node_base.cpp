@@ -436,6 +436,8 @@ void cse::EditableNode::update_output_node(OutputNode& output)
 			const std::shared_ptr<ColorRampSocketValue> ramp_val = std::dynamic_pointer_cast<ColorRampSocketValue>(this_socket->value);
 			if (ramp_val) {
 				OutputColorRamp out_ramp;
+
+				// Copy over control points
 				for (const auto& this_point : ramp_val->ramp_points) {
 					OutputColorRampPoint new_point;
 					new_point.pos = this_point.position;
@@ -443,6 +445,14 @@ void cse::EditableNode::update_output_node(OutputNode& output)
 					new_point.alpha = this_point.alpha;
 					out_ramp.points.push_back(new_point);
 				}
+
+				// Copy evaluated samples
+				std::vector<Float4> samples = ramp_val->evaluate_samples();
+				for (const auto& this_sample : samples) {
+					out_ramp.samples_color.push_back(Float3(this_sample.x, this_sample.y, this_sample.z));
+					out_ramp.samples_alpha.push_back(this_sample.w);
+				}
+
 				output.ramp_values[this_socket->internal_name] = out_ramp;
 			}
 		}

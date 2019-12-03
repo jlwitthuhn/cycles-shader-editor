@@ -14,6 +14,8 @@ namespace cse {
 	class ColorRampNode : public EditableNode {
 	public:
 		ColorRampNode(FloatPos position);
+
+		virtual void update_output_node(OutputNode& output) override;
 	};
 
 	class CombineHSVNode : public EditableNode {

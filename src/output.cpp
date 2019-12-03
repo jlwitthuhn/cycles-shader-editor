@@ -7,7 +7,7 @@ cse::Float2::Float2() :
 
 }
 
-cse::Float2::Float2(float x, float y) :
+cse::Float2::Float2(const float x, const float y) :
 	x(x),
 	y(y)
 {
@@ -22,10 +22,19 @@ cse::Float3::Float3() :
 
 }
 
-cse::Float3::Float3(float x, float y, float z) :
+cse::Float3::Float3(const float x, const float y, const float z) :
 	x(x),
 	y(y),
 	z(z)
+{
+
+}
+
+cse::Float4::Float4(const float x, const float y, const float z, const float w) :
+	x(x),
+	y(y),
+	z(z),
+	w(w)
 {
 
 }

@@ -153,6 +153,8 @@ namespace cse {
 		virtual SocketType get_type() const override;
 
 		std::vector<ColorRampPoint> ramp_points;
+
+		std::vector<Float4> evaluate_samples() const;
 	};
 
 	class NodeSocket {
