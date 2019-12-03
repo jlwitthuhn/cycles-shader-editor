@@ -195,7 +195,7 @@ cse::PrincipledHairNode::PrincipledHairNode(FloatPos position)
 
 	// Direct coloring
 	const auto color_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::COLOR, "Color", "color");
-	color_input->value = std::make_shared<ColorSocketValue>(0.5f, 0.5f, 0.5f);
+	color_input->value = std::make_shared<ColorSocketValue>(0.017513f, 0.005763f, 0.002059f);
 
 	// General
 	const auto roughness_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Roughness", "roughness");
