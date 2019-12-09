@@ -8,6 +8,7 @@
 #include "float_pos.h"
 #include "output.h"
 #include "util_area.h"
+#include "util_enum.h"
 
 struct NVGcontext;
 
@@ -29,6 +30,7 @@ namespace cse {
 
 	class EditableNode {
 	public:
+		EditableNode(NodeCategory category, CyclesNodeType type, const std::string& title);
 		virtual ~EditableNode() {}
 
 		virtual std::string get_title() const;
@@ -50,14 +52,15 @@ namespace cse {
 
 		bool changed = true;
 
-		CyclesNodeType type = CyclesNodeType::Unknown;
-
 		FloatPos world_pos;
 
 	protected:
 		FloatPos get_local_pos(FloatPos world_pos_in) const;
 
-		std::string title;
+		const NodeCategory category;
+		const CyclesNodeType type;
+
+		const std::string title;
 
 		bool highlight_header = false;
 

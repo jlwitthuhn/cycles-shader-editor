@@ -12,11 +12,9 @@
 #include "output.h"
 #include "sockets.h"
 
-cse::MixRGBNode::MixRGBNode(FloatPos position)
+cse::MixRGBNode::MixRGBNode(FloatPos position) : EditableNode(NodeCategory::COLOR, CyclesNodeType::MixRGB, "Mix RGB")
 {
 	world_pos = position;
-
-	title = "Mix RGB";
 
 	const auto color_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::COLOR, "Color", "color");
 
@@ -58,15 +56,11 @@ cse::MixRGBNode::MixRGBNode(FloatPos position)
 	sockets.push_back(fac_input);
 	sockets.push_back(color1_input);
 	sockets.push_back(color2_input);
-
-	type = CyclesNodeType::MixRGB;
 }
 
-cse::InvertNode::InvertNode(FloatPos position)
+cse::InvertNode::InvertNode(FloatPos position) : EditableNode(NodeCategory::COLOR, CyclesNodeType::Invert, "Invert")
 {
 	world_pos = position;
-
-	title = "Invert";
 
 	const auto color_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::COLOR, "Color", "color");
 
@@ -79,15 +73,11 @@ cse::InvertNode::InvertNode(FloatPos position)
 
 	sockets.push_back(fac_input);
 	sockets.push_back(color_input);
-
-	type = CyclesNodeType::Invert;
 }
 
-cse::LightFalloffNode::LightFalloffNode(FloatPos position)
+cse::LightFalloffNode::LightFalloffNode(FloatPos position) : EditableNode(NodeCategory::COLOR, CyclesNodeType::LightFalloff, "Light Falloff")
 {
 	world_pos = position;
-
-	title = "Light Falloff";
 
 	const auto quadratic_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Quadratic", "quadratic");
 	const auto linear_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Linear", "linear");
@@ -104,15 +94,11 @@ cse::LightFalloffNode::LightFalloffNode(FloatPos position)
 
 	sockets.push_back(strength_input);
 	sockets.push_back(smooth_input);
-
-	type = CyclesNodeType::LightFalloff;
 }
 
-cse::HSVNode::HSVNode(FloatPos position)
+cse::HSVNode::HSVNode(FloatPos position) : EditableNode(NodeCategory::COLOR, CyclesNodeType::HSV, "HSV")
 {
 	world_pos = position;
-
-	title = "HSV";
 
 	const auto color_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::COLOR, "Color", "color");
 
@@ -134,15 +120,11 @@ cse::HSVNode::HSVNode(FloatPos position)
 	sockets.push_back(val_input);
 	sockets.push_back(fac_input);
 	sockets.push_back(color_input);
-
-	type = CyclesNodeType::HSV;
 }
 
-cse::GammaNode::GammaNode(FloatPos position)
+cse::GammaNode::GammaNode(FloatPos position) : EditableNode(NodeCategory::COLOR, CyclesNodeType::Gamma, "Gamma")
 {
 	world_pos = position;
-
-	title = "Gamma";
 
 	const auto color_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::COLOR, "Color", "color");
 
@@ -155,15 +137,11 @@ cse::GammaNode::GammaNode(FloatPos position)
 
 	sockets.push_back(color_input);
 	sockets.push_back(gamma_input);
-
-	type = CyclesNodeType::Gamma;
 }
 
-cse::BrightnessContrastNode::BrightnessContrastNode(FloatPos position)
+cse::BrightnessContrastNode::BrightnessContrastNode(FloatPos position) : EditableNode(NodeCategory::COLOR, CyclesNodeType::BrightnessContrast, "Bright/Contrast")
 {
 	world_pos = position;
-
-	title = "Bright/Contrast";
 
 	const auto color_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::COLOR, "Color", "color");
 
@@ -179,15 +157,11 @@ cse::BrightnessContrastNode::BrightnessContrastNode(FloatPos position)
 	sockets.push_back(color_input);
 	sockets.push_back(bright_input);
 	sockets.push_back(cont_input);
-
-	type = CyclesNodeType::BrightnessContrast;
 }
 
-cse::RGBCurvesNode::RGBCurvesNode(FloatPos position)
+cse::RGBCurvesNode::RGBCurvesNode(FloatPos position) : EditableNode(NodeCategory::COLOR, CyclesNodeType::RGBCurves, "RGB Curves")
 {
 	world_pos = position;
-
-	title = "RGB Curves";
 
 	const auto color_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::COLOR, "Color", "color");
 
@@ -212,8 +186,6 @@ cse::RGBCurvesNode::RGBCurvesNode(FloatPos position)
 	sockets.push_back(b_curve_input);
 	sockets.push_back(fac_input);
 	sockets.push_back(color_input);
-
-	type = CyclesNodeType::RGBCurves;
 }
 
 void cse::RGBCurvesNode::update_output_node(OutputNode& output)

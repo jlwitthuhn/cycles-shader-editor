@@ -38,6 +38,14 @@ bool cse::NodeConnection::includes_node(EditableNode* const node) const
 	return false;
 }
 
+cse::EditableNode::EditableNode(NodeCategory category, CyclesNodeType type, const std::string& title) :
+	category(category),
+	type(type),
+	title(title)
+{
+
+}
+
 std::string cse::EditableNode::get_title() const
 {
 	return title;

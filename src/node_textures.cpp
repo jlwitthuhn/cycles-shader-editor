@@ -9,11 +9,9 @@
 #include "output.h"
 #include "sockets.h"
 
-cse::BrickTextureNode::BrickTextureNode(FloatPos position)
+cse::BrickTextureNode::BrickTextureNode(const FloatPos position) : EditableNode(NodeCategory::TEXTURE, CyclesNodeType::BrickTex, "Brick Texture")
 {
 	world_pos = position;
-
-	title = "Brick Texture";
 
 	const auto color_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::COLOR, "Color", "color");
 	const auto fac_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Fac", "fac");
@@ -69,15 +67,11 @@ cse::BrickTextureNode::BrickTextureNode(FloatPos position)
 	sockets.push_back(bias_input);
 	sockets.push_back(brick_width_input);
 	sockets.push_back(row_height_input);
-
-	type = CyclesNodeType::BrickTex;
 }
 
-cse::NoiseTextureNode::NoiseTextureNode(FloatPos position)
+cse::NoiseTextureNode::NoiseTextureNode(const FloatPos position) : EditableNode(NodeCategory::TEXTURE, CyclesNodeType::NoiseTex, "Noise Texture")
 {
 	world_pos = position;
-
-	title = "Noise Texture";
 
 	const auto color_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::COLOR, "Color", "color");
 	const auto fac_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Fac", "fac");
@@ -97,15 +91,11 @@ cse::NoiseTextureNode::NoiseTextureNode(FloatPos position)
 	sockets.push_back(scale_input);
 	sockets.push_back(detail_input);
 	sockets.push_back(distortion_input);
-
-	type = CyclesNodeType::NoiseTex;
 }
 
-cse::WaveTextureNode::WaveTextureNode(FloatPos position)
+cse::WaveTextureNode::WaveTextureNode(const FloatPos position) : EditableNode(NodeCategory::TEXTURE, CyclesNodeType::WaveTex, "Wave Texture")
 {
 	world_pos = position;
-
-	title = "Wave Texture";
 
 	const auto color_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::COLOR, "Color", "color");
 	const auto fac_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Fac", "fac");
@@ -142,15 +132,11 @@ cse::WaveTextureNode::WaveTextureNode(FloatPos position)
 	sockets.push_back(distortion_input);
 	sockets.push_back(detail_input);
 	sockets.push_back(detail_scale_input);
-
-	type = CyclesNodeType::WaveTex;
 }
 
-cse::VoronoiTextureNode::VoronoiTextureNode(FloatPos position)
+cse::VoronoiTextureNode::VoronoiTextureNode(const FloatPos position) : EditableNode(NodeCategory::TEXTURE, CyclesNodeType::VoronoiTex, "Voronoi Texture")
 {
 	world_pos = position;
-
-	title = "Voronoi Texture";
 
 	const auto color_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::COLOR, "Color", "color");
 	const auto fac_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Fac", "fac");
@@ -171,15 +157,11 @@ cse::VoronoiTextureNode::VoronoiTextureNode(FloatPos position)
 	sockets.push_back(coloring_input);
 	sockets.push_back(vector_input);
 	sockets.push_back(scale_input);
-
-	type = CyclesNodeType::VoronoiTex;
 }
 
-cse::MusgraveTextureNode::MusgraveTextureNode(FloatPos position)
+cse::MusgraveTextureNode::MusgraveTextureNode(const FloatPos position) : EditableNode(NodeCategory::TEXTURE, CyclesNodeType::MusgraveTex, "Musgrave Texture")
 {
 	world_pos = position;
-
-	title = "Musgrave Texture";
 
 	const auto color_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::COLOR, "Color", "color");
 	const auto fac_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Fac", "fac");
@@ -218,15 +200,11 @@ cse::MusgraveTextureNode::MusgraveTextureNode(FloatPos position)
 	sockets.push_back(lacunarity_input);
 	sockets.push_back(offset_input);
 	sockets.push_back(gain_input);
-
-	type = CyclesNodeType::MusgraveTex;
 }
 
-cse::GradientTextureNode::GradientTextureNode(FloatPos position)
+cse::GradientTextureNode::GradientTextureNode(const FloatPos position) : EditableNode(NodeCategory::TEXTURE, CyclesNodeType::GradientTex, "Gradient Texture")
 {
 	world_pos = position;
-
-	title = "Gradient Texture";
 
 	const auto color_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::COLOR, "Color", "color");
 	const auto fac_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Fac", "fac");
@@ -249,15 +227,11 @@ cse::GradientTextureNode::GradientTextureNode(FloatPos position)
 
 	sockets.push_back(type_input);
 	sockets.push_back(vector_input);
-
-	type = CyclesNodeType::GradientTex;
 }
 
-cse::MagicTextureNode::MagicTextureNode(FloatPos position)
+cse::MagicTextureNode::MagicTextureNode(const FloatPos position) : EditableNode(NodeCategory::TEXTURE, CyclesNodeType::MagicTex, "Magic Texture")
 {
 	world_pos = position;
-
-	title = "Magic Texture";
 
 	const auto color_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::COLOR, "Color", "color");
 	const auto fac_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Fac", "fac");
@@ -277,15 +251,11 @@ cse::MagicTextureNode::MagicTextureNode(FloatPos position)
 	sockets.push_back(vector_input);
 	sockets.push_back(scale_input);
 	sockets.push_back(distortion_input);
-
-	type = CyclesNodeType::MagicTex;
 }
 
-cse::CheckerTextureNode::CheckerTextureNode(FloatPos position)
+cse::CheckerTextureNode::CheckerTextureNode(const FloatPos position) : EditableNode(NodeCategory::TEXTURE, CyclesNodeType::CheckerTex, "Checker Texture")
 {
 	world_pos = position;
-
-	title = "Checker Texture";
 
 	const auto color_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::COLOR, "Color", "color");
 	const auto fac_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Fac", "fac");
@@ -305,6 +275,4 @@ cse::CheckerTextureNode::CheckerTextureNode(FloatPos position)
 	sockets.push_back(color1_input);
 	sockets.push_back(color2_input);
 	sockets.push_back(scale_input);
-
-	type = CyclesNodeType::CheckerTex;
 }

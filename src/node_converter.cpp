@@ -9,11 +9,9 @@
 #include "output.h"
 #include "sockets.h"
 
-cse::BlackbodyNode::BlackbodyNode(const FloatPos position)
+cse::BlackbodyNode::BlackbodyNode(const FloatPos position) : EditableNode(NodeCategory::CONVERTER, CyclesNodeType::Blackbody, "Blackbody")
 {
 	world_pos = position;
-
-	title = "Blackbody";
 
 	const auto color_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::COLOR, "Color", "color");
 
@@ -24,16 +22,12 @@ cse::BlackbodyNode::BlackbodyNode(const FloatPos position)
 
 	sockets.push_back(temp_input);
 
-	type = CyclesNodeType::Blackbody;
-
-	content_width = 164.0f;
+	content_width += 14.0f;
 }
 
-cse::ColorRampNode::ColorRampNode(const FloatPos position)
+cse::ColorRampNode::ColorRampNode(const FloatPos position) : EditableNode(NodeCategory::CONVERTER, CyclesNodeType::ColorRamp, "Color Ramp")
 {
 	world_pos = position;
-
-	title = "Color Ramp";
 
 	const auto color_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::COLOR, "Color", "color");
 	const auto alpha_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Alpha", "alpha");
@@ -48,8 +42,6 @@ cse::ColorRampNode::ColorRampNode(const FloatPos position)
 
 	sockets.push_back(ramp_input);
 	sockets.push_back(fac_input);
-
-	type = CyclesNodeType::ColorRamp;
 }
 
 void cse::ColorRampNode::update_output_node(OutputNode& output)
@@ -57,11 +49,9 @@ void cse::ColorRampNode::update_output_node(OutputNode& output)
 	EditableNode::update_output_node(output);
 }
 
-cse::CombineHSVNode::CombineHSVNode(const FloatPos position)
+cse::CombineHSVNode::CombineHSVNode(const FloatPos position) : EditableNode(NodeCategory::CONVERTER, CyclesNodeType::CombineHSV, "Combine HSV")
 {
 	world_pos = position;
-
-	title = "Combine HSV";
 
 	const auto color_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::COLOR, "Color", "color");
 
@@ -77,15 +67,11 @@ cse::CombineHSVNode::CombineHSVNode(const FloatPos position)
 	sockets.push_back(h_input);
 	sockets.push_back(s_input);
 	sockets.push_back(v_input);
-
-	type = CyclesNodeType::CombineHSV;
 }
 
-cse::CombineRGBNode::CombineRGBNode(const FloatPos position)
+cse::CombineRGBNode::CombineRGBNode(const FloatPos position) : EditableNode(NodeCategory::CONVERTER, CyclesNodeType::CombineRGB, "Combine RGB")
 {
 	world_pos = position;
-
-	title = "Combine RGB";
 
 	const auto image_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::COLOR, "Image", "image");
 
@@ -101,15 +87,11 @@ cse::CombineRGBNode::CombineRGBNode(const FloatPos position)
 	sockets.push_back(r_input);
 	sockets.push_back(g_input);
 	sockets.push_back(b_input);
-
-	type = CyclesNodeType::CombineRGB;
 }
 
-cse::CombineXYZNode::CombineXYZNode(const FloatPos position)
+cse::CombineXYZNode::CombineXYZNode(const FloatPos position) : EditableNode(NodeCategory::CONVERTER, CyclesNodeType::CombineXYZ, "Combine XYZ")
 {
 	world_pos = position;
-
-	title = "Combine XYZ";
 
 	const auto vec_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::VECTOR, "Vector", "vector");
 
@@ -125,15 +107,11 @@ cse::CombineXYZNode::CombineXYZNode(const FloatPos position)
 	sockets.push_back(x_input);
 	sockets.push_back(y_input);
 	sockets.push_back(z_input);
-
-	type = CyclesNodeType::CombineXYZ;
 }
 
-cse::MathNode::MathNode(const FloatPos position)
+cse::MathNode::MathNode(const FloatPos position) : EditableNode(NodeCategory::CONVERTER, CyclesNodeType::Math, "Math")
 {
 	world_pos = position;
-
-	title = "Math";
 
 	const auto value_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Value", "value");
 
@@ -173,15 +151,11 @@ cse::MathNode::MathNode(const FloatPos position)
 	sockets.push_back(clamp_input);
 	sockets.push_back(value1_input);
 	sockets.push_back(value2_input);
-
-	type = CyclesNodeType::Math;
 }
 
-cse::RGBToBWNode::RGBToBWNode(const FloatPos position)
+cse::RGBToBWNode::RGBToBWNode(const FloatPos position) : EditableNode(NodeCategory::CONVERTER, CyclesNodeType::RGBtoBW, "RGB to BW")
 {
 	world_pos = position;
-
-	title = "RGB to BW";
 
 	const auto val_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Val", "val");
 
@@ -191,15 +165,11 @@ cse::RGBToBWNode::RGBToBWNode(const FloatPos position)
 	color_input->value = std::make_shared<ColorSocketValue>(0.5f, 0.5f, 0.5f);
 
 	sockets.push_back(color_input);
-
-	type = CyclesNodeType::RGBtoBW;
 }
 
-cse::SeparateHSVNode::SeparateHSVNode(const FloatPos position)
+cse::SeparateHSVNode::SeparateHSVNode(const FloatPos position) : EditableNode(NodeCategory::CONVERTER, CyclesNodeType::SeparateHSV, "Separate HSV")
 {
 	world_pos = position;
-
-	title = "Separate HSV";
 
 	const auto h_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "H", "h");
 	const auto s_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "S", "s");
@@ -213,15 +183,11 @@ cse::SeparateHSVNode::SeparateHSVNode(const FloatPos position)
 	color_input->value = std::make_shared<ColorSocketValue>(0.5f, 0.5f, 0.5f);
 
 	sockets.push_back(color_input);
-
-	type = CyclesNodeType::SeparateHSV;
 }
 
-cse::SeparateRGBNode::SeparateRGBNode(const FloatPos position)
+cse::SeparateRGBNode::SeparateRGBNode(const FloatPos position) : EditableNode(NodeCategory::CONVERTER, CyclesNodeType::SeparateRGB, "Separate RGB")
 {
 	world_pos = position;
-
-	title = "Separate RGB";
 
 	const auto r_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "R", "r");
 	const auto g_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "G", "g");
@@ -235,15 +201,11 @@ cse::SeparateRGBNode::SeparateRGBNode(const FloatPos position)
 	image_input->value = std::make_shared<ColorSocketValue>(0.5f, 0.5f, 0.5f);
 
 	sockets.push_back(image_input);
-
-	type = CyclesNodeType::SeparateRGB;
 }
 
-cse::SeparateXYZNode::SeparateXYZNode(const FloatPos position)
+cse::SeparateXYZNode::SeparateXYZNode(const FloatPos position) : EditableNode(NodeCategory::CONVERTER, CyclesNodeType::SeparateXYZ, "SeparateXYZ")
 {
 	world_pos = position;
-
-	title = "Separate XYZ";
 
 	const auto x_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "X", "x");
 	const auto y_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Y", "y");
@@ -258,15 +220,11 @@ cse::SeparateXYZNode::SeparateXYZNode(const FloatPos position)
 	vec_input->selectable = true;
 
 	sockets.push_back(vec_input);
-
-	type = CyclesNodeType::SeparateXYZ;
 }
 
-cse::VectorMathNode::VectorMathNode(const FloatPos position)
+cse::VectorMathNode::VectorMathNode(const FloatPos position) : EditableNode(NodeCategory::CONVERTER, CyclesNodeType::VectorMath, "Vector Math")
 {
 	world_pos = position;
-
-	title = "Vector Math";
 
 	const auto vector_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::VECTOR, "Vector", "vector");
 	const auto value_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Value", "value");
@@ -294,15 +252,11 @@ cse::VectorMathNode::VectorMathNode(const FloatPos position)
 	sockets.push_back(type_input);
 	sockets.push_back(vector1_input);
 	sockets.push_back(vector2_input);
-
-	type = CyclesNodeType::VectorMath;
 }
 
-cse::WavelengthNode::WavelengthNode(const FloatPos position)
+cse::WavelengthNode::WavelengthNode(const FloatPos position) : EditableNode(NodeCategory::CONVERTER, CyclesNodeType::Wavelength, "Wavelength")
 {
 	world_pos = position;
-
-	title = "Wavelength";
 
 	const auto color_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::COLOR, "Color", "color");
 
@@ -312,6 +266,4 @@ cse::WavelengthNode::WavelengthNode(const FloatPos position)
 	wavelength_input->value = std::make_shared<FloatSocketValue>(500.0f, 380.0f, 780.0f);
 
 	sockets.push_back(wavelength_input);
-
-	type = CyclesNodeType::Wavelength;
 }

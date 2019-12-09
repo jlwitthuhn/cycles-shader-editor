@@ -9,11 +9,9 @@
 #include "output.h"
 #include "sockets.h"
 
-cse::AmbientOcculsionNode::AmbientOcculsionNode(const FloatPos position)
+cse::AmbientOcculsionNode::AmbientOcculsionNode(const FloatPos position) : EditableNode(NodeCategory::INPUT, CyclesNodeType::AmbientOcclusion, "Ambient Occlusion")
 {
 	world_pos = position;
-
-	title = "Ambient Occlusion";
 
 	const auto color_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::COLOR, "Color", "color");
 	const auto ao_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "AO", "ao");
@@ -39,15 +37,11 @@ cse::AmbientOcculsionNode::AmbientOcculsionNode(const FloatPos position)
 	sockets.push_back(color_input);
 	sockets.push_back(distance_input);
 	sockets.push_back(normal_input);
-
-	type = CyclesNodeType::AmbientOcclusion;
 }
 
-cse::BevelNode::BevelNode(const FloatPos position)
+cse::BevelNode::BevelNode(const FloatPos position) : EditableNode(NodeCategory::INPUT, CyclesNodeType::Bevel, "Bevel")
 {
 	world_pos = position;
-
-	title = "Bevel";
 
 	const auto normal_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::NORMAL, "Normal", "normal");
 
@@ -62,15 +56,11 @@ cse::BevelNode::BevelNode(const FloatPos position)
 	sockets.push_back(samples_input);
 	sockets.push_back(radius_input);
 	sockets.push_back(normal_input);
-
-	type = CyclesNodeType::Bevel;
 }
 
-cse::CameraDataNode::CameraDataNode(const FloatPos position)
+cse::CameraDataNode::CameraDataNode(const FloatPos position) : EditableNode(NodeCategory::INPUT, CyclesNodeType::CameraData, "Camera Data")
 {
 	world_pos = position;
-
-	title = "Camera Data";
 
 	const auto vector_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::VECTOR, "View Vector", "view_vector");
 	const auto z_depth_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "View Z Depth", "view_z_depth");
@@ -79,15 +69,11 @@ cse::CameraDataNode::CameraDataNode(const FloatPos position)
 	sockets.push_back(vector_output);
 	sockets.push_back(z_depth_output);
 	sockets.push_back(distance_output);
-
-	type = CyclesNodeType::CameraData;
 }
 
-cse::FresnelNode::FresnelNode(const FloatPos position)
+cse::FresnelNode::FresnelNode(const FloatPos position) : EditableNode(NodeCategory::INPUT, CyclesNodeType::Fresnel, "Fresnel")
 {
 	world_pos = position;
-
-	title = "Fresnel";
 
 	const auto fac_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Fac", "fac");
 
@@ -99,15 +85,11 @@ cse::FresnelNode::FresnelNode(const FloatPos position)
 
 	sockets.push_back(ior_input);
 	sockets.push_back(normal_input);
-
-	type = CyclesNodeType::Fresnel;
 }
 
-cse::GeometryNode::GeometryNode(const FloatPos position)
+cse::GeometryNode::GeometryNode(const FloatPos position) : EditableNode(NodeCategory::INPUT, CyclesNodeType::Geometry, "Geometry")
 {
 	world_pos = position;
-
-	title = "Geometry";
 
 	const auto position_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::VECTOR, "Position", "position");
 	const auto normal_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::NORMAL, "Normal", "normal");
@@ -126,15 +108,11 @@ cse::GeometryNode::GeometryNode(const FloatPos position)
 	sockets.push_back(parametric_output);
 	sockets.push_back(backfacing_output);
 	sockets.push_back(pointiness_output);
-
-	type = CyclesNodeType::Geometry;
 }
 
-cse::LayerWeightNode::LayerWeightNode(const FloatPos position)
+cse::LayerWeightNode::LayerWeightNode(const FloatPos position) : EditableNode(NodeCategory::INPUT, CyclesNodeType::LayerWeight, "Layer Weight")
 {
 	world_pos = position;
-
-	title = "Layer Weight";
 
 	const auto fresnel_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Fresnel", "fresnel");
 	const auto facing_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Facing", "facing");
@@ -148,15 +126,11 @@ cse::LayerWeightNode::LayerWeightNode(const FloatPos position)
 
 	sockets.push_back(blend_input);
 	sockets.push_back(normal_input);
-
-	type = CyclesNodeType::LayerWeight;
 }
 
-cse::LightPathNode::LightPathNode(const FloatPos position)
+cse::LightPathNode::LightPathNode(const FloatPos position) : EditableNode(NodeCategory::INPUT, CyclesNodeType::LightPath, "Light Path")
 {
 	world_pos = position;
-
-	title = "Light Path";
 
 	const auto camera_ray_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Is Camera Ray", "is_camera_ray");
 	const auto shadow_ray_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Is Shadow Ray", "is_shadow_ray");
@@ -183,15 +157,11 @@ cse::LightPathNode::LightPathNode(const FloatPos position)
 	sockets.push_back(ray_depth_output);
 	sockets.push_back(transparent_depth_output);
 	sockets.push_back(transmission_depth_output);
-
-	type = CyclesNodeType::LightPath;
 }
 
-cse::ObjectInfoNode::ObjectInfoNode(const FloatPos position)
+cse::ObjectInfoNode::ObjectInfoNode(const FloatPos position) : EditableNode(NodeCategory::INPUT, CyclesNodeType::ObjectInfo, "Object Info")
 {
 	world_pos = position;
-
-	title = "Object Info";
 
 	const auto location_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::VECTOR, "Location", "location");
 	const auto object_index_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Object Index", "object_index");
@@ -202,15 +172,11 @@ cse::ObjectInfoNode::ObjectInfoNode(const FloatPos position)
 	sockets.push_back(object_index_output);
 	sockets.push_back(material_index_output);
 	sockets.push_back(random_output);
-
-	type = CyclesNodeType::ObjectInfo;
 }
 
-cse::RGBNode::RGBNode(const FloatPos position)
+cse::RGBNode::RGBNode(const FloatPos position) : EditableNode(NodeCategory::INPUT, CyclesNodeType::RGB, "RGB")
 {
 	world_pos = position;
-
-	title = "RGB";
 
 	const auto color_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::COLOR, "Color", "color");
 
@@ -221,15 +187,11 @@ cse::RGBNode::RGBNode(const FloatPos position)
 	value_input->draw_socket = false;
 
 	sockets.push_back(value_input);
-
-	type = CyclesNodeType::RGB;
 }
 
-cse::TangentNode::TangentNode(const FloatPos position)
+cse::TangentNode::TangentNode(const FloatPos position) : EditableNode(NodeCategory::INPUT, CyclesNodeType::Tangent, "Tangent")
 {
 	world_pos = position;
-
-	title = "Tangent";
 
 	const auto tangent_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::VECTOR, "Tangent", "tangent");
 
@@ -251,15 +213,11 @@ cse::TangentNode::TangentNode(const FloatPos position)
 
 	sockets.push_back(direction_input);
 	sockets.push_back(axis_input);
-
-	type = CyclesNodeType::Tangent;
 }
 
-cse::TextureCoordinateNode::TextureCoordinateNode(const FloatPos position)
+cse::TextureCoordinateNode::TextureCoordinateNode(const FloatPos position) : EditableNode(NodeCategory::INPUT, CyclesNodeType::TextureCoordinate, "Texture Coordinate")
 {
 	world_pos = position;
-
-	title = "Texture Coordinate";
 
 	const auto generated_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::VECTOR, "Generated", "generated");
 	const auto normal_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::VECTOR, "Normal", "normal");
@@ -276,15 +234,11 @@ cse::TextureCoordinateNode::TextureCoordinateNode(const FloatPos position)
 	sockets.push_back(camera_output);
 	sockets.push_back(window_output);
 	sockets.push_back(reflection_output);
-
-	type = CyclesNodeType::TextureCoordinate;
 }
 
-cse::ValueNode::ValueNode(const FloatPos position)
+cse::ValueNode::ValueNode(const FloatPos position) : EditableNode(NodeCategory::INPUT, CyclesNodeType::Value, "Value")
 {
 	world_pos = position;
-
-	title = "Value";
 
 	const auto value_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Value", "value");
 
@@ -295,15 +249,11 @@ cse::ValueNode::ValueNode(const FloatPos position)
 	value_input->draw_socket = false;
 
 	sockets.push_back(value_input);
-
-	type = CyclesNodeType::Value;
 }
 
-cse::WireframeNode::WireframeNode(const FloatPos position)
+cse::WireframeNode::WireframeNode(const FloatPos position) : EditableNode(NodeCategory::INPUT, CyclesNodeType::Wireframe, "Wireframe")
 {
 	world_pos = position;
-
-	title = "Wireframe";
 
 	const auto fac_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Fac", "fac");
 
@@ -316,6 +266,4 @@ cse::WireframeNode::WireframeNode(const FloatPos position)
 
 	sockets.push_back(pixel_size_input);
 	sockets.push_back(size_input);
-
-	type = CyclesNodeType::Wireframe;
 }

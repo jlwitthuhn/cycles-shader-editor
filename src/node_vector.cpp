@@ -9,11 +9,9 @@
 #include "output.h"
 #include "sockets.h"
 
-cse::BumpNode::BumpNode(FloatPos position)
+cse::BumpNode::BumpNode(const FloatPos position) : EditableNode(NodeCategory::VECTOR, CyclesNodeType::Bump, "Bump")
 {
 	world_pos = position;
-
-	title = "Bump";
 
 	const auto normal_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::NORMAL, "Normal", "normal");
 
@@ -34,15 +32,11 @@ cse::BumpNode::BumpNode(FloatPos position)
 	sockets.push_back(distance_input);
 	sockets.push_back(height_input);
 	sockets.push_back(normal_input);
-
-	type = CyclesNodeType::Bump;
 }
 
-cse::NormalMapNode::NormalMapNode(FloatPos position)
+cse::NormalMapNode::NormalMapNode(const FloatPos position) : EditableNode(NodeCategory::VECTOR, CyclesNodeType::NormalMap, "Normal Map")
 {
 	world_pos = position;
-
-	title = "Normal Map";
 
 	const auto normal_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::NORMAL, "Normal", "normal");
 
@@ -63,15 +57,11 @@ cse::NormalMapNode::NormalMapNode(FloatPos position)
 	sockets.push_back(space_input);
 	sockets.push_back(strength_input);
 	sockets.push_back(color_input);
-
-	type = CyclesNodeType::NormalMap;
 }
 
-cse::VectorTransformNode::VectorTransformNode(FloatPos position)
+cse::VectorTransformNode::VectorTransformNode(const FloatPos position) : EditableNode(NodeCategory::VECTOR, CyclesNodeType::VectorTransform, "Vector Transform")
 {
 	world_pos = position;
-
-	title = "Vector Transform";
 
 	const auto vector_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::VECTOR, "Vector", "vector");
 
@@ -109,6 +99,4 @@ cse::VectorTransformNode::VectorTransformNode(FloatPos position)
 	sockets.push_back(convert_from_input);
 	sockets.push_back(convert_to_input);
 	sockets.push_back(vector_input);
-
-	type = CyclesNodeType::VectorTransform;
 }

@@ -9,11 +9,9 @@
 #include "output.h"
 #include "sockets.h"
 
-cse::MaxTexmapShaderNode::MaxTexmapShaderNode(FloatPos position)
+cse::MaxTexmapShaderNode::MaxTexmapShaderNode(FloatPos position) : EditableNode(NodeCategory::TEXTURE, CyclesNodeType::MaxTex, "3ds Max Texmap")
 {
 	world_pos = position;
-
-	title = "3ds Max Texmap";
 
 	const auto color_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::COLOR, "Color", "color");
 	const auto alpha_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Alpha", "alpha");
@@ -41,6 +39,4 @@ cse::MaxTexmapShaderNode::MaxTexmapShaderNode(FloatPos position)
 	sockets.push_back(width_input);
 	sockets.push_back(height_input);
 	sockets.push_back(precision_input);
-
-	type = CyclesNodeType::MaxTex;
 }

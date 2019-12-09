@@ -10,11 +10,9 @@
 #include "output.h"
 #include "sockets.h"
 
-cse::PrincipledBSDFNode::PrincipledBSDFNode(FloatPos position)
+cse::PrincipledBSDFNode::PrincipledBSDFNode(FloatPos position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::PrincipledBSDF, "Principled BSDF")
 {
 	world_pos = position;
-
-	title = "Principled BSDF";
 
 	const auto bsdf_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::CLOSURE, "BSDF", "BSDF");
 
@@ -107,16 +105,12 @@ cse::PrincipledBSDFNode::PrincipledBSDFNode(FloatPos position)
 	sockets.push_back(cc_normal_input);
 	sockets.push_back(tangent_input);
 
-	type = CyclesNodeType::PrincipledBSDF;
-
 	content_width += 34.0f;
 }
 
-cse::PrincipledVolumeNode::PrincipledVolumeNode(FloatPos position)
+cse::PrincipledVolumeNode::PrincipledVolumeNode(FloatPos position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::PrincipledVolume, "Principled Volume")
 {
 	world_pos = position;
-
-	title = "Principled Volume";
 
 	const auto volume_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::CLOSURE, "Volume", "volume");
 
@@ -152,18 +146,14 @@ cse::PrincipledVolumeNode::PrincipledVolumeNode(FloatPos position)
 	sockets.push_back(blackbody_tint_input);
 	sockets.push_back(temperature_input);
 
-	type = CyclesNodeType::PrincipledVolume;
-
 	content_width += 28.0f;
 }
 
-cse::PrincipledHairNode::PrincipledHairNode(FloatPos position)
+cse::PrincipledHairNode::PrincipledHairNode(FloatPos position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::PrincipledHair, "Principled Hair")
 {
 	constexpr float PI = 3.14159f;
 
 	world_pos = position;
-
-	title = "Principled Hair";
 
 	const auto bsdf_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::CLOSURE, "BSDF", "BSDF");
 
@@ -227,16 +217,12 @@ cse::PrincipledHairNode::PrincipledHairNode(FloatPos position)
 	sockets.push_back(random_roughness_input);
 	sockets.push_back(random_input);
 
-	type = CyclesNodeType::PrincipledHair;
-
 	content_width += 62.0f;
 }
 
-cse::MixShaderNode::MixShaderNode(FloatPos position)
+cse::MixShaderNode::MixShaderNode(FloatPos position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::MixShader, "Mix Shader")
 {
 	world_pos = position;
-
-	title = "Mix Shader";
 
 	const auto shader_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::CLOSURE, "Closure", "closure");
 
@@ -250,15 +236,11 @@ cse::MixShaderNode::MixShaderNode(FloatPos position)
 	sockets.push_back(fac_input);
 	sockets.push_back(shader_a_input);
 	sockets.push_back(shader_b_input);
-
-	type = CyclesNodeType::MixShader;
 }
 
-cse::AddShaderNode::AddShaderNode(FloatPos position)
+cse::AddShaderNode::AddShaderNode(FloatPos position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::AddShader, "Add Shader")
 {
 	world_pos = position;
-
-	title = "Add Shader";
 
 	const auto shader_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::CLOSURE, "Closure", "closure");
 
@@ -269,15 +251,11 @@ cse::AddShaderNode::AddShaderNode(FloatPos position)
 
 	sockets.push_back(shader_a_input);
 	sockets.push_back(shader_b_input);
-
-	type = CyclesNodeType::AddShader;
 }
 
-cse::DiffuseBSDFNode::DiffuseBSDFNode(FloatPos position)
+cse::DiffuseBSDFNode::DiffuseBSDFNode(FloatPos position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::DiffuseBSDF, "Diffuse BSDF")
 {
 	world_pos = position;
-
-	title = "Diffuse BSDF";
 
 	const auto bsdf_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::CLOSURE, "BSDF", "BSDF");
 
@@ -292,15 +270,11 @@ cse::DiffuseBSDFNode::DiffuseBSDFNode(FloatPos position)
 	sockets.push_back(color_input);
 	sockets.push_back(roughness_input);
 	sockets.push_back(normal_input);
-
-	type = CyclesNodeType::DiffuseBSDF;
 }
 
-cse::GlossyBSDFNode::GlossyBSDFNode(FloatPos position)
+cse::GlossyBSDFNode::GlossyBSDFNode(FloatPos position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::GlossyBSDF, "Glossy BSDF")
 {
 	world_pos = position;
-
-	title = "Glossy BSDF";
 
 	const auto bsdf_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::CLOSURE, "BSDF", "BSDF");
 
@@ -325,15 +299,11 @@ cse::GlossyBSDFNode::GlossyBSDFNode(FloatPos position)
 	sockets.push_back(color_input);
 	sockets.push_back(roughness_input);
 	sockets.push_back(normal_input);
-
-	type = CyclesNodeType::GlossyBSDF;
 }
 
-cse::TransparentBSDFNode::TransparentBSDFNode(FloatPos position)
+cse::TransparentBSDFNode::TransparentBSDFNode(FloatPos position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::TransparentBSDF, "Transparent BSDF")
 {
 	world_pos = position;
-
-	title = "Transparent BSDF";
 
 	const auto bsdf_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::CLOSURE, "BSDF", "BSDF");
 
@@ -343,16 +313,12 @@ cse::TransparentBSDFNode::TransparentBSDFNode(FloatPos position)
 	color_input->value = std::make_shared<ColorSocketValue>(1.0f, 1.0f, 1.0f);
 
 	sockets.push_back(color_input);
-
-	type = CyclesNodeType::TransparentBSDF;
 }
 
 
-cse::RefractionBSDFNode::RefractionBSDFNode(FloatPos position)
+cse::RefractionBSDFNode::RefractionBSDFNode(FloatPos position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::RefractionBSDF, "Refraction BSDF")
 {
 	world_pos = position;
-
-	title = "Refraction BSDF";
 
 	const auto bsdf_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::CLOSURE, "BSDF", "BSDF");
 
@@ -378,15 +344,11 @@ cse::RefractionBSDFNode::RefractionBSDFNode(FloatPos position)
 	sockets.push_back(roughness_input);
 	sockets.push_back(ior_input);
 	sockets.push_back(normal_input);
-
-	type = CyclesNodeType::RefractionBSDF;
 }
 
-cse::GlassBSDFNode::GlassBSDFNode(FloatPos position)
+cse::GlassBSDFNode::GlassBSDFNode(FloatPos position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::GlassBSDF, "Glass BSDF")
 {
 	world_pos = position;
-
-	title = "Glass BSDF";
 
 	const auto bsdf_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::CLOSURE, "BSDF", "BSDF");
 
@@ -413,15 +375,11 @@ cse::GlassBSDFNode::GlassBSDFNode(FloatPos position)
 	sockets.push_back(roughness_input);
 	sockets.push_back(ior_input);
 	sockets.push_back(normal_input);
-
-	type = CyclesNodeType::GlassBSDF;
 }
 
-cse::TranslucentBSDFNode::TranslucentBSDFNode(FloatPos position)
+cse::TranslucentBSDFNode::TranslucentBSDFNode(FloatPos position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::TranslucentBSDF, "Translucent BSDF")
 {
 	world_pos = position;
-
-	title = "Translucent BSDF";
 
 	const auto bsdf_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::CLOSURE, "BSDF", "bsdf");
 
@@ -433,15 +391,11 @@ cse::TranslucentBSDFNode::TranslucentBSDFNode(FloatPos position)
 
 	sockets.push_back(color_input);
 	sockets.push_back(normal_input);
-
-	type = CyclesNodeType::TranslucentBSDF;
 }
 
-cse::AnisotropicBSDFNode::AnisotropicBSDFNode(FloatPos position)
+cse::AnisotropicBSDFNode::AnisotropicBSDFNode(FloatPos position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::AnisotropicBSDF, "Anisotropic BSDF")
 {
 	world_pos = position;
-
-	title = "Anisotropic BSDF";
 
 	const auto bsdf_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::CLOSURE, "BSDF", "BSDF");
 
@@ -473,15 +427,11 @@ cse::AnisotropicBSDFNode::AnisotropicBSDFNode(FloatPos position)
 	sockets.push_back(rotation_input);
 	sockets.push_back(normal_input);
 	sockets.push_back(tangent_input);
-
-	type = CyclesNodeType::AnisotropicBSDF;
 }
 
-cse::VelvetBSDFNode::VelvetBSDFNode(FloatPos position)
+cse::VelvetBSDFNode::VelvetBSDFNode(FloatPos position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::VelvetBSDF, "Velvet BSDF")
 {
 	world_pos = position;
-
-	title = "Velvet BSDF";
 
 	const auto bsdf_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::CLOSURE, "BSDF", "BSDF");
 
@@ -496,15 +446,11 @@ cse::VelvetBSDFNode::VelvetBSDFNode(FloatPos position)
 	sockets.push_back(color_input);
 	sockets.push_back(sigma_input);
 	sockets.push_back(normal_input);
-
-	type = CyclesNodeType::VelvetBSDF;
 }
 
-cse::ToonBSDFNode::ToonBSDFNode(FloatPos position)
+cse::ToonBSDFNode::ToonBSDFNode(FloatPos position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::ToonBSDF, "Toon BSDF")
 {
 	world_pos = position;
-
-	title = "Toon BSDF";
 
 	const auto bsdf_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::CLOSURE, "BSDF", "BSDF");
 
@@ -529,15 +475,11 @@ cse::ToonBSDFNode::ToonBSDFNode(FloatPos position)
 	sockets.push_back(size_input);
 	sockets.push_back(smooth_input);
 	sockets.push_back(normal_input);
-
-	type = CyclesNodeType::ToonBSDF;
 }
 
-cse::SubsurfaceScatteringNode::SubsurfaceScatteringNode(FloatPos position)
+cse::SubsurfaceScatteringNode::SubsurfaceScatteringNode(FloatPos position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::SubsurfaceScattering, "Subsurface Scattering")
 {
 	world_pos = position;
-
-	title = "Subsurface Scattering";
 
 	const auto bsdf_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::CLOSURE, "BSSRDF", "BSSRDF");
 
@@ -572,16 +514,12 @@ cse::SubsurfaceScatteringNode::SubsurfaceScatteringNode(FloatPos position)
 	sockets.push_back(blur_input);
 	sockets.push_back(normal_input);
 
-	type = CyclesNodeType::SubsurfaceScattering;
-
 	content_width += 20.0f;
 }
 
-cse::EmissionNode::EmissionNode(FloatPos position)
+cse::EmissionNode::EmissionNode(FloatPos position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::Emission, "Emission")
 {
 	world_pos = position;
-
-	title = "Emission";
 
 	const auto emission_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::CLOSURE, "Emission", "emission");
 
@@ -594,15 +532,11 @@ cse::EmissionNode::EmissionNode(FloatPos position)
 
 	sockets.push_back(color_input);
 	sockets.push_back(strength_input);
-
-	type = CyclesNodeType::Emission;
 }
 
-cse::HairBSDFNode::HairBSDFNode(FloatPos position)
+cse::HairBSDFNode::HairBSDFNode(FloatPos position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::HairBSDF, "Hair BSDF")
 {
 	world_pos = position;
-
-	title = "Hair BSDF";
 
 	const auto bsdf_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::CLOSURE, "BSDF", "BSDF");
 
@@ -631,28 +565,20 @@ cse::HairBSDFNode::HairBSDFNode(FloatPos position)
 	sockets.push_back(roughness_u_input);
 	sockets.push_back(roughness_v_input);
 	sockets.push_back(tangent_input);
-
-	type = CyclesNodeType::HairBSDF;
 }
 
-cse::HoldoutNode::HoldoutNode(FloatPos position)
+cse::HoldoutNode::HoldoutNode(FloatPos position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::Holdout, "Holdout")
 {
 	world_pos = position;
-
-	title = "Holdout";
 
 	const auto holdout_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::CLOSURE, "Holdout", "holdout");
 
 	sockets.push_back(holdout_output);
-
-	type = CyclesNodeType::Holdout;
 }
 
-cse::VolumeAbsorptionNode::VolumeAbsorptionNode(FloatPos position)
+cse::VolumeAbsorptionNode::VolumeAbsorptionNode(FloatPos position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::VolAbsorption, "Volume Absorption")
 {
 	world_pos = position;
-
-	title = "Volume Absorption";
 
 	const auto vol_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::CLOSURE, "Volume", "volume");
 
@@ -665,15 +591,11 @@ cse::VolumeAbsorptionNode::VolumeAbsorptionNode(FloatPos position)
 
 	sockets.push_back(color_input);
 	sockets.push_back(density_input);
-
-	type = CyclesNodeType::VolAbsorption;
 }
 
-cse::VolumeScatterNode::VolumeScatterNode(FloatPos position)
+cse::VolumeScatterNode::VolumeScatterNode(FloatPos position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::VolScatter, "Volume Scatter")
 {
 	world_pos = position;
-
-	title = "Volume Scatter";
 
 	const auto vol_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::CLOSURE, "Volume", "volume");
 
@@ -689,6 +611,4 @@ cse::VolumeScatterNode::VolumeScatterNode(FloatPos position)
 	sockets.push_back(color_input);
 	sockets.push_back(density_input);
 	sockets.push_back(anisotropy_input);
-
-	type = CyclesNodeType::VolScatter;
 }

@@ -9,11 +9,9 @@
 #include "output.h"
 #include "sockets.h"
 
-cse::MaterialOutputNode::MaterialOutputNode(FloatPos position)
+cse::MaterialOutputNode::MaterialOutputNode(FloatPos position) : EditableNode(NodeCategory::OUTPUT, CyclesNodeType::MaterialOutput, "Material Output")
 {
 	world_pos = position;
-
-	title = "Material Output";
 
 	const auto surface_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::CLOSURE, "Surface", "surface");
 	const auto volume_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::CLOSURE, "Volume", "volume");
@@ -22,8 +20,6 @@ cse::MaterialOutputNode::MaterialOutputNode(FloatPos position)
 	sockets.push_back(surface_input);
 	sockets.push_back(volume_input);
 	sockets.push_back(displacement_input);
-
-	type = CyclesNodeType::MaterialOutput;
 
 	// This node being added should not trigger an update to undo state
 	changed = false;
