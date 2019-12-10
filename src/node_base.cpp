@@ -8,8 +8,31 @@
 
 #include "config.h"
 #include "curve.h"
+#include "gui_colors.h"
 #include "gui_sizes.h"
 #include "sockets.h"
+
+static NVGcolor get_color_for_category(const NodeCategory category)
+{
+	switch(category) {
+		case NodeCategory::OUTPUT:
+			return COLOR_NODE_HEADER_OUTPUT;
+		case NodeCategory::COLOR:
+			return COLOR_NODE_HEADER_COLOR;
+		case NodeCategory::CONVERTER:
+			return COLOR_NODE_HEADER_CONVERTER;
+		case NodeCategory::INPUT:
+			return COLOR_NODE_HEADER_INPUT;
+		case NodeCategory::SHADER:
+			return COLOR_NODE_HEADER_SHADER;
+		case NodeCategory::TEXTURE:
+			return COLOR_NODE_HEADER_TEXTURE;
+		case NodeCategory::VECTOR:
+			return COLOR_NODE_HEADER_VECTOR;
+		default:
+			return COLOR_NODE_HEADER_DEFAULT;
+	}
+}
 
 cse::NodeConnection::NodeConnection(const std::weak_ptr<NodeSocket> begin_socket, const std::weak_ptr<NodeSocket> end_socket) :
 	begin_socket(begin_socket),
@@ -70,12 +93,7 @@ void cse::EditableNode::draw_node(NVGcontext* const draw_context, const bool sel
 		nvgBeginPath(draw_context);
 		nvgRoundedRect(draw_context, draw_pos_x, draw_pos_y, content_width, UI_NODE_HEADER_HEIGHT, UI_NODE_CORNER_RADIUS);
 		nvgRect(draw_context, draw_pos_x, rect_pos_y, content_width, UI_NODE_CORNER_RADIUS);
-		if (highlight_header) {
-			nvgFillColor(draw_context, nvgRGBA(225, 225, 225, 255));
-		}
-		else {
-			nvgFillColor(draw_context, nvgRGBA(210, 210, 210, 255));
-		}
+		nvgFillColor(draw_context, get_color_for_category(category));
 		nvgFill(draw_context);
 	}
 

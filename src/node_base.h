@@ -62,8 +62,6 @@ namespace cse {
 
 		const std::string title;
 
-		bool highlight_header = false;
-
 		float content_width = 150.0f;
 		float content_height = 0.0f;
 
