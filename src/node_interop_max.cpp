@@ -9,7 +9,7 @@
 #include "output.h"
 #include "sockets.h"
 
-cse::MaxTexmapShaderNode::MaxTexmapShaderNode(FloatPos position) : EditableNode(NodeCategory::TEXTURE, CyclesNodeType::MaxTex, "3ds Max Texmap")
+cse::MaxTexmapShaderNode::MaxTexmapShaderNode(const FloatPos position) : EditableNode(NodeCategory::TEXTURE, CyclesNodeType::MaxTex, "3ds Max Texmap")
 {
 	world_pos = position;
 
@@ -33,10 +33,12 @@ cse::MaxTexmapShaderNode::MaxTexmapShaderNode(FloatPos position) : EditableNode(
 	precision_value->enum_values.push_back(StringEnumPair("32-bit/Channel Float", "float"));
 	precision_value->set_from_internal_name("uchar");
 	precision_input->value = precision_value;
+	const auto vector_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::VECTOR, "Vector", "vector");
 
 	sockets.push_back(slot_input);
 	sockets.push_back(autosize_input);
 	sockets.push_back(width_input);
 	sockets.push_back(height_input);
 	sockets.push_back(precision_input);
+	sockets.push_back(vector_input);
 }
