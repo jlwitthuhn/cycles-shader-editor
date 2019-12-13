@@ -4,8 +4,6 @@
 
 namespace cse {
 
-	class FloatPos;
-
 	class BrickTextureNode : public EditableNode {
 	public:
 		BrickTextureNode(FloatPos position);

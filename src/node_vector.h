@@ -4,11 +4,14 @@
 
 namespace cse {
 
-	class FloatPos;
-
 	class BumpNode : public EditableNode {
 	public:
 		BumpNode(FloatPos position);
+	};
+
+	class DisplacementNode : public EditableNode {
+	public:
+		DisplacementNode(FloatPos position);
 	};
 
 	class NormalMapNode : public EditableNode {

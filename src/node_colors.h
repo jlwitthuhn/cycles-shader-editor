@@ -4,10 +4,6 @@
 
 namespace cse {
 
-	class FloatPos;
-
-	struct OutputNode;
-
 	class MixRGBNode : public EditableNode {
 	public:
 		MixRGBNode(FloatPos position);

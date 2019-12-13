@@ -4,8 +4,6 @@
 
 namespace cse {
 
-	class FloatPos;
-
 	class BlackbodyNode : public EditableNode {
 	public:
 		BlackbodyNode(FloatPos position);

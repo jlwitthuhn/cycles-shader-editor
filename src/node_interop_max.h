@@ -4,8 +4,6 @@
 
 namespace cse {
 
-	class FloatPos;
-
 	class MaxTexmapShaderNode : public EditableNode {
 	public:
 		MaxTexmapShaderNode(FloatPos position);

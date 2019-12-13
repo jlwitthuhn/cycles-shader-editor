@@ -62,6 +62,7 @@ namespace cse {
 		RGBCurves,
 		// Vector
 		Bump,
+		Displacement,
 		NormalMap,
 		VectorTransform,
 		// Converter

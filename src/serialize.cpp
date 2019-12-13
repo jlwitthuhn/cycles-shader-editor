@@ -103,6 +103,7 @@ static void initialize_maps()
 	type_to_code[CyclesNodeType::RGBCurves] = std::string("rgb_curves");
 
 	type_to_code[CyclesNodeType::Bump] = std::string("bump");
+	type_to_code[CyclesNodeType::Displacement] = std::string("displacement");
 	type_to_code[CyclesNodeType::NormalMap] = std::string("normal_map");
 	type_to_code[CyclesNodeType::VectorTransform] = std::string("vector_transform");
 
@@ -568,6 +569,10 @@ static std::shared_ptr<cse::EditableNode> create_node_from_type(cse::CyclesNodeT
 		case CyclesNodeType::Bump:
 		{
 			return std::make_shared<BumpNode>(pos);
+		}
+		case CyclesNodeType::Displacement:
+		{
+			return std::make_shared<DisplacementNode>(pos);
 		}
 		case CyclesNodeType::NormalMap:
 		{

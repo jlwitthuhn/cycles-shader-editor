@@ -34,6 +34,35 @@ cse::BumpNode::BumpNode(const FloatPos position) : EditableNode(NodeCategory::VE
 	sockets.push_back(normal_input);
 }
 
+cse::DisplacementNode::DisplacementNode(const FloatPos position) : EditableNode(NodeCategory::VECTOR, CyclesNodeType::Displacement, "Displacement")
+{
+	world_pos = position;
+
+	const auto displacement_output = std::make_shared <NodeSocket>(this, SocketIOType::INPUT, SocketType::VECTOR, "Displacement", "displacement");
+
+	sockets.push_back(displacement_output);
+
+	const auto space_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::STRING_ENUM, "Space", "space");
+	const auto space_value = std::make_shared<StringEnumSocketValue>();
+	space_value->enum_values.push_back(StringEnumPair("Object Space", "object"));
+	space_value->enum_values.push_back(StringEnumPair("World Space", "world"));
+	space_value->set_from_internal_name("object");
+	space_input->value = space_value;
+	const auto height_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Height", "height");
+	height_input->value = std::make_shared<FloatSocketValue>(0.0f, 0.0f, 1000.0f);
+	const auto midlevel_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Midlevel", "midlevel");
+	midlevel_input->value = std::make_shared<FloatSocketValue>(0.5f, 0.0f, 1000.0f);
+	const auto scale_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Scale", "scale");
+	scale_input->value = std::make_shared<FloatSocketValue>(1.0f, 0.0f, 1000.0f);
+	const auto normal_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::NORMAL, "Normal", "normal");
+
+	sockets.push_back(space_input);
+	sockets.push_back(height_input);
+	sockets.push_back(midlevel_input);
+	sockets.push_back(scale_input);
+	sockets.push_back(normal_input);
+}
+
 cse::NormalMapNode::NormalMapNode(const FloatPos position) : EditableNode(NodeCategory::VECTOR, CyclesNodeType::NormalMap, "Normal Map")
 {
 	world_pos = position;
