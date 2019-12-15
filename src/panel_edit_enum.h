@@ -12,6 +12,7 @@ namespace cse {
 
 		virtual bool is_active() const override;
 
+		virtual void pre_draw() override;
 		virtual float draw(NVGcontext* draw_context) override;
 
 		virtual void set_mouse_local_position(FloatPos local_pos) override;

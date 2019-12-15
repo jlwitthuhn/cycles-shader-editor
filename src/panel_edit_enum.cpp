@@ -14,6 +14,11 @@ bool cse::EditEnumPanel::is_active() const
 	return attached_enum.use_count() > 0;
 }
 
+void cse::EditEnumPanel::pre_draw()
+{
+	radio_widget.pre_draw();
+}
+
 float cse::EditEnumPanel::draw(NVGcontext* const draw_context)
 {
 	float height_drawn = 0.0f;

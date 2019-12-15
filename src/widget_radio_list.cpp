@@ -16,11 +16,20 @@ void cse::RadioListWidget::attach_enum(const std::weak_ptr<StringEnumSocketValue
 	this->enum_socket_value = enum_socket_value;
 }
 
+void cse::RadioListWidget::pre_draw()
+{
+	enum_targets.clear();
+}
+
 float cse::RadioListWidget::draw(NVGcontext* const draw_context)
 {
+	float height_drawn = 0.0f;
+
 	const auto attached_enum = enum_socket_value.lock();
 
-	float height_drawn = 0.0f;
+	if (attached_enum.use_count() == 0) {
+		return height_drawn;
+	}
 
 	nvgFontSize(draw_context, UI_FONT_SIZE_NORMAL);
 	nvgFontFace(draw_context, "sans");

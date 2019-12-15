@@ -17,6 +17,7 @@ namespace cse {
 
 		void attach_enum(std::weak_ptr<StringEnumSocketValue> enum_socket_value);
 
+		void pre_draw();
 		float draw(NVGcontext* draw_context);
 
 		void set_mouse_local_position(FloatPos local_pos);
