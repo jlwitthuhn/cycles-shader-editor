@@ -20,14 +20,18 @@ namespace cse {
 		FloatPos end;
 	};
 
-	class BoolValueArea : public Area {
+	template<typename T>
+	class HolderArea : public Area {
 	public:
-		BoolValueArea(FloatPos begin_pos, FloatPos end_pos, bool bool_value, std::weak_ptr<BoolSocketValue> socket_value);
+		HolderArea(const FloatPos begin_pos, const FloatPos end_pos, T hold_value) :
+			Area(begin_pos, end_pos),
+			value(hold_value)
+			{}
 
-		bool click();
+		T get_value() const { return value; }
 
-		const bool bool_value;
-		const std::weak_ptr<BoolSocketValue> socket_value;
+	protected:
+		T value;
 	};
 
 	class StringEnumArea : public Area {

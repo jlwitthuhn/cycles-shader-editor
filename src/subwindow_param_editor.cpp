@@ -84,9 +84,9 @@ void cse::ParamEditorSubwindow::handle_mouse_button(const int button, const int 
 			}
 		}
 	}
-	else if (is_bool_target_under_mouse()) {
+	else if (is_bool_area_under_mouse()) {
 		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-			click_bool_target_under_mouse();
+			click_bool_area_under_mouse();
 		}
 	}
 	else {
@@ -171,7 +171,7 @@ void cse::ParamEditorSubwindow::draw_content(NVGcontext* const draw_context)
 
 	auto selected_param_ptr = selected_param.lock();
 	if (selected_param_ptr && selected_param_ptr->io_type == SocketIOType::INPUT) {
-		bool_targets.clear();
+		bool_click_areas.clear();
 
 		// Draw generic part
 		nvgFontSize(draw_context, UI_FONT_SIZE_NORMAL);
@@ -300,9 +300,9 @@ void cse::ParamEditorSubwindow::draw_content(NVGcontext* const draw_context)
 
 				FloatPos click_area_begin(0.0f, height_drawn);
 				FloatPos click_area_end(subwindow_width, height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT);
-				BoolValueArea click_area(click_area_begin, click_area_end, current_label, bool_value);
+				HolderArea<bool> click_area(click_area_begin, click_area_end, current_label);
 
-				bool_targets.push_back(click_area);
+				bool_click_areas.push_back(click_area);
 
 				height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
 			}
@@ -336,10 +336,10 @@ void cse::ParamEditorSubwindow::draw_content(NVGcontext* const draw_context)
 	content_height = height_drawn + 4.0f;
 }
 
-bool cse::ParamEditorSubwindow::is_bool_target_under_mouse()
+bool cse::ParamEditorSubwindow::is_bool_area_under_mouse()
 {
-	for (BoolValueArea& this_target : bool_targets) {
-		if (this_target.contains_point(mouse_content_pos)) {
+	for (HolderArea<bool>& this_area : bool_click_areas) {
+		if (this_area.contains_point(mouse_content_pos)) {
 			return true;
 		}
 	}
@@ -347,11 +347,19 @@ bool cse::ParamEditorSubwindow::is_bool_target_under_mouse()
 	return false;
 }
 
-void cse::ParamEditorSubwindow::click_bool_target_under_mouse()
+void cse::ParamEditorSubwindow::click_bool_area_under_mouse()
 {
-	for (BoolValueArea& this_target : bool_targets) {
-		if (this_target.contains_point(mouse_content_pos)) {
-			this_target.click();
+	for (HolderArea<bool>& this_area : bool_click_areas) {
+		if (this_area.contains_point(mouse_content_pos)) {
+			if (auto socket = selected_param.lock()) {
+				if (auto as_bool_value = std::dynamic_pointer_cast<BoolSocketValue>(socket->value)) {
+					const bool new_val = this_area.get_value();
+					if (as_bool_value->value != new_val) {
+						as_bool_value->value = new_val;
+						request_undo_stack_push = true;
+					}
+				}
+			}
 			return;
 		}
 	}

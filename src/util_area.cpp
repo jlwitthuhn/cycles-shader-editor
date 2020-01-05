@@ -26,30 +26,6 @@ cse::FloatPos cse::Area::get_normalized_pos(const cse::FloatPos pos) const
 	return result;
 }
 
-cse::BoolValueArea::BoolValueArea(
-	const FloatPos begin_pos,
-	const FloatPos end_pos,
-	const bool bool_value,
-	const std::weak_ptr<BoolSocketValue> socket_value
-	):
-	Area(begin_pos, end_pos),
-	bool_value(bool_value),
-	socket_value(socket_value)
-{
-
-}
-
-bool cse::BoolValueArea::click()
-{
-	if (const auto socket_value_ptr = socket_value.lock()) {
-		if (socket_value_ptr->value != bool_value) {
-			socket_value_ptr->value = bool_value;
-			return true;
-		}
-	}
-	return false;
-}
-
 cse::StringEnumArea::StringEnumArea(const FloatPos begin_pos, const FloatPos end_pos, const StringEnumPair& str_pair, const std::weak_ptr<StringEnumSocketValue> enum_value) :
 	Area(begin_pos, end_pos),
 	str_pair_value(str_pair),
