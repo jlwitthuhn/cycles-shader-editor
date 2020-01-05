@@ -26,40 +26,6 @@ cse::FloatPos cse::Area::get_normalized_pos(const cse::FloatPos pos) const
 	return result;
 }
 
-cse::CurveEditModeArea::CurveEditModeArea(const FloatPos begin_pos, const FloatPos end_pos, const EditCurveMode this_mode, EditCurveMode* const mode_enum) :
-	Area(begin_pos, end_pos),
-	this_mode(this_mode),
-	mode_enum(mode_enum)
-{
-
-}
-
-bool cse::CurveEditModeArea::click()
-{
-	if (*mode_enum != this_mode) {
-		*mode_enum = this_mode;
-		return true;
-	}
-	return false;
-}
-
-cse::CurveInterpModeArea::CurveInterpModeArea(const FloatPos begin_pos, const FloatPos end_pos, const CurveInterpolation this_interp, CurveInterpolation* const interp_enum) :
-	Area(begin_pos, end_pos),
-	this_interp(this_interp),
-	interp_enum(interp_enum)
-{
-
-}
-
-bool cse::CurveInterpModeArea::click()
-{
-	if (*interp_enum != this_interp) {
-		*interp_enum = this_interp;
-		return true;
-	}
-	return false;
-}
-
 cse::SocketArea::SocketArea(const FloatPos begin_pos, const FloatPos end_pos, const std::weak_ptr<NodeSocket> socket) :
 	Area(begin_pos, end_pos),
 	socket(socket)

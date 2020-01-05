@@ -19,12 +19,7 @@ static cse::FloatPos get_panel_space_point(const cse::FloatPos normalized_point,
 
 cse::EditCurvePanel::EditCurvePanel(const float width) :
 	EditParamPanel(width),
-	target_view(FloatPos(), FloatPos()),
-	target_edit_mode_move(FloatPos(), FloatPos(), EditCurveMode::MOVE, &edit_mode),
-	target_edit_mode_create(FloatPos(), FloatPos(), EditCurveMode::CREATE, &edit_mode),
-	target_edit_mode_delete(FloatPos(), FloatPos(), EditCurveMode::DELETE, &edit_mode),
-	target_interp_linear(FloatPos(), FloatPos(), CurveInterpolation::LINEAR, nullptr),
-	target_interp_hermite(FloatPos(), FloatPos(), CurveInterpolation::CUBIC_HERMITE, nullptr)
+	target_view(FloatPos(), FloatPos())
 {
 
 }
@@ -40,6 +35,9 @@ void cse::EditCurvePanel::pre_draw()
 		return;
 	}
 
+	edit_mode_click_areas.clear();
+	interp_click_areas.clear();
+
 	if (moving_selected_point && mouse_local_pos != move_selected_point_begin_mouse_pos) {
 		mouse_has_moved = true;
 	}
@@ -52,7 +50,7 @@ void cse::EditCurvePanel::pre_draw()
 	}
 }
 
-float cse::EditCurvePanel::draw(NVGcontext* draw_context)
+float cse::EditCurvePanel::draw(NVGcontext* const draw_context)
 {
 	float height_drawn = 0.0f;
 
@@ -231,24 +229,24 @@ float cse::EditCurvePanel::draw(NVGcontext* draw_context)
 		const float horizontal_separator_1_y = height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
 		const float horizontal_separator_2_y = height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT * 2;
 		const float horizontal_separator_3_y = height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT * 3;
-		target_edit_mode_move = CurveEditModeArea(
+		HolderArea<EditCurveMode> click_area_move(
 			FloatPos(click_target_begin_x, horizontal_separator_0_y),
 			FloatPos(click_target_end_x, horizontal_separator_1_y),
-			EditCurveMode::MOVE,
-			&edit_mode
+			EditCurveMode::MOVE
 		);
-		target_edit_mode_create = CurveEditModeArea(
+		HolderArea<EditCurveMode> click_area_create(
 			FloatPos(click_target_begin_x, horizontal_separator_1_y),
 			FloatPos(click_target_end_x, horizontal_separator_2_y),
-			EditCurveMode::CREATE,
-			&edit_mode
+			EditCurveMode::CREATE
 		);
-		target_edit_mode_delete = CurveEditModeArea(
+		HolderArea<EditCurveMode> click_area_delete(
 			FloatPos(click_target_begin_x, horizontal_separator_2_y),
 			FloatPos(click_target_end_x, horizontal_separator_3_y),
-			EditCurveMode::DELETE,
-			&edit_mode
+			EditCurveMode::DELETE
 		);
+		edit_mode_click_areas.push_back(click_area_move);
+		edit_mode_click_areas.push_back(click_area_create);
+		edit_mode_click_areas.push_back(click_area_delete);
 
 		height_drawn += (UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT * 3);
 	}
@@ -316,18 +314,18 @@ float cse::EditCurvePanel::draw(NVGcontext* draw_context)
 		const float horizontal_separator_0_y = height_drawn;
 		const float horizontal_separator_1_y = height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
 		const float horizontal_separator_2_y = height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT * 2;
-		target_interp_linear = CurveInterpModeArea(
+		HolderArea<CurveInterpolation> area_interp_linear(
 			FloatPos(click_target_begin_x, horizontal_separator_0_y),
 			FloatPos(click_target_end_x, horizontal_separator_1_y),
-			CurveInterpolation::LINEAR,
-			&(attached_curve_ptr->curve_interp)
+			CurveInterpolation::LINEAR
 		);
-		target_interp_hermite = CurveInterpModeArea(
+		HolderArea<CurveInterpolation> area_interp_hermite(
 			FloatPos(click_target_begin_x, horizontal_separator_1_y),
 			FloatPos(click_target_end_x, horizontal_separator_2_y),
-			CurveInterpolation::CUBIC_HERMITE,
-			&(attached_curve_ptr->curve_interp)
+			CurveInterpolation::CUBIC_HERMITE
 		);
+		interp_click_areas.push_back(area_interp_linear);
+		interp_click_areas.push_back(area_interp_hermite);
 
 		height_drawn += (UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT * 2);
 	}
@@ -375,25 +373,23 @@ void cse::EditCurvePanel::handle_mouse_button(int button, int action, int /*mods
 				request_undo_push = true;
 			}
 		}
-		if (target_edit_mode_move.contains_point(mouse_local_pos)) {
-			target_edit_mode_move.click();
-			request_undo_push = true;
+
+		for (HolderArea<EditCurveMode>& this_area : edit_mode_click_areas) {
+			if (this_area.contains_point(mouse_local_pos)) {
+				edit_mode = this_area.get_value();
+			}
 		}
-		else if (target_edit_mode_create.contains_point(mouse_local_pos)) {
-			target_edit_mode_create.click();
-			request_undo_push = true;
-		}
-		else if (target_edit_mode_delete.contains_point(mouse_local_pos)) {
-			target_edit_mode_delete.click();
-			request_undo_push = true;
-		}
-		else if (target_interp_linear.contains_point(mouse_local_pos)) {
-			target_interp_linear.click();
-			request_undo_push = true;
-		}
-		else if (target_interp_hermite.contains_point(mouse_local_pos)) {
-			target_interp_hermite.click();
-			request_undo_push = true;
+
+		for (HolderArea<CurveInterpolation>& this_area : interp_click_areas) {
+			if (this_area.contains_point(mouse_local_pos)) {
+				if (attached_curve_ptr) {
+					const CurveInterpolation new_interp = this_area.get_value();
+					if (attached_curve_ptr->curve_interp != new_interp) {
+						attached_curve_ptr->curve_interp = new_interp;
+						request_undo_push = true;
+					}
+				}
+			}
 		}
 	}
 

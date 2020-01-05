@@ -34,28 +34,6 @@ namespace cse {
 		T value;
 	};
 
-	class CurveEditModeArea : public Area {
-	public:
-		CurveEditModeArea(FloatPos begin_pos, FloatPos end_pos, EditCurveMode this_mode, EditCurveMode* mode_enum);
-
-		bool click();
-
-	private:
-		EditCurveMode this_mode;
-		EditCurveMode* mode_enum;
-	};
-
-	class CurveInterpModeArea : public Area {
-	public:
-		CurveInterpModeArea(FloatPos begin_pos, FloatPos end_pos, CurveInterpolation this_interp, CurveInterpolation* interp_enum);
-
-		bool click();
-
-	private:
-		CurveInterpolation this_interp;
-		CurveInterpolation* interp_enum;
-	};
-
 	class SocketArea : public Area {
 	public:
 		SocketArea(FloatPos begin_pos, FloatPos end_pos, std::weak_ptr<NodeSocket> socket);

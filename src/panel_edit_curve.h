@@ -2,6 +2,7 @@
 
 #include <cstddef>
 #include <memory>
+#include <vector>
 
 #include "common_enums.h"
 #include "float_pos.h"
@@ -36,11 +37,8 @@ namespace cse {
 		EditCurveMode edit_mode = EditCurveMode::MOVE;
 
 		Area target_view;
-		CurveEditModeArea target_edit_mode_move;
-		CurveEditModeArea target_edit_mode_create;
-		CurveEditModeArea target_edit_mode_delete;
-		CurveInterpModeArea target_interp_linear;
-		CurveInterpModeArea target_interp_hermite;
+		std::vector<HolderArea<EditCurveMode>> edit_mode_click_areas;
+		std::vector<HolderArea<CurveInterpolation>> interp_click_areas;
 
 		std::size_t selected_point_index = 0;
 		bool selected_point_valid = false;
