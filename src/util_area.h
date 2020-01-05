@@ -34,16 +34,6 @@ namespace cse {
 		T value;
 	};
 
-	class StringEnumArea : public Area {
-	public:
-		StringEnumArea(FloatPos begin_pos, FloatPos end_pos, const StringEnumPair& str_pair, std::weak_ptr<StringEnumSocketValue> enum_value);
-
-		bool click();
-
-		const StringEnumPair str_pair_value;
-		const std::weak_ptr<StringEnumSocketValue> enum_value;
-	};
-
 	class CurveEditModeArea : public Area {
 	public:
 		CurveEditModeArea(FloatPos begin_pos, FloatPos end_pos, EditCurveMode this_mode, EditCurveMode* mode_enum);

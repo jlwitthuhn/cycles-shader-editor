@@ -18,7 +18,7 @@ void cse::RadioListWidget::attach_enum(const std::weak_ptr<StringEnumSocketValue
 
 void cse::RadioListWidget::pre_draw()
 {
-	enum_targets.clear();
+	enum_click_areas.clear();
 }
 
 float cse::RadioListWidget::draw(NVGcontext* const draw_context)
@@ -71,9 +71,9 @@ float cse::RadioListWidget::draw(NVGcontext* const draw_context)
 
 		FloatPos click_area_begin(0.0f, height_drawn);
 		FloatPos click_area_end(width, height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT);
-		StringEnumArea click_area(click_area_begin, click_area_end, this_enum_value, attached_enum);
+		HolderArea<std::string> click_area(click_area_begin, click_area_end, this_enum_value.internal_value);
 
-		enum_targets.push_back(click_area);
+		enum_click_areas.push_back(click_area);
 
 		height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
 	}
@@ -89,9 +89,14 @@ void cse::RadioListWidget::set_mouse_local_position(const FloatPos local_pos)
 void cse::RadioListWidget::handle_mouse_button(const int button, const int action, const int /*mods*/)
 {
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-		for (StringEnumArea& this_target : enum_targets) {
-			if (this_target.contains_point(mouse_local_pos)) {
-				request_undo_push = this_target.click() || request_undo_push;
+		for (HolderArea<std::string>& this_area : enum_click_areas) {
+			if (this_area.contains_point(mouse_local_pos)) {
+				if (auto socket_value = enum_socket_value.lock()) {
+					if (socket_value->value.internal_value != this_area.get_value()) {
+						socket_value->set_from_internal_name(this_area.get_value());
+						request_undo_push = true;
+					}
+				}
 			}
 		}
 	}

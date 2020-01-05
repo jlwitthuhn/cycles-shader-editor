@@ -26,25 +26,6 @@ cse::FloatPos cse::Area::get_normalized_pos(const cse::FloatPos pos) const
 	return result;
 }
 
-cse::StringEnumArea::StringEnumArea(const FloatPos begin_pos, const FloatPos end_pos, const StringEnumPair& str_pair, const std::weak_ptr<StringEnumSocketValue> enum_value) :
-	Area(begin_pos, end_pos),
-	str_pair_value(str_pair),
-	enum_value(enum_value)
-{
-
-}
-
-bool cse::StringEnumArea::click()
-{
-	if (const auto enum_value_ptr = enum_value.lock()) {
-		if (enum_value_ptr->value.internal_value != str_pair_value.internal_value) {
-			enum_value_ptr->value = str_pair_value;
-			return true;
-		}
-	}
-	return false;
-}
-
 cse::CurveEditModeArea::CurveEditModeArea(const FloatPos begin_pos, const FloatPos end_pos, const EditCurveMode this_mode, EditCurveMode* const mode_enum) :
 	Area(begin_pos, end_pos),
 	this_mode(this_mode),

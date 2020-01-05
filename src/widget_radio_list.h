@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <string>
 
 #include "float_pos.h"
 #include "util_area.h"
@@ -30,7 +31,7 @@ namespace cse {
 		const float width;
 
 		std::weak_ptr<StringEnumSocketValue> enum_socket_value;
-		std::vector<StringEnumArea> enum_targets;
+		std::vector<HolderArea<std::string>> enum_click_areas;
 
 		FloatPos mouse_local_pos;
 
