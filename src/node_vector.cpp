@@ -38,7 +38,7 @@ cse::DisplacementNode::DisplacementNode(const FloatPos position) : EditableNode(
 {
 	world_pos = position;
 
-	const auto displacement_output = std::make_shared <NodeSocket>(this, SocketIOType::INPUT, SocketType::VECTOR, "Displacement", "displacement");
+	const auto displacement_output = std::make_shared <NodeSocket>(this, SocketIOType::OUTPUT, SocketType::VECTOR, "Displacement", "displacement");
 
 	sockets.push_back(displacement_output);
 
