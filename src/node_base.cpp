@@ -261,7 +261,7 @@ void cse::EditableNode::draw_node(NVGcontext* const draw_context, const bool sel
 			// Add label click target
 			const cse::FloatPos click_target_begin(0, next_draw_y - draw_pos_y);
 			const cse::FloatPos click_target_end(content_width, next_draw_y - draw_pos_y + UI_NODE_SOCKET_ROW_HEIGHT);
-			const SocketArea label_target(click_target_begin, click_target_end, this_socket);
+			const HolderArea<std::weak_ptr<NodeSocket>> label_target(click_target_begin, click_target_end, this_socket);
 			label_targets.push_back(label_target);
 		}
 
@@ -282,7 +282,7 @@ void cse::EditableNode::draw_node(NVGcontext* const draw_context, const bool sel
 			cse::FloatPos local_socket_position(socket_position.get_x() - draw_pos_x, socket_position.get_y() - draw_pos_y);
 			cse::FloatPos click_target_begin(local_socket_position.get_x() - 7.0f, local_socket_position.get_y() - 7.0f);
 			cse::FloatPos click_target_end(local_socket_position.get_x() + 7.0f, local_socket_position.get_y() + 7.0f);
-			SocketArea socket_target(click_target_begin, click_target_end, this_socket);
+			const HolderArea<std::weak_ptr<NodeSocket>> socket_target(click_target_begin, click_target_end, this_socket);
 			socket_targets.push_back(socket_target);
 
 			if (this_socket->socket_type == SocketType::CLOSURE) {
@@ -331,7 +331,7 @@ std::weak_ptr<cse::NodeSocket> cse::EditableNode::get_socket_connector_under_poi
 	const FloatPos local_pos = get_local_pos(check_world_pos);
 	for (const auto click_target : socket_targets) {
 		if (click_target.contains_point(local_pos)) {
-			return click_target.socket;
+			return click_target.get_value();
 		}
 	}
 	return std::weak_ptr<NodeSocket>();
@@ -346,7 +346,7 @@ std::weak_ptr<cse::NodeSocket> cse::EditableNode::get_socket_label_under_point(c
 	const FloatPos local_pos = get_local_pos(check_world_pos);
 	for (const auto click_target : label_targets) {
 		if (click_target.contains_point(local_pos)) {
-			return click_target.socket;
+			return click_target.get_value();
 		}
 	}
 	return std::weak_ptr<NodeSocket>();

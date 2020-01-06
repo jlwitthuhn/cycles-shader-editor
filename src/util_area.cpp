@@ -25,10 +25,3 @@ cse::FloatPos cse::Area::get_normalized_pos(const cse::FloatPos pos) const
 	result.clamp_to(FloatPos(0.0f, 0.0f), FloatPos(1.0f, 1.0f));
 	return result;
 }
-
-cse::SocketArea::SocketArea(const FloatPos begin_pos, const FloatPos end_pos, const std::weak_ptr<NodeSocket> socket) :
-	Area(begin_pos, end_pos),
-	socket(socket)
-{
-
-}

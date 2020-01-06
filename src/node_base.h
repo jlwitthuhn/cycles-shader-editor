@@ -66,8 +66,8 @@ namespace cse {
 		float content_height = 0.0f;
 
 		std::vector<std::shared_ptr<NodeSocket>> sockets;
-		std::vector<SocketArea> socket_targets;
-		std::vector<SocketArea> label_targets;
+		std::vector<HolderArea<std::weak_ptr<NodeSocket>>> socket_targets;
+		std::vector<HolderArea<std::weak_ptr<NodeSocket>>> label_targets;
 	};
 
 }

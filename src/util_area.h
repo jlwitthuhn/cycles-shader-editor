@@ -33,12 +33,4 @@ namespace cse {
 	protected:
 		T value;
 	};
-
-	class SocketArea : public Area {
-	public:
-		SocketArea(FloatPos begin_pos, FloatPos end_pos, std::weak_ptr<NodeSocket> socket);
-
-		const std::weak_ptr<NodeSocket> socket;
-	};
-
 }
