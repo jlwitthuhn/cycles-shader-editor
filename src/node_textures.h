@@ -6,42 +6,42 @@ namespace cse {
 
 	class BrickTextureNode : public EditableNode {
 	public:
-		BrickTextureNode(FloatPos position);
+		BrickTextureNode(Float2 position);
 	};
 
 	class NoiseTextureNode : public EditableNode {
 	public:
-		NoiseTextureNode(FloatPos position);
+		NoiseTextureNode(Float2 position);
 	};
 
 	class WaveTextureNode : public EditableNode {
 	public:
-		WaveTextureNode(FloatPos position);
+		WaveTextureNode(Float2 position);
 	};
 
 	class VoronoiTextureNode : public EditableNode {
 	public:
-		VoronoiTextureNode(FloatPos position);
+		VoronoiTextureNode(Float2 position);
 	};
 
 	class MusgraveTextureNode : public EditableNode {
 	public:
-		MusgraveTextureNode(FloatPos position);
+		MusgraveTextureNode(Float2 position);
 	};
 
 	class GradientTextureNode : public EditableNode {
 	public:
-		GradientTextureNode(FloatPos position);
+		GradientTextureNode(Float2 position);
 	};
 
 	class MagicTextureNode : public EditableNode {
 	public:
-		MagicTextureNode(FloatPos position);
+		MagicTextureNode(Float2 position);
 	};
 
 	class CheckerTextureNode : public EditableNode {
 	public:
-		CheckerTextureNode(FloatPos position);
+		CheckerTextureNode(Float2 position);
 	};
 
 }

@@ -23,15 +23,15 @@ static constexpr int GRID_SIZE_INT = 32;
 static constexpr float GRID_SIZE_FL = static_cast<float>(GRID_SIZE_INT);
 
 cse::EditGraphView::ViewBorders::ViewBorders(
-	const FloatPos view_center,
+	const Float2 view_center,
 	const int viewport_width,
 	const int viewport_height,
 	const float zoom_scale
 	) :
-	left  (view_center.get_x() - static_cast<int>(viewport_width / zoom_scale) / 2),
-	right (view_center.get_x() + static_cast<int>(viewport_width / zoom_scale) / 2),
-	top   (view_center.get_y() - static_cast<int>(viewport_height / zoom_scale) / 2),
-	bottom(view_center.get_y() + static_cast<int>(viewport_height / zoom_scale) / 2)
+	left  (view_center.x - static_cast<int>(viewport_width / zoom_scale) / 2),
+	right (view_center.x + static_cast<int>(viewport_width / zoom_scale) / 2),
+	top   (view_center.y - static_cast<int>(viewport_height / zoom_scale) / 2),
+	bottom(view_center.y + static_cast<int>(viewport_height / zoom_scale) / 2)
 {
 
 }
@@ -39,10 +39,10 @@ cse::EditGraphView::ViewBorders::ViewBorders(
 cse::EditGraphView::EditGraphView(const std::shared_ptr<EditableGraph> graph, const std::weak_ptr<NodeCreationHelper> node_creation_helper)
 	: graph(graph), node_creation_helper(node_creation_helper), selection(std::make_shared<Selection>())
 {
-	view_center = FloatPos(0.0f, 0.0f);
+	view_center = Float2(0.0f, 0.0f);
 }
 
-void cse::EditGraphView::set_mouse_position(const FloatPos view_local_mouse_pos, const int viewport_width, const int viewport_height)
+void cse::EditGraphView::set_mouse_position(const Float2 view_local_mouse_pos, const int viewport_width, const int viewport_height)
 {
 	widget_width = viewport_width;
 	widget_height = viewport_height;
@@ -55,11 +55,11 @@ void cse::EditGraphView::set_mouse_position(const FloatPos view_local_mouse_pos,
 	const float view_height = viewport_height / zoom_scale;
 
 	// Convert mouse position from view space to world space
-	const float x_pos = view_local_mouse_pos.get_x() / (viewport_width) * (view_width) + borders.left;
-	const float y_pos = view_local_mouse_pos.get_y() / (viewport_height) * (view_height) + borders.top;
+	const float x_pos = view_local_mouse_pos.x / (viewport_width) * (view_width) + borders.left;
+	const float y_pos = view_local_mouse_pos.y / (viewport_height) * (view_height) + borders.top;
 
-	const FloatPos calculated_new_world_pos(x_pos, y_pos);
-	const FloatPos mouse_delta = calculated_new_world_pos - mouse_world_position;
+	const Float2 calculated_new_world_pos(x_pos, y_pos);
+	const Float2 mouse_delta = calculated_new_world_pos - mouse_world_position;
 
 	// If we are panning the view, adjust the view center so the mouse stays in the same world position
 	if (mouse_pan_active) {
@@ -164,7 +164,9 @@ void cse::EditGraphView::draw(NVGcontext* draw_context)
 	for (auto node_iterator = graph->nodes.rbegin(); node_iterator != graph->nodes.rend(); ++node_iterator) {
 		const std::shared_ptr<EditableNode> this_node = *node_iterator;
 		nvgSave(draw_context);
-		nvgTranslate(draw_context, this_node->world_pos.get_floor_x(), this_node->world_pos.get_floor_y());
+		const float x = std::floorf(this_node->world_pos.x);
+		const float y = std::floorf(this_node->world_pos.y);
+		nvgTranslate(draw_context, x, y);
 		const bool node_selected = (selection->nodes.count(this_node) == 1);
 		this_node->draw_node(draw_context, node_selected, selected_node);
 		nvgRestore(draw_context);
@@ -177,11 +179,11 @@ void cse::EditGraphView::draw(NVGcontext* draw_context)
 
 		nvgBeginPath(draw_context);
 
-		nvgMoveTo(draw_context, world_box_select_begin.get_x(), world_box_select_begin.get_y());
-		nvgLineTo(draw_context, world_box_select_begin.get_x(), world_box_select_end.get_y());
-		nvgLineTo(draw_context, world_box_select_end.get_x(), world_box_select_end.get_y());
-		nvgLineTo(draw_context, world_box_select_end.get_x(), world_box_select_begin.get_y());
-		nvgLineTo(draw_context, world_box_select_begin.get_x(), world_box_select_begin.get_y());
+		nvgMoveTo(draw_context, world_box_select_begin.x, world_box_select_begin.y);
+		nvgLineTo(draw_context, world_box_select_begin.x, world_box_select_end.y);
+		nvgLineTo(draw_context, world_box_select_end.x, world_box_select_end.y);
+		nvgLineTo(draw_context, world_box_select_end.x, world_box_select_begin.y);
+		nvgLineTo(draw_context, world_box_select_begin.x, world_box_select_begin.y);
 
 		nvgStroke(draw_context);
 	}
@@ -419,28 +421,28 @@ cse::WeakNodeSet cse::EditGraphView::get_boxed_nodes()
 	float max_x_pos = 0.0f;
 	float max_y_pos = 0.0f;
 
-	if (world_box_select_begin.get_x() < world_box_select_end.get_x()) {
-		min_x_pos = world_box_select_begin.get_x();
-		max_x_pos = world_box_select_end.get_x();
+	if (world_box_select_begin.x < world_box_select_end.x) {
+		min_x_pos = world_box_select_begin.x;
+		max_x_pos = world_box_select_end.x;
 	}
 	else {
-		min_x_pos = world_box_select_end.get_x();
-		max_x_pos = world_box_select_begin.get_x();
+		min_x_pos = world_box_select_end.x;
+		max_x_pos = world_box_select_begin.x;
 	}
 	assert(min_x_pos <= max_x_pos);
 
-	if (world_box_select_begin.get_y() < world_box_select_end.get_y()) {
-		min_y_pos = world_box_select_begin.get_y();
-		max_y_pos = world_box_select_end.get_y();
+	if (world_box_select_begin.y < world_box_select_end.y) {
+		min_y_pos = world_box_select_begin.y;
+		max_y_pos = world_box_select_end.y;
 	}
 	else {
-		min_y_pos = world_box_select_end.get_y();
-		max_y_pos = world_box_select_begin.get_y();
+		min_y_pos = world_box_select_end.y;
+		max_y_pos = world_box_select_begin.y;
 	}
 	assert(min_y_pos <= max_y_pos);
 
-	cse::FloatPos min_position(min_x_pos, min_y_pos);
-	cse::FloatPos max_position(max_x_pos, max_y_pos);
+	Float2 min_position(min_x_pos, min_y_pos);
+	Float2 max_position(max_x_pos, max_y_pos);
 
 	for (const auto& this_node : graph->nodes) {
 		if (do_rectangles_overlap(min_position, max_position, this_node->world_pos, this_node->world_pos + this_node->get_dimensions())) {
@@ -468,14 +470,16 @@ void cse::EditGraphView::node_move_end()
 
 void cse::EditGraphView::pan(const int horizontal_ticks, const int vertical_ticks)
 {
-	view_center = view_center + FloatPos(GRID_SIZE_FL * horizontal_ticks, GRID_SIZE_FL * vertical_ticks);
+	view_center = view_center + Float2(GRID_SIZE_FL * horizontal_ticks, GRID_SIZE_FL * vertical_ticks);
 }
 
 void cse::EditGraphView::snap_view_center()
 {
 	// Snap view to nearest whole number (x, y) coordinate
 	// This is to avoid blurry text and lines after a user has panned around while zoomed in
-	view_center = FloatPos(view_center.get_round_x(), view_center.get_round_y());
+	const float x = std::roundf(view_center.x);
+	const float y = std::roundf(view_center.y);
+	view_center = Float2(x, y);
 }
 
 void cse::EditGraphView::box_select_begin()

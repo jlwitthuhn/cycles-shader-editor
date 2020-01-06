@@ -1,6 +1,5 @@
 #include "editable_graph.h"
 
-#include "float_pos.h"
 #include "node_outputs.h"
 #include "sockets.h"
 
@@ -9,7 +8,7 @@ cse::EditableGraph::EditableGraph(const ShaderGraphType type)
 	reset(type);
 }
 
-void cse::EditableGraph::add_node(std::shared_ptr<EditableNode>& node, const FloatPos world_pos)
+void cse::EditableGraph::add_node(std::shared_ptr<EditableNode>& node, const Float2 world_pos)
 {
 	if (node.use_count() == 0) {
 		return;
@@ -95,7 +94,7 @@ void cse::EditableGraph::remove_node_set(const cse::WeakNodeSet& weak_nodes_to_r
 	remove_invalid_connections();
 }
 
-bool cse::EditableGraph::is_node_under_point(const FloatPos world_pos) const
+bool cse::EditableGraph::is_node_under_point(const Float2 world_pos) const
 {
 	for (const auto this_node : nodes) {
 		if (this_node->contains_point(world_pos)) {
@@ -105,7 +104,7 @@ bool cse::EditableGraph::is_node_under_point(const FloatPos world_pos) const
 	return false;
 }
 
-std::weak_ptr<cse::EditableNode> cse::EditableGraph::get_node_under_point(const FloatPos world_pos) const
+std::weak_ptr<cse::EditableNode> cse::EditableGraph::get_node_under_point(const Float2 world_pos) const
 {
 	for (const auto this_node : nodes) {
 		if (this_node->contains_point(world_pos)) {
@@ -115,7 +114,7 @@ std::weak_ptr<cse::EditableNode> cse::EditableGraph::get_node_under_point(const 
 	return std::weak_ptr<EditableNode>();
 }
 
-std::weak_ptr<cse::NodeSocket> cse::EditableGraph::get_socket_under_point(const FloatPos world_pos) const
+std::weak_ptr<cse::NodeSocket> cse::EditableGraph::get_socket_under_point(const Float2 world_pos) const
 {
 	for (const auto this_node : nodes) {
 		auto maybe_result = this_node->get_socket_label_under_point(world_pos);
@@ -126,7 +125,7 @@ std::weak_ptr<cse::NodeSocket> cse::EditableGraph::get_socket_under_point(const 
 	return std::weak_ptr<NodeSocket>();
 }
 
-std::weak_ptr<cse::NodeSocket> cse::EditableGraph::get_connector_under_point(const FloatPos world_pos, const SocketIOType io_type) const
+std::weak_ptr<cse::NodeSocket> cse::EditableGraph::get_connector_under_point(const Float2 world_pos, const SocketIOType io_type) const
 {
 	for (const auto this_node : nodes) {
 		auto maybe_result = this_node->get_socket_connector_under_point(world_pos);
@@ -189,7 +188,7 @@ void cse::EditableGraph::reset(const ShaderGraphType type)
 			break;
 		case ShaderGraphType::MATERIAL:
 		{
-			nodes.push_back(std::make_shared<MaterialOutputNode>(FloatPos(0.0f, 0.0f)));
+			nodes.push_back(std::make_shared<MaterialOutputNode>(Float2(0.0f, 0.0f)));
 		}
 	}
 }

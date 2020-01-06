@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "float_pos.h"
+#include "util_vector.h"
 
 struct NVGcontext;
 
@@ -22,7 +22,7 @@ namespace cse {
 		virtual void pre_draw();
 		virtual float draw(NVGcontext* draw_context) = 0;
 
-		virtual void set_mouse_local_position(FloatPos local_pos);
+		virtual void set_mouse_local_position(Float2 local_pos);
 		virtual bool is_mouse_over() const;
 
 		virtual bool should_capture_input() const;
@@ -41,7 +41,7 @@ namespace cse {
 		const float panel_width;
 		float panel_height = 1.0f;
 
-		FloatPos mouse_local_pos;
+		Float2 mouse_local_pos;
 
 		bool request_undo_push = false;
 	};

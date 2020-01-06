@@ -9,9 +9,9 @@
 static constexpr float CURVE_CREATE_POINT_IGNORE_MARGIN = 0.012f;
 static constexpr float CURVE_POINT_SELECT_MARGIN = 0.05f;
 
-static bool FloatPos_x_lt(cse::FloatPos a, cse::FloatPos b)
+static bool Float2_x_lt(const cse::Float2 a, const cse::Float2 b)
 {
-	return a.get_x() < b.get_x();
+	return a.x < b.x;
 }
 
 cse::IntSocketValue::IntSocketValue(int default_val, int min, int max)
@@ -185,8 +185,8 @@ void cse::CurveSocketValue::reset_value()
 {
 	curve_points.clear();
 
-	FloatPos default_0(0.0f, 0.0f);
-	FloatPos default_1(1.0f, 1.0f);
+	Float2 default_0(0.0f, 0.0f);
+	Float2 default_1(1.0f, 1.0f);
 
 	curve_points.push_back(default_0);
 	curve_points.push_back(default_1);
@@ -194,9 +194,9 @@ void cse::CurveSocketValue::reset_value()
 
 void cse::CurveSocketValue::create_point(float x)
 {
-	for (const FloatPos& this_point : curve_points) {
-		const bool is_above_with_margin = x + CURVE_CREATE_POINT_IGNORE_MARGIN > this_point.get_x();
-		const bool is_below_with_margin = x - CURVE_CREATE_POINT_IGNORE_MARGIN < this_point.get_x();
+	for (const Float2& this_point : curve_points) {
+		const bool is_above_with_margin = x + CURVE_CREATE_POINT_IGNORE_MARGIN > this_point.x;
+		const bool is_below_with_margin = x - CURVE_CREATE_POINT_IGNORE_MARGIN < this_point.x;
 		if (is_above_with_margin && is_below_with_margin) {
 			return;
 		}
@@ -206,11 +206,11 @@ void cse::CurveSocketValue::create_point(float x)
 	CurveEvaluator curve(this);
 	const float y = curve.eval(x);
 
-	curve_points.push_back(FloatPos(x, y));
+	curve_points.push_back(Float2(x, y));
 	sort_curve_points();
 }
 
-void cse::CurveSocketValue::delete_point(const FloatPos& target)
+void cse::CurveSocketValue::delete_point(const Float2& target)
 {
 	if (curve_points.size() <= 1) {
 		return;
@@ -224,7 +224,7 @@ void cse::CurveSocketValue::delete_point(const FloatPos& target)
 	}
 }
 
-bool cse::CurveSocketValue::get_target_index(const FloatPos& target, std::size_t& index)
+bool cse::CurveSocketValue::get_target_index(const Float2& target, std::size_t& index)
 {
 	constexpr float MAX_DISTANCE_SQUARED = CURVE_POINT_SELECT_MARGIN * CURVE_POINT_SELECT_MARGIN;
 
@@ -232,9 +232,9 @@ bool cse::CurveSocketValue::get_target_index(const FloatPos& target, std::size_t
 	size_t target_index = 0;
 	float target_distance_squared = MAX_DISTANCE_SQUARED;
 	for (size_t i = 0; i < curve_points.size(); i++) {
-		const FloatPos& this_point = curve_points[i];
-		const FloatPos delta = target - this_point;
-		const float distance_squared = delta.get_magnitude_squared();
+		const Float2& this_point = curve_points[i];
+		const Float2 delta = target - this_point;
+		const float distance_squared = delta.magnitude_squared();
 		if (distance_squared < target_distance_squared) {
 			target_distance_squared = distance_squared;
 			target_index = i;
@@ -250,7 +250,7 @@ bool cse::CurveSocketValue::get_target_index(const FloatPos& target, std::size_t
 	return false;
 }
 
-size_t cse::CurveSocketValue::move_point(const std::size_t index, const FloatPos& new_point)
+size_t cse::CurveSocketValue::move_point(const std::size_t index, const Float2& new_point)
 {
 	if (index >= curve_points.size()) {
 		// Index should always be valid
@@ -261,7 +261,7 @@ size_t cse::CurveSocketValue::move_point(const std::size_t index, const FloatPos
 	sort_curve_points();
 
 	for (size_t i = 0; i < curve_points.size(); i++) {
-		const FloatPos this_point = curve_points[i];
+		const Float2 this_point = curve_points[i];
 		if (this_point == new_point) {
 			return i;
 		}
@@ -274,7 +274,7 @@ size_t cse::CurveSocketValue::move_point(const std::size_t index, const FloatPos
 
 void cse::CurveSocketValue::sort_curve_points()
 {
-	std::sort(curve_points.begin(), curve_points.end(), FloatPos_x_lt);
+	std::sort(curve_points.begin(), curve_points.end(), Float2_x_lt);
 }
 
 cse::ColorRampSocketValue::ColorRampSocketValue()

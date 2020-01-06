@@ -1,19 +1,5 @@
 #include "output.h"
 
-cse::Float2::Float2() :
-	x(0.0f),
-	y(0.0f)
-{
-
-}
-
-cse::Float2::Float2(const float x, const float y) :
-	x(x),
-	y(y)
-{
-
-}
-
 cse::Float3::Float3() :
 	x(0.0f),
 	y(0.0f),

@@ -6,8 +6,8 @@
 #include <vector>
 
 #include "common_enums.h"
-#include "float_pos.h"
 #include "util_color_ramp.h"
+#include "util_vector.h"
 
 namespace cse {
 
@@ -134,15 +134,15 @@ namespace cse {
 
 		void reset_value();
 		void create_point(float x);
-		void delete_point(const FloatPos& target);
+		void delete_point(const Float2& target);
 		// Gets the index, if any, of the closest point within selection range
-		bool get_target_index(const FloatPos& target, std::size_t& index);
+		bool get_target_index(const Float2& target, std::size_t& index);
 		// Move a point and return its new index
-		std::size_t move_point(std::size_t index, const FloatPos& new_point);
+		std::size_t move_point(std::size_t index, const Float2& new_point);
 
 		void sort_curve_points();
 
-		std::vector<FloatPos> curve_points;
+		std::vector<Float2> curve_points;
 		CurveInterpolation curve_interp = CurveInterpolation::CUBIC_HERMITE;
 	};
 
@@ -177,7 +177,7 @@ namespace cse {
 		bool selectable = false;
 
 		// World position where this socket was drawn last frame
-		FloatPos world_draw_position;
+		Float2 world_draw_position;
 
 		std::shared_ptr<SocketValue> value;
 

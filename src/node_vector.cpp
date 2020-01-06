@@ -5,11 +5,10 @@
 #include <vector>
 
 #include "common_enums.h"
-#include "float_pos.h"
 #include "output.h"
 #include "sockets.h"
 
-cse::BumpNode::BumpNode(const FloatPos position) : EditableNode(NodeCategory::VECTOR, CyclesNodeType::Bump, "Bump")
+cse::BumpNode::BumpNode(const Float2 position) : EditableNode(NodeCategory::VECTOR, CyclesNodeType::Bump, "Bump")
 {
 	world_pos = position;
 
@@ -34,7 +33,7 @@ cse::BumpNode::BumpNode(const FloatPos position) : EditableNode(NodeCategory::VE
 	sockets.push_back(normal_input);
 }
 
-cse::DisplacementNode::DisplacementNode(const FloatPos position) : EditableNode(NodeCategory::VECTOR, CyclesNodeType::Displacement, "Displacement")
+cse::DisplacementNode::DisplacementNode(const Float2 position) : EditableNode(NodeCategory::VECTOR, CyclesNodeType::Displacement, "Displacement")
 {
 	world_pos = position;
 
@@ -63,7 +62,7 @@ cse::DisplacementNode::DisplacementNode(const FloatPos position) : EditableNode(
 	sockets.push_back(normal_input);
 }
 
-cse::NormalMapNode::NormalMapNode(const FloatPos position) : EditableNode(NodeCategory::VECTOR, CyclesNodeType::NormalMap, "Normal Map")
+cse::NormalMapNode::NormalMapNode(const Float2 position) : EditableNode(NodeCategory::VECTOR, CyclesNodeType::NormalMap, "Normal Map")
 {
 	world_pos = position;
 
@@ -88,7 +87,7 @@ cse::NormalMapNode::NormalMapNode(const FloatPos position) : EditableNode(NodeCa
 	sockets.push_back(color_input);
 }
 
-cse::VectorTransformNode::VectorTransformNode(const FloatPos position) : EditableNode(NodeCategory::VECTOR, CyclesNodeType::VectorTransform, "Vector Transform")
+cse::VectorTransformNode::VectorTransformNode(const Float2 position) : EditableNode(NodeCategory::VECTOR, CyclesNodeType::VectorTransform, "Vector Transform")
 {
 	world_pos = position;
 

@@ -4,12 +4,12 @@
 
 #include <nanovg.h>
 
-#include "float_pos.h"
 #include "gui_sizes.h"
+#include "util_vector.h"
 
 void cse::Drawing::draw_button(
 	NVGcontext* const draw_context,
-	const FloatPos pos,
+	const Float2 pos,
 	const float width,
 	const float height,
 	const std::string& label,
@@ -21,8 +21,8 @@ void cse::Drawing::draw_button(
 	const unsigned char button_alpha = enabled ? 170 : 95;
 	const unsigned char label_alpha = enabled ? 255 : 100;
 
-	const float x_pos = pos.get_x();
-	const float y_pos = pos.get_y();
+	const float x_pos = pos.x;
+	const float y_pos = pos.y;
 
 	const unsigned char start_color = pressed ? 0 : 255;
 	const unsigned char end_color = pressed ? 127 : 15;
@@ -60,10 +60,10 @@ void cse::Drawing::draw_button(
 	nvgText(draw_context, x_pos + width / 2, y_pos + height / 2, label.c_str(), nullptr);
 }
 
-void cse::Drawing::draw_color_swatch(NVGcontext* const draw_context, const FloatPos pos, const float width, const float height, const NVGcolor color, const bool selected)
+void cse::Drawing::draw_color_swatch(NVGcontext* const draw_context, const Float2 pos, const float width, const float height, const NVGcolor color, const bool selected)
 {
 	nvgBeginPath(draw_context);
-	nvgRoundedRect(draw_context, pos.get_x(), pos.get_y(), UI_SUBWIN_PARAM_EDIT_COLOR_RAMP_TEXT_INPUT_WIDTH, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT, UI_BUTTON_CORNER_RADIUS);
+	nvgRoundedRect(draw_context, pos.x, pos.y, UI_SUBWIN_PARAM_EDIT_COLOR_RAMP_TEXT_INPUT_WIDTH, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT, UI_BUTTON_CORNER_RADIUS);
 	nvgFillColor(draw_context, color);
 	nvgFill(draw_context);
 	if (selected) {
@@ -76,13 +76,13 @@ void cse::Drawing::draw_color_swatch(NVGcontext* const draw_context, const Float
 	nvgStroke(draw_context);
 }
 
-void cse::Drawing::draw_color_pick_cursor(NVGcontext* const draw_context, const FloatPos pos)
+void cse::Drawing::draw_color_pick_cursor(NVGcontext* const draw_context, const Float2 pos)
 {
 	constexpr float CURSOR_LENGTH_SHORT = 3.0f;
 	constexpr float CURSOR_LENGTH_LONG = 8.0f;
 
-	const float x_pos = pos.get_x();
-	const float y_pos = pos.get_y();
+	const float x_pos = pos.x;
+	const float y_pos = pos.y;
 
 	nvgBeginPath(draw_context);
 
@@ -119,15 +119,15 @@ void cse::Drawing::draw_color_pick_cursor(NVGcontext* const draw_context, const 
 
 void cse::Drawing::draw_node_connection_curve(
 	NVGcontext* const draw_context,
-	const FloatPos begin_pos,
-	const FloatPos end_pos,
+	const Float2 begin_pos,
+	const Float2 end_pos,
 	const float width
 	)
 {
-	const float source_x = begin_pos.get_x();
-	const float source_y = begin_pos.get_y();
-	const float dest_x = end_pos.get_x();
-	const float dest_y = end_pos.get_y();
+	const float source_x = begin_pos.x;
+	const float source_y = begin_pos.y;
+	const float dest_x = end_pos.x;
+	const float dest_y = end_pos.y;
 
 	const float c_distance = fabs(dest_x - source_x) / 2.0f;
 	const float c1_x = source_x + c_distance;

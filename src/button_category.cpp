@@ -4,7 +4,7 @@
 
 #include "drawing.h"
 
-cse::NodeCategoryButtonPlacer::NodeCategoryButtonPlacer(const FloatPos draw_origin, const float parent_width, const float vertical_padding)
+cse::NodeCategoryButtonPlacer::NodeCategoryButtonPlacer(const Float2 draw_origin, const float parent_width, const float vertical_padding)
 {
 	this->draw_origin = draw_origin;
 	this->parent_width = parent_width;
@@ -16,7 +16,7 @@ cse::NodeCategoryButtonPlacer::NodeCategoryButtonPlacer(const FloatPos draw_orig
 	positions_made = 0;
 }
 
-cse::FloatPos cse::NodeCategoryButtonPlacer::next_button_position()
+cse::Float2 cse::NodeCategoryButtonPlacer::next_button_position()
 {
 	// Find horizontal position
 	float x;
@@ -36,7 +36,7 @@ cse::FloatPos cse::NodeCategoryButtonPlacer::next_button_position()
 
 	++positions_made;
 
-	const FloatPos result(x, y);
+	const Float2 result(x, y);
 	return draw_origin + result;
 }
 
@@ -52,13 +52,13 @@ cse::NodeCategoryButton::NodeCategoryButton(const std::string& label)
 	this->label = label;
 }
 
-void cse::NodeCategoryButton::draw(const FloatPos draw_position, NVGcontext* const draw_context)
+void cse::NodeCategoryButton::draw(const Float2 draw_position, NVGcontext* const draw_context)
 {
 	constexpr bool BUTTON_ENABLED = true;
 	Drawing::draw_button(draw_context, draw_position, get_button_width(), get_button_height(), label, BUTTON_ENABLED, selected);
 }
 
-void cse::NodeCategoryButton::update_mouse_position(const FloatPos local_position)
+void cse::NodeCategoryButton::update_mouse_position(const Float2 local_position)
 {
 	mouse_local_pos = local_position;
 }
@@ -66,9 +66,9 @@ void cse::NodeCategoryButton::update_mouse_position(const FloatPos local_positio
 bool cse::NodeCategoryButton::is_mouse_over_button() const
 {
 	return (
-		mouse_local_pos.get_x() > 0.0f &&
-		mouse_local_pos.get_x() < get_button_width() &&
-		mouse_local_pos.get_y() > 0.0f &&
-		mouse_local_pos.get_y() < get_button_height()
+		mouse_local_pos.x > 0.0f &&
+		mouse_local_pos.x < get_button_width() &&
+		mouse_local_pos.y > 0.0f &&
+		mouse_local_pos.y < get_button_height()
 		);
 }

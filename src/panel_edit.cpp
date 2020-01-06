@@ -21,7 +21,7 @@ void cse::EditParamPanel::pre_draw()
 	// Stub so subclasses can optionally override
 }
 
-void cse::EditParamPanel::set_mouse_local_position(const FloatPos local_pos)
+void cse::EditParamPanel::set_mouse_local_position(const Float2 local_pos)
 {
 	mouse_local_pos = local_pos;
 }
@@ -37,10 +37,10 @@ bool cse::EditParamPanel::is_mouse_over() const
 	const float min_y = 0.0f;
 	const float max_y = panel_height;
 
-	if (mouse_local_pos.get_x() > min_x &&
-		mouse_local_pos.get_x() < max_x &&
-		mouse_local_pos.get_y() > min_y &&
-		mouse_local_pos.get_y() < max_y)
+	if (mouse_local_pos.x > min_x &&
+		mouse_local_pos.x < max_x &&
+		mouse_local_pos.y > min_y &&
+		mouse_local_pos.y < max_y)
 	{
 		return true;
 	}

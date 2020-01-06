@@ -3,7 +3,7 @@
 #include <memory>
 #include <vector>
 
-#include "float_pos.h"
+#include "util_vector.h"
 
 namespace cse {
 	class CurveSocketValue;
@@ -15,12 +15,12 @@ namespace cse {
 	public:
 		CurveEvaluator(CurveSocketValue* curve_socket_val, int segments = 512);
 		CurveEvaluator(std::shared_ptr<CurveSocketValue> curve_socket_val, int segments = 512);
-		CurveEvaluator(FloatPos a, FloatPos b, FloatPos c, FloatPos d, int segments = 128);
+		CurveEvaluator(Float2 a, Float2 b, Float2 c, Float2 d, int segments = 128);
 
 		int compare_to_range(float in_value) const;
 		float eval(float in_value) const;
 
 	private:
-		std::vector<FloatPos> sampled_points;
+		std::vector<Float2> sampled_points;
 	};
 }

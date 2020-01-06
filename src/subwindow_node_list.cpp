@@ -10,7 +10,6 @@
 
 #include "button_category.h"
 #include "buttons_nodes.h"
-#include "float_pos.h"
 #include "gui_sizes.h"
 #include "node_colors.h"
 #include "node_converter.h"
@@ -48,7 +47,7 @@ std::shared_ptr<cse::EditableNode> cse::NodeCreationHelper::take()
 	return std::unique_ptr<EditableNode>();
 }
 
-cse::NodeListSubwindow::NodeListSubwindow(const std::weak_ptr<NodeCreationHelper> node_creation_helper, const FloatPos screen_position) :
+cse::NodeListSubwindow::NodeListSubwindow(const std::weak_ptr<NodeCreationHelper> node_creation_helper, const Float2 screen_position) :
 	NodeEditorSubwindow(screen_position, "Create Node"),
 	node_creation_helper(node_creation_helper)
 {
@@ -264,10 +263,10 @@ void cse::NodeListSubwindow::draw_content(NVGcontext* const draw_context)
 	float height_drawn = 0.0f;
 
 	// Node category buttons
-	NodeCategoryButtonPlacer placer(FloatPos(0.0f, height_drawn), subwindow_width, UI_SUBWIN_NODE_LIST_BUTTON_VPADDING);
+	NodeCategoryButtonPlacer placer(Float2(0.0f, height_drawn), subwindow_width, UI_SUBWIN_NODE_LIST_BUTTON_VPADDING);
 
 	for (const auto& category_button : category_buttons) {
-		const FloatPos button_position = placer.next_button_position();
+		const Float2 button_position = placer.next_button_position();
 		category_button->update_mouse_position(mouse_content_pos - button_position);
 		category_button->draw(button_position, draw_context);
 	}
@@ -276,7 +275,7 @@ void cse::NodeListSubwindow::draw_content(NVGcontext* const draw_context)
 
 	// Buttons
 	for (const auto& node_button : get_active_creation_buttons()) {
-		const FloatPos button_location(0.0f, height_drawn);
+		const Float2 button_location(0.0f, height_drawn);
 		height_drawn += node_button->draw(draw_context, button_location, mouse_content_pos, subwindow_width);
 	}
 

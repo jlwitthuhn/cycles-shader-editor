@@ -69,8 +69,8 @@ float cse::RadioListWidget::draw(NVGcontext* const draw_context)
 		nvgFillColor(draw_context, nvgRGBA(0, 0, 0, 255));
 		nvgText(draw_context, text_pos_x, text_pos_y, this_enum_value.display_value.c_str(), nullptr);
 
-		FloatPos click_area_begin(0.0f, height_drawn);
-		FloatPos click_area_end(width, height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT);
+		Float2 click_area_begin(0.0f, height_drawn);
+		Float2 click_area_end(width, height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT);
 		HolderArea<std::string> click_area(click_area_begin, click_area_end, this_enum_value.internal_value);
 
 		enum_click_areas.push_back(click_area);
@@ -81,7 +81,7 @@ float cse::RadioListWidget::draw(NVGcontext* const draw_context)
 	return height_drawn;
 }
 
-void cse::RadioListWidget::set_mouse_local_position(const FloatPos local_pos)
+void cse::RadioListWidget::set_mouse_local_position(const Float2 local_pos)
 {
 	mouse_local_pos = local_pos;
 }

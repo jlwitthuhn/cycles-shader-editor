@@ -3,7 +3,7 @@
 #include <memory>
 #include <string>
 
-#include "float_pos.h"
+#include "util_vector.h"
 
 struct NVGcontext;
 
@@ -13,10 +13,10 @@ namespace cse {
 
 	class NodeEditorSubwindow {
 	public:
-		NodeEditorSubwindow(FloatPos screen_position, std::string title);
+		NodeEditorSubwindow(Float2 screen_position, std::string title);
 		virtual ~NodeEditorSubwindow() {}
 
-		virtual FloatPos get_screen_pos() const;
+		virtual Float2 get_screen_pos() const;
 		virtual float get_width() const;
 		virtual float get_height() const;
 
@@ -26,7 +26,7 @@ namespace cse {
 
 		virtual bool is_mouse_over() const;
 		virtual bool is_mouse_over_header() const;
-		virtual void set_mouse_position(FloatPos local_position, float max_pos_y);
+		virtual void set_mouse_position(Float2 local_position, float max_pos_y);
 
 		// Returns true if this subwindow wants to capture keyboard input
 		virtual bool should_capture_input() const;
@@ -50,11 +50,11 @@ namespace cse {
 		virtual void draw_content(NVGcontext* draw_context) = 0;
 
 		std::string title = "Subwindow";
-		FloatPos subwindow_screen_pos;
+		Float2 subwindow_screen_pos;
 
-		FloatPos mouse_local_pos; // Mouse position relative to the top-left corner of the window, prefer using mouse_content_pos over this
-		FloatPos mouse_local_begin_move_pos;
-		FloatPos mouse_content_pos; // Local position not including window header
+		Float2 mouse_local_pos; // Mouse position relative to the top-left corner of the window, prefer using mouse_content_pos over this
+		Float2 mouse_local_begin_move_pos;
+		Float2 mouse_content_pos; // Local position not including window header
 
 		float subwindow_width = 100.0f;
 		float content_height = 1.0f;

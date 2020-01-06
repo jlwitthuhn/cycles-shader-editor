@@ -5,11 +5,10 @@
 #include <vector>
 
 #include "common_enums.h"
-#include "float_pos.h"
 #include "output.h"
 #include "sockets.h"
 
-cse::BrickTextureNode::BrickTextureNode(const FloatPos position) : EditableNode(NodeCategory::TEXTURE, CyclesNodeType::BrickTex, "Brick Texture")
+cse::BrickTextureNode::BrickTextureNode(const Float2 position) : EditableNode(NodeCategory::TEXTURE, CyclesNodeType::BrickTex, "Brick Texture")
 {
 	world_pos = position;
 
@@ -69,7 +68,7 @@ cse::BrickTextureNode::BrickTextureNode(const FloatPos position) : EditableNode(
 	sockets.push_back(row_height_input);
 }
 
-cse::NoiseTextureNode::NoiseTextureNode(const FloatPos position) : EditableNode(NodeCategory::TEXTURE, CyclesNodeType::NoiseTex, "Noise Texture")
+cse::NoiseTextureNode::NoiseTextureNode(const Float2 position) : EditableNode(NodeCategory::TEXTURE, CyclesNodeType::NoiseTex, "Noise Texture")
 {
 	world_pos = position;
 
@@ -93,7 +92,7 @@ cse::NoiseTextureNode::NoiseTextureNode(const FloatPos position) : EditableNode(
 	sockets.push_back(distortion_input);
 }
 
-cse::WaveTextureNode::WaveTextureNode(const FloatPos position) : EditableNode(NodeCategory::TEXTURE, CyclesNodeType::WaveTex, "Wave Texture")
+cse::WaveTextureNode::WaveTextureNode(const Float2 position) : EditableNode(NodeCategory::TEXTURE, CyclesNodeType::WaveTex, "Wave Texture")
 {
 	world_pos = position;
 
@@ -134,7 +133,7 @@ cse::WaveTextureNode::WaveTextureNode(const FloatPos position) : EditableNode(No
 	sockets.push_back(detail_scale_input);
 }
 
-cse::VoronoiTextureNode::VoronoiTextureNode(const FloatPos position) : EditableNode(NodeCategory::TEXTURE, CyclesNodeType::VoronoiTex, "Voronoi Texture")
+cse::VoronoiTextureNode::VoronoiTextureNode(const Float2 position) : EditableNode(NodeCategory::TEXTURE, CyclesNodeType::VoronoiTex, "Voronoi Texture")
 {
 	world_pos = position;
 
@@ -159,7 +158,7 @@ cse::VoronoiTextureNode::VoronoiTextureNode(const FloatPos position) : EditableN
 	sockets.push_back(scale_input);
 }
 
-cse::MusgraveTextureNode::MusgraveTextureNode(const FloatPos position) : EditableNode(NodeCategory::TEXTURE, CyclesNodeType::MusgraveTex, "Musgrave Texture")
+cse::MusgraveTextureNode::MusgraveTextureNode(const Float2 position) : EditableNode(NodeCategory::TEXTURE, CyclesNodeType::MusgraveTex, "Musgrave Texture")
 {
 	world_pos = position;
 
@@ -202,7 +201,7 @@ cse::MusgraveTextureNode::MusgraveTextureNode(const FloatPos position) : Editabl
 	sockets.push_back(gain_input);
 }
 
-cse::GradientTextureNode::GradientTextureNode(const FloatPos position) : EditableNode(NodeCategory::TEXTURE, CyclesNodeType::GradientTex, "Gradient Texture")
+cse::GradientTextureNode::GradientTextureNode(const Float2 position) : EditableNode(NodeCategory::TEXTURE, CyclesNodeType::GradientTex, "Gradient Texture")
 {
 	world_pos = position;
 
@@ -229,7 +228,7 @@ cse::GradientTextureNode::GradientTextureNode(const FloatPos position) : Editabl
 	sockets.push_back(vector_input);
 }
 
-cse::MagicTextureNode::MagicTextureNode(const FloatPos position) : EditableNode(NodeCategory::TEXTURE, CyclesNodeType::MagicTex, "Magic Texture")
+cse::MagicTextureNode::MagicTextureNode(const Float2 position) : EditableNode(NodeCategory::TEXTURE, CyclesNodeType::MagicTex, "Magic Texture")
 {
 	world_pos = position;
 
@@ -253,7 +252,7 @@ cse::MagicTextureNode::MagicTextureNode(const FloatPos position) : EditableNode(
 	sockets.push_back(distortion_input);
 }
 
-cse::CheckerTextureNode::CheckerTextureNode(const FloatPos position) : EditableNode(NodeCategory::TEXTURE, CyclesNodeType::CheckerTex, "Checker Texture")
+cse::CheckerTextureNode::CheckerTextureNode(const Float2 position) : EditableNode(NodeCategory::TEXTURE, CyclesNodeType::CheckerTex, "Checker Texture")
 {
 	world_pos = position;
 

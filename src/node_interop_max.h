@@ -6,7 +6,7 @@ namespace cse {
 
 	class MaxTexmapShaderNode : public EditableNode {
 	public:
-		MaxTexmapShaderNode(FloatPos position);
+		MaxTexmapShaderNode(Float2 position);
 	};
 
 }

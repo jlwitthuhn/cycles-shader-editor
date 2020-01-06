@@ -5,10 +5,10 @@
 #include <vector>
 
 #include "common_enums.h"
-#include "float_pos.h"
 #include "output.h"
 #include "util_area.h"
 #include "util_enum.h"
+#include "util_vector.h"
 
 struct NVGcontext;
 
@@ -37,14 +37,14 @@ namespace cse {
 
 		virtual void draw_node(NVGcontext* draw_context, bool selected, std::shared_ptr<NodeSocket> selected_socket);
 
-		virtual bool contains_point(FloatPos world_pos) const;
-		virtual std::weak_ptr<NodeSocket> get_socket_connector_under_point(FloatPos check_world_pos) const;
-		virtual std::weak_ptr<NodeSocket> get_socket_label_under_point(FloatPos check_world_pos) const;
+		virtual bool contains_point(Float2 world_pos) const;
+		virtual std::weak_ptr<NodeSocket> get_socket_connector_under_point(Float2 check_world_pos) const;
+		virtual std::weak_ptr<NodeSocket> get_socket_label_under_point(Float2 check_world_pos) const;
 
 		virtual std::weak_ptr<NodeSocket> get_socket_by_display_name(SocketIOType in_out, const std::string& socket_name);
 		virtual std::weak_ptr<NodeSocket> get_socket_by_internal_name(SocketIOType in_out, const std::string& socket_name);
 
-		virtual FloatPos get_dimensions();
+		virtual Float2 get_dimensions();
 
 		virtual bool can_be_deleted();
 
@@ -52,10 +52,10 @@ namespace cse {
 
 		bool changed = true;
 
-		FloatPos world_pos;
+		Float2 world_pos;
 
 	protected:
-		FloatPos get_local_pos(FloatPos world_pos_in) const;
+		Float2 get_local_pos(Float2 world_pos_in) const;
 
 		const NodeCategory category;
 		const CyclesNodeType type;

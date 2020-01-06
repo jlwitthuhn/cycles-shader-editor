@@ -30,24 +30,24 @@ std::string cse::ToolbarButton::get_label() const
 	}
 }
 
-void cse::ToolbarButton::set_geometry(const FloatPos pos_in, const float width_in, const float height_in)
+void cse::ToolbarButton::set_geometry(const Float2 pos_in, const float width_in, const float height_in)
 {
 	pos = pos_in;
 	width = width_in;
 	height = height_in;
 }
 
-bool cse::ToolbarButton::contains_point(const FloatPos point) const
+bool cse::ToolbarButton::contains_point(const Float2 point) const
 {
-	const float min_x = pos.get_x();
-	const float max_x = pos.get_x() + width;
-	const float min_y = pos.get_y();
-	const float max_y = pos.get_y() + height;
+	const float min_x = pos.x;
+	const float max_x = pos.x + width;
+	const float min_y = pos.y;
+	const float max_y = pos.y + height;
 	return (
-		point.get_x() >= min_x &&
-		point.get_x() <= max_x &&
-		point.get_y() >= min_y &&
-		point.get_y() <= max_y
+		point.x >= min_x &&
+		point.x <= max_x &&
+		point.y >= min_y &&
+		point.y <= max_y
 	);
 }
 
@@ -92,7 +92,7 @@ void cse::NodeEditorToolbar::draw(NVGcontext* const draw_context, const float to
 			continue;
 		}
 
-		const FloatPos button_pos(section_begin_x + UI_TOOLBAR_BUTTON_HPAD, UI_TOOLBAR_BUTTON_VPAD);
+		const Float2 button_pos(section_begin_x + UI_TOOLBAR_BUTTON_HPAD, UI_TOOLBAR_BUTTON_VPAD);
 		const float button_height = get_toolbar_height() - 2 * UI_TOOLBAR_BUTTON_VPAD;
 		Drawing::draw_button(draw_context, button_pos, UI_TOOLBAR_BUTTON_WIDTH, button_height, this_button.get_label(), this_button.enabled, this_button.pressed);
 		this_button.set_geometry(button_pos, UI_TOOLBAR_BUTTON_WIDTH, button_height);
@@ -116,12 +116,12 @@ void cse::NodeEditorToolbar::set_button_enabled(const ToolbarButtonType type, co
 bool cse::NodeEditorToolbar::is_mouse_over()
 {
 	return (
-		mouse_screen_pos.get_y() > 0.0f &&
-		mouse_screen_pos.get_y() < get_toolbar_height()
+		mouse_screen_pos.y > 0.0f &&
+		mouse_screen_pos.y < get_toolbar_height()
 		);
 }
 
-void cse::NodeEditorToolbar::set_mouse_position(FloatPos screen_position)
+void cse::NodeEditorToolbar::set_mouse_position(Float2 screen_position)
 {
 	mouse_screen_pos = screen_position;
 }

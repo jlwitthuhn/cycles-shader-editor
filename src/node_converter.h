@@ -6,64 +6,64 @@ namespace cse {
 
 	class BlackbodyNode : public EditableNode {
 	public:
-		BlackbodyNode(FloatPos position);
+		BlackbodyNode(Float2 position);
 	};
 
 	class ColorRampNode : public EditableNode {
 	public:
-		ColorRampNode(FloatPos position);
+		ColorRampNode(Float2 position);
 
 		virtual void update_output_node(OutputNode& output) override;
 	};
 
 	class CombineHSVNode : public EditableNode {
 	public:
-		CombineHSVNode(FloatPos position);
+		CombineHSVNode(Float2 position);
 	};
 
 	class CombineRGBNode : public EditableNode {
 	public:
-		CombineRGBNode(FloatPos position);
+		CombineRGBNode(Float2 position);
 	};
 
 	class CombineXYZNode : public EditableNode {
 	public:
-		CombineXYZNode(FloatPos position);
+		CombineXYZNode(Float2 position);
 	};
 
 	class MathNode : public EditableNode {
 	public:
-		MathNode(FloatPos position);
+		MathNode(Float2 position);
 	};
 
 	class RGBToBWNode : public EditableNode {
 	public:
-		RGBToBWNode(FloatPos position);
+		RGBToBWNode(Float2 position);
 	};
 
 	class SeparateHSVNode : public EditableNode {
 	public:
-		SeparateHSVNode(FloatPos position);
+		SeparateHSVNode(Float2 position);
 	};
 
 	class SeparateRGBNode : public EditableNode {
 	public:
-		SeparateRGBNode(FloatPos position);
+		SeparateRGBNode(Float2 position);
 	};
 
 	class SeparateXYZNode : public EditableNode {
 	public:
-		SeparateXYZNode(FloatPos position);
+		SeparateXYZNode(Float2 position);
 	};
 
 	class VectorMathNode : public EditableNode {
 	public:
-		VectorMathNode(FloatPos position);
+		VectorMathNode(Float2 position);
 	};
 
 	class WavelengthNode : public EditableNode {
 	public:
-		WavelengthNode(FloatPos position);
+		WavelengthNode(Float2 position);
 	};
 
 }

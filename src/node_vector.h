@@ -6,22 +6,22 @@ namespace cse {
 
 	class BumpNode : public EditableNode {
 	public:
-		BumpNode(FloatPos position);
+		BumpNode(Float2 position);
 	};
 
 	class DisplacementNode : public EditableNode {
 	public:
-		DisplacementNode(FloatPos position);
+		DisplacementNode(Float2 position);
 	};
 
 	class NormalMapNode : public EditableNode {
 	public:
-		NormalMapNode(FloatPos position);
+		NormalMapNode(Float2 position);
 	};
 
 	class VectorTransformNode : public EditableNode {
 	public:
-		VectorTransformNode(FloatPos position);
+		VectorTransformNode(Float2 position);
 	};
 
 }

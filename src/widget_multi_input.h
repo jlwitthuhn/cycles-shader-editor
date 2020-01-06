@@ -4,9 +4,9 @@
 #include <utility>
 #include <vector>
 
-#include "float_pos.h"
 #include "input_box.h"
 #include "sockets.h"
+#include "util_vector.h"
 
 namespace cse {
 	// Widget that can accept input for multiple socket values
@@ -21,7 +21,7 @@ namespace cse {
 
 		float draw(NVGcontext* draw_context);
 
-		void set_mouse_local_position(FloatPos local_pos);
+		void set_mouse_local_position(Float2 local_pos);
 
 		bool should_capture_input() const;
 		void handle_mouse_button(int button, int action, int mods);
@@ -44,7 +44,7 @@ namespace cse {
 
 		std::vector<InputRow> sockets;
 
-		FloatPos mouse_local_pos;
+		Float2 mouse_local_pos;
 
 		bool request_undo_push = false;
 	};

@@ -5,8 +5,8 @@
 #include <string>
 
 #include "buttons_nodes.h"
-#include "float_pos.h"
 #include "gui_sizes.h"
+#include "util_vector.h"
 
 struct NVGcontext;
 
@@ -14,12 +14,12 @@ namespace cse {
 
 	class NodeCategoryButtonPlacer {
 	public:
-		NodeCategoryButtonPlacer(FloatPos draw_origin, float parent_width, float vertical_padding);
-		FloatPos next_button_position();
+		NodeCategoryButtonPlacer(Float2 draw_origin, float parent_width, float vertical_padding);
+		Float2 next_button_position();
 		float get_draw_height();
 
 	private:
-		FloatPos draw_origin;
+		Float2 draw_origin;
 		float button_width;
 		float button_height;
 		float parent_width;
@@ -35,8 +35,8 @@ namespace cse {
 
 		NodeCategoryButton(const std::string& label);
 
-		void draw(FloatPos draw_position, NVGcontext* draw_context);
-		void update_mouse_position(FloatPos local_position);
+		void draw(Float2 draw_position, NVGcontext* draw_context);
+		void update_mouse_position(Float2 local_position);
 
 		bool is_mouse_over_button() const;
 
@@ -47,7 +47,7 @@ namespace cse {
 	private:
 		std::string label;
 
-		FloatPos mouse_local_pos;
+		Float2 mouse_local_pos;
 
 	};
 

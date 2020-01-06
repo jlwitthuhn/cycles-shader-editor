@@ -5,11 +5,10 @@
 #include <vector>
 
 #include "common_enums.h"
-#include "float_pos.h"
 #include "output.h"
 #include "sockets.h"
 
-cse::AmbientOcculsionNode::AmbientOcculsionNode(const FloatPos position) : EditableNode(NodeCategory::INPUT, CyclesNodeType::AmbientOcclusion, "Ambient Occlusion")
+cse::AmbientOcculsionNode::AmbientOcculsionNode(const Float2 position) : EditableNode(NodeCategory::INPUT, CyclesNodeType::AmbientOcclusion, "Ambient Occlusion")
 {
 	world_pos = position;
 
@@ -39,7 +38,7 @@ cse::AmbientOcculsionNode::AmbientOcculsionNode(const FloatPos position) : Edita
 	sockets.push_back(normal_input);
 }
 
-cse::BevelNode::BevelNode(const FloatPos position) : EditableNode(NodeCategory::INPUT, CyclesNodeType::Bevel, "Bevel")
+cse::BevelNode::BevelNode(const Float2 position) : EditableNode(NodeCategory::INPUT, CyclesNodeType::Bevel, "Bevel")
 {
 	world_pos = position;
 
@@ -58,7 +57,7 @@ cse::BevelNode::BevelNode(const FloatPos position) : EditableNode(NodeCategory::
 	sockets.push_back(normal_input);
 }
 
-cse::CameraDataNode::CameraDataNode(const FloatPos position) : EditableNode(NodeCategory::INPUT, CyclesNodeType::CameraData, "Camera Data")
+cse::CameraDataNode::CameraDataNode(const Float2 position) : EditableNode(NodeCategory::INPUT, CyclesNodeType::CameraData, "Camera Data")
 {
 	world_pos = position;
 
@@ -71,7 +70,7 @@ cse::CameraDataNode::CameraDataNode(const FloatPos position) : EditableNode(Node
 	sockets.push_back(distance_output);
 }
 
-cse::FresnelNode::FresnelNode(const FloatPos position) : EditableNode(NodeCategory::INPUT, CyclesNodeType::Fresnel, "Fresnel")
+cse::FresnelNode::FresnelNode(const Float2 position) : EditableNode(NodeCategory::INPUT, CyclesNodeType::Fresnel, "Fresnel")
 {
 	world_pos = position;
 
@@ -87,7 +86,7 @@ cse::FresnelNode::FresnelNode(const FloatPos position) : EditableNode(NodeCatego
 	sockets.push_back(normal_input);
 }
 
-cse::GeometryNode::GeometryNode(const FloatPos position) : EditableNode(NodeCategory::INPUT, CyclesNodeType::Geometry, "Geometry")
+cse::GeometryNode::GeometryNode(const Float2 position) : EditableNode(NodeCategory::INPUT, CyclesNodeType::Geometry, "Geometry")
 {
 	world_pos = position;
 
@@ -110,7 +109,7 @@ cse::GeometryNode::GeometryNode(const FloatPos position) : EditableNode(NodeCate
 	sockets.push_back(pointiness_output);
 }
 
-cse::LayerWeightNode::LayerWeightNode(const FloatPos position) : EditableNode(NodeCategory::INPUT, CyclesNodeType::LayerWeight, "Layer Weight")
+cse::LayerWeightNode::LayerWeightNode(const Float2 position) : EditableNode(NodeCategory::INPUT, CyclesNodeType::LayerWeight, "Layer Weight")
 {
 	world_pos = position;
 
@@ -128,7 +127,7 @@ cse::LayerWeightNode::LayerWeightNode(const FloatPos position) : EditableNode(No
 	sockets.push_back(normal_input);
 }
 
-cse::LightPathNode::LightPathNode(const FloatPos position) : EditableNode(NodeCategory::INPUT, CyclesNodeType::LightPath, "Light Path")
+cse::LightPathNode::LightPathNode(const Float2 position) : EditableNode(NodeCategory::INPUT, CyclesNodeType::LightPath, "Light Path")
 {
 	world_pos = position;
 
@@ -159,7 +158,7 @@ cse::LightPathNode::LightPathNode(const FloatPos position) : EditableNode(NodeCa
 	sockets.push_back(transmission_depth_output);
 }
 
-cse::ObjectInfoNode::ObjectInfoNode(const FloatPos position) : EditableNode(NodeCategory::INPUT, CyclesNodeType::ObjectInfo, "Object Info")
+cse::ObjectInfoNode::ObjectInfoNode(const Float2 position) : EditableNode(NodeCategory::INPUT, CyclesNodeType::ObjectInfo, "Object Info")
 {
 	world_pos = position;
 
@@ -174,7 +173,7 @@ cse::ObjectInfoNode::ObjectInfoNode(const FloatPos position) : EditableNode(Node
 	sockets.push_back(random_output);
 }
 
-cse::RGBNode::RGBNode(const FloatPos position) : EditableNode(NodeCategory::INPUT, CyclesNodeType::RGB, "RGB")
+cse::RGBNode::RGBNode(const Float2 position) : EditableNode(NodeCategory::INPUT, CyclesNodeType::RGB, "RGB")
 {
 	world_pos = position;
 
@@ -189,7 +188,7 @@ cse::RGBNode::RGBNode(const FloatPos position) : EditableNode(NodeCategory::INPU
 	sockets.push_back(value_input);
 }
 
-cse::TangentNode::TangentNode(const FloatPos position) : EditableNode(NodeCategory::INPUT, CyclesNodeType::Tangent, "Tangent")
+cse::TangentNode::TangentNode(const Float2 position) : EditableNode(NodeCategory::INPUT, CyclesNodeType::Tangent, "Tangent")
 {
 	world_pos = position;
 
@@ -215,7 +214,7 @@ cse::TangentNode::TangentNode(const FloatPos position) : EditableNode(NodeCatego
 	sockets.push_back(axis_input);
 }
 
-cse::TextureCoordinateNode::TextureCoordinateNode(const FloatPos position) : EditableNode(NodeCategory::INPUT, CyclesNodeType::TextureCoordinate, "Texture Coordinate")
+cse::TextureCoordinateNode::TextureCoordinateNode(const Float2 position) : EditableNode(NodeCategory::INPUT, CyclesNodeType::TextureCoordinate, "Texture Coordinate")
 {
 	world_pos = position;
 
@@ -236,7 +235,7 @@ cse::TextureCoordinateNode::TextureCoordinateNode(const FloatPos position) : Edi
 	sockets.push_back(reflection_output);
 }
 
-cse::ValueNode::ValueNode(const FloatPos position) : EditableNode(NodeCategory::INPUT, CyclesNodeType::Value, "Value")
+cse::ValueNode::ValueNode(const Float2 position) : EditableNode(NodeCategory::INPUT, CyclesNodeType::Value, "Value")
 {
 	world_pos = position;
 
@@ -251,7 +250,7 @@ cse::ValueNode::ValueNode(const FloatPos position) : EditableNode(NodeCategory::
 	sockets.push_back(value_input);
 }
 
-cse::WireframeNode::WireframeNode(const FloatPos position) : EditableNode(NodeCategory::INPUT, CyclesNodeType::Wireframe, "Wireframe")
+cse::WireframeNode::WireframeNode(const Float2 position) : EditableNode(NodeCategory::INPUT, CyclesNodeType::Wireframe, "Wireframe")
 {
 	world_pos = position;
 

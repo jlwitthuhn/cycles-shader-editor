@@ -6,11 +6,10 @@
 #include <vector>
 
 #include "common_enums.h"
-#include "float_pos.h"
 #include "output.h"
 #include "sockets.h"
 
-cse::PrincipledBSDFNode::PrincipledBSDFNode(FloatPos position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::PrincipledBSDF, "Principled BSDF")
+cse::PrincipledBSDFNode::PrincipledBSDFNode(const Float2 position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::PrincipledBSDF, "Principled BSDF")
 {
 	world_pos = position;
 
@@ -108,7 +107,7 @@ cse::PrincipledBSDFNode::PrincipledBSDFNode(FloatPos position) : EditableNode(No
 	content_width += 34.0f;
 }
 
-cse::PrincipledVolumeNode::PrincipledVolumeNode(FloatPos position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::PrincipledVolume, "Principled Volume")
+cse::PrincipledVolumeNode::PrincipledVolumeNode(const Float2 position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::PrincipledVolume, "Principled Volume")
 {
 	world_pos = position;
 
@@ -149,7 +148,7 @@ cse::PrincipledVolumeNode::PrincipledVolumeNode(FloatPos position) : EditableNod
 	content_width += 28.0f;
 }
 
-cse::PrincipledHairNode::PrincipledHairNode(FloatPos position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::PrincipledHair, "Principled Hair")
+cse::PrincipledHairNode::PrincipledHairNode(const Float2 position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::PrincipledHair, "Principled Hair")
 {
 	constexpr float PI = 3.14159f;
 
@@ -220,7 +219,7 @@ cse::PrincipledHairNode::PrincipledHairNode(FloatPos position) : EditableNode(No
 	content_width += 62.0f;
 }
 
-cse::MixShaderNode::MixShaderNode(FloatPos position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::MixShader, "Mix Shader")
+cse::MixShaderNode::MixShaderNode(const Float2 position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::MixShader, "Mix Shader")
 {
 	world_pos = position;
 
@@ -238,7 +237,7 @@ cse::MixShaderNode::MixShaderNode(FloatPos position) : EditableNode(NodeCategory
 	sockets.push_back(shader_b_input);
 }
 
-cse::AddShaderNode::AddShaderNode(FloatPos position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::AddShader, "Add Shader")
+cse::AddShaderNode::AddShaderNode(const Float2 position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::AddShader, "Add Shader")
 {
 	world_pos = position;
 
@@ -253,7 +252,7 @@ cse::AddShaderNode::AddShaderNode(FloatPos position) : EditableNode(NodeCategory
 	sockets.push_back(shader_b_input);
 }
 
-cse::DiffuseBSDFNode::DiffuseBSDFNode(FloatPos position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::DiffuseBSDF, "Diffuse BSDF")
+cse::DiffuseBSDFNode::DiffuseBSDFNode(const Float2 position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::DiffuseBSDF, "Diffuse BSDF")
 {
 	world_pos = position;
 
@@ -272,7 +271,7 @@ cse::DiffuseBSDFNode::DiffuseBSDFNode(FloatPos position) : EditableNode(NodeCate
 	sockets.push_back(normal_input);
 }
 
-cse::GlossyBSDFNode::GlossyBSDFNode(FloatPos position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::GlossyBSDF, "Glossy BSDF")
+cse::GlossyBSDFNode::GlossyBSDFNode(const Float2 position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::GlossyBSDF, "Glossy BSDF")
 {
 	world_pos = position;
 
@@ -301,7 +300,7 @@ cse::GlossyBSDFNode::GlossyBSDFNode(FloatPos position) : EditableNode(NodeCatego
 	sockets.push_back(normal_input);
 }
 
-cse::TransparentBSDFNode::TransparentBSDFNode(FloatPos position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::TransparentBSDF, "Transparent BSDF")
+cse::TransparentBSDFNode::TransparentBSDFNode(const Float2 position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::TransparentBSDF, "Transparent BSDF")
 {
 	world_pos = position;
 
@@ -316,7 +315,7 @@ cse::TransparentBSDFNode::TransparentBSDFNode(FloatPos position) : EditableNode(
 }
 
 
-cse::RefractionBSDFNode::RefractionBSDFNode(FloatPos position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::RefractionBSDF, "Refraction BSDF")
+cse::RefractionBSDFNode::RefractionBSDFNode(const Float2 position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::RefractionBSDF, "Refraction BSDF")
 {
 	world_pos = position;
 
@@ -346,7 +345,7 @@ cse::RefractionBSDFNode::RefractionBSDFNode(FloatPos position) : EditableNode(No
 	sockets.push_back(normal_input);
 }
 
-cse::GlassBSDFNode::GlassBSDFNode(FloatPos position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::GlassBSDF, "Glass BSDF")
+cse::GlassBSDFNode::GlassBSDFNode(const Float2 position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::GlassBSDF, "Glass BSDF")
 {
 	world_pos = position;
 
@@ -377,7 +376,7 @@ cse::GlassBSDFNode::GlassBSDFNode(FloatPos position) : EditableNode(NodeCategory
 	sockets.push_back(normal_input);
 }
 
-cse::TranslucentBSDFNode::TranslucentBSDFNode(FloatPos position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::TranslucentBSDF, "Translucent BSDF")
+cse::TranslucentBSDFNode::TranslucentBSDFNode(const Float2 position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::TranslucentBSDF, "Translucent BSDF")
 {
 	world_pos = position;
 
@@ -393,7 +392,7 @@ cse::TranslucentBSDFNode::TranslucentBSDFNode(FloatPos position) : EditableNode(
 	sockets.push_back(normal_input);
 }
 
-cse::AnisotropicBSDFNode::AnisotropicBSDFNode(FloatPos position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::AnisotropicBSDF, "Anisotropic BSDF")
+cse::AnisotropicBSDFNode::AnisotropicBSDFNode(const Float2 position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::AnisotropicBSDF, "Anisotropic BSDF")
 {
 	world_pos = position;
 
@@ -429,7 +428,7 @@ cse::AnisotropicBSDFNode::AnisotropicBSDFNode(FloatPos position) : EditableNode(
 	sockets.push_back(tangent_input);
 }
 
-cse::VelvetBSDFNode::VelvetBSDFNode(FloatPos position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::VelvetBSDF, "Velvet BSDF")
+cse::VelvetBSDFNode::VelvetBSDFNode(const Float2 position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::VelvetBSDF, "Velvet BSDF")
 {
 	world_pos = position;
 
@@ -448,7 +447,7 @@ cse::VelvetBSDFNode::VelvetBSDFNode(FloatPos position) : EditableNode(NodeCatego
 	sockets.push_back(normal_input);
 }
 
-cse::ToonBSDFNode::ToonBSDFNode(FloatPos position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::ToonBSDF, "Toon BSDF")
+cse::ToonBSDFNode::ToonBSDFNode(const Float2 position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::ToonBSDF, "Toon BSDF")
 {
 	world_pos = position;
 
@@ -477,7 +476,7 @@ cse::ToonBSDFNode::ToonBSDFNode(FloatPos position) : EditableNode(NodeCategory::
 	sockets.push_back(normal_input);
 }
 
-cse::SubsurfaceScatteringNode::SubsurfaceScatteringNode(FloatPos position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::SubsurfaceScattering, "Subsurface Scattering")
+cse::SubsurfaceScatteringNode::SubsurfaceScatteringNode(const Float2 position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::SubsurfaceScattering, "Subsurface Scattering")
 {
 	world_pos = position;
 
@@ -517,7 +516,7 @@ cse::SubsurfaceScatteringNode::SubsurfaceScatteringNode(FloatPos position) : Edi
 	content_width += 20.0f;
 }
 
-cse::EmissionNode::EmissionNode(FloatPos position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::Emission, "Emission")
+cse::EmissionNode::EmissionNode(const Float2 position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::Emission, "Emission")
 {
 	world_pos = position;
 
@@ -534,7 +533,7 @@ cse::EmissionNode::EmissionNode(FloatPos position) : EditableNode(NodeCategory::
 	sockets.push_back(strength_input);
 }
 
-cse::HairBSDFNode::HairBSDFNode(FloatPos position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::HairBSDF, "Hair BSDF")
+cse::HairBSDFNode::HairBSDFNode(const Float2 position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::HairBSDF, "Hair BSDF")
 {
 	world_pos = position;
 
@@ -567,7 +566,7 @@ cse::HairBSDFNode::HairBSDFNode(FloatPos position) : EditableNode(NodeCategory::
 	sockets.push_back(tangent_input);
 }
 
-cse::HoldoutNode::HoldoutNode(FloatPos position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::Holdout, "Holdout")
+cse::HoldoutNode::HoldoutNode(const Float2 position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::Holdout, "Holdout")
 {
 	world_pos = position;
 
@@ -576,7 +575,7 @@ cse::HoldoutNode::HoldoutNode(FloatPos position) : EditableNode(NodeCategory::SH
 	sockets.push_back(holdout_output);
 }
 
-cse::VolumeAbsorptionNode::VolumeAbsorptionNode(FloatPos position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::VolAbsorption, "Volume Absorption")
+cse::VolumeAbsorptionNode::VolumeAbsorptionNode(const Float2 position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::VolAbsorption, "Volume Absorption")
 {
 	world_pos = position;
 
@@ -593,7 +592,7 @@ cse::VolumeAbsorptionNode::VolumeAbsorptionNode(FloatPos position) : EditableNod
 	sockets.push_back(density_input);
 }
 
-cse::VolumeScatterNode::VolumeScatterNode(FloatPos position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::VolScatter, "Volume Scatter")
+cse::VolumeScatterNode::VolumeScatterNode(const Float2 position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::VolScatter, "Volume Scatter")
 {
 	world_pos = position;
 

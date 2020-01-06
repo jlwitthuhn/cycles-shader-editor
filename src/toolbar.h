@@ -3,9 +3,9 @@
 #include <list>
 #include <string>
 
-#include "float_pos.h"
 #include "gui_sizes.h"
 #include "ui_requests.h"
+#include "util_vector.h"
 
 struct NVGcontext;
 
@@ -27,15 +27,15 @@ namespace cse {
 		std::string get_label() const;
 
 		// Called from NodeEditorToolbar::draw to store the geometry of this button every draw
-		void set_geometry(FloatPos pos, float width, float height);
-		bool contains_point(FloatPos point) const;
+		void set_geometry(Float2 pos, float width, float height);
+		bool contains_point(Float2 point) const;
 
 		ToolbarButtonType type = ToolbarButtonType::SPACER;
 		bool pressed = false;
 		bool enabled = true;
 
 	private:
-		FloatPos pos;
+		Float2 pos;
 		float width;
 		float height;
 	};
@@ -51,7 +51,7 @@ namespace cse {
 		void set_button_enabled(ToolbarButtonType type, bool enabled);
 
 		bool is_mouse_over();
-		void set_mouse_position(FloatPos screen_position);
+		void set_mouse_position(Float2 screen_position);
 		void handle_mouse_button(int button, int action, int mods);
 
 		UIRequests consume_ui_requests();
@@ -61,7 +61,7 @@ namespace cse {
 		void release_button_under_mouse();
 		void set_request(ToolbarButtonType button_type);
 
-		FloatPos mouse_screen_pos;
+		Float2 mouse_screen_pos;
 
 		std::list<ToolbarButton> buttons;
 

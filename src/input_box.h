@@ -4,7 +4,7 @@
 #include <sstream>
 #include <string>
 
-#include "float_pos.h"
+#include "util_vector.h"
 
 struct NVGcontext;
 
@@ -18,8 +18,8 @@ namespace cse {
 		BaseInputBox(float width, float height);
 
 		void draw(NVGcontext* draw_context, bool highlight);
-		void set_position(FloatPos parent_position);
-		bool contains_point(FloatPos parent_local_pos);
+		void set_position(Float2 parent_position);
+		bool contains_point(Float2 parent_local_pos);
 
 		void handle_character(unsigned int codepoint);
 		void backspace();
@@ -38,7 +38,7 @@ namespace cse {
 		virtual bool set_value_from_input_stream() = 0;
 
 		// Position of this UI element, relative to parent component
-		FloatPos position;
+		Float2 position;
 
 		bool selected = false;
 

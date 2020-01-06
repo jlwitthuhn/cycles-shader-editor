@@ -5,11 +5,10 @@
 #include <vector>
 
 #include "common_enums.h"
-#include "float_pos.h"
 #include "output.h"
 #include "sockets.h"
 
-cse::MaxTexmapShaderNode::MaxTexmapShaderNode(const FloatPos position) : EditableNode(NodeCategory::TEXTURE, CyclesNodeType::MaxTex, "3ds Max Texmap")
+cse::MaxTexmapShaderNode::MaxTexmapShaderNode(const Float2 position) : EditableNode(NodeCategory::TEXTURE, CyclesNodeType::MaxTex, "3ds Max Texmap")
 {
 	world_pos = position;
 

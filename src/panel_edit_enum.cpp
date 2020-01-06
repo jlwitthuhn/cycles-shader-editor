@@ -30,11 +30,11 @@ float cse::EditEnumPanel::draw(NVGcontext* const draw_context)
 	return panel_height;
 }
 
-void cse::EditEnumPanel::set_mouse_local_position(const FloatPos local_pos)
+void cse::EditEnumPanel::set_mouse_local_position(const Float2 local_pos)
 {
 	EditParamPanel::set_mouse_local_position(local_pos);
 
-	const FloatPos radio_widget_relative = local_pos - FloatPos(0.0f, radio_widget_pos);
+	const Float2 radio_widget_relative = local_pos - Float2(0.0f, radio_widget_pos);
 	radio_widget.set_mouse_local_position(radio_widget_relative);
 }
 

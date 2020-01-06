@@ -1,16 +1,14 @@
 #include "util_rectangle.h"
 
-#include "float_pos.h"
-
-bool cse::do_rectangles_overlap(FloatPos low1, FloatPos high1, FloatPos low2, FloatPos high2)
+bool cse::do_rectangles_overlap(const Float2 low1, const Float2 high1, const Float2 low2, const Float2 high2)
 {
 	// Return false if there is no horizontal overlap
-	if (low1.get_x() > high2.get_x() || low2.get_x() > high1.get_x()) {
+	if (low1.x > high2.x || low2.x > high1.x) {
 		return false;
 	}
 
 	// Return false if there is no vertical overlap
-	if (low1.get_y() > high2.get_y() || low2.get_y() > high1.get_y()) {
+	if (low1.y > high2.y || low2.y > high1.y) {
 		return false;
 	}
 

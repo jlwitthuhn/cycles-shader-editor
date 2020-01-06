@@ -36,11 +36,11 @@ float cse::EditIntPanel::draw(NVGcontext* const draw_context)
 	return panel_height;
 }
 
-void cse::EditIntPanel::set_mouse_local_position(const FloatPos local_pos)
+void cse::EditIntPanel::set_mouse_local_position(const Float2 local_pos)
 {
 	EditParamPanel::set_mouse_local_position(local_pos);
 
-	const FloatPos input_widget_offset = local_pos - FloatPos(0.0f, input_widget_pos);
+	const Float2 input_widget_offset = local_pos - Float2(0.0f, input_widget_pos);
 	input_widget.set_mouse_local_position(input_widget_offset);
 }
 

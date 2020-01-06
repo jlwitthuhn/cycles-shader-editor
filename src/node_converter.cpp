@@ -5,11 +5,10 @@
 #include <vector>
 
 #include "common_enums.h"
-#include "float_pos.h"
 #include "output.h"
 #include "sockets.h"
 
-cse::BlackbodyNode::BlackbodyNode(const FloatPos position) : EditableNode(NodeCategory::CONVERTER, CyclesNodeType::Blackbody, "Blackbody")
+cse::BlackbodyNode::BlackbodyNode(const Float2 position) : EditableNode(NodeCategory::CONVERTER, CyclesNodeType::Blackbody, "Blackbody")
 {
 	world_pos = position;
 
@@ -25,7 +24,7 @@ cse::BlackbodyNode::BlackbodyNode(const FloatPos position) : EditableNode(NodeCa
 	content_width += 14.0f;
 }
 
-cse::ColorRampNode::ColorRampNode(const FloatPos position) : EditableNode(NodeCategory::CONVERTER, CyclesNodeType::ColorRamp, "Color Ramp")
+cse::ColorRampNode::ColorRampNode(const Float2 position) : EditableNode(NodeCategory::CONVERTER, CyclesNodeType::ColorRamp, "Color Ramp")
 {
 	world_pos = position;
 
@@ -49,7 +48,7 @@ void cse::ColorRampNode::update_output_node(OutputNode& output)
 	EditableNode::update_output_node(output);
 }
 
-cse::CombineHSVNode::CombineHSVNode(const FloatPos position) : EditableNode(NodeCategory::CONVERTER, CyclesNodeType::CombineHSV, "Combine HSV")
+cse::CombineHSVNode::CombineHSVNode(const Float2 position) : EditableNode(NodeCategory::CONVERTER, CyclesNodeType::CombineHSV, "Combine HSV")
 {
 	world_pos = position;
 
@@ -69,7 +68,7 @@ cse::CombineHSVNode::CombineHSVNode(const FloatPos position) : EditableNode(Node
 	sockets.push_back(v_input);
 }
 
-cse::CombineRGBNode::CombineRGBNode(const FloatPos position) : EditableNode(NodeCategory::CONVERTER, CyclesNodeType::CombineRGB, "Combine RGB")
+cse::CombineRGBNode::CombineRGBNode(const Float2 position) : EditableNode(NodeCategory::CONVERTER, CyclesNodeType::CombineRGB, "Combine RGB")
 {
 	world_pos = position;
 
@@ -89,7 +88,7 @@ cse::CombineRGBNode::CombineRGBNode(const FloatPos position) : EditableNode(Node
 	sockets.push_back(b_input);
 }
 
-cse::CombineXYZNode::CombineXYZNode(const FloatPos position) : EditableNode(NodeCategory::CONVERTER, CyclesNodeType::CombineXYZ, "Combine XYZ")
+cse::CombineXYZNode::CombineXYZNode(const Float2 position) : EditableNode(NodeCategory::CONVERTER, CyclesNodeType::CombineXYZ, "Combine XYZ")
 {
 	world_pos = position;
 
@@ -109,7 +108,7 @@ cse::CombineXYZNode::CombineXYZNode(const FloatPos position) : EditableNode(Node
 	sockets.push_back(z_input);
 }
 
-cse::MathNode::MathNode(const FloatPos position) : EditableNode(NodeCategory::CONVERTER, CyclesNodeType::Math, "Math")
+cse::MathNode::MathNode(const Float2 position) : EditableNode(NodeCategory::CONVERTER, CyclesNodeType::Math, "Math")
 {
 	world_pos = position;
 
@@ -153,7 +152,7 @@ cse::MathNode::MathNode(const FloatPos position) : EditableNode(NodeCategory::CO
 	sockets.push_back(value2_input);
 }
 
-cse::RGBToBWNode::RGBToBWNode(const FloatPos position) : EditableNode(NodeCategory::CONVERTER, CyclesNodeType::RGBtoBW, "RGB to BW")
+cse::RGBToBWNode::RGBToBWNode(const Float2 position) : EditableNode(NodeCategory::CONVERTER, CyclesNodeType::RGBtoBW, "RGB to BW")
 {
 	world_pos = position;
 
@@ -167,7 +166,7 @@ cse::RGBToBWNode::RGBToBWNode(const FloatPos position) : EditableNode(NodeCatego
 	sockets.push_back(color_input);
 }
 
-cse::SeparateHSVNode::SeparateHSVNode(const FloatPos position) : EditableNode(NodeCategory::CONVERTER, CyclesNodeType::SeparateHSV, "Separate HSV")
+cse::SeparateHSVNode::SeparateHSVNode(const Float2 position) : EditableNode(NodeCategory::CONVERTER, CyclesNodeType::SeparateHSV, "Separate HSV")
 {
 	world_pos = position;
 
@@ -185,7 +184,7 @@ cse::SeparateHSVNode::SeparateHSVNode(const FloatPos position) : EditableNode(No
 	sockets.push_back(color_input);
 }
 
-cse::SeparateRGBNode::SeparateRGBNode(const FloatPos position) : EditableNode(NodeCategory::CONVERTER, CyclesNodeType::SeparateRGB, "Separate RGB")
+cse::SeparateRGBNode::SeparateRGBNode(const Float2 position) : EditableNode(NodeCategory::CONVERTER, CyclesNodeType::SeparateRGB, "Separate RGB")
 {
 	world_pos = position;
 
@@ -203,7 +202,7 @@ cse::SeparateRGBNode::SeparateRGBNode(const FloatPos position) : EditableNode(No
 	sockets.push_back(image_input);
 }
 
-cse::SeparateXYZNode::SeparateXYZNode(const FloatPos position) : EditableNode(NodeCategory::CONVERTER, CyclesNodeType::SeparateXYZ, "SeparateXYZ")
+cse::SeparateXYZNode::SeparateXYZNode(const Float2 position) : EditableNode(NodeCategory::CONVERTER, CyclesNodeType::SeparateXYZ, "SeparateXYZ")
 {
 	world_pos = position;
 
@@ -222,7 +221,7 @@ cse::SeparateXYZNode::SeparateXYZNode(const FloatPos position) : EditableNode(No
 	sockets.push_back(vec_input);
 }
 
-cse::VectorMathNode::VectorMathNode(const FloatPos position) : EditableNode(NodeCategory::CONVERTER, CyclesNodeType::VectorMath, "Vector Math")
+cse::VectorMathNode::VectorMathNode(const Float2 position) : EditableNode(NodeCategory::CONVERTER, CyclesNodeType::VectorMath, "Vector Math")
 {
 	world_pos = position;
 
@@ -254,7 +253,7 @@ cse::VectorMathNode::VectorMathNode(const FloatPos position) : EditableNode(Node
 	sockets.push_back(vector2_input);
 }
 
-cse::WavelengthNode::WavelengthNode(const FloatPos position) : EditableNode(NodeCategory::CONVERTER, CyclesNodeType::Wavelength, "Wavelength")
+cse::WavelengthNode::WavelengthNode(const Float2 position) : EditableNode(NodeCategory::CONVERTER, CyclesNodeType::Wavelength, "Wavelength")
 {
 	world_pos = position;
 

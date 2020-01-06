@@ -7,14 +7,13 @@
 
 #include "common_enums.h"
 #include "drawing.h"
-#include "float_pos.h"
 #include "gui_sizes.h"
 #include "sockets.h"
 
 cse::EditColorPanel::EditColorPanel(const float width) :
 	EditParamPanel(width),
-	color_rect_click_target(FloatPos(), FloatPos()),
-	hue_bar_click_target(FloatPos(), FloatPos()),
+	color_rect_click_target(Float2(), Float2()),
+	hue_bar_click_target(Float2(), Float2()),
 	input_widget(width)
 {
 
@@ -90,11 +89,11 @@ float cse::EditColorPanel::draw(NVGcontext* const draw_context)
 		// Cursor
 		const float cursor_pos_x = hsv.sat * rect_width + draw_x;
 		const float cursor_pos_y = (1.0f - hsv.val) * rect_height + draw_y;
-		Drawing::draw_color_pick_cursor(draw_context, FloatPos(cursor_pos_x, cursor_pos_y));
+		Drawing::draw_color_pick_cursor(draw_context, Float2(cursor_pos_x, cursor_pos_y));
 
 		// Click target
-		FloatPos color_rect_begin = FloatPos(draw_x, draw_y);
-		FloatPos color_rect_end = FloatPos(draw_x + rect_width, draw_y + rect_height);
+		Float2 color_rect_begin = Float2(draw_x, draw_y);
+		Float2 color_rect_end = Float2(draw_x + rect_width, draw_y + rect_height);
 		color_rect_click_target = Area(color_rect_begin, color_rect_end);
 
 		height_drawn += 2 * UI_SUBWIN_PARAM_EDIT_RECT_VPAD + UI_SUBWIN_PARAM_EDIT_RECT_HEIGHT;
@@ -155,8 +154,8 @@ float cse::EditColorPanel::draw(NVGcontext* const draw_context)
 		nvgStrokeWidth(draw_context, 2.0f);
 		nvgStroke(draw_context);
 
-		FloatPos hue_bar_begin = FloatPos(draw_x, draw_y);
-		FloatPos hue_bar_end = FloatPos(draw_x + hue_bar_width, draw_y + hue_bar_height);
+		Float2 hue_bar_begin = Float2(draw_x, draw_y);
+		Float2 hue_bar_end = Float2(draw_x + hue_bar_width, draw_y + hue_bar_height);
 		hue_bar_click_target = Area(hue_bar_begin, hue_bar_end);
 
 		height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
@@ -172,11 +171,11 @@ float cse::EditColorPanel::draw(NVGcontext* const draw_context)
 	return panel_height;
 }
 
-void cse::EditColorPanel::set_mouse_local_position(FloatPos local_pos)
+void cse::EditColorPanel::set_mouse_local_position(Float2 local_pos)
 {
 	EditParamPanel::set_mouse_local_position(local_pos);
 
-	const FloatPos input_widget_offset = local_pos - FloatPos(0.0f, input_widget_pos);
+	const Float2 input_widget_offset = local_pos - Float2(0.0f, input_widget_pos);
 	input_widget.set_mouse_local_position(input_widget_offset);
 }
 
@@ -293,7 +292,7 @@ void cse::EditColorPanel::set_hsv(HueSatVal hsv)
 
 void cse::EditColorPanel::set_hue_from_mouse()
 {
-	float new_hue = hue_bar_click_target.get_normalized_pos(mouse_local_pos).get_x();
+	float new_hue = hue_bar_click_target.get_normalized_pos(mouse_local_pos).x;
 	if (new_hue < 0.0f) {
 		new_hue = 0.0f;
 	}
@@ -309,9 +308,9 @@ void cse::EditColorPanel::set_hue_from_mouse()
 
 void cse::EditColorPanel::set_sat_val_from_mouse()
 {
-	FloatPos mouse_pos_normalized = color_rect_click_target.get_normalized_pos(mouse_local_pos);
-	const float new_sat = mouse_pos_normalized.get_x();
-	const float new_val = 1.0f - mouse_pos_normalized.get_y();
+	Float2 mouse_pos_normalized = color_rect_click_target.get_normalized_pos(mouse_local_pos);
+	const float new_sat = mouse_pos_normalized.x;
+	const float new_val = 1.0f - mouse_pos_normalized.y;
 
 	HueSatVal hsv = get_hsv();
 	hsv.sat = new_sat;

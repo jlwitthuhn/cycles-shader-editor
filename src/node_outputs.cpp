@@ -5,11 +5,10 @@
 #include <vector>
 
 #include "common_enums.h"
-#include "float_pos.h"
 #include "output.h"
 #include "sockets.h"
 
-cse::MaterialOutputNode::MaterialOutputNode(FloatPos position) : EditableNode(NodeCategory::OUTPUT, CyclesNodeType::MaterialOutput, "Material Output")
+cse::MaterialOutputNode::MaterialOutputNode(const Float2 position) : EditableNode(NodeCategory::OUTPUT, CyclesNodeType::MaterialOutput, "Material Output")
 {
 	world_pos = position;
 

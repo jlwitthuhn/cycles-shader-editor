@@ -1,9 +1,9 @@
 #include "selection.h"
 
-#include "float_pos.h"
 #include "node_base.h"
+#include "util_vector.h"
 
-void cse::Selection::move_nodes(const FloatPos delta)
+void cse::Selection::move_nodes(const Float2 delta)
 {
 	for (const auto weak_node : nodes) {
 		if (const auto this_node = weak_node.lock()) {

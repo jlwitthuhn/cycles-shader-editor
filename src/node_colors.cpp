@@ -8,11 +8,10 @@
 #include "common_enums.h"
 #include "config.h"
 #include "curve.h"
-#include "float_pos.h"
 #include "output.h"
 #include "sockets.h"
 
-cse::MixRGBNode::MixRGBNode(FloatPos position) : EditableNode(NodeCategory::COLOR, CyclesNodeType::MixRGB, "Mix RGB")
+cse::MixRGBNode::MixRGBNode(const Float2 position) : EditableNode(NodeCategory::COLOR, CyclesNodeType::MixRGB, "Mix RGB")
 {
 	world_pos = position;
 
@@ -58,7 +57,7 @@ cse::MixRGBNode::MixRGBNode(FloatPos position) : EditableNode(NodeCategory::COLO
 	sockets.push_back(color2_input);
 }
 
-cse::InvertNode::InvertNode(FloatPos position) : EditableNode(NodeCategory::COLOR, CyclesNodeType::Invert, "Invert")
+cse::InvertNode::InvertNode(const Float2 position) : EditableNode(NodeCategory::COLOR, CyclesNodeType::Invert, "Invert")
 {
 	world_pos = position;
 
@@ -75,7 +74,7 @@ cse::InvertNode::InvertNode(FloatPos position) : EditableNode(NodeCategory::COLO
 	sockets.push_back(color_input);
 }
 
-cse::LightFalloffNode::LightFalloffNode(FloatPos position) : EditableNode(NodeCategory::COLOR, CyclesNodeType::LightFalloff, "Light Falloff")
+cse::LightFalloffNode::LightFalloffNode(const Float2 position) : EditableNode(NodeCategory::COLOR, CyclesNodeType::LightFalloff, "Light Falloff")
 {
 	world_pos = position;
 
@@ -96,7 +95,7 @@ cse::LightFalloffNode::LightFalloffNode(FloatPos position) : EditableNode(NodeCa
 	sockets.push_back(smooth_input);
 }
 
-cse::HSVNode::HSVNode(FloatPos position) : EditableNode(NodeCategory::COLOR, CyclesNodeType::HSV, "HSV")
+cse::HSVNode::HSVNode(const Float2 position) : EditableNode(NodeCategory::COLOR, CyclesNodeType::HSV, "HSV")
 {
 	world_pos = position;
 
@@ -122,7 +121,7 @@ cse::HSVNode::HSVNode(FloatPos position) : EditableNode(NodeCategory::COLOR, Cyc
 	sockets.push_back(color_input);
 }
 
-cse::GammaNode::GammaNode(FloatPos position) : EditableNode(NodeCategory::COLOR, CyclesNodeType::Gamma, "Gamma")
+cse::GammaNode::GammaNode(const Float2 position) : EditableNode(NodeCategory::COLOR, CyclesNodeType::Gamma, "Gamma")
 {
 	world_pos = position;
 
@@ -139,7 +138,7 @@ cse::GammaNode::GammaNode(FloatPos position) : EditableNode(NodeCategory::COLOR,
 	sockets.push_back(gamma_input);
 }
 
-cse::BrightnessContrastNode::BrightnessContrastNode(FloatPos position) : EditableNode(NodeCategory::COLOR, CyclesNodeType::BrightnessContrast, "Bright/Contrast")
+cse::BrightnessContrastNode::BrightnessContrastNode(const Float2 position) : EditableNode(NodeCategory::COLOR, CyclesNodeType::BrightnessContrast, "Bright/Contrast")
 {
 	world_pos = position;
 
@@ -159,7 +158,7 @@ cse::BrightnessContrastNode::BrightnessContrastNode(FloatPos position) : Editabl
 	sockets.push_back(cont_input);
 }
 
-cse::RGBCurvesNode::RGBCurvesNode(FloatPos position) : EditableNode(NodeCategory::COLOR, CyclesNodeType::RGBCurves, "RGB Curves")
+cse::RGBCurvesNode::RGBCurvesNode(const Float2 position) : EditableNode(NodeCategory::COLOR, CyclesNodeType::RGBCurves, "RGB Curves")
 {
 	world_pos = position;
 

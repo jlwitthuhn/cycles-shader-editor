@@ -1,5 +1,6 @@
 #include "node_base.h"
 
+#include <cmath>
 #include <iomanip>
 #include <map>
 #include <sstream>
@@ -259,29 +260,29 @@ void cse::EditableNode::draw_node(NVGcontext* const draw_context, const bool sel
 
 		if (this_socket->selectable) {
 			// Add label click target
-			const cse::FloatPos click_target_begin(0, next_draw_y - draw_pos_y);
-			const cse::FloatPos click_target_end(content_width, next_draw_y - draw_pos_y + UI_NODE_SOCKET_ROW_HEIGHT);
+			const cse::Float2 click_target_begin(0, next_draw_y - draw_pos_y);
+			const cse::Float2 click_target_end(content_width, next_draw_y - draw_pos_y + UI_NODE_SOCKET_ROW_HEIGHT);
 			const HolderArea<std::weak_ptr<NodeSocket>> label_target(click_target_begin, click_target_end, this_socket);
 			label_targets.push_back(label_target);
 		}
 
 		if (this_socket->draw_socket) {
-			cse::FloatPos socket_position;
+			cse::Float2 socket_position;
 			if (this_socket->io_type == SocketIOType::INPUT) {
-				socket_position = cse::FloatPos(draw_pos_x, next_draw_y + UI_NODE_SOCKET_ROW_HEIGHT / 2);
+				socket_position = cse::Float2(draw_pos_x, next_draw_y + UI_NODE_SOCKET_ROW_HEIGHT / 2);
 			}
 			else {
-				socket_position = cse::FloatPos(draw_pos_x + content_width, next_draw_y + UI_NODE_SOCKET_ROW_HEIGHT / 2);
+				socket_position = cse::Float2(draw_pos_x + content_width, next_draw_y + UI_NODE_SOCKET_ROW_HEIGHT / 2);
 			}
 			nvgBeginPath(draw_context);
-			nvgCircle(draw_context, socket_position.get_x(), socket_position.get_y(), UI_NODE_SOCKET_RADIUS);
+			nvgCircle(draw_context, socket_position.x, socket_position.y, UI_NODE_SOCKET_RADIUS);
 
 			this_socket->world_draw_position = world_pos + socket_position;
 
 			// Add click target for this socket
-			cse::FloatPos local_socket_position(socket_position.get_x() - draw_pos_x, socket_position.get_y() - draw_pos_y);
-			cse::FloatPos click_target_begin(local_socket_position.get_x() - 7.0f, local_socket_position.get_y() - 7.0f);
-			cse::FloatPos click_target_end(local_socket_position.get_x() + 7.0f, local_socket_position.get_y() + 7.0f);
+			cse::Float2 local_socket_position(socket_position.x - draw_pos_x, socket_position.y - draw_pos_y);
+			cse::Float2 click_target_begin(local_socket_position.x - 7.0f, local_socket_position.y - 7.0f);
+			cse::Float2 click_target_end(local_socket_position.x + 7.0f, local_socket_position.y + 7.0f);
 			const HolderArea<std::weak_ptr<NodeSocket>> socket_target(click_target_begin, click_target_end, this_socket);
 			socket_targets.push_back(socket_target);
 
@@ -315,20 +316,20 @@ void cse::EditableNode::draw_node(NVGcontext* const draw_context, const bool sel
 	}
 }
 
-bool cse::EditableNode::contains_point(const FloatPos world_pos) const
+bool cse::EditableNode::contains_point(const Float2 world_pos) const
 {
-	const FloatPos local_pos = get_local_pos(world_pos);
+	const Float2 local_pos = get_local_pos(world_pos);
 	return (
-		local_pos.get_x() >= 0.0f &&
-		local_pos.get_x() <= content_width &&
-		local_pos.get_y() >= 0.0f &&
-		local_pos.get_y() <= UI_NODE_HEADER_HEIGHT + content_height
+		local_pos.x >= 0.0f &&
+		local_pos.x <= content_width &&
+		local_pos.y >= 0.0f &&
+		local_pos.y <= UI_NODE_HEADER_HEIGHT + content_height
 	);
 }
 
-std::weak_ptr<cse::NodeSocket> cse::EditableNode::get_socket_connector_under_point(const FloatPos check_world_pos) const
+std::weak_ptr<cse::NodeSocket> cse::EditableNode::get_socket_connector_under_point(const Float2 check_world_pos) const
 {
-	const FloatPos local_pos = get_local_pos(check_world_pos);
+	const Float2 local_pos = get_local_pos(check_world_pos);
 	for (const auto click_target : socket_targets) {
 		if (click_target.contains_point(local_pos)) {
 			return click_target.get_value();
@@ -337,13 +338,13 @@ std::weak_ptr<cse::NodeSocket> cse::EditableNode::get_socket_connector_under_poi
 	return std::weak_ptr<NodeSocket>();
 }
 
-std::weak_ptr<cse::NodeSocket> cse::EditableNode::get_socket_label_under_point(const FloatPos check_world_pos) const
+std::weak_ptr<cse::NodeSocket> cse::EditableNode::get_socket_label_under_point(const Float2 check_world_pos) const
 {
 	if (contains_point(check_world_pos) == false) {
 		// Nothing will match if the node is not under the given point
 		return std::weak_ptr<NodeSocket>();
 	}
-	const FloatPos local_pos = get_local_pos(check_world_pos);
+	const Float2 local_pos = get_local_pos(check_world_pos);
 	for (const auto click_target : label_targets) {
 		if (click_target.contains_point(local_pos)) {
 			return click_target.get_value();
@@ -372,9 +373,9 @@ std::weak_ptr<cse::NodeSocket> cse::EditableNode::get_socket_by_internal_name(co
 	return std::weak_ptr<NodeSocket>();
 }
 
-cse::FloatPos cse::EditableNode::get_dimensions()
+cse::Float2 cse::EditableNode::get_dimensions()
 {
-	return cse::FloatPos(content_width, content_height + UI_NODE_HEADER_HEIGHT);
+	return cse::Float2(content_width, content_height + UI_NODE_HEADER_HEIGHT);
 }
 
 bool cse::EditableNode::can_be_deleted()
@@ -386,8 +387,8 @@ void cse::EditableNode::update_output_node(OutputNode& output)
 {
 	output.type = type;
 
-	output.world_x = world_pos.get_floor_x();
-	output.world_y = world_pos.get_floor_y();
+	output.world_x = std::floorf(world_pos.x);
+	output.world_y = std::floorf(world_pos.y);
 
 	if (type == CyclesNodeType::MaterialOutput) {
 		output.name = std::string("output");
@@ -444,10 +445,10 @@ void cse::EditableNode::update_output_node(OutputNode& output)
 			const std::shared_ptr<CurveSocketValue> curve_val = std::dynamic_pointer_cast<CurveSocketValue>(this_socket->value);
 			if (curve_val) {
 				OutputCurve out_curve;
-				typedef std::vector<FloatPos>::size_type vec_index;
+				typedef std::vector<Float2>::size_type vec_index;
 				for (vec_index i = 0; i < curve_val->curve_points.size(); i++) {
-					const FloatPos this_point = curve_val->curve_points[i];
-					out_curve.control_points.push_back(Float2(this_point.get_x(), this_point.get_y()));
+					const Float2 this_point = curve_val->curve_points[i];
+					out_curve.control_points.push_back(Float2(this_point.x, this_point.y));
 				}
 				out_curve.enum_curve_interp = static_cast<int>(curve_val->curve_interp);
 				const CurveEvaluator curve(curve_val);
@@ -485,7 +486,7 @@ void cse::EditableNode::update_output_node(OutputNode& output)
 	}
 }
 
-cse::FloatPos cse::EditableNode::get_local_pos(FloatPos world_pos_in) const
+cse::Float2 cse::EditableNode::get_local_pos(const Float2 world_pos_in) const
 {
 	return world_pos_in - world_pos;
 }

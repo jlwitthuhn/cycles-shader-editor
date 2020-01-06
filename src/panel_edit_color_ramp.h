@@ -21,7 +21,7 @@ namespace cse {
 		virtual void pre_draw() override;
 		virtual float draw(NVGcontext* draw_context) override;
 
-		virtual void set_mouse_local_position(FloatPos local_pos) override;
+		virtual void set_mouse_local_position(Float2 local_pos) override;
 
 		virtual bool should_capture_input() const override;
 		virtual void handle_mouse_button(int button, int action, int mods) override;

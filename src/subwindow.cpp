@@ -4,13 +4,13 @@
 
 #include "gui_sizes.h"
 
-cse::NodeEditorSubwindow::NodeEditorSubwindow(FloatPos screen_position, std::string title)
+cse::NodeEditorSubwindow::NodeEditorSubwindow(Float2 screen_position, std::string title)
 {
 	subwindow_screen_pos = screen_position;
 	this->title = title;
 }
 
-cse::FloatPos cse::NodeEditorSubwindow::get_screen_pos() const
+cse::Float2 cse::NodeEditorSubwindow::get_screen_pos() const
 {
 	return subwindow_screen_pos;
 }
@@ -92,10 +92,10 @@ bool cse::NodeEditorSubwindow::is_mouse_over() const
 		return false;
 	}
 	return (
-		mouse_local_pos.get_x() > 0.0f &&
-		mouse_local_pos.get_y() > 0.0f &&
-		mouse_local_pos.get_x() < get_width() &&
-		mouse_local_pos.get_y() < get_height()
+		mouse_local_pos.x > 0.0f &&
+		mouse_local_pos.y > 0.0f &&
+		mouse_local_pos.x < get_width() &&
+		mouse_local_pos.y < get_height()
 		);
 }
 
@@ -107,25 +107,25 @@ bool cse::NodeEditorSubwindow::is_mouse_over_header() const
 	if (is_active() == false) {
 		return false;
 	}
-	return (mouse_local_pos.get_x() > 0 &&
-		mouse_local_pos.get_x() < subwindow_width &&
-		mouse_local_pos.get_y() > 0 &&
-		mouse_local_pos.get_y() < UI_SUBWIN_HEADER_HEIGHT);
+	return (mouse_local_pos.x > 0 &&
+		mouse_local_pos.x < subwindow_width &&
+		mouse_local_pos.y > 0 &&
+		mouse_local_pos.y < UI_SUBWIN_HEADER_HEIGHT);
 }
 
-void cse::NodeEditorSubwindow::set_mouse_position(FloatPos local_position, float max_safe_pos_y)
+void cse::NodeEditorSubwindow::set_mouse_position(Float2 local_position, float max_safe_pos_y)
 {
 	if (subwindow_moving) {
 		subwindow_screen_pos = subwindow_screen_pos + (local_position - mouse_local_begin_move_pos);
-		if (subwindow_screen_pos.get_y() + UI_SUBWIN_HEADER_HEIGHT > max_safe_pos_y) {
-			subwindow_screen_pos = FloatPos(subwindow_screen_pos.get_x(), max_safe_pos_y - UI_SUBWIN_HEADER_HEIGHT);
+		if (subwindow_screen_pos.y + UI_SUBWIN_HEADER_HEIGHT > max_safe_pos_y) {
+			subwindow_screen_pos = Float2(subwindow_screen_pos.x, max_safe_pos_y - UI_SUBWIN_HEADER_HEIGHT);
 		}
 		mouse_local_pos = mouse_local_begin_move_pos;
 	}
 	else {
 		mouse_local_pos = local_position;
 	}
-	mouse_content_pos = mouse_local_pos - FloatPos(0.0f, UI_SUBWIN_HEADER_HEIGHT + 3.0f);
+	mouse_content_pos = mouse_local_pos - Float2(0.0f, UI_SUBWIN_HEADER_HEIGHT + 3.0f);
 }
 
 bool cse::NodeEditorSubwindow::should_capture_input() const

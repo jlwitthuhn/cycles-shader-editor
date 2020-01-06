@@ -3,11 +3,11 @@
 #include "drawing.h"
 #include "gui_sizes.h"
 
-float cse::NodeCreationButton::draw(NVGcontext* const draw_context, const FloatPos draw_origin, const FloatPos parent_local_mouse_pos, const float parent_width)
+float cse::NodeCreationButton::draw(NVGcontext* const draw_context, const Float2 draw_origin, const Float2 parent_local_mouse_pos, const float parent_width)
 {
 	// Coordinates to draw the actual button at
 	// This is the input draw_origin adjusted to account for padding
-	draw_pos = draw_origin + cse::FloatPos(UI_SUBWIN_NODE_LIST_NODE_BUTTON_HPADDING, UI_SUBWIN_NODE_LIST_BUTTON_VPADDING);
+	draw_pos = draw_origin + cse::Float2(UI_SUBWIN_NODE_LIST_NODE_BUTTON_HPADDING, UI_SUBWIN_NODE_LIST_BUTTON_VPADDING);
 
 	this->mouse_parent_pos = parent_local_mouse_pos;
 
@@ -23,10 +23,10 @@ float cse::NodeCreationButton::draw(NVGcontext* const draw_context, const FloatP
 
 bool cse::NodeCreationButton::is_mouse_over_button()
 {
-	if (mouse_parent_pos.get_x() > draw_pos.get_x() &&
-		mouse_parent_pos.get_x() < draw_pos.get_x() + button_width &&
-		mouse_parent_pos.get_y() > draw_pos.get_y() &&
-		mouse_parent_pos.get_y() < draw_pos.get_y() + UI_SUBWIN_NODE_LIST_NODE_BUTTON_HEIGHT)
+	if (mouse_parent_pos.x > draw_pos.x &&
+		mouse_parent_pos.x < draw_pos.x + button_width &&
+		mouse_parent_pos.y > draw_pos.y &&
+		mouse_parent_pos.y < draw_pos.y + UI_SUBWIN_NODE_LIST_NODE_BUTTON_HEIGHT)
 	{
 		return true;
 	}

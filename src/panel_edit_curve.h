@@ -5,9 +5,9 @@
 #include <vector>
 
 #include "common_enums.h"
-#include "float_pos.h"
 #include "panel_edit.h"
 #include "util_area.h"
+#include "util_vector.h"
 
 struct NVGcontext;
 
@@ -31,7 +31,7 @@ namespace cse {
 		virtual void reset() override;
 
 	private:
-		void move_selected_point(FloatPos new_pos);
+		void move_selected_point(Float2 new_pos);
 
 		std::weak_ptr<CurveSocketValue> attached_curve;
 		EditCurveMode edit_mode = EditCurveMode::MOVE;
@@ -45,6 +45,6 @@ namespace cse {
 
 		bool moving_selected_point = false;
 		bool mouse_has_moved = false;
-		FloatPos move_selected_point_begin_mouse_pos;
+		Float2 move_selected_point_begin_mouse_pos;
 	};
 }

@@ -3,7 +3,6 @@
 #include <memory>
 #include <string>
 
-#include "float_pos.h"
 #include "util_area.h"
 
 struct NVGcontext;
@@ -21,7 +20,7 @@ namespace cse {
 		void pre_draw();
 		float draw(NVGcontext* draw_context);
 
-		void set_mouse_local_position(FloatPos local_pos);
+		void set_mouse_local_position(Float2 local_pos);
 
 		void handle_mouse_button(int button, int action, int mods);
 
@@ -33,7 +32,7 @@ namespace cse {
 		std::weak_ptr<StringEnumSocketValue> enum_socket_value;
 		std::vector<HolderArea<std::string>> enum_click_areas;
 
-		FloatPos mouse_local_pos;
+		Float2 mouse_local_pos;
 
 		bool request_undo_push = false;
 	};

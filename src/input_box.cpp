@@ -23,7 +23,7 @@ void cse::BaseInputBox::draw(NVGcontext* const draw_context, const bool hightlig
 {
 	// Back fill
 	nvgBeginPath(draw_context);
-	nvgRoundedRect(draw_context, position.get_x(), position.get_y(), width, height, INPUT_CORNER_RADIUS);
+	nvgRoundedRect(draw_context, position.x, position.y, width, height, INPUT_CORNER_RADIUS);
 	if (hightlight) {
 		nvgFillColor(draw_context, nvgRGBA(230, 230, 230, 255));
 	}
@@ -47,11 +47,11 @@ void cse::BaseInputBox::draw(NVGcontext* const draw_context, const bool hightlig
 	else {
 		socket_text_stream << get_value_as_string();
 	}
-	nvgText(draw_context, position.get_x() + width / 2, position.get_y() + height / 2, socket_text_stream.str().c_str(), nullptr);
+	nvgText(draw_context, position.x + width / 2, position.y + height / 2, socket_text_stream.str().c_str(), nullptr);
 
 	// Outline
 	nvgBeginPath(draw_context);
-	nvgRoundedRect(draw_context, position.get_x(), position.get_y(), width, height, INPUT_CORNER_RADIUS);
+	nvgRoundedRect(draw_context, position.x, position.y, width, height, INPUT_CORNER_RADIUS);
 	if (selected) {
 		nvgStrokeColor(draw_context, nvgRGBA(255, 255, 255, 255));
 	}
@@ -62,19 +62,19 @@ void cse::BaseInputBox::draw(NVGcontext* const draw_context, const bool hightlig
 	nvgStroke(draw_context);
 }
 
-void cse::BaseInputBox::set_position(const FloatPos parent_position)
+void cse::BaseInputBox::set_position(const Float2 parent_position)
 {
 	this->position = parent_position;
 }
 
-bool cse::BaseInputBox::contains_point(const FloatPos parent_local_pos)
+bool cse::BaseInputBox::contains_point(const Float2 parent_local_pos)
 {
-	const FloatPos local_pos = parent_local_pos - position;
+	const Float2 local_pos = parent_local_pos - position;
 
-	return (local_pos.get_x() > 0 &&
-		local_pos.get_x() < width &&
-		local_pos.get_y() > 0 &&
-		local_pos.get_y() < height);
+	return (local_pos.x > 0 &&
+		local_pos.x < width &&
+		local_pos.y > 0 &&
+		local_pos.y < height);
 }
 
 void cse::BaseInputBox::handle_character(const unsigned int codepoint)

@@ -4,9 +4,9 @@
 #include <set>
 #include <string>
 
-#include "float_pos.h"
 #include "selection.h"
 #include "util_typedef.h"
+#include "util_vector.h"
 #include "zoom.h"
 
 struct NVGcontext;
@@ -23,7 +23,7 @@ namespace cse {
 	private:
 		class ViewBorders {
 		public:
-			ViewBorders(FloatPos view_center, int viewport_width, int viewport_height, float zoom_scale);
+			ViewBorders(Float2 view_center, int viewport_width, int viewport_height, float zoom_scale);
 
 			const float left;
 			const float right;
@@ -38,7 +38,7 @@ namespace cse {
 		);
 
 		// Main 3 functions called from the main loop
-		void set_mouse_position(FloatPos view_local_mouse_pos, int viewport_width, int viewport_height);
+		void set_mouse_position(Float2 view_local_mouse_pos, int viewport_width, int viewport_height);
 		void update();
 		void draw(NVGcontext* draw_context);
 
@@ -85,15 +85,15 @@ namespace cse {
 		std::weak_ptr<NodeSocket> connection_in_progress_start;
 
 		bool box_select_active = false;
-		FloatPos world_box_select_begin;
-		FloatPos world_box_select_end;
+		Float2 world_box_select_begin;
+		Float2 world_box_select_end;
 
 		std::shared_ptr<Selection> selection;
 		ZoomManager zoom_level;
 
-		FloatPos view_center;
+		Float2 view_center;
 
-		FloatPos mouse_world_position;
+		Float2 mouse_world_position;
 		bool mouse_pan_active = false;
 
 		bool node_move_active = false;

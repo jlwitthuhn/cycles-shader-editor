@@ -6,102 +6,102 @@ namespace cse {
 
 	class PrincipledBSDFNode : public EditableNode {
 	public:
-		PrincipledBSDFNode(FloatPos position);
+		PrincipledBSDFNode(Float2 position);
 	};
 
 	class PrincipledVolumeNode : public EditableNode {
 	public:
-		PrincipledVolumeNode(FloatPos position);
+		PrincipledVolumeNode(Float2 position);
 	};
 
 	class PrincipledHairNode : public EditableNode {
 	public:
-		PrincipledHairNode(FloatPos position);
+		PrincipledHairNode(Float2 position);
 	};
 
 	class MixShaderNode : public EditableNode {
 	public:
-		MixShaderNode(FloatPos position);
+		MixShaderNode(Float2 position);
 	};
 
 	class AddShaderNode : public EditableNode {
 	public:
-		AddShaderNode(FloatPos position);
+		AddShaderNode(Float2 position);
 	};
 
 	class DiffuseBSDFNode : public EditableNode {
 	public:
-		DiffuseBSDFNode(FloatPos position);
+		DiffuseBSDFNode(Float2 position);
 	};
 
 	class GlossyBSDFNode : public EditableNode {
 	public:
-		GlossyBSDFNode(FloatPos position);
+		GlossyBSDFNode(Float2 position);
 	};
 
 	class TransparentBSDFNode : public EditableNode {
 	public:
-		TransparentBSDFNode(FloatPos position);
+		TransparentBSDFNode(Float2 position);
 	};
 
 	class RefractionBSDFNode : public EditableNode {
 	public:
-		RefractionBSDFNode(FloatPos position);
+		RefractionBSDFNode(Float2 position);
 	};
 
 	class GlassBSDFNode : public EditableNode {
 	public:
-		GlassBSDFNode(FloatPos position);
+		GlassBSDFNode(Float2 position);
 	};
 
 	class TranslucentBSDFNode : public EditableNode {
 	public:
-		TranslucentBSDFNode(FloatPos position);
+		TranslucentBSDFNode(Float2 position);
 	};
 
 	class AnisotropicBSDFNode : public EditableNode {
 	public:
-		AnisotropicBSDFNode(FloatPos position);
+		AnisotropicBSDFNode(Float2 position);
 	};
 
 	class VelvetBSDFNode : public EditableNode {
 	public:
-		VelvetBSDFNode(FloatPos position);
+		VelvetBSDFNode(Float2 position);
 	};
 
 	class ToonBSDFNode : public EditableNode {
 	public:
-		ToonBSDFNode(FloatPos position);
+		ToonBSDFNode(Float2 position);
 	};
 
 	class SubsurfaceScatteringNode : public EditableNode {
 	public:
-		SubsurfaceScatteringNode(FloatPos position);
+		SubsurfaceScatteringNode(Float2 position);
 	};
 
 	class EmissionNode : public EditableNode {
 	public:
-		EmissionNode(FloatPos position);
+		EmissionNode(Float2 position);
 	};
 
 	class HairBSDFNode : public EditableNode {
 	public:
-		HairBSDFNode(FloatPos position);
+		HairBSDFNode(Float2 position);
 	};
 
 	class HoldoutNode : public EditableNode {
 	public:
-		HoldoutNode(FloatPos position);
+		HoldoutNode(Float2 position);
 	};
 
 	class VolumeAbsorptionNode : public EditableNode {
 	public:
-		VolumeAbsorptionNode(FloatPos position);
+		VolumeAbsorptionNode(Float2 position);
 	};
 
 	class VolumeScatterNode : public EditableNode {
 	public:
-		VolumeScatterNode(FloatPos position);
+		VolumeScatterNode(Float2 position);
 	};
 
 }

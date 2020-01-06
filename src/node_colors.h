@@ -6,37 +6,37 @@ namespace cse {
 
 	class MixRGBNode : public EditableNode {
 	public:
-		MixRGBNode(FloatPos position);
+		MixRGBNode(Float2 position);
 	};
 
 	class InvertNode : public EditableNode {
 	public:
-		InvertNode(FloatPos position);
+		InvertNode(Float2 position);
 	};
 
 	class LightFalloffNode : public EditableNode {
 	public:
-		LightFalloffNode(FloatPos position);
+		LightFalloffNode(Float2 position);
 	};
 
 	class HSVNode : public EditableNode {
 	public:
-		HSVNode(FloatPos position);
+		HSVNode(Float2 position);
 	};
 
 	class GammaNode : public EditableNode {
 	public:
-		GammaNode(FloatPos position);
+		GammaNode(Float2 position);
 	};
 
 	class BrightnessContrastNode : public EditableNode {
 	public:
-		BrightnessContrastNode(FloatPos position);
+		BrightnessContrastNode(Float2 position);
 	};
 
 	class RGBCurvesNode : public EditableNode {
 	public:
-		RGBCurvesNode(FloatPos position);
+		RGBCurvesNode(Float2 position);
 
 		virtual void update_output_node(OutputNode& output) override;
 	};

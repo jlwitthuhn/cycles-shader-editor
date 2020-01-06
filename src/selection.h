@@ -4,11 +4,11 @@
 #include <set>
 
 #include "util_typedef.h"
+#include "util_vector.h"
 
 namespace cse {
 
 	class EditableNode;
-	class FloatPos;
 	class NodeSocket;
 
 	enum class SelectMode {
@@ -20,7 +20,7 @@ namespace cse {
 	// This class is used to hold references to the objects currently selected by the user
 	class Selection {
 	public:
-		void move_nodes(FloatPos delta);
+		void move_nodes(Float2 delta);
 
 		void modify_selection(SelectMode mode, std::weak_ptr<EditableNode> node);
 

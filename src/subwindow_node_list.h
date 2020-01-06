@@ -12,8 +12,6 @@ struct NVGcontext;
 
 namespace cse {
 
-	class FloatPos;
-
 	class NodeCreationHelper {
 	public:
 		NodeCreationHelper();
@@ -30,7 +28,7 @@ namespace cse {
 
 	class NodeListSubwindow : public NodeEditorSubwindow {
 	public:
-		NodeListSubwindow(std::weak_ptr<NodeCreationHelper> node_creation_helper, FloatPos screen_position);
+		NodeListSubwindow(std::weak_ptr<NodeCreationHelper> node_creation_helper, Float2 screen_position);
 
 		virtual void handle_mouse_button(int button, int action, int mods) override;
 

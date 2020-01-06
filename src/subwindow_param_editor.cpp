@@ -9,7 +9,6 @@
 #include <nanovg.h>
 
 #include "common_enums.h"
-#include "float_pos.h"
 #include "gui_sizes.h"
 #include "input_box.h"
 #include "panel_edit.h"
@@ -23,7 +22,7 @@
 #include "selection.h"
 #include "sockets.h"
 
-cse::ParamEditorSubwindow::ParamEditorSubwindow(const FloatPos screen_position) :
+cse::ParamEditorSubwindow::ParamEditorSubwindow(const Float2 screen_position) :
 	NodeEditorSubwindow(screen_position, "Parameter Editor")
 {
 	subwindow_width = UI_SUBWIN_PARAM_EDIT_WIDTH;
@@ -48,12 +47,12 @@ void cse::ParamEditorSubwindow::pre_draw()
 	}
 }
 
-void cse::ParamEditorSubwindow::set_mouse_position(const FloatPos local_position, const float max_pos_y)
+void cse::ParamEditorSubwindow::set_mouse_position(const Float2 local_position, const float max_pos_y)
 {
 	NodeEditorSubwindow::set_mouse_position(local_position, max_pos_y);
 	for (const auto& this_panel : panels) {
 		if (this_panel->is_active()) {
-			this_panel->set_mouse_local_position(mouse_content_pos - FloatPos(0.0f, panel_start_y));
+			this_panel->set_mouse_local_position(mouse_content_pos - Float2(0.0f, panel_start_y));
 		}
 	}
 }
@@ -298,8 +297,8 @@ void cse::ParamEditorSubwindow::draw_content(NVGcontext* const draw_context)
 				nvgFillColor(draw_context, nvgRGBA(0, 0, 0, 255));
 				nvgText(draw_context, text_pos_x, text_pos_y, label.c_str(), nullptr);
 
-				FloatPos click_area_begin(0.0f, height_drawn);
-				FloatPos click_area_end(subwindow_width, height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT);
+				Float2 click_area_begin(0.0f, height_drawn);
+				Float2 click_area_end(subwindow_width, height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT);
 				HolderArea<bool> click_area(click_area_begin, click_area_end, current_label);
 
 				bool_click_areas.push_back(click_area);

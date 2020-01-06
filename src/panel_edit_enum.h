@@ -1,6 +1,7 @@
 #pragma once
 
 #include "panel_edit.h"
+#include "util_vector.h"
 #include "widget_radio_list.h"
 
 namespace cse {
@@ -15,7 +16,7 @@ namespace cse {
 		virtual void pre_draw() override;
 		virtual float draw(NVGcontext* draw_context) override;
 
-		virtual void set_mouse_local_position(FloatPos local_pos) override;
+		virtual void set_mouse_local_position(Float2 local_pos) override;
 
 		virtual void handle_mouse_button(int button, int action, int mods) override;
 

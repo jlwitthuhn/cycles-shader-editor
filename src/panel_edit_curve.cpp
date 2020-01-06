@@ -1,5 +1,6 @@
 #include "panel_edit_curve.h"
 
+#include <cmath>
 #include <vector>
 
 #include <GLFW/glfw3.h>
@@ -9,17 +10,17 @@
 #include "gui_sizes.h"
 #include "sockets.h"
 
-static cse::FloatPos get_panel_space_point(const cse::FloatPos normalized_point, const float hpad, const float vpad, const float width, const float height)
+static cse::Float2 get_panel_space_point(const cse::Float2 normalized_point, const float hpad, const float vpad, const float width, const float height)
 {
-	const float out_x = hpad + normalized_point.get_x() * width;
-	const float out_y = vpad + (1.0f - normalized_point.get_y()) * height;
+	const float out_x = hpad + normalized_point.x * width;
+	const float out_y = vpad + (1.0f - normalized_point.y) * height;
 
-	return cse::FloatPos(out_x, out_y);
+	return cse::Float2(out_x, out_y);
 }
 
 cse::EditCurvePanel::EditCurvePanel(const float width) :
 	EditParamPanel(width),
-	target_view(FloatPos(), FloatPos())
+	target_view(Float2(), Float2())
 {
 
 }
@@ -43,9 +44,9 @@ void cse::EditCurvePanel::pre_draw()
 	}
 
 	if (selected_point_valid && moving_selected_point && mouse_has_moved) {
-		FloatPos normalized_pos = target_view.get_normalized_pos(mouse_local_pos);
-		normalized_pos.clamp_to(FloatPos(0.0f, 0.0f), FloatPos(1.0f, 1.0f));
-		const FloatPos xy_pos = FloatPos(normalized_pos.get_x(), 1.0f - normalized_pos.get_y());
+		Float2 normalized_pos = target_view.get_normalized_pos(mouse_local_pos);
+		normalized_pos = normalized_pos.clamp_to(Float2(0.0f, 0.0f), Float2(1.0f, 1.0f));
+		const Float2 xy_pos = Float2(normalized_pos.x, 1.0f - normalized_pos.y);
 		move_selected_point(xy_pos);
 	}
 }
@@ -88,8 +89,8 @@ float cse::EditCurvePanel::draw(NVGcontext* const draw_context)
 
 		// Set click target for the view
 		{
-			const FloatPos view_target_begin(rect_draw_x, rect_draw_y);
-			const FloatPos view_target_end(rect_draw_x + rect_width, rect_draw_y + rect_height);
+			const Float2 view_target_begin(rect_draw_x, rect_draw_y);
+			const Float2 view_target_end(rect_draw_x + rect_width, rect_draw_y + rect_height);
 			target_view = Area(view_target_begin, view_target_end);
 		}
 
@@ -99,25 +100,35 @@ float cse::EditCurvePanel::draw(NVGcontext* const draw_context)
 			// Horizontal
 			for (int i = 1; i < 10; i++) {
 				const float normalized_y = 0.1f * i;
-				const FloatPos left_point(0.0f, normalized_y);
-				const FloatPos right_point(1.0f, normalized_y);
-				const FloatPos left_point_panel_space = get_panel_space_point(left_point, UI_SUBWIN_PARAM_EDIT_RECT_HPAD, UI_SUBWIN_PARAM_EDIT_RECT_VPAD, rect_width, rect_height);
-				const FloatPos right_point_panel_space = get_panel_space_point(right_point, UI_SUBWIN_PARAM_EDIT_RECT_HPAD, UI_SUBWIN_PARAM_EDIT_RECT_VPAD, rect_width, rect_height);
+				const Float2 left_point(0.0f, normalized_y);
+				const Float2 right_point(1.0f, normalized_y);
+				const Float2 left_point_panel_space = get_panel_space_point(left_point, UI_SUBWIN_PARAM_EDIT_RECT_HPAD, UI_SUBWIN_PARAM_EDIT_RECT_VPAD, rect_width, rect_height);
+				const Float2 right_point_panel_space = get_panel_space_point(right_point, UI_SUBWIN_PARAM_EDIT_RECT_HPAD, UI_SUBWIN_PARAM_EDIT_RECT_VPAD, rect_width, rect_height);
 
-				nvgMoveTo(draw_context, left_point_panel_space.get_floor_x(), left_point_panel_space.get_floor_y());
-				nvgLineTo(draw_context, right_point_panel_space.get_floor_x(), right_point_panel_space.get_floor_y());
+				const float left_x = std::floorf(left_point_panel_space.x);
+				const float left_y = std::floorf(left_point_panel_space.y);
+				const float right_x = std::floorf(right_point_panel_space.x);
+				const float right_y = std::floorf(right_point_panel_space.y);
+
+				nvgMoveTo(draw_context, left_x, left_y);
+				nvgLineTo(draw_context, right_x, right_y);
 			}
 
 			// Vertical
 			for (int i = 1; i < 4; i++) {
 				const float normalized_x = 0.25f * i;
-				const FloatPos top_point(normalized_x, 1.0f);
-				const FloatPos bot_point(normalized_x, 0.0f);
-				const FloatPos top_point_panel_space = get_panel_space_point(top_point, UI_SUBWIN_PARAM_EDIT_RECT_HPAD, UI_SUBWIN_PARAM_EDIT_RECT_VPAD, rect_width, rect_height);
-				const FloatPos bot_point_panel_space = get_panel_space_point(bot_point, UI_SUBWIN_PARAM_EDIT_RECT_HPAD, UI_SUBWIN_PARAM_EDIT_RECT_VPAD, rect_width, rect_height);
+				const Float2 top_point(normalized_x, 1.0f);
+				const Float2 bot_point(normalized_x, 0.0f);
+				const Float2 top_point_panel_space = get_panel_space_point(top_point, UI_SUBWIN_PARAM_EDIT_RECT_HPAD, UI_SUBWIN_PARAM_EDIT_RECT_VPAD, rect_width, rect_height);
+				const Float2 bot_point_panel_space = get_panel_space_point(bot_point, UI_SUBWIN_PARAM_EDIT_RECT_HPAD, UI_SUBWIN_PARAM_EDIT_RECT_VPAD, rect_width, rect_height);
 
-				nvgMoveTo(draw_context, top_point_panel_space.get_floor_x(), top_point_panel_space.get_floor_y());
-				nvgLineTo(draw_context, bot_point_panel_space.get_floor_x(), bot_point_panel_space.get_floor_y());
+				const float top_x = std::floorf(top_point_panel_space.x);
+				const float top_y = std::floorf(top_point_panel_space.y);
+				const float bot_x = std::floorf(bot_point_panel_space.x);
+				const float bot_y = std::floorf(bot_point_panel_space.y);
+
+				nvgMoveTo(draw_context, top_x, top_y);
+				nvgLineTo(draw_context, bot_x, bot_y);
 			}
 		}
 		nvgStrokeWidth(draw_context, 1.0f);
@@ -133,13 +144,13 @@ float cse::EditCurvePanel::draw(NVGcontext* const draw_context)
 			for (int i = 0; i <= SEGMENTS; i++) {
 				const float current_x = i * UNITS_PER_SEGMENT;
 				const float current_y = curve.eval(current_x);
-				const FloatPos normalized_point(current_x, current_y);
-				const FloatPos draw_point = get_panel_space_point(normalized_point, UI_SUBWIN_PARAM_EDIT_RECT_HPAD, UI_SUBWIN_PARAM_EDIT_RECT_VPAD, rect_width, rect_height);
+				const Float2 normalized_point(current_x, current_y);
+				const Float2 draw_point = get_panel_space_point(normalized_point, UI_SUBWIN_PARAM_EDIT_RECT_HPAD, UI_SUBWIN_PARAM_EDIT_RECT_VPAD, rect_width, rect_height);
 				if (i == 0) {
-					nvgMoveTo(draw_context, draw_point.get_x(), draw_point.get_y());
+					nvgMoveTo(draw_context, draw_point.x, draw_point.y);
 				}
 				else {
-					nvgLineTo(draw_context, draw_point.get_x(), draw_point.get_y());
+					nvgLineTo(draw_context, draw_point.x, draw_point.y);
 				}
 			}
 		}
@@ -149,19 +160,19 @@ float cse::EditCurvePanel::draw(NVGcontext* const draw_context)
 
 		// Draw points
 		nvgBeginPath(draw_context);
-		for (const FloatPos this_point : attached_curve_ptr->curve_points) {
-			const FloatPos panel_space_point = get_panel_space_point(this_point, UI_SUBWIN_PARAM_EDIT_RECT_HPAD, UI_SUBWIN_PARAM_EDIT_RECT_VPAD, rect_width, rect_height);
-			nvgCircle(draw_context, panel_space_point.get_x(), panel_space_point.get_y(), UI_SUBWIN_PARAM_EDIT_CURVE_POINT_RADIUS);
+		for (const Float2 this_point : attached_curve_ptr->curve_points) {
+			const Float2 panel_space_point = get_panel_space_point(this_point, UI_SUBWIN_PARAM_EDIT_RECT_HPAD, UI_SUBWIN_PARAM_EDIT_RECT_VPAD, rect_width, rect_height);
+			nvgCircle(draw_context, panel_space_point.x, panel_space_point.y, UI_SUBWIN_PARAM_EDIT_CURVE_POINT_RADIUS);
 		}
 		nvgFillColor(draw_context, point_color);
 		nvgFill(draw_context);
 
 		// Draw selected point
 		if (selected_point_valid) {
-			const FloatPos selected_point = attached_curve_ptr->curve_points[selected_point_index];
-			const FloatPos selected_point_panel_space = get_panel_space_point(selected_point, UI_SUBWIN_PARAM_EDIT_RECT_HPAD, UI_SUBWIN_PARAM_EDIT_RECT_VPAD, rect_width, rect_height);
+			const Float2 selected_point = attached_curve_ptr->curve_points[selected_point_index];
+			const Float2 selected_point_panel_space = get_panel_space_point(selected_point, UI_SUBWIN_PARAM_EDIT_RECT_HPAD, UI_SUBWIN_PARAM_EDIT_RECT_VPAD, rect_width, rect_height);
 			nvgBeginPath(draw_context);
-			nvgCircle(draw_context, selected_point_panel_space.get_x(), selected_point_panel_space.get_y(), UI_SUBWIN_PARAM_EDIT_CURVE_POINT_RADIUS * 1.5f);
+			nvgCircle(draw_context, selected_point_panel_space.x, selected_point_panel_space.y, UI_SUBWIN_PARAM_EDIT_CURVE_POINT_RADIUS * 1.5f);
 			nvgStrokeWidth(draw_context, 1.0f);
 			nvgStrokeColor(draw_context, selected_point_color);
 			nvgStroke(draw_context);
@@ -230,18 +241,18 @@ float cse::EditCurvePanel::draw(NVGcontext* const draw_context)
 		const float horizontal_separator_2_y = height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT * 2;
 		const float horizontal_separator_3_y = height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT * 3;
 		HolderArea<EditCurveMode> click_area_move(
-			FloatPos(click_target_begin_x, horizontal_separator_0_y),
-			FloatPos(click_target_end_x, horizontal_separator_1_y),
+			Float2(click_target_begin_x, horizontal_separator_0_y),
+			Float2(click_target_end_x, horizontal_separator_1_y),
 			EditCurveMode::MOVE
 		);
 		HolderArea<EditCurveMode> click_area_create(
-			FloatPos(click_target_begin_x, horizontal_separator_1_y),
-			FloatPos(click_target_end_x, horizontal_separator_2_y),
+			Float2(click_target_begin_x, horizontal_separator_1_y),
+			Float2(click_target_end_x, horizontal_separator_2_y),
 			EditCurveMode::CREATE
 		);
 		HolderArea<EditCurveMode> click_area_delete(
-			FloatPos(click_target_begin_x, horizontal_separator_2_y),
-			FloatPos(click_target_end_x, horizontal_separator_3_y),
+			Float2(click_target_begin_x, horizontal_separator_2_y),
+			Float2(click_target_end_x, horizontal_separator_3_y),
 			EditCurveMode::DELETE
 		);
 		edit_mode_click_areas.push_back(click_area_move);
@@ -315,13 +326,13 @@ float cse::EditCurvePanel::draw(NVGcontext* const draw_context)
 		const float horizontal_separator_1_y = height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
 		const float horizontal_separator_2_y = height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT * 2;
 		HolderArea<CurveInterpolation> area_interp_linear(
-			FloatPos(click_target_begin_x, horizontal_separator_0_y),
-			FloatPos(click_target_end_x, horizontal_separator_1_y),
+			Float2(click_target_begin_x, horizontal_separator_0_y),
+			Float2(click_target_end_x, horizontal_separator_1_y),
 			CurveInterpolation::LINEAR
 		);
 		HolderArea<CurveInterpolation> area_interp_hermite(
-			FloatPos(click_target_begin_x, horizontal_separator_1_y),
-			FloatPos(click_target_end_x, horizontal_separator_2_y),
+			Float2(click_target_begin_x, horizontal_separator_1_y),
+			Float2(click_target_end_x, horizontal_separator_2_y),
 			CurveInterpolation::CUBIC_HERMITE
 		);
 		interp_click_areas.push_back(area_interp_linear);
@@ -342,8 +353,8 @@ void cse::EditCurvePanel::handle_mouse_button(int button, int action, int /*mods
 	const auto attached_curve_ptr = attached_curve.lock();
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
 		if (target_view.contains_point(mouse_local_pos)) {
-			FloatPos normalized_pos = target_view.get_normalized_pos(mouse_local_pos);
-			FloatPos xy_pos = FloatPos(normalized_pos.get_x(), 1.0f - normalized_pos.get_y());
+			Float2 normalized_pos = target_view.get_normalized_pos(mouse_local_pos);
+			Float2 xy_pos = Float2(normalized_pos.x, 1.0f - normalized_pos.y);
 			if (edit_mode == EditCurveMode::MOVE) {
 				size_t target_index;
 				if (attached_curve_ptr->get_target_index(xy_pos, target_index)) {
@@ -365,7 +376,7 @@ void cse::EditCurvePanel::handle_mouse_button(int button, int action, int /*mods
 				}
 			}
 			else if (edit_mode == EditCurveMode::CREATE) {
-				attached_curve_ptr->create_point(xy_pos.get_x());
+				attached_curve_ptr->create_point(xy_pos.x);
 				request_undo_push = true;
 			}
 			else if (edit_mode == EditCurveMode::DELETE) {
@@ -423,7 +434,7 @@ void cse::EditCurvePanel::reset()
 	selected_point_valid = false;
 }
 
-void cse::EditCurvePanel::move_selected_point(const FloatPos new_pos)
+void cse::EditCurvePanel::move_selected_point(const Float2 new_pos)
 {
 	if (auto attached_curve_ptr = attached_curve.lock()) {
 		if (selected_point_valid) {

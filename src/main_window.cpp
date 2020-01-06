@@ -95,9 +95,9 @@ bool cse::EditorMainWindow::create_window()
 	status_bar = std::make_unique<NodeEditorStatusBar>();
 
 	std::unique_ptr<NodeEditorSubwindow> node_list_window =
-		std::make_unique<NodeListSubwindow>(node_creation_helper, cse::FloatPos(15.0f, NodeEditorToolbar::get_toolbar_height() + 15.0f));
+		std::make_unique<NodeListSubwindow>(node_creation_helper, cse::Float2(15.0f, NodeEditorToolbar::get_toolbar_height() + 15.0f));
 	std::unique_ptr<NodeEditorSubwindow> param_editor_window =
-		std::make_unique<ParamEditorSubwindow>(cse::FloatPos(15.0f * 2.0f + UI_SUBWIN_NODE_LIST_WIDTH, NodeEditorToolbar::get_toolbar_height() + 15.0f));
+		std::make_unique<ParamEditorSubwindow>(cse::Float2(15.0f * 2.0f + UI_SUBWIN_NODE_LIST_WIDTH, NodeEditorToolbar::get_toolbar_height() + 15.0f));
 	subwindows.push_back(std::move(node_list_window));
 	subwindows.push_back(std::move(param_editor_window));
 
@@ -276,7 +276,7 @@ void cse::EditorMainWindow::pre_draw()
 	double mx, my;
 	glfwGetCursorPos(glfw_window, &mx, &my);
 	glfwGetWindowSize(glfw_window, &window_width, &window_height);
-	update_mouse_position(cse::FloatPos(static_cast<float>(mx), static_cast<float>(my)));
+	update_mouse_position(cse::Float2(static_cast<float>(mx), static_cast<float>(my)));
 
 	// Handle window events
 	glfwPollEvents();
@@ -292,8 +292,8 @@ void cse::EditorMainWindow::pre_draw()
 	view->set_mouse_position(mouse_screen_pos, window_width, window_height);
 	for (auto& subwindow : subwindows) {
 		const float max_safe_pos_y = window_height - UI_STATUSBAR_HEIGHT;
-		const FloatPos subwindow_pos = subwindow->get_screen_pos();
-		const FloatPos local_mouse_pos = mouse_screen_pos - subwindow_pos;
+		const Float2 subwindow_pos = subwindow->get_screen_pos();
+		const Float2 local_mouse_pos = mouse_screen_pos - subwindow_pos;
 		subwindow->set_mouse_position(local_mouse_pos, max_safe_pos_y);
 	}
 
@@ -347,9 +347,9 @@ void cse::EditorMainWindow::draw()
 	// Draw subwindows
 	std::list<std::unique_ptr<NodeEditorSubwindow>>::reverse_iterator window_iter;
 	for (window_iter = subwindows.rbegin(); window_iter != subwindows.rend(); ++window_iter) {
-		const FloatPos subwindow_pos = (*window_iter)->get_screen_pos();
+		const Float2 subwindow_pos = (*window_iter)->get_screen_pos();
 		nvgSave(nvg_ctx_pointer);
-		nvgTranslate(nvg_ctx_pointer, subwindow_pos.get_x(), subwindow_pos.get_y());
+		nvgTranslate(nvg_ctx_pointer, subwindow_pos.x, subwindow_pos.y);
 		(*window_iter)->draw(nvg_ctx_pointer);
 		nvgRestore(nvg_ctx_pointer);
 	}
@@ -400,10 +400,9 @@ void cse::EditorMainWindow::service_requests()
 	view->handle_requests(requests.view);
 }
 
-void cse::EditorMainWindow::update_mouse_position(cse::FloatPos screen_position)
+void cse::EditorMainWindow::update_mouse_position(const cse::Float2 screen_position)
 {
-	screen_position.clamp_to(cse::FloatPos(0.0f, 0.0f), cse::FloatPos(window_width - 1.0f, window_height - 1.0f));
-	mouse_screen_pos = screen_position;
+	mouse_screen_pos = screen_position.clamp_to(cse::Float2(0.0f, 0.0f), cse::Float2(window_width - 1.0f, window_height - 1.0f));
 }
 
 bool cse::EditorMainWindow::forward_mouse_to_subwindow(const int button, const int action, const int mods)

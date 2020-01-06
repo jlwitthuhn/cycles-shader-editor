@@ -5,9 +5,9 @@
 #include <memory>
 #include <string>
 
-#include "float_pos.h"
 #include "ui_requests.h"
 #include "util_platform.h"
+#include "util_vector.h"
 #include "undo.h"
 
 namespace cse {
@@ -51,7 +51,7 @@ namespace cse {
 
 		void service_requests();
 
-		void update_mouse_position(FloatPos screen_position);
+		void update_mouse_position(Float2 screen_position);
 
 		// Forwards input to any subwindow that wants to grab input
 		// Returns true if a subwindow accepted the input, false otherwise
@@ -73,7 +73,7 @@ namespace cse {
 
 		std::shared_ptr<EditableGraph> main_graph;
 
-		FloatPos mouse_screen_pos;
+		Float2 mouse_screen_pos;
 		int window_width, window_height;
 
 		std::string serialized_state;

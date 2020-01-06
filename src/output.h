@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+#include "util_vector.h"
+
 namespace cse {
 
 	enum class CyclesNodeType {
@@ -83,14 +85,6 @@ namespace cse {
 		Unknown,
 		// Other
 		Count,
-	};
-
-	class Float2 {
-	public:
-		Float2();
-		Float2(float x, float y);
-
-		float x, y;
 	};
 
 	class Float3 {

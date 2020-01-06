@@ -8,7 +8,6 @@
 #include <utility>
 
 #include "common_enums.h"
-#include "float_pos.h"
 #include "node_base.h"
 #include "node_colors.h"
 #include "node_converter.h"
@@ -200,7 +199,7 @@ static void deserialize_curve(const std::string serialized_curve, const std::sha
 	for (std::size_t points_copied = 0; points_copied < control_point_count; points_copied++) {
 		const float x = cse::locale_safe_stof(*(input_iter++));
 		const float y = cse::locale_safe_stof(*(input_iter++));
-		cse::FloatPos this_point(x, y);
+		cse::Float2 this_point(x, y);
 		curve_value->curve_points.push_back(this_point);
 	}
 	curve_value->sort_curve_points();
@@ -368,7 +367,7 @@ std::string cse::serialize_graph(std::vector<OutputNode> &nodes, std::vector<Out
 
 static std::shared_ptr<cse::EditableNode> create_node_from_type(cse::CyclesNodeType type) {
 	using namespace cse;
-	const FloatPos pos(0.0f, 0.0f);
+	const Float2 pos(0.0f, 0.0f);
 	switch (type) {
 		case CyclesNodeType::PrincipledBSDF:
 		{
@@ -679,7 +678,7 @@ static std::shared_ptr<cse::EditableNode> deserialize_node(std::list<std::string
 	CyclesNodeType type = code_to_type[type_code];
 
 	std::shared_ptr<EditableNode> result = create_node_from_type(type);
-	result->world_pos = FloatPos(x_position, y_position);
+	result->world_pos = Float2(x_position, y_position);
 
 	if (result.use_count() == 0) {
 		return nullptr;

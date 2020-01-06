@@ -12,7 +12,7 @@
 
 cse::EditColorRampPanel::EditColorRampPanel(const float width) :
 	EditParamPanel(width),
-	new_point_button(cse::FloatPos(0.0f, 0.0f), cse::FloatPos(1.0f, 1.0f)),
+	new_point_button(cse::Float2(0.0f, 0.0f), cse::Float2(1.0f, 1.0f)),
 	edit_color_panel(std::make_shared<EditColorPanel>(width))
 {
 
@@ -147,17 +147,17 @@ float cse::EditColorRampPanel::draw(NVGcontext* const draw_context)
 			nvgStrokeColor(draw_context, nvgRGB(240, 80, 80));
 			nvgStrokeWidth(draw_context, 2.0f);
 			nvgStroke(draw_context);
-			this_row.delete_target = Area(FloatPos(min_x, min_y), FloatPos(max_x, max_y));
+			this_row.delete_target = Area(Float2(min_x, min_y), Float2(max_x, max_y));
 		}
 
 		// Draw input boxes
 		{
-			const FloatPos left_box_pos(x_left_box, y_box + height_drawn);
+			const Float2 left_box_pos(x_left_box, y_box + height_drawn);
 			const bool highlight_left = this_row.box_pos.contains_point(mouse_local_pos);
 			this_row.box_pos.set_position(left_box_pos);
 			this_row.box_pos.draw(draw_context, highlight_left);
 
-			const FloatPos right_box_pos(x_right_box, y_box + height_drawn);
+			const Float2 right_box_pos(x_right_box, y_box + height_drawn);
 			const bool highlight_right = this_row.box_alpha.contains_point(mouse_local_pos);
 			this_row.box_alpha.set_position(right_box_pos);
 			this_row.box_alpha.draw(draw_context, highlight_right);
@@ -167,11 +167,11 @@ float cse::EditColorRampPanel::draw(NVGcontext* const draw_context)
 		{
 			const FloatRGBColor row_color = this_row.value_color->get_value();
 			NVGcolor nvg_row_color = nvgRGBf(row_color.r, row_color.g, row_color.b);
-			const FloatPos swatch_pos(x_middle_box, y_box + height_drawn);
+			const Float2 swatch_pos(x_middle_box, y_box + height_drawn);
 			const float swatch_width = UI_SUBWIN_PARAM_EDIT_COLOR_RAMP_TEXT_INPUT_WIDTH;
 			const float swatch_height = UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT;
 			Drawing::draw_color_swatch(draw_context, swatch_pos, swatch_width, swatch_height, nvg_row_color, this_row.color_selected);
-			const FloatPos swatch_end(swatch_pos.get_x() + swatch_width, swatch_pos.get_y() + swatch_height);
+			const Float2 swatch_end(swatch_pos.x + swatch_width, swatch_pos.y + swatch_height);
 			this_row.color_target = Area(swatch_pos, swatch_end);
 		}
 
@@ -182,10 +182,10 @@ float cse::EditColorRampPanel::draw(NVGcontext* const draw_context)
 	{
 		const float button_pos_x = 2 * UI_SUBWIN_PARAM_EDIT_ROW_HIGHLIGHT_HPAD;
 		const float button_pos_y = height_drawn + UI_SUBWIN_PARAM_EDIT_ROW_HIGHLIGHT_VPAD;
-		const FloatPos button_pos(button_pos_x, button_pos_y);
+		const Float2 button_pos(button_pos_x, button_pos_y);
 		const float button_width = panel_width - 4 * UI_SUBWIN_PARAM_EDIT_ROW_HIGHLIGHT_HPAD;
 		const float button_height = UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT - 2 * UI_SUBWIN_PARAM_EDIT_ROW_HIGHLIGHT_VPAD;
-		const FloatPos button_end(button_pos_x + button_width, button_pos_y + button_height);
+		const Float2 button_end(button_pos_x + button_width, button_pos_y + button_height);
 		new_point_button = Area(button_pos, button_end);
 		Drawing::draw_button(draw_context, button_pos, button_width, button_height, "+", true, new_point_button_pressed);
 
@@ -205,11 +205,11 @@ float cse::EditColorRampPanel::draw(NVGcontext* const draw_context)
 	return panel_height;
 }
 
-void cse::EditColorRampPanel::set_mouse_local_position(const FloatPos local_pos)
+void cse::EditColorRampPanel::set_mouse_local_position(const Float2 local_pos)
 {
 	EditParamPanel::set_mouse_local_position(local_pos);
 
-	const FloatPos exit_color_mouse_pos(local_pos.get_x(), local_pos.get_y() - edit_color_panel_pos);
+	const Float2 exit_color_mouse_pos(local_pos.x, local_pos.y - edit_color_panel_pos);
 	edit_color_panel->set_mouse_local_position(exit_color_mouse_pos);
 }
 
@@ -343,8 +343,8 @@ cse::EditColorRampPanel::ColorRampRow::ColorRampRow(const cse::ColorRampPoint po
 	value_pos(std::make_shared<FloatSocketValue>(point.position, 0.0f, 1.0f)),
 	value_alpha(std::make_shared<FloatSocketValue>(point.alpha, 0.0f, 1.0f)),
 	value_color(std::make_shared<ColorSocketValue>(point.color.x, point.color.y, point.color.z)),
-	color_target(FloatPos(0.0f, 0.0f), FloatPos(0.0f, 0.0f)),
-	delete_target(FloatPos(0.0f, 0.0f), FloatPos(0.0f, 0.0f))
+	color_target(Float2(0.0f, 0.0f), Float2(0.0f, 0.0f)),
+	delete_target(Float2(0.0f, 0.0f), Float2(0.0f, 0.0f))
 {
 	box_pos.attach_float_value(value_pos);
 	box_alpha.attach_float_value(value_alpha);

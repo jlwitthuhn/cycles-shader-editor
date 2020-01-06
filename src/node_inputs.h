@@ -6,66 +6,66 @@ namespace cse {
 
 	class AmbientOcculsionNode : public EditableNode {
 	public:
-		AmbientOcculsionNode(FloatPos position);
+		AmbientOcculsionNode(Float2 position);
 	};
 
 	class BevelNode : public EditableNode {
 	public:
-		BevelNode(FloatPos position);
+		BevelNode(Float2 position);
 	};
 
 	class CameraDataNode : public EditableNode {
 	public:
-		CameraDataNode(FloatPos position);
+		CameraDataNode(Float2 position);
 	};
 
 	class FresnelNode : public EditableNode {
 	public:
-		FresnelNode(FloatPos position);
+		FresnelNode(Float2 position);
 	};
 
 	class GeometryNode : public EditableNode {
 	public:
-		GeometryNode(FloatPos position);
+		GeometryNode(Float2 position);
 	};
 
 	class LayerWeightNode : public EditableNode {
 	public:
-		LayerWeightNode(FloatPos position);
+		LayerWeightNode(Float2 position);
 	};
 
 	class LightPathNode : public EditableNode {
 	public:
-		LightPathNode(FloatPos position);
+		LightPathNode(Float2 position);
 	};
 
 	class ObjectInfoNode : public EditableNode {
 	public:
-		ObjectInfoNode(FloatPos position);
+		ObjectInfoNode(Float2 position);
 	};
 
 	class RGBNode : public EditableNode {
 	public:
-		RGBNode(FloatPos position);
+		RGBNode(Float2 position);
 	};
 
 	class TangentNode : public EditableNode {
 	public:
-		TangentNode(FloatPos position);
+		TangentNode(Float2 position);
 	};
 
 	class TextureCoordinateNode : public EditableNode {
 	public:
-		TextureCoordinateNode(FloatPos position);
+		TextureCoordinateNode(Float2 position);
 	};
 
 	class ValueNode : public EditableNode {
 	public:
-		ValueNode(FloatPos position);
+		ValueNode(Float2 position);
 	};
 
 	class WireframeNode : public EditableNode {
 	public:
-		WireframeNode(FloatPos position);
+		WireframeNode(Float2 position);
 	};
 }

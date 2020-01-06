@@ -7,23 +7,23 @@
 #include "input_box.h"
 #include "subwindow.h"
 #include "util_area.h"
+#include "util_vector.h"
 
 struct NVGcontext;
 
 namespace cse {
 
-	class FloatPos;
 	class NodeSocket;
 	class EditParamPanel;
 	class Selection;
 
 	class ParamEditorSubwindow : public NodeEditorSubwindow {
 	public:
-		ParamEditorSubwindow(FloatPos screen_position);
+		ParamEditorSubwindow(Float2 screen_position);
 
 		virtual void pre_draw() override;
 
-		virtual void set_mouse_position(FloatPos local_position, float max_pos_y) override;
+		virtual void set_mouse_position(Float2 local_position, float max_pos_y) override;
 
 		virtual void handle_mouse_button(int button, int action, int mods) override;
 		virtual void handle_key(int key, int scancode, int action, int mods) override;

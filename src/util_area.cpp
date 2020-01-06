@@ -1,27 +1,26 @@
 #include "util_area.h"
 
-cse::Area::Area(const FloatPos begin_pos, const FloatPos end_pos)
+cse::Area::Area(const Float2 begin_pos, const Float2 end_pos)
 {
 	begin = begin_pos;
 	end = end_pos;
 }
 
-bool cse::Area::contains_point(const FloatPos pos) const
+bool cse::Area::contains_point(const Float2 pos) const
 {
-	return (pos.get_x() > begin.get_x() &&
-		pos.get_x() < end.get_x() &&
-		pos.get_y() > begin.get_y() &&
-		pos.get_y() < end.get_y());
+	return (pos.x > begin.x &&
+		pos.x < end.x &&
+		pos.y > begin.y &&
+		pos.y < end.y);
 }
 
-cse::FloatPos cse::Area::get_normalized_pos(const cse::FloatPos pos) const
+cse::Float2 cse::Area::get_normalized_pos(const cse::Float2 pos) const
 {
-	const float width = end.get_x() - begin.get_x();
-	const float height = end.get_y() - begin.get_y();
-	const float pos_x = (pos.get_x() - begin.get_x()) / width;
-	const float pos_y = (pos.get_y() - begin.get_y()) / height;
+	const float width = end.x - begin.x;
+	const float height = end.y - begin.y;
+	const float pos_x = (pos.x - begin.x) / width;
+	const float pos_y = (pos.y - begin.y) / height;
 
-	FloatPos result(pos_x, pos_y);
-	result.clamp_to(FloatPos(0.0f, 0.0f), FloatPos(1.0f, 1.0f));
-	return result;
+	Float2 result(pos_x, pos_y);
+	return result.clamp_to(Float2(0.0f, 0.0f), Float2(1.0f, 1.0f));
 }

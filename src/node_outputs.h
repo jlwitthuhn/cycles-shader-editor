@@ -6,7 +6,7 @@ namespace cse {
 
 	class MaterialOutputNode : public EditableNode {
 	public:
-		MaterialOutputNode(FloatPos position);
+		MaterialOutputNode(Float2 position);
 
 		virtual bool can_be_deleted() override;
 	};
