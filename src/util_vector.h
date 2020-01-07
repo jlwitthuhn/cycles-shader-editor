@@ -24,4 +24,14 @@ namespace cse {
 		float x;
 		float y;
 	};
+
+	class Float3 {
+	public:
+		Float3() : x(0.0f), y(0.0f), z(0.0f) {}
+		Float3(const float x, const float y, const float z) : x(x), y(y), z(z) {}
+
+		float x;
+		float y;
+		float z;
+	};
 }

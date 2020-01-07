@@ -87,14 +87,6 @@ namespace cse {
 		Count,
 	};
 
-	class Float3 {
-	public:
-		Float3();
-		Float3(float x, float y, float z);
-
-		float x, y, z;
-	};
-
 	class Float4 {
 	public:
 		Float4(float x, float y, float z, float w);
