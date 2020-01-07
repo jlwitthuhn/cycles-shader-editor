@@ -13,9 +13,12 @@
 #include "gui_sizes.h"
 #include "sockets.h"
 #include "util_color_ramp.h"
+#include "util_enum.h"
 
-static NVGcolor get_color_for_category(const NodeCategory category)
+static NVGcolor get_color_for_category(const cse::NodeCategory category)
 {
+	using cse::NodeCategory;
+
 	switch(category) {
 		case NodeCategory::OUTPUT:
 			return COLOR_NODE_HEADER_OUTPUT;

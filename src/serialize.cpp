@@ -8,7 +8,6 @@
 #include <sstream>
 #include <utility>
 
-#include "common_enums.h"
 #include "node_base.h"
 #include "node_colors.h"
 #include "node_converter.h"
@@ -21,6 +20,7 @@
 #include "output.h"
 #include "sockets.h"
 #include "util_color_ramp.h"
+#include "util_enum.h"
 #include "util_parse.h"
 #include "util_vector.h"
 

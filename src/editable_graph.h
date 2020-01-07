@@ -3,8 +3,8 @@
 #include <list>
 #include <memory>
 
-#include "common_enums.h"
 #include "node_base.h"
+#include "util_enum.h"
 #include "util_typedef.h"
 
 namespace cse {

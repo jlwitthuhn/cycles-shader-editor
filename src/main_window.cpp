@@ -7,7 +7,6 @@
 #include <GLFW/glfw3.h>
 #include <nanovg.h>
 
-#include "common_enums.h"
 #include "editable_graph.h"
 #include "glfw_callbacks.h"
 #include "gui_sizes.h"
@@ -20,6 +19,7 @@
 #include "subwindow_node_list.h"
 #include "subwindow_param_editor.h"
 #include "toolbar.h"
+#include "util_enum.h"
 #include "util_platform.h"
 #include "view.h"
 #include "wrapper_glfw_func.h"

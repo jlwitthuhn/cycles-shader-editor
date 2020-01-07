@@ -4,9 +4,9 @@
 #include <memory>
 #include <vector>
 
-#include "common_enums.h"
 #include "panel_edit.h"
 #include "util_area.h"
+#include "util_enum.h"
 #include "util_vector.h"
 
 struct NVGcontext;

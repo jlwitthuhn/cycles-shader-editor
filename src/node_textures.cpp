@@ -3,7 +3,6 @@
 #include <memory>
 #include <vector>
 
-#include "common_enums.h"
 #include "output.h"
 #include "sockets.h"
 #include "util_enum.h"

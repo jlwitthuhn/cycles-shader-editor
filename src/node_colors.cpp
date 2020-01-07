@@ -5,7 +5,6 @@
 #include <string>
 #include <vector>
 
-#include "common_enums.h"
 #include "config.h"
 #include "curve.h"
 #include "output.h"

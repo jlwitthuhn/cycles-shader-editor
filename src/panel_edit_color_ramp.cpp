@@ -6,13 +6,13 @@
 #include <GLFW/glfw3.h>
 #include <nanovg.h>
 
-#include "common_enums.h"
 #include "drawing.h"
 #include "gui_sizes.h"
 #include "output.h"
 #include "panel_edit_color.h"
 #include "sockets.h"
 #include "util_color_ramp.h"
+#include "util_enum.h"
 #include "util_vector.h"
 
 cse::EditColorRampPanel::EditColorRampPanel(const float width) :

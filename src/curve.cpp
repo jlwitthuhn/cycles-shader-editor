@@ -2,8 +2,8 @@
 
 #include <memory>
 
-#include "common_enums.h"
 #include "sockets.h"
+#include "util_enum.h"
 #include "util_hermite_spline.h"
 
 cse::CurveEvaluator::CurveEvaluator(CurveSocketValue* const curve_socket_val, const int segments)

@@ -7,7 +7,6 @@
 #include <GLFW/glfw3.h>
 #include <nanovg.h>
 
-#include "common_enums.h"
 #include "gui_sizes.h"
 #include "panel_edit.h"
 #include "panel_edit_color.h"
@@ -19,6 +18,7 @@
 #include "panel_edit_vector.h"
 #include "selection.h"
 #include "sockets.h"
+#include "util_enum.h"
 #include "util_vector.h"
 
 cse::ParamEditorSubwindow::ParamEditorSubwindow(const Float2 screen_position) :

@@ -2,8 +2,8 @@
 
 #include <nanovg.h>
 
-#include "common_enums.h"
 #include "sockets.h"
+#include "util_enum.h"
 #include "util_vector.h"
 
 cse::EditVectorPanel::EditVectorPanel(const float width) :

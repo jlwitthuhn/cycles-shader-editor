@@ -8,7 +8,6 @@
 #include <GLFW/glfw3.h>
 #include <nanovg.h>
 
-#include "common_enums.h"
 #include "drawing.h"
 #include "editable_graph.h"
 #include "node_base.h"
@@ -16,6 +15,7 @@
 #include "sockets.h"
 #include "subwindow_node_list.h"
 #include "ui_requests.h"
+#include "util_enum.h"
 #include "util_platform.h"
 #include "util_rectangle.h"
 

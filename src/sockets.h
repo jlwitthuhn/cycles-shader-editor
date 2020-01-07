@@ -5,8 +5,8 @@
 #include <string>
 #include <vector>
 
-#include "common_enums.h"
 #include "util_color_ramp.h"
+#include "util_enum.h"
 #include "util_vector.h"
 
 namespace cse {
