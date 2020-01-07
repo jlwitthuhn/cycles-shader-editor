@@ -21,7 +21,7 @@ cse::Float2 cse::Float2::clamp_to(const Float2& a, const Float2& b) const
 
 bool cse::Float2::is_nonzero() const
 {
-	return x != 0.0f && y != 0.0f;
+	return x != 0.0f || y != 0.0f;
 }
 
 cse::Float2 cse::Float2::operator+(const Float2& other) const
