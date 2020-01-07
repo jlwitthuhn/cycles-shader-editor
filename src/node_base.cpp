@@ -387,8 +387,8 @@ void cse::EditableNode::update_output_node(OutputNode& output)
 {
 	output.type = type;
 
-	output.world_x = std::floorf(world_pos.x);
-	output.world_y = std::floorf(world_pos.y);
+	output.world_x = std::floor(world_pos.x);
+	output.world_y = std::floor(world_pos.y);
 
 	if (type == CyclesNodeType::MaterialOutput) {
 		output.name = std::string("output");

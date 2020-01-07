@@ -1,5 +1,7 @@
 #include "widget_radio_list.h"
 
+#include <cmath>
+
 #include <GLFW/glfw3.h>
 #include <nanovg.h>
 

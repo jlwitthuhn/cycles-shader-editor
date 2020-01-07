@@ -1,6 +1,7 @@
 #include "panel_edit_color_ramp.h"
 
 #include <algorithm>
+#include <cmath>
 
 #include <GLFW/glfw3.h>
 #include <nanovg.h>
@@ -114,10 +115,10 @@ float cse::EditColorRampPanel::draw(NVGcontext* const draw_context)
 	}
 
 	// Calculate positions for all buttons
-	const float y_box = std::floorf((UI_SUBWIN_PARAM_EDIT_COLOR_RAMP_ROW_HEIGHT - UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT) / 2.0f);
-	const float x_left_box = std::floorf(x_left - (UI_SUBWIN_PARAM_EDIT_COLOR_RAMP_TEXT_INPUT_WIDTH / 2.0f));
-	const float x_right_box = std::floorf(x_right - (UI_SUBWIN_PARAM_EDIT_COLOR_RAMP_TEXT_INPUT_WIDTH / 2.0f));
-	const float x_middle_box = std::floorf(x_middle - (UI_SUBWIN_PARAM_EDIT_COLOR_RAMP_TEXT_INPUT_WIDTH / 2.0f));
+	const float y_box = std::floor((UI_SUBWIN_PARAM_EDIT_COLOR_RAMP_ROW_HEIGHT - UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT) / 2.0f);
+	const float x_left_box = std::floor(x_left - (UI_SUBWIN_PARAM_EDIT_COLOR_RAMP_TEXT_INPUT_WIDTH / 2.0f));
+	const float x_right_box = std::floor(x_right - (UI_SUBWIN_PARAM_EDIT_COLOR_RAMP_TEXT_INPUT_WIDTH / 2.0f));
+	const float x_middle_box = std::floor(x_middle - (UI_SUBWIN_PARAM_EDIT_COLOR_RAMP_TEXT_INPUT_WIDTH / 2.0f));
 
 	for (ColorRampRow& this_row : ramp_rows) {
 		const float x_rect = UI_SUBWIN_PARAM_EDIT_ROW_HIGHLIGHT_HPAD;
@@ -340,11 +341,11 @@ bool cse::EditColorRampPanel::should_push_undo_state()
 cse::EditColorRampPanel::ColorRampRow::ColorRampRow(const cse::ColorRampPoint point) :
 	box_pos(UI_SUBWIN_PARAM_EDIT_COLOR_RAMP_TEXT_INPUT_WIDTH, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT),
 	box_alpha(UI_SUBWIN_PARAM_EDIT_COLOR_RAMP_TEXT_INPUT_WIDTH, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT),
+	color_target(Float2(0.0f, 0.0f), Float2(0.0f, 0.0f)),
+	delete_target(Float2(0.0f, 0.0f), Float2(0.0f, 0.0f)),
 	value_pos(std::make_shared<FloatSocketValue>(point.position, 0.0f, 1.0f)),
 	value_alpha(std::make_shared<FloatSocketValue>(point.alpha, 0.0f, 1.0f)),
-	value_color(std::make_shared<ColorSocketValue>(point.color.x, point.color.y, point.color.z)),
-	color_target(Float2(0.0f, 0.0f), Float2(0.0f, 0.0f)),
-	delete_target(Float2(0.0f, 0.0f), Float2(0.0f, 0.0f))
+	value_color(std::make_shared<ColorSocketValue>(point.color.x, point.color.y, point.color.z))
 {
 	box_pos.attach_float_value(value_pos);
 	box_alpha.attach_float_value(value_alpha);

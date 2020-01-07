@@ -40,14 +40,10 @@ void cse::BaseInputBox::draw(NVGcontext* const draw_context, const bool hightlig
 	nvgFillColor(draw_context, nvgRGBA(0, 0, 0, 255));
 
 	// Socket value
-	std::stringstream socket_text_stream;
-	if (selected) {
-		socket_text_stream << input_stream.str();
-	}
-	else {
-		socket_text_stream << get_value_as_string();
-	}
-	nvgText(draw_context, position.x + width / 2, position.y + height / 2, socket_text_stream.str().c_str(), nullptr);
+	const std::string value_text = selected ?
+		input_string :
+		get_value_as_string();
+	nvgText(draw_context, position.x + width / 2, position.y + height / 2, value_text.c_str(), nullptr);
 
 	// Outline
 	nvgBeginPath(draw_context);
@@ -85,19 +81,17 @@ void cse::BaseInputBox::handle_character(const unsigned int codepoint)
 	const int is_punctuation = (as_char == '-' || as_char == '.');
 
 	if (is_num || is_punctuation) {
-		input_stream << static_cast<char>(codepoint);
+		input_string += static_cast<char>(codepoint);
 	}
 }
 
 void cse::BaseInputBox::backspace()
 {
-	std::string full_string = input_stream.str();
-	if (full_string.size() == 0) {
+	if (input_string.size() == 0) {
 		return;
 	}
 
-	input_stream = std::stringstream();
-	input_stream << full_string.substr(0, full_string.size() - 1);
+	input_string = input_string.substr(0, input_string.size() - 1);
 }
 
 void cse::BaseInputBox::begin_edit()
@@ -108,20 +102,19 @@ void cse::BaseInputBox::begin_edit()
 
 bool cse::BaseInputBox::complete_edit()
 {
-	const std::string user_input = input_stream.str();
 	selected = false;
-	if (user_input == "") {
+	if (input_string == "") {
 		return false;
 	}
 
-	const bool result = set_value_from_input_stream();
-	input_stream = std::stringstream();
+	const bool result = set_value_from_input_string();
+	input_string.clear();
 	return result;
 }
 
 void cse::BaseInputBox::cancel_edit()
 {
-	input_stream = std::stringstream();
+	input_string.clear();
 	selected = false;
 }
 
@@ -150,13 +143,12 @@ std::string cse::IntInputBox::get_value_as_string()
 	return std::string();
 }
 
-bool cse::IntInputBox::set_value_from_input_stream()
+bool cse::IntInputBox::set_value_from_input_string()
 {
 	if (auto socket_value_ptr = socket_value.lock()) {
-		const std::string user_input = input_stream.str();
 		try {
 			const int old_val = socket_value_ptr->get_value();
-			const int new_val = std::stoi(user_input);
+			const int new_val = std::stoi(input_string);
 			if (old_val != new_val) {
 				socket_value_ptr->set_value(new_val);
 				return true;
@@ -203,13 +195,12 @@ std::string cse::FloatInputBox::get_value_as_string()
 	return std::string();
 }
 
-bool cse::FloatInputBox::set_value_from_input_stream()
+bool cse::FloatInputBox::set_value_from_input_string()
 {
 	if (auto socket_value_ptr = socket_value.lock()) {
-		const std::string user_input = input_stream.str();
 		try {
 			const float old_val = socket_value_ptr->get_value();
-			const float new_val = locale_safe_stof(user_input);
+			const float new_val = locale_safe_stof(input_string);
 			socket_value_ptr->set_value(new_val);
 			if (old_val != new_val) {
 				socket_value_ptr->set_value(new_val);

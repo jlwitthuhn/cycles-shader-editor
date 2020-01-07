@@ -105,10 +105,10 @@ float cse::EditCurvePanel::draw(NVGcontext* const draw_context)
 				const Float2 left_point_panel_space = get_panel_space_point(left_point, UI_SUBWIN_PARAM_EDIT_RECT_HPAD, UI_SUBWIN_PARAM_EDIT_RECT_VPAD, rect_width, rect_height);
 				const Float2 right_point_panel_space = get_panel_space_point(right_point, UI_SUBWIN_PARAM_EDIT_RECT_HPAD, UI_SUBWIN_PARAM_EDIT_RECT_VPAD, rect_width, rect_height);
 
-				const float left_x = std::floorf(left_point_panel_space.x);
-				const float left_y = std::floorf(left_point_panel_space.y);
-				const float right_x = std::floorf(right_point_panel_space.x);
-				const float right_y = std::floorf(right_point_panel_space.y);
+				const float left_x = std::floor(left_point_panel_space.x);
+				const float left_y = std::floor(left_point_panel_space.y);
+				const float right_x = std::floor(right_point_panel_space.x);
+				const float right_y = std::floor(right_point_panel_space.y);
 
 				nvgMoveTo(draw_context, left_x, left_y);
 				nvgLineTo(draw_context, right_x, right_y);
@@ -122,10 +122,10 @@ float cse::EditCurvePanel::draw(NVGcontext* const draw_context)
 				const Float2 top_point_panel_space = get_panel_space_point(top_point, UI_SUBWIN_PARAM_EDIT_RECT_HPAD, UI_SUBWIN_PARAM_EDIT_RECT_VPAD, rect_width, rect_height);
 				const Float2 bot_point_panel_space = get_panel_space_point(bot_point, UI_SUBWIN_PARAM_EDIT_RECT_HPAD, UI_SUBWIN_PARAM_EDIT_RECT_VPAD, rect_width, rect_height);
 
-				const float top_x = std::floorf(top_point_panel_space.x);
-				const float top_y = std::floorf(top_point_panel_space.y);
-				const float bot_x = std::floorf(bot_point_panel_space.x);
-				const float bot_y = std::floorf(bot_point_panel_space.y);
+				const float top_x = std::floor(top_point_panel_space.x);
+				const float top_y = std::floor(top_point_panel_space.y);
+				const float bot_x = std::floor(bot_point_panel_space.x);
+				const float bot_y = std::floor(bot_point_panel_space.y);
 
 				nvgMoveTo(draw_context, top_x, top_y);
 				nvgLineTo(draw_context, bot_x, bot_y);

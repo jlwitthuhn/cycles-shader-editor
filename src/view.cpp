@@ -164,8 +164,8 @@ void cse::EditGraphView::draw(NVGcontext* draw_context)
 	for (auto node_iterator = graph->nodes.rbegin(); node_iterator != graph->nodes.rend(); ++node_iterator) {
 		const std::shared_ptr<EditableNode> this_node = *node_iterator;
 		nvgSave(draw_context);
-		const float x = std::floorf(this_node->world_pos.x);
-		const float y = std::floorf(this_node->world_pos.y);
+		const float x = std::floor(this_node->world_pos.x);
+		const float y = std::floor(this_node->world_pos.y);
 		nvgTranslate(draw_context, x, y);
 		const bool node_selected = (selection->nodes.count(this_node) == 1);
 		this_node->draw_node(draw_context, node_selected, selected_node);

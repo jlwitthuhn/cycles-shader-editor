@@ -63,7 +63,7 @@ void cse::Drawing::draw_button(
 void cse::Drawing::draw_color_swatch(NVGcontext* const draw_context, const Float2 pos, const float width, const float height, const NVGcolor color, const bool selected)
 {
 	nvgBeginPath(draw_context);
-	nvgRoundedRect(draw_context, pos.x, pos.y, UI_SUBWIN_PARAM_EDIT_COLOR_RAMP_TEXT_INPUT_WIDTH, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT, UI_BUTTON_CORNER_RADIUS);
+	nvgRoundedRect(draw_context, pos.x, pos.y, width, height, UI_BUTTON_CORNER_RADIUS);
 	nvgFillColor(draw_context, color);
 	nvgFill(draw_context);
 	if (selected) {
