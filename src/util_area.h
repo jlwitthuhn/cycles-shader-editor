@@ -9,11 +9,13 @@ namespace cse {
 		Area(Float2 a, Float2 b);
 
 		bool contains_point(Float2 pos) const;
+		bool overlaps(Area other) const;
+
 		Float2 get_normalized_pos(Float2 pos) const;
 
 	protected:
-		Float2 begin;
-		Float2 end;
+		Float2 lo;
+		Float2 hi;
 	};
 
 	template<typename T>

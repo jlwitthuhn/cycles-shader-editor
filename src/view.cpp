@@ -1,6 +1,6 @@
 #include "view.h"
 
-#include <cassert>
+#include <algorithm>
 #include <cmath>
 #include <cstdio>
 #include <list>
@@ -15,9 +15,9 @@
 #include "sockets.h"
 #include "subwindow_node_list.h"
 #include "ui_requests.h"
+#include "util_area.h"
 #include "util_enum.h"
 #include "util_platform.h"
-#include "util_rectangle.h"
 
 static constexpr int GRID_SIZE_INT = 32;
 static constexpr float GRID_SIZE_FL = static_cast<float>(GRID_SIZE_INT);
@@ -412,40 +412,16 @@ cse::WeakNodeSet cse::EditGraphView::get_boxed_nodes()
 {
 	WeakNodeSet result;
 
-	if (box_select_active == false) {
-		assert(false);
-	}
-
 	float min_x_pos = 0.0f;
 	float min_y_pos = 0.0f;
 	float max_x_pos = 0.0f;
 	float max_y_pos = 0.0f;
 
-	if (world_box_select_begin.x < world_box_select_end.x) {
-		min_x_pos = world_box_select_begin.x;
-		max_x_pos = world_box_select_end.x;
-	}
-	else {
-		min_x_pos = world_box_select_end.x;
-		max_x_pos = world_box_select_begin.x;
-	}
-	assert(min_x_pos <= max_x_pos);
-
-	if (world_box_select_begin.y < world_box_select_end.y) {
-		min_y_pos = world_box_select_begin.y;
-		max_y_pos = world_box_select_end.y;
-	}
-	else {
-		min_y_pos = world_box_select_end.y;
-		max_y_pos = world_box_select_begin.y;
-	}
-	assert(min_y_pos <= max_y_pos);
-
-	Float2 min_position(min_x_pos, min_y_pos);
-	Float2 max_position(max_x_pos, max_y_pos);
+	Area select_box = Area(world_box_select_begin, world_box_select_end);
 
 	for (const auto& this_node : graph->nodes) {
-		if (do_rectangles_overlap(min_position, max_position, this_node->world_pos, this_node->world_pos + this_node->get_dimensions())) {
+		const Area node_box = Area(this_node->world_pos, this_node->world_pos + this_node->get_dimensions());
+		if (select_box.overlaps(node_box)) {
 			result.insert(this_node);
 		}
 	}
