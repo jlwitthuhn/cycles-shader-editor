@@ -137,7 +137,8 @@ float cse::EditColorRampPanel::draw(NVGcontext* const draw_context)
 		nvgFill(draw_context);
 
 		// Draw delete button
-		{
+		const bool allow_delete = (ramp_rows.size() > 2);
+		if (allow_delete) {
 			constexpr float BUTTON_SIZE = 10.0f;
 			constexpr float BUTTON_HPAD = UI_SUBWIN_PARAM_EDIT_ROW_HIGHLIGHT_HPAD;
 			const float min_x = UI_SUBWIN_PARAM_EDIT_ROW_HIGHLIGHT_HPAD + BUTTON_HPAD;
@@ -153,6 +154,9 @@ float cse::EditColorRampPanel::draw(NVGcontext* const draw_context)
 			nvgStrokeWidth(draw_context, 2.0f);
 			nvgStroke(draw_context);
 			this_row.delete_target = Area(Float2(min_x, min_y), Float2(max_x, max_y));
+		}
+		else {
+			this_row.delete_target = Area(Float2(), Float2());
 		}
 
 		// Draw input boxes
