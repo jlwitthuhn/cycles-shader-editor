@@ -2,6 +2,7 @@
 
 #include "node_outputs.h"
 #include "sockets.h"
+#include "util_vector.h"
 
 cse::EditableGraph::EditableGraph(const ShaderGraphType type)
 {

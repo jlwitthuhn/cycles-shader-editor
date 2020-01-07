@@ -5,9 +5,9 @@
 
 #include <nanovg.h>
 
-#include "util_vector.h"
-
 namespace cse {
+
+	class Float2;
 
 	namespace Drawing {
 

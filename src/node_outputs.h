@@ -4,6 +4,8 @@
 
 namespace cse {
 
+	class Float2;
+
 	class MaterialOutputNode : public EditableNode {
 	public:
 		MaterialOutputNode(Float2 position);

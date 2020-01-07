@@ -1,12 +1,13 @@
 #include "node_converter.h"
 
 #include <memory>
-#include <string>
 #include <vector>
 
 #include "common_enums.h"
 #include "output.h"
 #include "sockets.h"
+#include "util_enum.h"
+#include "util_vector.h"
 
 cse::BlackbodyNode::BlackbodyNode(const Float2 position) : EditableNode(NodeCategory::CONVERTER, CyclesNodeType::Blackbody, "Blackbody")
 {

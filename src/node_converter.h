@@ -4,6 +4,10 @@
 
 namespace cse {
 
+	class Float2;
+
+	struct OutputNode;
+
 	class BlackbodyNode : public EditableNode {
 	public:
 		BlackbodyNode(Float2 position);

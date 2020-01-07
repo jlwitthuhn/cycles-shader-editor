@@ -1,7 +1,6 @@
 #include "subwindow_param_editor.h"
 
 #include <algorithm>
-#include <cmath>
 #include <memory>
 #include <string>
 
@@ -10,7 +9,6 @@
 
 #include "common_enums.h"
 #include "gui_sizes.h"
-#include "input_box.h"
 #include "panel_edit.h"
 #include "panel_edit_color.h"
 #include "panel_edit_color_ramp.h"
@@ -21,6 +19,7 @@
 #include "panel_edit_vector.h"
 #include "selection.h"
 #include "sockets.h"
+#include "util_vector.h"
 
 cse::ParamEditorSubwindow::ParamEditorSubwindow(const Float2 screen_position) :
 	NodeEditorSubwindow(screen_position, "Parameter Editor")

@@ -2,8 +2,10 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
 #include "util_area.h"
+#include "util_vector.h"
 
 struct NVGcontext;
 

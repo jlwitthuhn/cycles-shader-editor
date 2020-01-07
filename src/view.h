@@ -1,7 +1,6 @@
 #pragma once
 
 #include <memory>
-#include <set>
 #include <string>
 
 #include "selection.h"
@@ -14,7 +13,6 @@ struct NVGcontext;
 namespace cse {
 
 	class EditableGraph;
-	class EditableNode;
 	class NodeCreationHelper;
 	class NodeSocket;
 	class ViewUIRequests;

@@ -5,12 +5,14 @@
 
 #include "button_category.h"
 #include "buttons_nodes.h"
-#include "node_base.h"
 #include "subwindow.h"
 
 struct NVGcontext;
 
 namespace cse {
+
+	class EditableNode;
+	class Float2;
 
 	class NodeCreationHelper {
 	public:

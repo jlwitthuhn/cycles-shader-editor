@@ -3,7 +3,6 @@
 #define NANOVG_GL2_IMPLEMENTATION
 
 #include <GL/glew.h>
-#include <nanovg.h>
 #include <nanovg_gl.h>
 
 cse::NvgContext::NvgContext() :

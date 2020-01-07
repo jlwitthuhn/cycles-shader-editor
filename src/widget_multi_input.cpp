@@ -4,6 +4,8 @@
 #include <nanovg.h>
 
 #include "gui_sizes.h"
+#include "input_box.h"
+#include "sockets.h"
 
 static std::shared_ptr<cse::BaseInputBox> get_input_box_for_value(const std::shared_ptr<cse::SocketValue>& socket_value)
 {

@@ -12,6 +12,7 @@
 #include "gui_colors.h"
 #include "gui_sizes.h"
 #include "sockets.h"
+#include "util_color_ramp.h"
 
 static NVGcolor get_color_for_category(const NodeCategory category)
 {

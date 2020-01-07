@@ -1,7 +1,6 @@
 #pragma once
 
 #include "output.h"
-#include "util_color.h"
 
 namespace cse {
 	struct ColorRampPoint {

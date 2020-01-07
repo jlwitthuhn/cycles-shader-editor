@@ -1,7 +1,5 @@
 #include "panel_edit_color.h"
 
-#include <string>
-
 #include <GLFW/glfw3.h>
 #include <nanovg.h>
 
@@ -9,6 +7,7 @@
 #include "drawing.h"
 #include "gui_sizes.h"
 #include "sockets.h"
+#include "util_vector.h"
 
 cse::EditColorPanel::EditColorPanel(const float width) :
 	EditParamPanel(width),

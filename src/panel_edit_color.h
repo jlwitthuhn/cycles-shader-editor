@@ -2,7 +2,6 @@
 
 #include <memory>
 
-#include "input_box.h"
 #include "panel_edit.h"
 #include "util_area.h"
 #include "util_color.h"
@@ -11,7 +10,9 @@
 struct NVGcontext;
 
 namespace cse {
+
 	class ColorSocketValue;
+	class Float2;
 	class SocketValue;
 
 	class EditColorPanel : public EditParamPanel {

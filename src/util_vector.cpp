@@ -1,6 +1,6 @@
 #include "util_vector.h"
 
-#include <cmath>
+#include <algorithm>
 
 float cse::Float2::magnitude_squared() const
 {
@@ -9,13 +9,13 @@ float cse::Float2::magnitude_squared() const
 
 cse::Float2 cse::Float2::clamp_to(const Float2& a, const Float2& b) const
 {
-	const float lo_x_in = std::fmin(a.x, b.x);
-	const float lo_y_in = std::fmin(a.y, b.y);
-	const float hi_x_in = std::fmax(a.x, b.x);
-	const float hi_y_in = std::fmax(a.y, b.y);
+	const float lo_x_in = std::min(a.x, b.x);
+	const float lo_y_in = std::min(a.y, b.y);
+	const float hi_x_in = std::max(a.x, b.x);
+	const float hi_y_in = std::max(a.y, b.y);
 
-	const float new_x = std::fmax(lo_x_in, std::fmin(hi_x_in, x));
-	const float new_y = std::fmax(lo_y_in, std::fmin(hi_y_in, y));
+	const float new_x = std::max(lo_x_in, std::min(hi_x_in, x));
+	const float new_y = std::max(lo_y_in, std::min(hi_y_in, y));
 	return Float2(new_x, new_y);
 }
 

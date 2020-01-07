@@ -4,6 +4,8 @@
 
 namespace cse {
 
+	class Float2;
+
 	class AmbientOcculsionNode : public EditableNode {
 	public:
 		AmbientOcculsionNode(Float2 position);

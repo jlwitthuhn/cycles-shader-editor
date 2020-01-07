@@ -1,12 +1,13 @@
 #include "node_inputs.h"
 
 #include <memory>
-#include <string>
 #include <vector>
 
 #include "common_enums.h"
 #include "output.h"
 #include "sockets.h"
+#include "util_enum.h"
+#include "util_vector.h"
 
 cse::AmbientOcculsionNode::AmbientOcculsionNode(const Float2 position) : EditableNode(NodeCategory::INPUT, CyclesNodeType::AmbientOcclusion, "Ambient Occlusion")
 {

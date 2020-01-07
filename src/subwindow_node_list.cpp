@@ -11,6 +11,7 @@
 #include "button_category.h"
 #include "buttons_nodes.h"
 #include "gui_sizes.h"
+#include "node_base.h"
 #include "node_colors.h"
 #include "node_converter.h"
 #include "node_inputs.h"
@@ -18,6 +19,7 @@
 #include "node_shaders.h"
 #include "node_textures.h"
 #include "node_vector.h"
+#include "util_vector.h"
 
 cse::NodeCreationHelper::NodeCreationHelper()
 {

@@ -15,7 +15,6 @@ namespace cse {
 	class EditableGraph;
 	class EditGraphView;
 	class GlfwWindow;
-	class GraphEditor;
 	class NodeCreationHelper;
 	class NodeEditorStatusBar;
 	class NodeEditorSubwindow;

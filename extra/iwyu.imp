@@ -1,4 +1,5 @@
 [
-    { include: ["<bits/shared_ptr.h>", "private", "<memory>", "public"] },
-    { include: ["<ext/alloc_traits.h>", "private", "<memory>", "public"] }
+    { include: ["<ext/alloc_traits.h>", "private", "<IGNORE>", "public"] },
+    { symbol: ["std::ceil", "private", "<cmath>", "public"] },
+    { symbol: ["std::floor", "private", "<cmath>", "public"] }
 ]

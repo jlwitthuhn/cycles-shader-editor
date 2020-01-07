@@ -1,6 +1,8 @@
 #include "panel_edit_enum.h"
 
+#include "common_enums.h"
 #include "sockets.h"
+#include "util_vector.h"
 
 cse::EditEnumPanel::EditEnumPanel(const float width) :
 	EditParamPanel(width),

@@ -4,6 +4,8 @@
 
 namespace cse {
 
+	class Float2;
+
 	class PrincipledBSDFNode : public EditableNode {
 	public:
 		PrincipledBSDFNode(Float2 position);

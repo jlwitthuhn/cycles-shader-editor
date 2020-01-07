@@ -1,12 +1,13 @@
 #include "node_interop_max.h"
 
 #include <memory>
-#include <string>
 #include <vector>
 
 #include "common_enums.h"
 #include "output.h"
 #include "sockets.h"
+#include "util_enum.h"
+#include "util_vector.h"
 
 cse::MaxTexmapShaderNode::MaxTexmapShaderNode(const Float2 position) : EditableNode(NodeCategory::TEXTURE, CyclesNodeType::MaxTex, "3ds Max Texmap")
 {

@@ -6,11 +6,19 @@
 #include "input_box.h"
 #include "panel_edit.h"
 #include "util_area.h"
-#include "util_color_ramp.h"
+
+struct NVGcontext;
 
 namespace cse {
+
+	class ColorSocketValue;
 	class ColorRampSocketValue;
 	class EditColorPanel;
+	class Float2;
+	class FloatSocketValue;
+	class SocketValue;
+
+	struct ColorRampPoint;
 
 	class EditColorRampPanel : public EditParamPanel {
 	public:

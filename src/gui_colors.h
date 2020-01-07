@@ -2,7 +2,6 @@
 
 #include <nanovg.h>
 
-
 static const NVGcolor COLOR_NODE_HEADER_DEFAULT   = nvgRGB(210, 210, 210);
 static const NVGcolor COLOR_NODE_HEADER_OUTPUT    = nvgRGB(210, 105, 105);
 static const NVGcolor COLOR_NODE_HEADER_COLOR     = nvgRGB(210, 210,  80);

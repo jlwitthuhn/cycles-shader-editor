@@ -6,10 +6,14 @@
 #include <GLFW/glfw3.h>
 #include <nanovg.h>
 
+#include "common_enums.h"
 #include "drawing.h"
 #include "gui_sizes.h"
+#include "output.h"
 #include "panel_edit_color.h"
 #include "sockets.h"
+#include "util_color_ramp.h"
+#include "util_vector.h"
 
 cse::EditColorRampPanel::EditColorRampPanel(const float width) :
 	EditParamPanel(width),
@@ -30,7 +34,7 @@ void cse::EditColorRampPanel::pre_draw()
 	bool delete_happened;
 	do {
 		delete_happened = false;
-		const size_t point_count = ramp_rows.size();
+		const auto point_count = ramp_rows.size();
 		if (point_count <= 2) {
 			// Deleting only works when 3 or more points exist
 			break;

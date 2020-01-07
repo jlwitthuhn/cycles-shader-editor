@@ -1,5 +1,7 @@
 #include "util_rectangle.h"
 
+#include "util_vector.h"
+
 bool cse::do_rectangles_overlap(const Float2 low1, const Float2 high1, const Float2 low2, const Float2 high2)
 {
 	// Return false if there is no horizontal overlap

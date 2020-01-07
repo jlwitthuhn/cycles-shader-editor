@@ -1,13 +1,13 @@
 #include "node_shaders.h"
 
-#include <cmath>
 #include <memory>
-#include <string>
 #include <vector>
 
 #include "common_enums.h"
 #include "output.h"
 #include "sockets.h"
+#include "util_enum.h"
+#include "util_vector.h"
 
 cse::PrincipledBSDFNode::PrincipledBSDFNode(const Float2 position) : EditableNode(NodeCategory::SHADER, CyclesNodeType::PrincipledBSDF, "Principled BSDF")
 {

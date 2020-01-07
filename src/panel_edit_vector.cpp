@@ -1,10 +1,10 @@
 #include "panel_edit_vector.h"
 
-#include <GLFW/glfw3.h>
 #include <nanovg.h>
 
-#include "gui_sizes.h"
+#include "common_enums.h"
 #include "sockets.h"
+#include "util_vector.h"
 
 cse::EditVectorPanel::EditVectorPanel(const float width) :
 	EditParamPanel(width),

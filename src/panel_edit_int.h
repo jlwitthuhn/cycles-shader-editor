@@ -2,12 +2,16 @@
 
 #include <memory>
 
-#include "input_box.h"
 #include "panel_edit.h"
 #include "widget_multi_input.h"
 
+struct NVGcontext;
+
 namespace cse {
+
+	class Float2;
 	class IntSocketValue;
+	class SocketValue;
 
 	class EditIntPanel : public EditParamPanel {
 	public:

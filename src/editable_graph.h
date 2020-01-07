@@ -2,15 +2,14 @@
 
 #include <list>
 #include <memory>
-#include <set>
 
 #include "common_enums.h"
 #include "node_base.h"
 #include "util_typedef.h"
-#include "util_vector.h"
 
 namespace cse {
 
+	class Float2;
 	class NodeSocket;
 
 	// This class is used to store all data for a single graph that can be edited interactively

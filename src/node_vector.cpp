@@ -1,12 +1,13 @@
 #include "node_vector.h"
 
 #include <memory>
-#include <string>
 #include <vector>
 
 #include "common_enums.h"
 #include "output.h"
 #include "sockets.h"
+#include "util_enum.h"
+#include "util_vector.h"
 
 cse::BumpNode::BumpNode(const Float2 position) : EditableNode(NodeCategory::VECTOR, CyclesNodeType::Bump, "Bump")
 {

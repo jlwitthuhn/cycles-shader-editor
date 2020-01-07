@@ -1,6 +1,7 @@
 #include "serialize.h"
 
 #include <cassert>
+#include <cstddef>
 #include <map>
 #include <memory>
 #include <string>
@@ -19,7 +20,9 @@
 #include "node_vector.h"
 #include "output.h"
 #include "sockets.h"
+#include "util_color_ramp.h"
 #include "util_parse.h"
+#include "util_vector.h"
 
 static const char SEPARATOR = '|';
 
@@ -34,7 +37,7 @@ static const char* NODE_END = "node_end";
 std::map<cse::CyclesNodeType, std::string> type_to_code;
 std::map<std::string, cse::CyclesNodeType> code_to_type;
 
-static std::string create_node_name(const size_t number)
+static std::string create_node_name(const std::size_t number)
 {
 	return std::string("node") + std::to_string(number);
 }

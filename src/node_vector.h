@@ -4,6 +4,8 @@
 
 namespace cse {
 
+	class Float2;
+
 	class BumpNode : public EditableNode {
 	public:
 		BumpNode(Float2 position);

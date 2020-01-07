@@ -10,6 +10,8 @@
 #include "curve.h"
 #include "output.h"
 #include "sockets.h"
+#include "util_enum.h"
+#include "util_vector.h"
 
 cse::MixRGBNode::MixRGBNode(const Float2 position) : EditableNode(NodeCategory::COLOR, CyclesNodeType::MixRGB, "Mix RGB")
 {

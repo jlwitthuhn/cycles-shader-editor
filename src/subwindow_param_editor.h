@@ -4,10 +4,8 @@
 #include <memory>
 #include <vector>
 
-#include "input_box.h"
 #include "subwindow.h"
 #include "util_area.h"
-#include "util_vector.h"
 
 struct NVGcontext;
 
@@ -15,6 +13,7 @@ namespace cse {
 
 	class NodeSocket;
 	class EditParamPanel;
+	class Float2;
 	class Selection;
 
 	class ParamEditorSubwindow : public NodeEditorSubwindow {

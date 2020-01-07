@@ -12,6 +12,7 @@
 namespace cse {
 
 	class EditableNode;
+	class Float4;
 
 	struct Float3Holder {
 		float x = 0.0f;

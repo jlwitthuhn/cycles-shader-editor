@@ -1,14 +1,13 @@
 #pragma once
 
 #include <memory>
-#include <set>
 
 #include "util_typedef.h"
-#include "util_vector.h"
 
 namespace cse {
 
 	class EditableNode;
+	class Float2;
 	class NodeSocket;
 
 	enum class SelectMode {

@@ -1,14 +1,18 @@
 #pragma once
 
 #include <memory>
-#include <utility>
+#include <string>
 #include <vector>
 
-#include "input_box.h"
-#include "sockets.h"
 #include "util_vector.h"
 
+struct NVGcontext;
+
 namespace cse {
+
+	class BaseInputBox;
+	class SocketValue;
+
 	// Widget that can accept input for multiple socket values
 	class MultiInputWidget {
 	public:

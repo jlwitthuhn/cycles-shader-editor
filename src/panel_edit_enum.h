@@ -1,10 +1,16 @@
 #pragma once
 
+#include <memory>
+
 #include "panel_edit.h"
-#include "util_vector.h"
 #include "widget_radio_list.h"
 
+struct NVGcontext;
+
 namespace cse {
+
+	class Float2;
+	class SocketValue;
 	class StringEnumSocketValue;
 
 	class EditEnumPanel : public EditParamPanel {

@@ -1,12 +1,13 @@
 #include "node_textures.h"
 
 #include <memory>
-#include <string>
 #include <vector>
 
 #include "common_enums.h"
 #include "output.h"
 #include "sockets.h"
+#include "util_enum.h"
+#include "util_vector.h"
 
 cse::BrickTextureNode::BrickTextureNode(const Float2 position) : EditableNode(NodeCategory::TEXTURE, CyclesNodeType::BrickTex, "Brick Texture")
 {
