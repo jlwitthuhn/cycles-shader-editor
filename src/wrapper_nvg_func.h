@@ -1,12 +1,13 @@
 #pragma once
 
 // This header defines small inline-able functions to make standard nanovg functions work with
-// this project's NvgContext wrapper class as well as smart pointers to NvgContext
+// this project's internal types
 
 #include <memory>
 
 #include <nanovg.h>
 
+#include "util_vector.h"
 #include "wrapper_nvg_context.h"
 
 namespace cse {
@@ -19,4 +20,8 @@ namespace cse {
 		nvgEndFrame(ctx->context_ptr);
 	}
 
+	// Color stuff
+	inline void nvgFillColor(NVGcontext* const ctx, const Float3& color) {
+		nvgFillColor(ctx, nvgRGBf(color.x, color.y, color.z));
+	}
 }

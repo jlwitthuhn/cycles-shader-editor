@@ -6,6 +6,7 @@
 
 #include "gui_sizes.h"
 #include "util_vector.h"
+#include "wrapper_nvg_func.h"
 
 void cse::Drawing::draw_button(
 	NVGcontext* const draw_context,
@@ -60,7 +61,7 @@ void cse::Drawing::draw_button(
 	nvgText(draw_context, x_pos + width / 2, y_pos + height / 2, label.c_str(), nullptr);
 }
 
-void cse::Drawing::draw_color_swatch(NVGcontext* const draw_context, const Float2 pos, const float width, const float height, const NVGcolor color, const bool selected)
+void cse::Drawing::draw_color_swatch(NVGcontext* const draw_context, const Float2 pos, const float width, const float height, const Float3 color, const bool selected)
 {
 	nvgBeginPath(draw_context);
 	nvgRoundedRect(draw_context, pos.x, pos.y, width, height, UI_BUTTON_CORNER_RADIUS);

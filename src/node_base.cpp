@@ -14,8 +14,10 @@
 #include "sockets.h"
 #include "util_color_ramp.h"
 #include "util_enum.h"
+#include "util_vector.h"
+#include "wrapper_nvg_func.h"
 
-static NVGcolor get_color_for_category(const cse::NodeCategory category)
+static cse::Float3 get_color_for_category(const cse::NodeCategory category)
 {
 	using cse::NodeCategory;
 

@@ -175,7 +175,7 @@ float cse::EditColorRampPanel::draw(NVGcontext* const draw_context)
 		// Draw color swatch
 		{
 			const FloatRGBColor row_color = this_row.value_color->get_value();
-			NVGcolor nvg_row_color = nvgRGBf(row_color.r, row_color.g, row_color.b);
+			const Float3 nvg_row_color(row_color.r, row_color.g, row_color.b);
 			const Float2 swatch_pos(x_middle_box, y_box + height_drawn);
 			const float swatch_width = UI_SUBWIN_PARAM_EDIT_COLOR_RAMP_TEXT_INPUT_WIDTH;
 			const float swatch_height = UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT;
