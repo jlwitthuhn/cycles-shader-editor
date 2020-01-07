@@ -6,7 +6,7 @@ namespace cse {
 
 	class Area {
 	public:
-		Area(Float2 begin_pos, Float2 end_pos);
+		Area(Float2 a, Float2 b);
 
 		bool contains_point(Float2 pos) const;
 		Float2 get_normalized_pos(Float2 pos) const;
