@@ -260,8 +260,8 @@ void cse::EditGraphView::handle_mouse_button(const int button, const int action,
 			box_select_begin();
 		}
 		else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
-			if (const auto node_creation_helper = this->node_creation_helper.lock()) {
-				std::shared_ptr<EditableNode> new_node = node_creation_helper->take();
+			if (const auto locked_node_creation_helper = this->node_creation_helper.lock()) {
+				std::shared_ptr<EditableNode> new_node = locked_node_creation_helper->take();
 				if (new_node) {
 					graph->add_node(new_node, mouse_world_position);
 					selection->nodes.clear();
@@ -411,11 +411,6 @@ void cse::EditGraphView::select_label(const std::weak_ptr<NodeSocket> label)
 cse::WeakNodeSet cse::EditGraphView::get_boxed_nodes()
 {
 	WeakNodeSet result;
-
-	float min_x_pos = 0.0f;
-	float min_y_pos = 0.0f;
-	float max_x_pos = 0.0f;
-	float max_y_pos = 0.0f;
 
 	Area select_box = Area(world_box_select_begin, world_box_select_end);
 

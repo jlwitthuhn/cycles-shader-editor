@@ -67,11 +67,10 @@ cse::Float3 cse::Float3::rgb_as_hsv() const
 	const float sat = range / max;
 
 	// Calculate Hue
-	auto calculate_hue = [](const Float3 rgb, const float min, const float max) -> double
+	auto calculate_hue = [](const Float3 rgb, const float min, const float max, const float range) -> double
 	{
 		constexpr double ONE_THIRD = 0.3333333333333333333333;
 		constexpr double OFFSET_MULTIPLIER = ONE_THIRD / 2.0;
-		const float range = max - min;
 
 		if (rgb.x == max) {
 			// Red is the top color, so the hue must be between magenta and yellow
@@ -104,7 +103,7 @@ cse::Float3 cse::Float3::rgb_as_hsv() const
 		}
 	};
 
-	const float hue = static_cast<float>(calculate_hue(*this, min, max));
+	const float hue = static_cast<float>(calculate_hue(*this, min, max, range));
 
 	return Float3(hue, sat, val);
 }

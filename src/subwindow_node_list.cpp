@@ -323,11 +323,11 @@ void cse::NodeListSubwindow::select_category_button_under_mouse()
 
 void cse::NodeListSubwindow::select_creation_button_under_mouse()
 {
-	if (const auto node_creation_helper = this->node_creation_helper.lock()) {
+	if (const auto locked_node_creation_helper = this->node_creation_helper.lock()) {
 		for (const auto& creation_button : get_active_creation_buttons()) {
 			if (creation_button->is_mouse_over_button()) {
 				auto ptr = creation_button->create_node();
-				node_creation_helper->set_node(ptr);
+				locked_node_creation_helper->set_node(ptr);
 				creation_button->pressed = true;
 				break;
 			}
@@ -340,7 +340,7 @@ void cse::NodeListSubwindow::reset_creation_buttons()
 	for (const auto& this_button : get_active_creation_buttons()) {
 		this_button->pressed = false;
 	}
-	if (const auto node_creation_helper = this->node_creation_helper.lock()) {
-		node_creation_helper->clear();
+	if (const auto locked_node_creation_helper = this->node_creation_helper.lock()) {
+		locked_node_creation_helper->clear();
 	}
 }

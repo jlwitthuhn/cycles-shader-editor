@@ -300,28 +300,28 @@ std::vector<cse::Float4> cse::ColorRampSocketValue::evaluate_samples() const
 	std::vector<Float4> result;
 
 	// Create a function-local copy of the control point vector so we can be sure it is sorted
-	std::vector<ColorRampPoint> ramp_points = this->ramp_points;
+	std::vector<ColorRampPoint> ramp_points_local = this->ramp_points;
 	std::sort(
-		ramp_points.begin(),
-		ramp_points.end(),
+		ramp_points_local.begin(),
+		ramp_points_local.end(),
 		[](const ColorRampPoint& lhs, const ColorRampPoint& rhs) {
 			return lhs.position < rhs.position;
 		}
 	);
 
-	if (ramp_points.size() == 0) {
+	if (ramp_points_local.size() == 0) {
 		// Invalid ramp, interpret as all black
 		result.push_back(Float4(0.0f, 0.0f, 0.0f, 1.0f));
 		result.push_back(Float4(0.0f, 0.0f, 0.0f, 1.0f));
 	}
 
-	const float pos_first_change = ramp_points[0].position;
-	const Float3 color_start = ramp_points[0].color;
-	const float alpha_start = ramp_points[0].alpha;
+	const float pos_first_change = ramp_points_local[0].position;
+	const Float3 color_start = ramp_points_local[0].color;
+	const float alpha_start = ramp_points_local[0].alpha;
 
-	const float pos_last_change = ramp_points[ramp_points.size() - 1].position;
-	const Float3 color_end = ramp_points[ramp_points.size() - 1].color;
-	const float alpha_end = ramp_points[ramp_points.size() - 1].alpha;
+	const float pos_last_change = ramp_points_local[ramp_points_local.size() - 1].position;
+	const Float3 color_end = ramp_points_local[ramp_points_local.size() - 1].color;
+	const float alpha_end = ramp_points_local[ramp_points_local.size() - 1].alpha;
 
 	{
 		size_t index_search_begin = 0;
@@ -336,12 +336,12 @@ std::vector<cse::Float4> cse::ColorRampSocketValue::evaluate_samples() const
 				result.push_back(this_output);
 			}
 			else {
-				while (ramp_points[index_search_begin + 1].position <= this_pos) {
+				while (ramp_points_local[index_search_begin + 1].position <= this_pos) {
 					index_search_begin++;
 				}
 
-				const ColorRampPoint low = ramp_points[index_search_begin];
-				const ColorRampPoint high = ramp_points[index_search_begin + 1];
+				const ColorRampPoint low = ramp_points_local[index_search_begin];
+				const ColorRampPoint high = ramp_points_local[index_search_begin + 1];
 
 				const float segment_size = high.position - low.position;
 				const float relative_pos = this_pos - low.position;

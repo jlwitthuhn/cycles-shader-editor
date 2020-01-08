@@ -322,9 +322,9 @@ void cse::EditableNode::draw_node(NVGcontext* const draw_context, const bool sel
 	}
 }
 
-bool cse::EditableNode::contains_point(const Float2 world_pos) const
+bool cse::EditableNode::contains_point(const Float2 world_pos_in) const
 {
-	const Float2 local_pos = get_local_pos(world_pos);
+	const Float2 local_pos = get_local_pos(world_pos_in);
 	return (
 		local_pos.x >= 0.0f &&
 		local_pos.x <= content_width &&
