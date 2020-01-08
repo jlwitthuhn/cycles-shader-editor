@@ -14,18 +14,6 @@ namespace cse {
 	class EditableNode;
 	class Float4;
 
-	struct Float3Holder {
-		float x = 0.0f;
-		float y = 0.0f;
-		float z = 0.0f;
-	};
-
-	struct FloatRGBColor {
-		float r = 1.0f;
-		float g = 1.0f;
-		float b = 1.0f;
-	};
-
 	class SocketValue {
 	public:
 		virtual ~SocketValue() {}
@@ -74,7 +62,7 @@ namespace cse {
 
 		virtual SocketType get_type() const override;
 
-		Float3Holder get_value();
+		Float3 get_value();
 		void set_x(float x_in);
 		void set_y(float x_in);
 		void set_z(float x_in);
@@ -90,11 +78,11 @@ namespace cse {
 
 		virtual SocketType get_type() const override;
 
-		FloatRGBColor get_value();
+		Float3 get_value();
 
-		std::shared_ptr<FloatSocketValue> red_socket_val;
-		std::shared_ptr<FloatSocketValue> green_socket_val;
-		std::shared_ptr<FloatSocketValue> blue_socket_val;
+		std::shared_ptr<FloatSocketValue> r_socket_val;
+		std::shared_ptr<FloatSocketValue> g_socket_val;
+		std::shared_ptr<FloatSocketValue> b_socket_val;
 	};
 
 	class StringEnumPair {

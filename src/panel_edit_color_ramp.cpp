@@ -81,9 +81,9 @@ void cse::EditColorRampPanel::pre_draw()
 		ramp_socket_value->ramp_points.clear();
 		for (const auto& this_row : ramp_rows) {
 			const float pos = this_row.value_pos->get_value();
-			const FloatRGBColor color = this_row.value_color->get_value();
+			const Float3 color = this_row.value_color->get_value();
 			const float alpha = this_row.value_alpha->get_value();
-			const ColorRampPoint new_point(pos, Float3(color.r, color.g, color.b), alpha);
+			const ColorRampPoint new_point(pos, color, alpha);
 			ramp_socket_value->ramp_points.push_back(new_point);
 		}
 	}
@@ -174,12 +174,11 @@ float cse::EditColorRampPanel::draw(NVGcontext* const draw_context)
 
 		// Draw color swatch
 		{
-			const FloatRGBColor row_color = this_row.value_color->get_value();
-			const Float3 nvg_row_color(row_color.r, row_color.g, row_color.b);
+			const Float3 row_color = this_row.value_color->get_value();
 			const Float2 swatch_pos(x_middle_box, y_box + height_drawn);
 			const float swatch_width = UI_SUBWIN_PARAM_EDIT_COLOR_RAMP_TEXT_INPUT_WIDTH;
 			const float swatch_height = UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT;
-			Drawing::draw_color_swatch(draw_context, swatch_pos, swatch_width, swatch_height, nvg_row_color, this_row.color_selected);
+			Drawing::draw_color_swatch(draw_context, swatch_pos, swatch_width, swatch_height, row_color, this_row.color_selected);
 			const Float2 swatch_end(swatch_pos.x + swatch_width, swatch_pos.y + swatch_height);
 			this_row.color_target = Area(swatch_pos, swatch_end);
 		}

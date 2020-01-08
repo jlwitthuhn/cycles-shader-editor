@@ -95,13 +95,12 @@ cse::SocketType cse::Float3SocketValue::get_type() const
 	return SocketType::VECTOR;
 }
 
-cse::Float3Holder cse::Float3SocketValue::get_value()
+cse::Float3 cse::Float3SocketValue::get_value()
 {
-	Float3Holder result;
-	result.x = x_socket_val->get_value();
-	result.y = y_socket_val->get_value();
-	result.z = z_socket_val->get_value();
-
+	const float x = x_socket_val->get_value();
+	const float y = y_socket_val->get_value();
+	const float z = z_socket_val->get_value();
+	const Float3 result(x, y, z);
 	return result;
 }
 
@@ -121,9 +120,9 @@ void cse::Float3SocketValue::set_z(float z_in)
 }
 
 cse::ColorSocketValue::ColorSocketValue(float default_r, float default_g, float default_b) :
-	red_socket_val(std::make_shared<FloatSocketValue>(default_r, 0.0f, 1.0f)),
-	green_socket_val(std::make_shared<FloatSocketValue>(default_g, 0.0f, 1.0f)),
-	blue_socket_val(std::make_shared<FloatSocketValue>(default_b, 0.0f, 1.0f))
+	r_socket_val(std::make_shared<FloatSocketValue>(default_r, 0.0f, 1.0f)),
+	g_socket_val(std::make_shared<FloatSocketValue>(default_g, 0.0f, 1.0f)),
+	b_socket_val(std::make_shared<FloatSocketValue>(default_b, 0.0f, 1.0f))
 {
 
 }
@@ -362,13 +361,13 @@ std::vector<cse::Float4> cse::ColorRampSocketValue::evaluate_samples() const
 	return result;
 }
 
-cse::FloatRGBColor cse::ColorSocketValue::get_value()
+cse::Float3 cse::ColorSocketValue::get_value()
 {
-	FloatRGBColor value;
-	value.r = red_socket_val->get_value();
-	value.g = green_socket_val->get_value();
-	value.b = blue_socket_val->get_value();
-	return value;
+	const float r = r_socket_val->get_value();
+	const float g = g_socket_val->get_value();
+	const float b = b_socket_val->get_value();
+	const Float3 result(r, g, b);
+	return result;
 }
 
 cse::NodeSocket::NodeSocket(EditableNode* parent, SocketIOType io_type, SocketType socket_type, std::string display_name, std::string internal_name) :
@@ -425,9 +424,9 @@ void cse::NodeSocket::set_float3_val(float x_in, float y_in, float z_in)
 	if (socket_type == SocketType::COLOR) {
 		const std::shared_ptr<ColorSocketValue> color_val = std::dynamic_pointer_cast<ColorSocketValue>(value);
 		if (color_val) {
-			color_val->red_socket_val->set_value(x_in);
-			color_val->green_socket_val->set_value(y_in);
-			color_val->blue_socket_val->set_value(z_in);
+			color_val->r_socket_val->set_value(x_in);
+			color_val->g_socket_val->set_value(y_in);
+			color_val->b_socket_val->set_value(z_in);
 		}
 	}
 	else if (socket_type == SocketType::VECTOR) {

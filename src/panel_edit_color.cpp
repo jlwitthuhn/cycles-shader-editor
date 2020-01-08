@@ -232,9 +232,9 @@ void cse::EditColorPanel::set_attached_value(const std::weak_ptr<SocketValue> so
 				reset();
 				attached_color = color_value_ptr;
 				input_widget.clear_sockets();
-				input_widget.add_socket_input("Red:", color_value_ptr->red_socket_val);
-				input_widget.add_socket_input("Green:", color_value_ptr->green_socket_val);
-				input_widget.add_socket_input("Blue:", color_value_ptr->blue_socket_val);
+				input_widget.add_socket_input("Red:", color_value_ptr->r_socket_val);
+				input_widget.add_socket_input("Green:", color_value_ptr->g_socket_val);
+				input_widget.add_socket_input("Blue:", color_value_ptr->b_socket_val);
 			}
 			return;
 		}
@@ -265,9 +265,9 @@ cse::HueSatVal cse::EditColorPanel::get_hsv()
 {
 	RedGreenBlue rgb;
 	if (const auto locked = attached_color.lock()) {
-		rgb.r = locked->red_socket_val->get_value();
-		rgb.g = locked->green_socket_val->get_value();
-		rgb.b = locked->blue_socket_val->get_value();
+		rgb.r = locked->r_socket_val->get_value();
+		rgb.g = locked->g_socket_val->get_value();
+		rgb.b = locked->b_socket_val->get_value();
 	}
 	HueSatVal hsv = hsv_from_rgb(rgb);
 	if (hsv.hue < 0.0f) {
@@ -283,9 +283,9 @@ void cse::EditColorPanel::set_hsv(HueSatVal hsv)
 	RedGreenBlue rgb = rgb_from_hsv(hsv);
 
 	if (const auto locked = attached_color.lock()) {
-		locked->red_socket_val->set_value(rgb.r);
-		locked->green_socket_val->set_value(rgb.g);
-		locked->blue_socket_val->set_value(rgb.b);
+		locked->r_socket_val->set_value(rgb.r);
+		locked->g_socket_val->set_value(rgb.g);
+		locked->b_socket_val->set_value(rgb.b);
 	}
 }
 

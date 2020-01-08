@@ -217,14 +217,14 @@ void cse::EditableNode::draw_node(NVGcontext* const draw_context, const bool sel
 			const float text_pos_y = next_draw_y + UI_NODE_SOCKET_ROW_HEIGHT / 2;
 			nvgText(draw_context, text_pos_x, text_pos_y, label_text.c_str(), nullptr);
 
-			const FloatRGBColor swatch_color = dynamic_cast<ColorSocketValue*>(this_socket->value.get())->get_value();
+			const Float3 swatch_color = dynamic_cast<ColorSocketValue*>(this_socket->value.get())->get_value();
 
 			const float swatch_pos_x = text_pos_x + label_width / 2 + 1.0f;
 			const float swatch_pos_y = next_draw_y + (UI_NODE_SOCKET_ROW_HEIGHT - SWATCH_HEIGHT) / 2;
 
 			nvgBeginPath(draw_context);
 			nvgRoundedRect(draw_context, swatch_pos_x, swatch_pos_y, SWATCH_WIDTH, SWATCH_HEIGHT, SWATCH_CORNER_RADIUS);
-			nvgFillColor(draw_context, nvgRGBAf(swatch_color.r, swatch_color.g, swatch_color.b, 1.0f));
+			nvgFillColor(draw_context, swatch_color);
 			nvgFill(draw_context);
 			nvgStrokeWidth(draw_context, 1.0f);
 			nvgStrokeColor(draw_context, nvgRGBA(0, 0, 0, 255));
@@ -414,9 +414,9 @@ void cse::EditableNode::update_output_node(OutputNode& output)
 		else if (this_socket->socket_type == SocketType::COLOR) {
 			const std::shared_ptr<ColorSocketValue> color_val = std::dynamic_pointer_cast<ColorSocketValue>(this_socket->value);
 			if (color_val) {
-				const float x = color_val->red_socket_val->get_value();
-				const float y = color_val->green_socket_val->get_value();
-				const float z = color_val->blue_socket_val->get_value();
+				const float x = color_val->r_socket_val->get_value();
+				const float y = color_val->g_socket_val->get_value();
+				const float z = color_val->b_socket_val->get_value();
 				const Float3 float3_val(x, y, z);
 				output.float3_values[this_socket->internal_name] = float3_val;
 			}
@@ -424,8 +424,7 @@ void cse::EditableNode::update_output_node(OutputNode& output)
 		else if (this_socket->socket_type == SocketType::VECTOR) {
 			const std::shared_ptr<Float3SocketValue> float3_socket_val = std::dynamic_pointer_cast<Float3SocketValue>(this_socket->value);
 			if (float3_socket_val) {
-				const Float3Holder temp_value = float3_socket_val->get_value();
-				const Float3 float3_val(temp_value.x, temp_value.y, temp_value.z);
+				const Float3 float3_val = float3_socket_val->get_value();
 				output.float3_values[this_socket->internal_name] = float3_val;
 			}
 		}
