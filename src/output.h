@@ -87,13 +87,6 @@ namespace cse {
 		Count,
 	};
 
-	class Float4 {
-	public:
-		Float4(float x, float y, float z, float w);
-
-		float x, y, z, w;
-	};
-
 	struct OutputCurve {
 		std::vector<Float2> control_points;
 		int enum_curve_interp = 0;

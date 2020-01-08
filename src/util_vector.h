@@ -37,4 +37,14 @@ namespace cse {
 		float y;
 		float z;
 	};
+
+	class Float4 {
+	public:
+		Float4(const float x, const float y, const float z, const float w) : x(x), y(y), z(z), w(w) {}
+
+		float x;
+		float y;
+		float z;
+		float w;
+	};
 }
