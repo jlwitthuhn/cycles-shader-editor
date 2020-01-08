@@ -39,18 +39,12 @@ namespace cse {
 	protected:
 		virtual void draw_content(NVGcontext* draw_context) override;
 
-		bool is_bool_area_under_mouse();
-		void click_bool_area_under_mouse();
-
 		std::weak_ptr<NodeSocket> selected_param;
 
 		float panel_start_y = 0;
 
 		// Panels
 		std::list<std::shared_ptr<EditParamPanel>> panels;
-
-		// Bool stuff
-		std::vector<HolderArea<bool>> bool_click_areas;
 
 		// Undo state stuff
 		bool request_undo_stack_push = false;

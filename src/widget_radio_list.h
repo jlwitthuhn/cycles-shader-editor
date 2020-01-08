@@ -10,6 +10,9 @@
 struct NVGcontext;
 
 namespace cse {
+
+	class BoolSocketValue;
+	class StringEnumPair;
 	class StringEnumSocketValue;
 
 	// Widget that creates a radio button input panel for an enum
@@ -17,7 +20,8 @@ namespace cse {
 	public:
 		RadioListWidget(float width);
 
-		void attach_enum(std::weak_ptr<StringEnumSocketValue> enum_socket_value);
+		void attach_value(std::weak_ptr<BoolSocketValue> bool_socket_value);
+		void attach_value(std::weak_ptr<StringEnumSocketValue> enum_socket_value);
 
 		void pre_draw();
 		float draw(NVGcontext* draw_context);
@@ -31,11 +35,14 @@ namespace cse {
 	private:
 		const float width;
 
-		std::weak_ptr<StringEnumSocketValue> enum_socket_value;
-		std::vector<HolderArea<std::string>> enum_click_areas;
+		std::weak_ptr<BoolSocketValue> attached_bool;
+		std::weak_ptr<StringEnumSocketValue> attached_enum;
+		std::vector<HolderArea<std::string>> click_areas;
 
 		Float2 mouse_local_pos;
 
 		bool request_undo_push = false;
+
+		std::vector<StringEnumPair> string_pairs;
 	};
 }

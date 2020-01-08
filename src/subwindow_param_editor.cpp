@@ -9,6 +9,7 @@
 
 #include "gui_sizes.h"
 #include "panel_edit.h"
+#include "panel_edit_bool.h"
 #include "panel_edit_color.h"
 #include "panel_edit_color_ramp.h"
 #include "panel_edit_curve.h"
@@ -25,6 +26,7 @@ cse::ParamEditorSubwindow::ParamEditorSubwindow(const Float2 screen_position) :
 	NodeEditorSubwindow(screen_position, "Parameter Editor")
 {
 	subwindow_width = UI_SUBWIN_PARAM_EDIT_WIDTH;
+	panels.push_back(std::make_shared<EditBoolPanel>(UI_SUBWIN_PARAM_EDIT_WIDTH));
 	panels.push_back(std::make_shared<EditColorPanel>(UI_SUBWIN_PARAM_EDIT_WIDTH));
 	panels.push_back(std::make_shared<EditColorRampPanel>(UI_SUBWIN_PARAM_EDIT_WIDTH));
 	panels.push_back(std::make_shared<EditCurvePanel>(UI_SUBWIN_PARAM_EDIT_WIDTH));
@@ -82,11 +84,6 @@ void cse::ParamEditorSubwindow::handle_mouse_button(const int button, const int 
 			}
 		}
 	}
-	else if (is_bool_area_under_mouse()) {
-		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-			click_bool_area_under_mouse();
-		}
-	}
 	else {
 		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
 			deselect_input_box();
@@ -95,7 +92,9 @@ void cse::ParamEditorSubwindow::handle_mouse_button(const int button, const int 
 
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
 		for (const auto& this_panel : panels) {
-			this_panel->handle_mouse_button(button, action, mods);
+			if (this_panel->is_active()) {
+				this_panel->handle_mouse_button(button, action, mods);
+			}
 		}
 	}
 }
@@ -169,8 +168,6 @@ void cse::ParamEditorSubwindow::draw_content(NVGcontext* const draw_context)
 
 	auto selected_param_ptr = selected_param.lock();
 	if (selected_param_ptr && selected_param_ptr->io_type == SocketIOType::INPUT) {
-		bool_click_areas.clear();
-
 		// Draw generic part
 		nvgFontSize(draw_context, UI_FONT_SIZE_NORMAL);
 		nvgFontFace(draw_context, "sans");
@@ -237,128 +234,28 @@ void cse::ParamEditorSubwindow::draw_content(NVGcontext* const draw_context)
 
 		panel_start_y = height_drawn;
 
-		if (selected_param_ptr->socket_type == SocketType::BOOLEAN) {
-			const auto bool_value = std::dynamic_pointer_cast<BoolSocketValue>(selected_param_ptr->value);
-
-			const std::string true_label = "True";
-			const std::string false_label = "False";
-
+		bool ui_drawn = false;
+		for (const auto& this_panel : panels) {
+			if (this_panel->is_active()) {
+				nvgSave(draw_context);
+				nvgTranslate(draw_context, 0.0f, panel_start_y);
+				nvgScissor(draw_context, 0.0f, 0.0f, this_panel->get_width(), this_panel->get_height());
+				height_drawn += this_panel->draw(draw_context);
+				nvgRestore(draw_context);
+				ui_drawn = true;
+				break;
+			}
+		}
+		if (ui_drawn == false) {
 			nvgFontSize(draw_context, UI_FONT_SIZE_NORMAL);
 			nvgFontFace(draw_context, "sans");
 			nvgTextAlign(draw_context, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
 			nvgFontBlur(draw_context, 0.0f);
 			nvgFillColor(draw_context, nvgRGBA(0, 0, 0, 255));
-
-			nvgTextAlign(draw_context, NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE);
-
-			float bounds[4];
-			float true_label_width = 0.0f;
-			float false_label_width = 0.0f;
-
-			nvgTextBounds(draw_context, 0.0f, 0.0f, true_label.c_str(), nullptr, bounds);
-			true_label_width = bounds[2];
-			nvgTextBounds(draw_context, 0.0f, 0.0f, false_label.c_str(), nullptr, bounds);
-			false_label_width = bounds[2];
-
-			float max_label_width = std::max(true_label_width, false_label_width);
-			float max_draw_width = max_label_width + UI_CHECKBOX_SPACING + UI_CHECKBOX_RADIUS * 2;
-
-			for (int i = 0; i < 2; ++i) {
-				std::string label;
-				bool this_value_selected;
-				bool current_label;
-				if (i == 0) {
-					label = true_label;
-					this_value_selected = bool_value->value;
-					current_label = true;
-				}
-				else {
-					label = false_label;
-					this_value_selected = !(bool_value->value);
-					current_label = false;
-				}
-
-				float circle_pos_x = subwindow_width / 2.0f - max_draw_width / 2 + UI_CHECKBOX_RADIUS;
-				float circle_pos_y = height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT * 0.5f;
-				nvgBeginPath(draw_context);
-				nvgCircle(draw_context, circle_pos_x, circle_pos_y, UI_CHECKBOX_RADIUS);
-				nvgFillColor(draw_context, nvgRGBAf(0.1f, 0.1f, 0.1f, 1.0f));
-				nvgFill(draw_context);
-				if (this_value_selected) {
-					nvgBeginPath(draw_context);
-					nvgCircle(draw_context, circle_pos_x, circle_pos_y, UI_CHECKBOX_RADIUS * 0.666f);
-					nvgFillColor(draw_context, nvgRGBAf(0.9f, 0.9f, 0.9f, 1.0f));
-					nvgFill(draw_context);
-				}
-
-				float text_pos_x = subwindow_width / 2.0f - max_draw_width / 2 + UI_CHECKBOX_SPACING + UI_CHECKBOX_RADIUS * 2;
-				float text_pos_y = height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT * 0.7f;
-				nvgFillColor(draw_context, nvgRGBA(0, 0, 0, 255));
-				nvgText(draw_context, text_pos_x, text_pos_y, label.c_str(), nullptr);
-
-				Float2 click_area_begin(0.0f, height_drawn);
-				Float2 click_area_end(subwindow_width, height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT);
-				HolderArea<bool> click_area(click_area_begin, click_area_end, current_label);
-
-				bool_click_areas.push_back(click_area);
-
-				height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
-			}
-		}
-		else {
-			// No built-in support for this type, it is handled in a panel or is an uneditable type
-			bool ui_drawn = false;
-			for (const auto& this_panel : panels) {
-				if (this_panel->is_active()) {
-					nvgSave(draw_context);
-					nvgTranslate(draw_context, 0.0f, panel_start_y);
-					nvgScissor(draw_context, 0.0f, 0.0f, this_panel->get_width(), this_panel->get_height());
-					height_drawn += this_panel->draw(draw_context);
-					nvgRestore(draw_context);
-					ui_drawn = true;
-					break;
-				}
-			}
-			if (ui_drawn == false) {
-				nvgFontSize(draw_context, UI_FONT_SIZE_NORMAL);
-				nvgFontFace(draw_context, "sans");
-				nvgTextAlign(draw_context, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-				nvgFontBlur(draw_context, 0.0f);
-				nvgFillColor(draw_context, nvgRGBA(0, 0, 0, 255));
-				nvgText(draw_context, subwindow_width / 2, height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT / 2, "Uneditable type selected", nullptr);
-				height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
-			}
+			nvgText(draw_context, subwindow_width / 2, height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT / 2, "Uneditable type selected", nullptr);
+			height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
 		}
 	}
 
 	content_height = height_drawn + 4.0f;
-}
-
-bool cse::ParamEditorSubwindow::is_bool_area_under_mouse()
-{
-	for (HolderArea<bool>& this_area : bool_click_areas) {
-		if (this_area.contains_point(mouse_content_pos)) {
-			return true;
-		}
-	}
-
-	return false;
-}
-
-void cse::ParamEditorSubwindow::click_bool_area_under_mouse()
-{
-	for (HolderArea<bool>& this_area : bool_click_areas) {
-		if (this_area.contains_point(mouse_content_pos)) {
-			if (auto socket = selected_param.lock()) {
-				if (auto as_bool_value = std::dynamic_pointer_cast<BoolSocketValue>(socket->value)) {
-					const bool new_val = this_area.get_value();
-					if (as_bool_value->value != new_val) {
-						as_bool_value->value = new_val;
-						request_undo_stack_push = true;
-					}
-				}
-			}
-			return;
-		}
-	}
 }

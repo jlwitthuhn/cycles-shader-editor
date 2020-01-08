@@ -52,13 +52,13 @@ void cse::EditEnumPanel::set_attached_value(const std::weak_ptr<SocketValue> soc
 			const auto enum_value_ptr = std::dynamic_pointer_cast<StringEnumSocketValue>(socket_value_ptr);
 			if (attached_enum.lock() != enum_value_ptr) {
 				attached_enum = enum_value_ptr;
-				radio_widget.attach_enum(attached_enum);
+				radio_widget.attach_value(attached_enum);
 			}
 			return;
 		}
 	}
 	attached_enum = std::weak_ptr<StringEnumSocketValue>();
-	radio_widget.attach_enum(attached_enum);
+	radio_widget.attach_value(attached_enum);
 }
 
 bool cse::EditEnumPanel::should_push_undo_state()
