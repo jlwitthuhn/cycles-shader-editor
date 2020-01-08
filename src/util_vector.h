@@ -30,6 +30,9 @@ namespace cse {
 		Float3() : x(0.0f), y(0.0f), z(0.0f) {}
 		Float3(const float x, const float y, const float z) : x(x), y(y), z(z) {}
 
+		Float3 rgb_as_hsv() const;
+		Float3 hsv_as_rgb() const;
+
 		float x;
 		float y;
 		float z;

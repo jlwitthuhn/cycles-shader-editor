@@ -4,7 +4,6 @@
 
 #include "panel_edit.h"
 #include "util_area.h"
-#include "util_color.h"
 #include "widget_multi_input.h"
 
 struct NVGcontext;
@@ -13,6 +12,7 @@ namespace cse {
 
 	class ColorSocketValue;
 	class Float2;
+	class Float3;
 	class SocketValue;
 
 	class EditColorPanel : public EditParamPanel {
@@ -37,8 +37,8 @@ namespace cse {
 		virtual bool should_push_undo_state() override;
 
 	private:
-		HueSatVal get_hsv();
-		void set_hsv(HueSatVal hsv);
+		Float3 get_hsv();
+		void set_hsv(Float3 hsv);
 
 		void set_hue_from_mouse();
 		void set_sat_val_from_mouse();

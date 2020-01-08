@@ -8,6 +8,7 @@
 #include "sockets.h"
 #include "util_enum.h"
 #include "util_vector.h"
+#include "wrapper_nvg_func.h"
 
 cse::EditColorPanel::EditColorPanel(const float width) :
 	EditParamPanel(width),
@@ -37,9 +38,10 @@ void cse::EditColorPanel::pre_draw()
 		set_hue_from_mouse();
 	}
 
-	const HueSatVal hsv = get_hsv();
-	if (hsv.hue >= 0.0f) {
-		last_hue = hsv.hue;
+	const Float3 hsv = get_hsv();
+	const float hue = hsv.x;
+	if (hue >= 0.0f) {
+		last_hue = hue;
 	}
 }
 
@@ -54,15 +56,9 @@ float cse::EditColorPanel::draw(NVGcontext* const draw_context)
 	const auto attached_color_ptr = attached_color.lock();
 
 	// We need to know the color value as HSV to draw the ui
-	RedGreenBlue rgb_from_hue;
-	{
-		// Get RGB here, set sat and val to 1 to get the brightest color at this hue
-		HueSatVal hsv_tmp;
-		hsv_tmp.sat = 1.0f;
-		hsv_tmp.val = 1.0f;
-		hsv_tmp.hue = last_hue;
-		rgb_from_hue = rgb_from_hsv(hsv_tmp);
-	}
+	// Get RGB here, set sat and val to 1 to get the brightest color at this hue
+	const Float3 hsv_tmp(last_hue, 1.0f, 1.0f);
+	const Float3 hue_color = hsv_tmp.hsv_as_rgb();
 
 	// Add a little top margin
 	height_drawn += 6.0f;
@@ -75,9 +71,9 @@ float cse::EditColorPanel::draw(NVGcontext* const draw_context)
 		const float rect_width = panel_width - 2 * UI_SUBWIN_PARAM_EDIT_RECT_HPAD;
 		const float rect_height = UI_SUBWIN_PARAM_EDIT_RECT_HEIGHT;
 
-		NVGcolor white_color = nvgRGBAf(1.0f, 1.0f, 1.0f, 1.0f);
+		const Float3 white_color(1.0f, 1.0f, 1.0f);
+
 		NVGcolor black_color = nvgRGBAf(0.0f, 0.0f, 0.0f, 1.0f);
-		NVGcolor hue_color = nvgRGBAf(rgb_from_hue.r, rgb_from_hue.g, rgb_from_hue.b, 1.0f);
 		NVGcolor transparent_color = nvgRGBAf(0.0f, 0.0f, 0.0f, 0.0f);
 
 		NVGpaint first_grad = nvgLinearGradient(draw_context, draw_x, draw_y, draw_x + rect_width, draw_y, white_color, hue_color);
@@ -91,9 +87,9 @@ float cse::EditColorPanel::draw(NVGcontext* const draw_context)
 		nvgFill(draw_context);
 
 		// Cursor
-		const HueSatVal hsv = get_hsv();
-		const float cursor_pos_x = hsv.sat * rect_width + draw_x;
-		const float cursor_pos_y = (1.0f - hsv.val) * rect_height + draw_y;
+		const Float3 hsv = get_hsv();
+		const float cursor_pos_x = hsv.y * rect_width + draw_x;
+		const float cursor_pos_y = (1.0f - hsv.z) * rect_height + draw_y;
 		Drawing::draw_color_pick_cursor(draw_context, Float2(cursor_pos_x, cursor_pos_y));
 
 		// Click target
@@ -266,26 +262,26 @@ bool cse::EditColorPanel::should_push_undo_state()
 	return result;
 }
 
-cse::HueSatVal cse::EditColorPanel::get_hsv()
+cse::Float3 cse::EditColorPanel::get_hsv()
 {
-	RedGreenBlue rgb;
+	Float3 rgb;
 	if (const auto locked = attached_color.lock()) {
-		rgb.r = locked->r_socket_val->get_value();
-		rgb.g = locked->g_socket_val->get_value();
-		rgb.b = locked->b_socket_val->get_value();
+		rgb.x = locked->r_socket_val->get_value();
+		rgb.y = locked->g_socket_val->get_value();
+		rgb.z = locked->b_socket_val->get_value();
 	}
-	HueSatVal hsv = hsv_from_rgb(rgb);
+	const Float3 hsv = rgb.rgb_as_hsv();
 	return hsv;
 }
 
-void cse::EditColorPanel::set_hsv(HueSatVal hsv)
+void cse::EditColorPanel::set_hsv(const Float3 hsv)
 {
-	RedGreenBlue rgb = rgb_from_hsv(hsv);
+	const Float3 rgb = hsv.hsv_as_rgb();
 
 	if (const auto locked = attached_color.lock()) {
-		locked->r_socket_val->set_value(rgb.r);
-		locked->g_socket_val->set_value(rgb.g);
-		locked->b_socket_val->set_value(rgb.b);
+		locked->r_socket_val->set_value(rgb.x);
+		locked->g_socket_val->set_value(rgb.y);
+		locked->b_socket_val->set_value(rgb.z);
 	}
 }
 
@@ -299,23 +295,23 @@ void cse::EditColorPanel::set_hue_from_mouse()
 		new_hue = 0.0f;
 	}
 
-	HueSatVal hsv = get_hsv();
-	hsv.hue = new_hue;
+	Float3 hsv = get_hsv();
+	hsv.x = new_hue;
 	last_hue = new_hue;
 	set_hsv(hsv);
 }
 
 void cse::EditColorPanel::set_sat_val_from_mouse()
 {
-	Float2 mouse_pos_normalized = color_rect_click_target.get_normalized_pos(mouse_local_pos);
+	const Float2 mouse_pos_normalized = color_rect_click_target.get_normalized_pos(mouse_local_pos);
 	const float new_sat = mouse_pos_normalized.x;
 	const float new_val = 1.0f - mouse_pos_normalized.y;
 
-	HueSatVal hsv = get_hsv();
-	hsv.sat = new_sat;
-	hsv.val = new_val;
-	if (hsv.hue < 0.0f) {
-		hsv.hue = last_hue;
+	Float3 hsv = get_hsv();
+	if (hsv.x < 0.0f) {
+		hsv.x = last_hue;
 	}
+	hsv.y = new_sat;
+	hsv.z = new_val;
 	set_hsv(hsv);
 }
