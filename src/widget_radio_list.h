@@ -4,16 +4,13 @@
 #include <string>
 #include <vector>
 
+#include "sockets.h"
 #include "util_area.h"
 #include "util_vector.h"
 
 struct NVGcontext;
 
 namespace cse {
-
-	class BoolSocketValue;
-	class StringEnumPair;
-	class StringEnumSocketValue;
 
 	// Widget that creates a radio button input panel for an enum
 	class RadioListWidget {

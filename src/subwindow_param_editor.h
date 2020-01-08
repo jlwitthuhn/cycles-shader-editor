@@ -1,11 +1,9 @@
 #pragma once
 
-#include <list>
 #include <memory>
 #include <vector>
 
 #include "subwindow.h"
-#include "util_area.h"
 
 struct NVGcontext;
 
@@ -44,7 +42,7 @@ namespace cse {
 		float panel_start_y = 0;
 
 		// Panels
-		std::list<std::shared_ptr<EditParamPanel>> panels;
+		std::vector<std::shared_ptr<EditParamPanel>> panels;
 
 		// Undo state stuff
 		bool request_undo_stack_push = false;

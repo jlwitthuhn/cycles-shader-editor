@@ -1,7 +1,6 @@
 #include "sockets.h"
 
 #include "curve.h"
-#include "output.h"
 
 #include <algorithm>
 #include <cassert>

@@ -1,6 +1,5 @@
 #include "view.h"
 
-#include <algorithm>
 #include <cmath>
 #include <cstdio>
 #include <list>

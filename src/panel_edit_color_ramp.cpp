@@ -8,7 +8,6 @@
 
 #include "drawing.h"
 #include "gui_sizes.h"
-#include "output.h"
 #include "panel_edit_color.h"
 #include "sockets.h"
 #include "util_color_ramp.h"

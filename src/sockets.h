@@ -12,7 +12,6 @@
 namespace cse {
 
 	class EditableNode;
-	class Float4;
 
 	class SocketValue {
 	public:

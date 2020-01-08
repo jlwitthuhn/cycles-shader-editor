@@ -1,6 +1,5 @@
 #include "subwindow_param_editor.h"
 
-#include <algorithm>
 #include <memory>
 #include <string>
 
