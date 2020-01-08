@@ -64,8 +64,8 @@ namespace cse {
 
 		Float3 get_value();
 		void set_x(float x_in);
-		void set_y(float x_in);
-		void set_z(float x_in);
+		void set_y(float y_in);
+		void set_z(float z_in);
 
 		std::shared_ptr<FloatSocketValue> x_socket_val;
 		std::shared_ptr<FloatSocketValue> y_socket_val;
@@ -83,11 +83,13 @@ namespace cse {
 		std::shared_ptr<FloatSocketValue> r_socket_val;
 		std::shared_ptr<FloatSocketValue> g_socket_val;
 		std::shared_ptr<FloatSocketValue> b_socket_val;
+
+		float last_hue = 0.0f;
 	};
 
 	class StringEnumPair {
 	public:
-		StringEnumPair(std::string display_value, std::string internal_value);
+		StringEnumPair(const std::string& display_value, const std::string& internal_value);
 
 		std::string display_value;
 		std::string internal_value;

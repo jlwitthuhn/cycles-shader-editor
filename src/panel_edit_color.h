@@ -36,17 +36,12 @@ namespace cse {
 
 		virtual bool should_push_undo_state() override;
 
-	protected:
-		virtual void reset() override;
-
 	private:
 		HueSatVal get_hsv();
 		void set_hsv(HueSatVal hsv);
 
 		void set_hue_from_mouse();
 		void set_sat_val_from_mouse();
-
-		float last_hue = 0.0f;
 
 		bool mouse_sat_val_selection_active = false;
 		bool mouse_hue_selection_active = false;
@@ -58,5 +53,7 @@ namespace cse {
 
 		float input_widget_pos = 0.0f;
 		MultiInputWidget input_widget;
+
+		float last_hue = 0.0f;
 	};
 }

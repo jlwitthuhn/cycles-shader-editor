@@ -1,5 +1,7 @@
 #include "util_color.h"
 
+#include <algorithm>
+
 // RGB/HSV conversion algorithms adapted from https://stackoverflow.com/questions/3018313
 
 cse::HueSatVal cse::hsv_from_rgb(RedGreenBlue rgb)
@@ -42,9 +44,20 @@ cse::HueSatVal cse::hsv_from_rgb(RedGreenBlue rgb)
 		// Red is the top color, so the hue must be between magenta and yellow
 		// offset is how far the hue is from straight red
 		// It has a range of [-1, 1] with -1 meaning magenta and 1 meaning yellow
-		constexpr float RED_BASE_HUE = 0.0f;
-		const float offset = (rgb.g - rgb.b) / range;
-		hsv.hue = RED_BASE_HUE + offset * OFFSET_MULTIPLIER;
+		constexpr float RED_BASE_HUE_LO = 0.0f;
+		constexpr float RED_BASE_HUE_HI = 1.0f;
+		if (rgb.g == min && rgb.b == min) {
+			hsv.hue = 0.0f;
+		}
+		else {
+			const float offset = (rgb.g - rgb.b) / range;
+			if (offset < 0.0f) {
+				hsv.hue = RED_BASE_HUE_HI + offset * OFFSET_MULTIPLIER;
+			}
+			else {
+				hsv.hue = RED_BASE_HUE_LO + offset * OFFSET_MULTIPLIER;
+			}
+		}
 	}
 	else {
 		if (rgb.g == max) {
@@ -62,7 +75,7 @@ cse::HueSatVal cse::hsv_from_rgb(RedGreenBlue rgb)
 	return hsv;
 }
 
-cse::RedGreenBlue cse::rgb_from_hsv(HueSatVal hsv)
+cse::RedGreenBlue cse::rgb_from_hsv(const HueSatVal hsv)
 {
 	cse::RedGreenBlue rgb;
 
@@ -74,7 +87,7 @@ cse::RedGreenBlue cse::rgb_from_hsv(HueSatVal hsv)
 		return rgb;
 	}
 
-	const float base_hue = hsv.hue >= 1.0f ? 0.0f : hsv.hue;
+	const float base_hue = std::min(1.0f, std::max(0.0f, hsv.hue));
 	const float scaled_hue = base_hue * 6.0f;
 	const int hue_bucket = static_cast<int>(scaled_hue);
 	const float hue_offset = scaled_hue - hue_bucket;

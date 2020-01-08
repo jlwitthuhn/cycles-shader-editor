@@ -104,22 +104,22 @@ cse::Float3 cse::Float3SocketValue::get_value()
 	return result;
 }
 
-void cse::Float3SocketValue::set_x(float x_in)
+void cse::Float3SocketValue::set_x(const float x_in)
 {
 	x_socket_val->set_value(x_in);
 }
 
-void cse::Float3SocketValue::set_y(float y_in)
+void cse::Float3SocketValue::set_y(const float y_in)
 {
 	y_socket_val->set_value(y_in);
 }
 
-void cse::Float3SocketValue::set_z(float z_in)
+void cse::Float3SocketValue::set_z(const float z_in)
 {
 	z_socket_val->set_value(z_in);
 }
 
-cse::ColorSocketValue::ColorSocketValue(float default_r, float default_g, float default_b) :
+cse::ColorSocketValue::ColorSocketValue(const float default_r, const float default_g, const float default_b) :
 	r_socket_val(std::make_shared<FloatSocketValue>(default_r, 0.0f, 1.0f)),
 	g_socket_val(std::make_shared<FloatSocketValue>(default_g, 0.0f, 1.0f)),
 	b_socket_val(std::make_shared<FloatSocketValue>(default_b, 0.0f, 1.0f))
@@ -132,7 +132,7 @@ cse::SocketType cse::ColorSocketValue::get_type() const
 	return SocketType::COLOR;
 }
 
-cse::StringEnumPair::StringEnumPair(std::string display_value, std::string internal_value)
+cse::StringEnumPair::StringEnumPair(const std::string& display_value, const std::string& internal_value)
 {
 	this->display_value = display_value;
 	this->internal_value = internal_value;

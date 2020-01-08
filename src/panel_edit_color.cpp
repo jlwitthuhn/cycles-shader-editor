@@ -36,6 +36,11 @@ void cse::EditColorPanel::pre_draw()
 	if (mouse_hue_selection_active) {
 		set_hue_from_mouse();
 	}
+
+	const HueSatVal hsv = get_hsv();
+	if (hsv.hue >= 0.0f) {
+		last_hue = hsv.hue;
+	}
 }
 
 float cse::EditColorPanel::draw(NVGcontext* const draw_context)
@@ -49,13 +54,13 @@ float cse::EditColorPanel::draw(NVGcontext* const draw_context)
 	const auto attached_color_ptr = attached_color.lock();
 
 	// We need to know the color value as HSV to draw the ui
-	HueSatVal hsv = get_hsv();
 	RedGreenBlue rgb_from_hue;
 	{
 		// Get RGB here, set sat and val to 1 to get the brightest color at this hue
-		HueSatVal hsv_tmp = hsv;
+		HueSatVal hsv_tmp;
 		hsv_tmp.sat = 1.0f;
 		hsv_tmp.val = 1.0f;
+		hsv_tmp.hue = last_hue;
 		rgb_from_hue = rgb_from_hsv(hsv_tmp);
 	}
 
@@ -86,6 +91,7 @@ float cse::EditColorPanel::draw(NVGcontext* const draw_context)
 		nvgFill(draw_context);
 
 		// Cursor
+		const HueSatVal hsv = get_hsv();
 		const float cursor_pos_x = hsv.sat * rect_width + draw_x;
 		const float cursor_pos_y = (1.0f - hsv.val) * rect_height + draw_y;
 		Drawing::draw_color_pick_cursor(draw_context, Float2(cursor_pos_x, cursor_pos_y));
@@ -145,7 +151,7 @@ float cse::EditColorPanel::draw(NVGcontext* const draw_context)
 		}
 
 		// Draw slider bar on current hue value
-		float hue_slider_position_x = hsv.hue * hue_bar_width + draw_x;
+		float hue_slider_position_x = last_hue * hue_bar_width + draw_x;
 		nvgBeginPath(draw_context);
 		nvgMoveTo(draw_context, hue_slider_position_x, height_drawn);
 		nvgLineTo(draw_context, hue_slider_position_x, height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT);
@@ -228,8 +234,12 @@ void cse::EditColorPanel::set_attached_value(const std::weak_ptr<SocketValue> so
 	if (auto socket_value_ptr = socket_value.lock()) {
 		if (socket_value_ptr->get_type() == SocketType::COLOR) {
 			const auto color_value_ptr = std::dynamic_pointer_cast<ColorSocketValue>(socket_value_ptr);
-			if (attached_color.lock() != color_value_ptr) {
-				reset();
+			const auto attached_color_ptr = attached_color.lock();
+			if (attached_color_ptr != color_value_ptr) {
+				if (attached_color_ptr) {
+					attached_color_ptr->last_hue = last_hue;
+				}
+				last_hue = color_value_ptr->last_hue;
 				attached_color = color_value_ptr;
 				input_widget.clear_sockets();
 				input_widget.add_socket_input("Red:", color_value_ptr->r_socket_val);
@@ -256,11 +266,6 @@ bool cse::EditColorPanel::should_push_undo_state()
 	return result;
 }
 
-void cse::EditColorPanel::reset()
-{
-	last_hue = 0.0f;
-}
-
 cse::HueSatVal cse::EditColorPanel::get_hsv()
 {
 	RedGreenBlue rgb;
@@ -270,11 +275,6 @@ cse::HueSatVal cse::EditColorPanel::get_hsv()
 		rgb.b = locked->b_socket_val->get_value();
 	}
 	HueSatVal hsv = hsv_from_rgb(rgb);
-	if (hsv.hue < 0.0f) {
-		// Negative hue indicates monochrome color
-		// Use the most recent hue instead
-		hsv.hue = last_hue;
-	}
 	return hsv;
 }
 
@@ -295,14 +295,14 @@ void cse::EditColorPanel::set_hue_from_mouse()
 	if (new_hue < 0.0f) {
 		new_hue = 0.0f;
 	}
-	else if (new_hue > 1.0f) {
-		new_hue = 1.0f;
+	else if (new_hue >= 1.0f) {
+		new_hue = 0.0f;
 	}
 
 	HueSatVal hsv = get_hsv();
 	hsv.hue = new_hue;
-	set_hsv(hsv);
 	last_hue = new_hue;
+	set_hsv(hsv);
 }
 
 void cse::EditColorPanel::set_sat_val_from_mouse()
@@ -314,5 +314,8 @@ void cse::EditColorPanel::set_sat_val_from_mouse()
 	HueSatVal hsv = get_hsv();
 	hsv.sat = new_sat;
 	hsv.val = new_val;
+	if (hsv.hue < 0.0f) {
+		hsv.hue = last_hue;
+	}
 	set_hsv(hsv);
 }
