@@ -10,16 +10,17 @@ struct NVGcontext;
 namespace cse {
 
 	class Float2;
+	class FloatSocketValue;
 	class Float3SocketValue;
+	class IntSocketValue;
 	class SocketValue;
 
-	class EditVectorPanel : public EditParamPanel {
+	class EditMultiInputPanel : public EditParamPanel {
 	public:
-		EditVectorPanel(float width);
+		EditMultiInputPanel(float width);
 
 		virtual bool is_active() const override;
 
-		virtual void pre_draw() override;
 		virtual float draw(NVGcontext* draw_context) override;
 
 		virtual void set_mouse_local_position(Float2 local_pos) override;
@@ -35,6 +36,8 @@ namespace cse {
 		virtual bool should_push_undo_state() override;
 
 	private:
+		std::weak_ptr<IntSocketValue> attached_int;
+		std::weak_ptr<FloatSocketValue> attached_float;
 		std::weak_ptr<Float3SocketValue> attached_vec;
 
 		float input_widget_pos = 0.0f;

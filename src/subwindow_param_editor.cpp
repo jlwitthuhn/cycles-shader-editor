@@ -13,9 +13,7 @@
 #include "panel_edit_color_ramp.h"
 #include "panel_edit_curve.h"
 #include "panel_edit_enum.h"
-#include "panel_edit_float.h"
-#include "panel_edit_int.h"
-#include "panel_edit_vector.h"
+#include "panel_edit_multi_input.h"
 #include "selection.h"
 #include "sockets.h"
 #include "util_enum.h"
@@ -30,9 +28,7 @@ cse::ParamEditorSubwindow::ParamEditorSubwindow(const Float2 screen_position) :
 	panels.push_back(std::make_shared<EditColorRampPanel>(UI_SUBWIN_PARAM_EDIT_WIDTH));
 	panels.push_back(std::make_shared<EditCurvePanel>(UI_SUBWIN_PARAM_EDIT_WIDTH));
 	panels.push_back(std::make_shared<EditEnumPanel>(UI_SUBWIN_PARAM_EDIT_WIDTH));
-	panels.push_back(std::make_shared<EditFloatPanel>(UI_SUBWIN_PARAM_EDIT_WIDTH));
-	panels.push_back(std::make_shared<EditIntPanel>(UI_SUBWIN_PARAM_EDIT_WIDTH));
-	panels.push_back(std::make_shared<EditVectorPanel>(UI_SUBWIN_PARAM_EDIT_WIDTH));
+	panels.push_back(std::make_shared<EditMultiInputPanel>(UI_SUBWIN_PARAM_EDIT_WIDTH));
 }
 
 void cse::ParamEditorSubwindow::pre_draw()
