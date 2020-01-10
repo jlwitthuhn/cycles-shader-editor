@@ -48,7 +48,7 @@ bool cse::EditParamPanel::is_mouse_over() const
 	return false;
 }
 
-bool cse::EditParamPanel::should_capture_input() const
+bool cse::EditParamPanel::has_input_focus() const
 {
 	return false;
 }

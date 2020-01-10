@@ -26,7 +26,7 @@ namespace cse {
 		virtual void handle_key(int key, int scancode, int action, int mods) override;
 		virtual void handle_character(unsigned int codepoint) override;
 
-		virtual bool should_capture_input() const override;
+		virtual bool has_input_focus() const override;
 		virtual void deselect_input_box() override;
 
 		virtual bool is_active() const override;

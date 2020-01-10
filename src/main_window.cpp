@@ -298,24 +298,10 @@ void cse::EditorMainWindow::pre_draw()
 	}
 
 	// Update any other state we need
-	view->update();
+	view->pre_draw();
 	status_bar->set_zoom_text(view->get_zoom_string());
 	for (auto& subwindow : subwindows) {
 		subwindow->update_selection(view->get_const_selection());
-	}
-
-	// Update toolbar button state
-	if (undo_stack.undo_available()) {
-		toolbar->set_button_enabled(cse::ToolbarButtonType::UNDO, true);
-	}
-	else {
-		toolbar->set_button_enabled(cse::ToolbarButtonType::UNDO, false);
-	}
-	if (undo_stack.redo_available()) {
-		toolbar->set_button_enabled(cse::ToolbarButtonType::REDO, true);
-	}
-	else {
-		toolbar->set_button_enabled(cse::ToolbarButtonType::REDO, false);
 	}
 
 	// Mark all connected input sockets
@@ -325,6 +311,11 @@ void cse::EditorMainWindow::pre_draw()
 		}
 	}
 
+	// Update toolbar button state
+	toolbar->set_button_enabled(cse::ToolbarButtonType::UNDO, undo_stack.undo_available());
+	toolbar->set_button_enabled(cse::ToolbarButtonType::REDO, undo_stack.redo_available());
+
+	// Run all UI pre_draw last
 	for (auto& this_subwindow : subwindows) {
 		this_subwindow->pre_draw();
 	}
@@ -424,7 +415,7 @@ bool cse::EditorMainWindow::forward_mouse_to_subwindow(const int button, const i
 bool cse::EditorMainWindow::forward_key_to_subwindow(const int key, const int scancode, const int action, const int mods)
 {
 	for (auto& this_subwindow : subwindows) {
-		if (this_subwindow->should_capture_input()) {
+		if (this_subwindow->has_input_focus()) {
 			this_subwindow->handle_key(key, scancode, action, mods);
 			return true;
 		}
@@ -435,7 +426,7 @@ bool cse::EditorMainWindow::forward_key_to_subwindow(const int key, const int sc
 bool cse::EditorMainWindow::forward_character_to_subwindow(const unsigned int codepoint)
 {
 	for (auto& this_subwindow : subwindows) {
-		if (this_subwindow->should_capture_input()) {
+		if (this_subwindow->has_input_focus()) {
 			this_subwindow->handle_character(codepoint);
 			return true;
 		}

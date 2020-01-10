@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "util_vector.h"
+#include "widget.h"
 
 struct NVGcontext;
 
@@ -14,7 +15,7 @@ namespace cse {
 	class SocketValue;
 
 	// Widget that can accept input for multiple socket values
-	class MultiInputWidget {
+	class MultiInputWidget : public Widget {
 	public:
 		MultiInputWidget(float width);
 
@@ -23,20 +24,14 @@ namespace cse {
 
 		bool complete_input();
 
-		float draw(NVGcontext* draw_context);
+		virtual float draw(NVGcontext* draw_context) override;
 
-		void set_mouse_local_position(Float2 local_pos);
-
-		bool should_capture_input() const;
-		void handle_mouse_button(int button, int action, int mods);
-		void handle_key(int key, int scancode, int action, int mods);
-		void handle_character(unsigned int codepoint);
-
-		bool should_push_undo_state();
+		virtual bool has_input_focus() const override;
+		virtual void handle_mouse_button(int button, int action, int mods) override;
+		virtual void handle_key(int key, int scancode, int action, int mods) override;
+		virtual void handle_character(unsigned int codepoint) override;
 
 	private:
-		const float width;
-
 		class InputRow {
 		public:
 			InputRow(std::string label, std::weak_ptr<SocketValue> socket_value, std::shared_ptr<cse::BaseInputBox> input_box);
@@ -47,9 +42,5 @@ namespace cse {
 		};
 
 		std::vector<InputRow> sockets;
-
-		Float2 mouse_local_pos;
-
-		bool request_undo_push = false;
 	};
 }

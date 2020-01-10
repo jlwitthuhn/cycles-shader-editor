@@ -220,14 +220,14 @@ void cse::EditColorRampPanel::set_mouse_local_position(const Float2 local_pos)
 	edit_color_panel->set_mouse_local_position(exit_color_mouse_pos);
 }
 
-bool cse::EditColorRampPanel::should_capture_input() const
+bool cse::EditColorRampPanel::has_input_focus() const
 {
 	bool result = false;
 	for (const auto& this_row : ramp_rows) {
-		result = this_row.box_pos.should_capture_input() || result;
-		result = this_row.box_alpha.should_capture_input() || result;
+		result = this_row.box_pos.has_input_focus() || result;
+		result = this_row.box_alpha.has_input_focus() || result;
 	}
-	result = edit_color_panel->should_capture_input() || result;
+	result = edit_color_panel->has_input_focus() || result;
 	return result && is_active();
 }
 
@@ -285,7 +285,7 @@ void cse::EditColorRampPanel::handle_key(const int key, const int scancode, cons
 		}
 	}
 
-	if (edit_color_panel->should_capture_input()) {
+	if (edit_color_panel->has_input_focus()) {
 		edit_color_panel->handle_key(key, scancode, action, mods);
 	}
 }
@@ -293,12 +293,12 @@ void cse::EditColorRampPanel::handle_key(const int key, const int scancode, cons
 void cse::EditColorRampPanel::handle_character(const unsigned int codepoint)
 {
 	for (auto& this_row : ramp_rows) {
-		if (this_row.should_capture_input()) {
+		if (this_row.has_input_focus()) {
 			this_row.handle_character(codepoint);
 		}
 	}
 
-	if (edit_color_panel->should_capture_input()) {
+	if (edit_color_panel->has_input_focus()) {
 		edit_color_panel->handle_character(codepoint);
 	}
 }
@@ -354,20 +354,20 @@ cse::EditColorRampPanel::ColorRampRow::ColorRampRow(const cse::ColorRampPoint po
 	box_alpha.attach_float_value(value_alpha);
 }
 
-bool cse::EditColorRampPanel::ColorRampRow::should_capture_input() const
+bool cse::EditColorRampPanel::ColorRampRow::has_input_focus() const
 {
 	bool result = false;
-	result = box_pos.should_capture_input() || result;
-	result = box_alpha.should_capture_input() || result;
+	result = box_pos.has_input_focus() || result;
+	result = box_alpha.has_input_focus() || result;
 	return result;
 }
 
 void cse::EditColorRampPanel::ColorRampRow::handle_character(const unsigned int codepoint)
 {
-	if (box_pos.should_capture_input()) {
+	if (box_pos.has_input_focus()) {
 		box_pos.handle_character(codepoint);
 	}
-	if (box_alpha.should_capture_input()) {
+	if (box_alpha.has_input_focus()) {
 		box_alpha.handle_character(codepoint);
 	}
 }

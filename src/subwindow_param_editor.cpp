@@ -97,7 +97,7 @@ void cse::ParamEditorSubwindow::handle_mouse_button(const int button, const int 
 void cse::ParamEditorSubwindow::handle_key(const int key, const int scancode, const int action, const int mods)
 {
 	for (const auto& this_panel : panels) {
-		if (this_panel->should_capture_input()) {
+		if (this_panel->has_input_focus()) {
 			this_panel->handle_key(key, scancode, action, mods);
 		}
 	}
@@ -106,7 +106,7 @@ void cse::ParamEditorSubwindow::handle_key(const int key, const int scancode, co
 void cse::ParamEditorSubwindow::handle_character(const unsigned int codepoint)
 {
 	for (const auto& this_panel : panels) {
-		if (this_panel->should_capture_input()) {
+		if (this_panel->has_input_focus()) {
 			this_panel->handle_character(codepoint);
 		}
 	}
@@ -147,10 +147,10 @@ void cse::ParamEditorSubwindow::update_selection(const std::weak_ptr<const Selec
 	}
 }
 
-bool cse::ParamEditorSubwindow::should_capture_input() const
+bool cse::ParamEditorSubwindow::has_input_focus() const
 {
 	for (const auto& this_panel : panels) {
-		if (this_panel->should_capture_input()) {
+		if (this_panel->has_input_focus()) {
 			return true;
 		}
 	}

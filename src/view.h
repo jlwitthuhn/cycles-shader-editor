@@ -37,7 +37,7 @@ namespace cse {
 
 		// Main 3 functions called from the main loop
 		void set_mouse_position(Float2 view_local_mouse_pos, int viewport_width, int viewport_height);
-		void update();
+		void pre_draw();
 		void draw(NVGcontext* draw_context);
 
 		// Input

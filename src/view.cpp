@@ -78,7 +78,7 @@ void cse::EditGraphView::set_mouse_position(const Float2 view_local_mouse_pos, c
 	}
 }
 
-void cse::EditGraphView::update()
+void cse::EditGraphView::pre_draw()
 {
 	if (box_select_active) {
 		world_box_select_end = mouse_world_position;

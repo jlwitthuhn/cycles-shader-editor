@@ -118,7 +118,7 @@ void cse::BaseInputBox::cancel_edit()
 	selected = false;
 }
 
-bool cse::BaseInputBox::should_capture_input() const
+bool cse::BaseInputBox::has_input_focus() const
 {
 	return selected;
 }

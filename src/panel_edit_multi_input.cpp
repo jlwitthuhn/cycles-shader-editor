@@ -45,12 +45,12 @@ void cse::EditMultiInputPanel::set_mouse_local_position(const Float2 local_pos)
 	EditParamPanel::set_mouse_local_position(local_pos);
 
 	const Float2 input_widget_offset = local_pos - Float2(0.0f, input_widget_pos);
-	input_widget.set_mouse_local_position(input_widget_offset);
+	input_widget.set_mouse_local_pos(input_widget_offset);
 }
 
-bool cse::EditMultiInputPanel::should_capture_input() const
+bool cse::EditMultiInputPanel::has_input_focus() const
 {
-	return input_widget.should_capture_input();
+	return input_widget.has_input_focus();
 }
 
 void cse::EditMultiInputPanel::handle_mouse_button(const int button, const int action, const int mods)
@@ -60,14 +60,14 @@ void cse::EditMultiInputPanel::handle_mouse_button(const int button, const int a
 
 void cse::EditMultiInputPanel::handle_key(const int key, int scancode, const int action, const int mods)
 {
-	if (input_widget.should_capture_input()) {
+	if (input_widget.has_input_focus()) {
 		input_widget.handle_key(key, scancode, action, mods);
 	}
 }
 
 void cse::EditMultiInputPanel::handle_character(const unsigned int codepoint)
 {
-	if (input_widget.should_capture_input()) {
+	if (input_widget.has_input_focus()) {
 		input_widget.handle_character(codepoint);
 	}
 }

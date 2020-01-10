@@ -28,7 +28,7 @@ namespace cse {
 		bool complete_edit();
 		void cancel_edit();
 
-		bool should_capture_input() const;
+		bool has_input_focus() const;
 
 		float width;
 		float height;

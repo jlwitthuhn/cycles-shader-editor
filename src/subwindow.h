@@ -29,7 +29,7 @@ namespace cse {
 		virtual void set_mouse_position(Float2 local_position, float max_pos_y);
 
 		// Returns true if this subwindow wants to capture keyboard input
-		virtual bool should_capture_input() const;
+		virtual bool has_input_focus() const;
 		virtual void deselect_input_box();
 
 		virtual void handle_mouse_button(int button, int action, int mods);

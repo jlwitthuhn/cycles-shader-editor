@@ -25,12 +25,12 @@ static std::shared_ptr<cse::BaseInputBox> get_input_box_for_value(const std::sha
 	}
 }
 
-cse::MultiInputWidget::MultiInputWidget(const float width) : width(width)
+cse::MultiInputWidget::MultiInputWidget(const float width) : Widget(width)
 {
 
 }
 
-bool cse::MultiInputWidget::add_socket_input(const std::string label, std::weak_ptr<SocketValue> socket_value)
+bool cse::MultiInputWidget::add_socket_input(const std::string label, const std::weak_ptr<SocketValue> socket_value)
 {
 	if (const auto locked = socket_value.lock()) {
 		const std::shared_ptr<cse::BaseInputBox> input_box = get_input_box_for_value(locked);
@@ -93,7 +93,7 @@ float cse::MultiInputWidget::draw(NVGcontext* const draw_context)
 
 			const float input_x_draw = width - this_socket.input_box->width - 2 * UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HPAD;
 			const float input_y_draw = height_drawn + (UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT - this_socket.input_box->height) / 2;
-			const bool highlight = this_socket.input_box->contains_point(mouse_local_pos);
+			const bool highlight = this_socket.input_box->contains_point(mouse_pos);
 			this_socket.input_box->set_position(Float2(input_x_draw, input_y_draw));
 			this_socket.input_box->draw(draw_context, highlight);
 
@@ -104,25 +104,20 @@ float cse::MultiInputWidget::draw(NVGcontext* const draw_context)
 	return height_drawn;
 }
 
-void cse::MultiInputWidget::set_mouse_local_position(const Float2 local_pos)
-{
-	mouse_local_pos = local_pos;
-}
-
-bool cse::MultiInputWidget::should_capture_input() const
+bool cse::MultiInputWidget::has_input_focus() const
 {
 	bool result = false;
 	for (const auto& this_socket : sockets) {
-		result = this_socket.input_box->should_capture_input() || result;
+		result = this_socket.input_box->has_input_focus() || result;
 	}
 	return result;
 }
 
-void cse::MultiInputWidget::handle_mouse_button(const int button, const int action, const int /*mods*/)
+void cse::MultiInputWidget::handle_mouse_button(const int button, const int action, int)
 {
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
 		for (const auto& this_socket : sockets) {
-			if (this_socket.input_box->contains_point(mouse_local_pos)) {
+			if (this_socket.input_box->contains_point(mouse_pos)) {
 				this_socket.input_box->begin_edit();
 			}
 			else {
@@ -132,10 +127,10 @@ void cse::MultiInputWidget::handle_mouse_button(const int button, const int acti
 	}
 }
 
-void cse::MultiInputWidget::handle_key(const int key, int /*scancode*/, const int action, const int /*mods*/)
+void cse::MultiInputWidget::handle_key(const int key, int, const int action, int)
 {
 	for (const auto& this_socket : sockets) {
-		if (this_socket.input_box->should_capture_input()) {
+		if (this_socket.input_box->has_input_focus()) {
 			if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
 				this_socket.input_box->cancel_edit();
 			}
@@ -152,20 +147,13 @@ void cse::MultiInputWidget::handle_key(const int key, int /*scancode*/, const in
 void cse::MultiInputWidget::handle_character(const unsigned int codepoint)
 {
 	for (const auto& this_socket : sockets) {
-		if (this_socket.input_box->should_capture_input()) {
+		if (this_socket.input_box->has_input_focus()) {
 			this_socket.input_box->handle_character(codepoint);
 		}
 	}
 }
 
-bool cse::MultiInputWidget::should_push_undo_state()
-{
-	bool result = request_undo_push;
-	request_undo_push = false;
-	return result;
-}
-
-cse::MultiInputWidget::InputRow::InputRow(const std::string label, std::weak_ptr<SocketValue> socket_value, const std::shared_ptr<cse::BaseInputBox> input_box) :
+cse::MultiInputWidget::InputRow::InputRow(const std::string label, const std::weak_ptr<SocketValue> socket_value, const std::shared_ptr<cse::BaseInputBox> input_box) :
 	label(label),
 	socket_value(socket_value),
 	input_box(input_box)

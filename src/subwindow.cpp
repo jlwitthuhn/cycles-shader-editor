@@ -128,7 +128,7 @@ void cse::NodeEditorSubwindow::set_mouse_position(Float2 local_position, float m
 	mouse_content_pos = mouse_local_pos - Float2(0.0f, UI_SUBWIN_HEADER_HEIGHT + 3.0f);
 }
 
-bool cse::NodeEditorSubwindow::should_capture_input() const
+bool cse::NodeEditorSubwindow::has_input_focus() const
 {
 	return false;
 }
