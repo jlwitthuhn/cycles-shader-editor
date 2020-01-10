@@ -293,11 +293,8 @@ void cse::EditColorRampPanel::handle_key(const int key, const int scancode, cons
 void cse::EditColorRampPanel::handle_character(const unsigned int codepoint)
 {
 	for (auto& this_row : ramp_rows) {
-		if (this_row.box_pos.should_capture_input()) {
-			this_row.box_pos.handle_character(codepoint);
-		}
-		if (this_row.box_alpha.should_capture_input()) {
-			this_row.box_alpha.handle_character(codepoint);
+		if (this_row.should_capture_input()) {
+			this_row.handle_character(codepoint);
 		}
 	}
 
@@ -355,4 +352,22 @@ cse::EditColorRampPanel::ColorRampRow::ColorRampRow(const cse::ColorRampPoint po
 {
 	box_pos.attach_float_value(value_pos);
 	box_alpha.attach_float_value(value_alpha);
+}
+
+bool cse::EditColorRampPanel::ColorRampRow::should_capture_input() const
+{
+	bool result = false;
+	result = box_pos.should_capture_input() || result;
+	result = box_alpha.should_capture_input() || result;
+	return result;
+}
+
+void cse::EditColorRampPanel::ColorRampRow::handle_character(const unsigned int codepoint)
+{
+	if (box_pos.should_capture_input()) {
+		box_pos.handle_character(codepoint);
+	}
+	if (box_alpha.should_capture_input()) {
+		box_alpha.handle_character(codepoint);
+	}
 }

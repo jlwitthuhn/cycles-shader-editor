@@ -47,6 +47,9 @@ namespace cse {
 		public:
 			ColorRampRow(cse::ColorRampPoint point);
 
+			bool should_capture_input() const;
+			void handle_character(unsigned int codepoint);
+
 			FloatInputBox box_pos;
 			FloatInputBox box_alpha;
 			Area color_target;
