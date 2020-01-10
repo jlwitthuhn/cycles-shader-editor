@@ -18,7 +18,7 @@
 #include "util_enum.h"
 #include "util_platform.h"
 
-static constexpr int GRID_SIZE_INT = 32;
+static constexpr int GRID_SIZE_INT = 36;
 static constexpr float GRID_SIZE_FL = static_cast<float>(GRID_SIZE_INT);
 
 cse::EditGraphView::ViewBorders::ViewBorders(
