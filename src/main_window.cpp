@@ -329,6 +329,15 @@ void cse::EditorMainWindow::draw()
 		toolbar->draw(nvg_ctx_pointer, static_cast<float>(window_width));
 	}
 
+	// Draw status bar
+	if (status_bar != nullptr) {
+		const float status_bar_height = NodeEditorStatusBar::get_status_bar_height();
+		nvgSave(nvg_ctx_pointer);
+		nvgTranslate(nvg_ctx_pointer, 0.0f, static_cast<float>(window_height) - status_bar_height);
+		status_bar->draw(nvg_ctx_pointer, static_cast<float>(window_width));
+		nvgRestore(nvg_ctx_pointer);
+	}
+
 	// Draw subwindows
 	std::list<std::unique_ptr<NodeEditorSubwindow>>::reverse_iterator window_iter;
 	for (window_iter = subwindows.rbegin(); window_iter != subwindows.rend(); ++window_iter) {
@@ -336,15 +345,6 @@ void cse::EditorMainWindow::draw()
 		nvgSave(nvg_ctx_pointer);
 		nvgTranslate(nvg_ctx_pointer, subwindow_pos.x, subwindow_pos.y);
 		(*window_iter)->draw(nvg_ctx_pointer);
-		nvgRestore(nvg_ctx_pointer);
-	}
-
-	// Draw status bar
-	if (status_bar != nullptr) {
-		const float status_bar_height = NodeEditorStatusBar::get_status_bar_height();
-		nvgSave(nvg_ctx_pointer);
-		nvgTranslate(nvg_ctx_pointer, 0.0f, static_cast<float>(window_height) - status_bar_height);
-		status_bar->draw(nvg_ctx_pointer, static_cast<float>(window_width));
 		nvgRestore(nvg_ctx_pointer);
 	}
 }
