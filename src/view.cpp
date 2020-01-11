@@ -209,26 +209,29 @@ void cse::EditGraphView::draw(NVGcontext* draw_context)
 void cse::EditGraphView::handle_mouse_button(const int button, const int action, const int mods)
 {
 	const std::weak_ptr<EditableNode> weak_focused_node = graph->get_node_under_point(mouse_world_position);
-	const auto focused_label_ptr = graph->get_socket_under_point(mouse_world_position).lock();
-	const auto focused_connector_in_ptr = graph->get_connector_under_point(mouse_world_position, SocketIOType::INPUT).lock();
-	const auto focused_connector_out_ptr = graph->get_connector_under_point(mouse_world_position, SocketIOType::OUTPUT).lock();
+	const auto focused_connector_out = graph->get_connector_under_point(mouse_world_position, SocketIOType::OUTPUT);
+	const auto focused_connector_in = graph->get_connector_under_point(mouse_world_position, SocketIOType::INPUT);
+	const auto focused_label = graph->get_socket_under_point(mouse_world_position);
 
-	if (focused_connector_out_ptr) {
+	if (focused_connector_out.expired() == false) {
 		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+			const auto focused_connector_out_ptr = focused_connector_out.lock();
 			begin_connection(focused_connector_out_ptr);
 		}
 	}
-	else if (focused_connector_in_ptr) {
+	else if (focused_connector_in.expired() == false) {
 		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+			const auto focused_connector_in_ptr = focused_connector_in.lock();
 			reroute_connection(focused_connector_in_ptr);
 		}
 		else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
+			const auto focused_connector_in_ptr = focused_connector_in.lock();
 			complete_connection(focused_connector_in_ptr);
 		}
 	}
-	else if (const auto focused_node = weak_focused_node.lock()) {
+	else if (weak_focused_node.expired() == false) {
 		// If the user clicked a label, select it
-		if (focused_label_ptr) {
+		if (focused_label.expired() == false) {
 			if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
 				select_label_under_mouse();
 			}
@@ -378,12 +381,10 @@ void cse::EditGraphView::begin_connection(const std::weak_ptr<NodeSocket> socket
 
 void cse::EditGraphView::complete_connection(const std::weak_ptr<NodeSocket> socket_end)
 {
-	if (connection_in_progress_start.expired()) {
+	if (connection_in_progress_start.expired() || socket_end.expired()) {
 		return;
 	}
-	if (socket_end.lock()) {
-		graph->add_connection(connection_in_progress_start, socket_end);
-	}
+	graph->add_connection(connection_in_progress_start, socket_end);
 	cancel_connection();
 }
 

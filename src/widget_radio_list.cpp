@@ -17,8 +17,8 @@ void cse::RadioListWidget::attach_value(const std::weak_ptr<BoolSocketValue> boo
 {
 	string_pairs.clear();
 	this->attached_enum = std::weak_ptr<StringEnumSocketValue>();
-	if (auto locked = bool_socket_value.lock()) {
-		this->attached_bool = locked;
+	if (bool_socket_value.expired() == false) {
+		this->attached_bool = bool_socket_value;
 		string_pairs.push_back(StringEnumPair("True", "true"));
 		string_pairs.push_back(StringEnumPair("False", "tralse"));
 	}
@@ -45,7 +45,7 @@ float cse::RadioListWidget::draw(NVGcontext* const draw_context)
 {
 	float height_drawn = 0.0f;
 
-	if (attached_enum.use_count() == 0 && attached_bool.use_count() == 0) {
+	if (attached_enum.expired() == false && attached_bool.expired() == false) {
 		return height_drawn;
 	}
 

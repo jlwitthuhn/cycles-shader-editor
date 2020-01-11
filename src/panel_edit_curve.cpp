@@ -27,7 +27,7 @@ cse::EditCurvePanel::EditCurvePanel(const float width) :
 
 bool cse::EditCurvePanel::is_active() const
 {
-	return static_cast<bool>(attached_curve.lock());
+	return (attached_curve.expired() == false);
 }
 
 void cse::EditCurvePanel::pre_draw()
@@ -64,9 +64,6 @@ float cse::EditCurvePanel::draw(NVGcontext* const draw_context)
 	}
 
 	const auto attached_curve_ptr = attached_curve.lock();
-	if (attached_curve_ptr.use_count() == 0) {
-		return 0.0f;
-	}
 
 	// Draw curve view
 	{

@@ -21,7 +21,7 @@ cse::EditColorPanel::EditColorPanel(const float width) :
 
 bool cse::EditColorPanel::is_active() const
 {
-	return static_cast<bool>(attached_color.lock());
+	return (attached_color.expired() == false);
 }
 
 void cse::EditColorPanel::pre_draw()
@@ -52,8 +52,6 @@ float cse::EditColorPanel::draw(NVGcontext* const draw_context)
 	if (is_active() == false) {
 		return height_drawn;
 	}
-
-	const auto attached_color_ptr = attached_color.lock();
 
 	// We need to know the color value as HSV to draw the ui
 	// Get RGB here, set sat and val to 1 to get the brightest color at this hue

@@ -257,16 +257,10 @@ void cse::EditorMainWindow::pre_draw()
 	{
 		bool should_push_undo_state = false;
 		for (auto& this_subwindow : subwindows) {
-			if (this_subwindow->needs_undo_push()) {
-				should_push_undo_state = true;
-			}
+			should_push_undo_state = this_subwindow->needs_undo_push() || should_push_undo_state;
 		}
-		if (main_graph->needs_undo_push()) {
-			should_push_undo_state = true;
-		}
-		if (view->needs_undo_push()) {
-			should_push_undo_state = true;
-		}
+		should_push_undo_state = main_graph->needs_undo_push() || should_push_undo_state;
+		should_push_undo_state = view->needs_undo_push() || should_push_undo_state;
 		if (should_push_undo_state) {
 			push_undo_state();
 		}

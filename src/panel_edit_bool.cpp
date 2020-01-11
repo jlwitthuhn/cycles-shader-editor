@@ -13,7 +13,7 @@ cse::EditBoolPanel::EditBoolPanel(const float width) :
 
 bool cse::EditBoolPanel::is_active() const
 {
-	return attached_bool.use_count() > 0;
+	return (attached_bool.expired() == false);
 }
 
 void cse::EditBoolPanel::pre_draw()

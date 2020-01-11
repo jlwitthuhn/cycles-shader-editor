@@ -76,10 +76,11 @@ float cse::MultiInputWidget::draw(NVGcontext* const draw_context)
 	else {
 		// Iterate through and draw all sockets
 		for (auto this_socket : sockets) {
-			const std::shared_ptr<SocketValue> this_val = this_socket.socket_value.lock();
-			if (this_val.use_count() == 0) {
+			if (this_socket.socket_value.expired()) {
 				continue;
 			}
+
+			const std::shared_ptr<SocketValue> this_val = this_socket.socket_value.lock();
 
 			nvgFontSize(draw_context, UI_FONT_SIZE_NORMAL);
 			nvgFontFace(draw_context, "sans");

@@ -119,7 +119,7 @@ std::weak_ptr<cse::NodeSocket> cse::EditableGraph::get_socket_under_point(const 
 {
 	for (const auto this_node : nodes) {
 		auto maybe_result = this_node->get_socket_label_under_point(world_pos);
-		if (maybe_result.lock()) {
+		if (maybe_result.expired() == false) {
 			return maybe_result;
 		}
 	}
@@ -141,11 +141,11 @@ std::weak_ptr<cse::NodeSocket> cse::EditableGraph::get_connector_under_point(con
 
 void cse::EditableGraph::raise_node(const std::weak_ptr<cse::EditableNode> weak_node)
 {
-	const std::shared_ptr<EditableNode> node_to_raise = weak_node.lock();
-
-	if (node_to_raise.use_count() == 0) {
+	if (weak_node.expired()) {
 		return;
 	}
+
+	const std::shared_ptr<EditableNode> node_to_raise = weak_node.lock();
 
 	// Exit early if this is already the top node
 	if (nodes.front() == node_to_raise) {
