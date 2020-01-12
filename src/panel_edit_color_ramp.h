@@ -23,6 +23,7 @@ namespace cse {
 	class EditColorRampPanel : public EditParamPanel {
 	public:
 		EditColorRampPanel(float width);
+		virtual ~EditColorRampPanel() override;
 
 		virtual bool is_active() const override;
 
@@ -42,6 +43,8 @@ namespace cse {
 		virtual bool should_push_undo_state() override;
 
 	private:
+		void update_preview();
+
 		// Everything needed to support one row in the UI
 		class ColorRampRow {
 		public:
@@ -72,5 +75,14 @@ namespace cse {
 
 		float edit_color_panel_pos = 0.0f;
 		std::shared_ptr<EditColorPanel> edit_color_panel;
+
+		static constexpr int PREVIEW_WIDTH_PX = 256;
+		static constexpr int PREVIEW_CHANNELS = 4;
+		unsigned char preview_tex_color[PREVIEW_WIDTH_PX * PREVIEW_CHANNELS];
+		unsigned char preview_tex_alpha[PREVIEW_WIDTH_PX * PREVIEW_CHANNELS];
+
+		NVGcontext* nvg_context = nullptr;
+		int nvg_handle_preview_color = -1;
+		int nvg_handle_preview_alpha = -1;
 	};
 }

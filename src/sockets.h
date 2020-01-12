@@ -144,7 +144,7 @@ namespace cse {
 
 		std::vector<ColorRampPoint> ramp_points;
 
-		std::vector<Float4> evaluate_samples() const;
+		std::vector<Float4> evaluate_samples(unsigned int count = 256) const;
 	};
 
 	class NodeSocket {

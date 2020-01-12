@@ -23,8 +23,14 @@ namespace cse {
 		nvgEndFrame(ctx->context_ptr);
 	}
 
-	// Color stuff
-	inline void nvgFillColor(NVGcontext* const ctx, const Float3& color)
+	// Path
+	inline void nvgRect(NVGcontext* const ctx, const Float2 begin, const Float2 size)
+	{
+		nvgRect(ctx, begin.x, begin.y, size.x, size.y);
+	}
+
+	// Color
+	inline void nvgFillColor(NVGcontext* const ctx, const Float3 color)
 	{
 		nvgFillColor(ctx, nvgRGBf(color.x, color.y, color.z));
 	}
@@ -35,8 +41,8 @@ namespace cse {
 		const float sy,
 		const float ex,
 		const float ey,
-		const Float3& icol,
-		const Float3& ocol)
+		const Float3 icol,
+		const Float3 ocol)
 	{
 		return nvgLinearGradient(ctx, sx, sy, ex, ey, nvgRGBf(icol.x, icol.y, icol.z), nvgRGBf(ocol.x, ocol.y, ocol.z));
 	}

@@ -289,14 +289,14 @@ cse::SocketType cse::ColorRampSocketValue::get_type() const
 	return SocketType::COLOR_RAMP;
 }
 
-std::vector<cse::Float4> cse::ColorRampSocketValue::evaluate_samples() const
+std::vector<cse::Float4> cse::ColorRampSocketValue::evaluate_samples(const unsigned int count) const
 {
-	constexpr size_t SAMPLE_COUNT = 256;
 	constexpr float POS_BEGIN = 0.0f;
 	constexpr float POS_END = 1.0f;
-	constexpr float POS_INCREMENT = (POS_END - POS_BEGIN) / (SAMPLE_COUNT - 1);
+	const float POS_INCREMENT = (POS_END - POS_BEGIN) / (count - 1);
 
 	std::vector<Float4> result;
+	result.reserve(count);
 
 	// Create a function-local copy of the control point vector so we can be sure it is sorted
 	std::vector<ColorRampPoint> ramp_points_local = this->ramp_points;
@@ -324,7 +324,7 @@ std::vector<cse::Float4> cse::ColorRampSocketValue::evaluate_samples() const
 
 	{
 		size_t index_search_begin = 0;
-		for (size_t i = 0; i < SAMPLE_COUNT; i++) {
+		for (size_t i = 0; i < count; i++) {
 			const float this_pos = POS_BEGIN + i * POS_INCREMENT;
 			if (this_pos <= pos_first_change) {
 				Float4 this_output(color_start.x, color_start.y, color_start.z, alpha_start);
