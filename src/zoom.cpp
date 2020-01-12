@@ -4,7 +4,6 @@
 
 cse::ZoomManager::ZoomManager()
 {
-	zooms.push_back(0.20f);
 	zooms.push_back(0.25f);
 	zooms.push_back(0.325f);
 	zooms.push_back(0.40f);
@@ -21,7 +20,6 @@ cse::ZoomManager::ZoomManager()
 	zooms.push_back(3.00f);
 	zooms.push_back(3.50f);
 	zooms.push_back(4.00f);
-	zooms.push_back(5.00f);
 
 	zoom_level = -1;
 	for (std::vector<float>::size_type i = 0; i < zooms.size(); i++) {
