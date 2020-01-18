@@ -96,6 +96,9 @@ namespace cse {
 
 		std::string display_value;
 		std::string internal_value;
+
+	protected:
+		bool this_is_spacer = false;
 	};
 
 	class StringEnumSocketValue : public SocketValue {
