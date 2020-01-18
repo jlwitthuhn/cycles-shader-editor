@@ -7,6 +7,7 @@
 
 #include "gui_sizes.h"
 #include "sockets.h"
+#include "wrapper_nvg_func.h"
 
 cse::RadioListWidget::RadioListWidget(const float width) : width(width)
 {
@@ -69,40 +70,56 @@ float cse::RadioListWidget::draw(NVGcontext* const draw_context)
 	const auto enum_ptr = attached_enum.lock();
 	const auto bool_ptr = attached_bool.lock();
 	for (StringEnumPair this_enum_value : string_pairs) {
-		bool this_value_selected = false;
-		if (enum_ptr) {
-			this_value_selected = (enum_ptr->value.internal_value == this_enum_value.internal_value);
-		}
-		else if (bool_ptr) {
-			const bool this_bool = this_enum_value.internal_value == "true";
-			this_value_selected = (this_bool == bool_ptr->value);
-		}
+		if (this_enum_value.is_spacer()) {
+			const Float2 spacer_left((width - max_draw_width) / 2.0f, height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_SPACER_HEIGHT / 2.0f);
+			const Float2 spacer_right(spacer_left.x + max_draw_width, spacer_left.y);
 
-		float circle_pos_x = width / 2.0f - max_draw_width / 2 + UI_CHECKBOX_RADIUS;
-		float circle_pos_y = height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT * 0.5f;
-		nvgBeginPath(draw_context);
-		nvgCircle(draw_context, circle_pos_x, circle_pos_y, UI_CHECKBOX_RADIUS);
-		nvgFillColor(draw_context, nvgRGBAf(0.1f, 0.1f, 0.1f, 1.0f));
-		nvgFill(draw_context);
-		if (this_value_selected) {
 			nvgBeginPath(draw_context);
-			nvgCircle(draw_context, circle_pos_x, circle_pos_y, UI_CHECKBOX_RADIUS * 0.666f);
-			nvgFillColor(draw_context, nvgRGBAf(0.9f, 0.9f, 0.9f, 1.0f));
-			nvgFill(draw_context);
+			nvgMoveTo(draw_context, spacer_left);
+			nvgLineTo(draw_context, spacer_right);
+
+			nvgStrokeWidth(draw_context, 1.0f);
+			nvgStrokeColor(draw_context, nvgRGBf(0.15f, 0.15f, 0.15f));
+			nvgStroke(draw_context);
+
+			height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_SPACER_HEIGHT;
 		}
+		else {
+			bool this_value_selected = false;
+			if (enum_ptr) {
+				this_value_selected = (enum_ptr->value.internal_value == this_enum_value.internal_value);
+			}
+			else if (bool_ptr) {
+				const bool this_bool = this_enum_value.internal_value == "true";
+				this_value_selected = (this_bool == bool_ptr->value);
+			}
 
-		float text_pos_x = width / 2.0f - max_draw_width / 2 + UI_CHECKBOX_SPACING + UI_CHECKBOX_RADIUS * 2;
-		float text_pos_y = height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT * 0.7f;
-		nvgFillColor(draw_context, nvgRGBA(0, 0, 0, 255));
-		nvgText(draw_context, text_pos_x, text_pos_y, this_enum_value.display_value.c_str(), nullptr);
+			float circle_pos_x = width / 2.0f - max_draw_width / 2 + UI_CHECKBOX_RADIUS;
+			float circle_pos_y = height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT * 0.5f;
+			nvgBeginPath(draw_context);
+			nvgCircle(draw_context, circle_pos_x, circle_pos_y, UI_CHECKBOX_RADIUS);
+			nvgFillColor(draw_context, nvgRGBAf(0.1f, 0.1f, 0.1f, 1.0f));
+			nvgFill(draw_context);
+			if (this_value_selected) {
+				nvgBeginPath(draw_context);
+				nvgCircle(draw_context, circle_pos_x, circle_pos_y, UI_CHECKBOX_RADIUS * 0.666f);
+				nvgFillColor(draw_context, nvgRGBAf(0.9f, 0.9f, 0.9f, 1.0f));
+				nvgFill(draw_context);
+			}
 
-		Float2 click_area_begin(0.0f, height_drawn);
-		Float2 click_area_end(width, height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT);
-		HolderArea<std::string> click_area(click_area_begin, click_area_end, this_enum_value.internal_value);
+			float text_pos_x = width / 2.0f - max_draw_width / 2 + UI_CHECKBOX_SPACING + UI_CHECKBOX_RADIUS * 2;
+			float text_pos_y = height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT * 0.7f;
+			nvgFillColor(draw_context, nvgRGBA(0, 0, 0, 255));
+			nvgText(draw_context, text_pos_x, text_pos_y, this_enum_value.display_value.c_str(), nullptr);
 
-		click_areas.push_back(click_area);
+			Float2 click_area_begin(0.0f, height_drawn);
+			Float2 click_area_end(width, height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT);
+			HolderArea<std::string> click_area(click_area_begin, click_area_end, this_enum_value.internal_value);
 
-		height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
+			click_areas.push_back(click_area);
+
+			height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
+		}
 	}
 
 	return height_drawn;

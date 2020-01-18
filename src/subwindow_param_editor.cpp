@@ -222,8 +222,8 @@ void cse::ParamEditorSubwindow::draw_content(NVGcontext* const draw_context)
 		nvgBeginPath(draw_context);
 		nvgMoveTo(draw_context, UI_SUBWIN_PARAM_EDIT_SEPARATOR_HPAD, height_drawn);
 		nvgLineTo(draw_context, subwindow_width - UI_SUBWIN_PARAM_EDIT_SEPARATOR_HPAD, height_drawn);
-		nvgStrokeColor(draw_context, nvgRGBAf(0.0f, 0.0f, 0.0f, 1.0f));
-		nvgStrokeWidth(draw_context, 0.8f);
+		nvgStrokeColor(draw_context, nvgRGBf(0.0f, 0.0f, 0.0f));
+		nvgStrokeWidth(draw_context, 1.0f);
 		nvgStroke(draw_context);
 		height_drawn += UI_SUBWIN_PARAM_EDIT_SEPARATOR_VPAD;
 

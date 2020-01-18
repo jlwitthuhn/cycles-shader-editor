@@ -24,6 +24,16 @@ namespace cse {
 	}
 
 	// Path
+	inline void nvgMoveTo(NVGcontext* const ctx, const Float2 point)
+	{
+		nvgMoveTo(ctx, point.x, point.y);
+	}
+
+	inline void nvgLineTo(NVGcontext* const ctx, const Float2 point)
+	{
+		nvgLineTo(ctx, point.x, point.y);
+	}
+
 	inline void nvgRect(NVGcontext* const ctx, const Float2 begin, const Float2 size)
 	{
 		nvgRect(ctx, begin.x, begin.y, size.x, size.y);

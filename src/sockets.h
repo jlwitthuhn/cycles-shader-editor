@@ -88,7 +88,11 @@ namespace cse {
 
 	class StringEnumPair {
 	public:
+		static StringEnumPair make_spacer();
+
 		StringEnumPair(const std::string& display_value, const std::string& internal_value);
+
+		bool is_spacer() const;
 
 		std::string display_value;
 		std::string internal_value;

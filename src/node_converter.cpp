@@ -235,12 +235,32 @@ cse::VectorMathNode::VectorMathNode(const Float2 position) : EditableNode(NodeCa
 	const auto type_value = std::make_shared<StringEnumSocketValue>();
 	type_value->enum_values.push_back(StringEnumPair("Add", "add"));
 	type_value->enum_values.push_back(StringEnumPair("Subtract", "subtract"));
-	type_value->enum_values.push_back(StringEnumPair("Average", "average"));
-	type_value->enum_values.push_back(StringEnumPair("Dot Product", "dot_product"));
+	type_value->enum_values.push_back(StringEnumPair("Multiply", "multiply"));
+	type_value->enum_values.push_back(StringEnumPair("Divide", "divide"));
+	type_value->enum_values.push_back(StringEnumPair::make_spacer());
 	type_value->enum_values.push_back(StringEnumPair("Cross Product", "cross_product"));
+	type_value->enum_values.push_back(StringEnumPair("Project", "project"));
+	type_value->enum_values.push_back(StringEnumPair("Reflect", "reflect"));
+	type_value->enum_values.push_back(StringEnumPair("Dot Product", "dot_product"));
+	type_value->enum_values.push_back(StringEnumPair::make_spacer());
+	type_value->enum_values.push_back(StringEnumPair("Distance", "distance"));
+	type_value->enum_values.push_back(StringEnumPair("Length", "length"));
+	type_value->enum_values.push_back(StringEnumPair("Scale", "scale"));
 	type_value->enum_values.push_back(StringEnumPair("Normalize", "normalize"));
+	type_value->enum_values.push_back(StringEnumPair::make_spacer());
+	type_value->enum_values.push_back(StringEnumPair("Snap", "snap"));
+	type_value->enum_values.push_back(StringEnumPair("Floor", "floor"));
+	type_value->enum_values.push_back(StringEnumPair("Ceil", "ceil"));
+	type_value->enum_values.push_back(StringEnumPair("Modulo", "modulo"));
+	type_value->enum_values.push_back(StringEnumPair("Fraction", "fraction"));
+	type_value->enum_values.push_back(StringEnumPair("Absolute", "absolute"));
+	type_value->enum_values.push_back(StringEnumPair("Minimum", "minimum"));
+	type_value->enum_values.push_back(StringEnumPair("Maximum", "maximum"));
+
 	type_value->set_from_internal_name("add");
 	type_input->value = type_value;
+
+
 	const auto vector1_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::VECTOR, "Vector1", "vector1");
 	vector1_input->value = std::make_shared<Float3SocketValue>(1.0f, -100000.0f, 100000.0f, 1.0f, -100000.0f, 100000.0f, 1.0f, -100000.0f, 100000.0f);
 	vector1_input->selectable = true;

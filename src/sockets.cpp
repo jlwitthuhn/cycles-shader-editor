@@ -131,10 +131,20 @@ cse::SocketType cse::ColorSocketValue::get_type() const
 	return SocketType::COLOR;
 }
 
+cse::StringEnumPair cse::StringEnumPair::make_spacer()
+{
+	return StringEnumPair("-", "-");
+}
+
 cse::StringEnumPair::StringEnumPair(const std::string& display_value, const std::string& internal_value)
 {
 	this->display_value = display_value;
 	this->internal_value = internal_value;
+}
+
+bool cse::StringEnumPair::is_spacer() const
+{
+	return (display_value == "-" && internal_value == "-");
 }
 
 cse::StringEnumSocketValue::StringEnumSocketValue() : value("", "")
