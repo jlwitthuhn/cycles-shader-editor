@@ -137,25 +137,57 @@ cse::VoronoiTextureNode::VoronoiTextureNode(const Float2 position) : EditableNod
 {
 	world_pos = position;
 
+	const auto distance_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Distance", "distance");
 	const auto color_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::COLOR, "Color", "color");
-	const auto fac_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Fac", "fac");
+	const auto position_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::VECTOR, "Position", "position");
+	const auto w_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "W", "w");
+	const auto radius_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Radius", "radius");
 
+	sockets.push_back(distance_output);
 	sockets.push_back(color_output);
-	sockets.push_back(fac_output);
+	sockets.push_back(position_output);
+	sockets.push_back(w_output);
+	sockets.push_back(radius_output);
 
-	const auto coloring_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::STRING_ENUM, "Coloring", "coloring");
-	const auto coloring_value = std::make_shared<StringEnumSocketValue>();
-	coloring_value->enum_values.push_back(StringEnumPair("Cells", "cells"));
-	coloring_value->enum_values.push_back(StringEnumPair("Intensity", "intensity"));
-	coloring_value->set_from_internal_name("intensity");
-	coloring_input->value = coloring_value;
+	const auto dimensions_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::INT, "Dimensions", "dimensions");
+	dimensions_input->value = std::make_shared<IntSocketValue>(3, 1, 4);
+	const auto metric_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::STRING_ENUM, "Distance Metric", "metric");
+	const auto metric_value = std::make_shared<StringEnumSocketValue>();
+	metric_value->enum_values.push_back(StringEnumPair("Euclidian", "euclidian"));
+	metric_value->enum_values.push_back(StringEnumPair("Manhattan", "manhattan"));
+	metric_value->enum_values.push_back(StringEnumPair("Chebychev", "chebychev"));
+	metric_value->enum_values.push_back(StringEnumPair("Minkowski", "minkowski"));
+	metric_value->set_from_internal_name("euclidian");
+	metric_input->value = metric_value;
+	const auto feature_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::STRING_ENUM, "Feature", "feature");
+	const auto feature_value = std::make_shared<StringEnumSocketValue>();
+	feature_value->enum_values.push_back(StringEnumPair("F1", "f1"));
+	feature_value->enum_values.push_back(StringEnumPair("F2", "f2"));
+	feature_value->enum_values.push_back(StringEnumPair("Smooth F1", "smooth_f1"));
+	feature_value->enum_values.push_back(StringEnumPair("Distance to Edge", "distance_to_edge"));
+	feature_value->enum_values.push_back(StringEnumPair("N-sphere Radius", "n_sphere_radius"));
+	feature_value->set_from_internal_name("f1");
+	feature_input->value = feature_value;
 	const auto vector_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::VECTOR, "Vector", "vector");
+	const auto w_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "W", "w");
+	w_input->value = std::make_shared<FloatSocketValue>(0.0f, -1000.0f, 1000.0f);
 	const auto scale_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Scale", "scale");
-	scale_input->value = std::make_shared<FloatSocketValue>(0.5f, -1000.0f, 1000.0f);
+	scale_input->value = std::make_shared<FloatSocketValue>(5.0f, -1000.0f, 1000.0f);
+	const auto smoothness_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Smoothness", "smoothness");
+	smoothness_input->value = std::make_shared<FloatSocketValue>(1.0f, 0.0f, 1.0f);
+	const auto randomness_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Randomness", "randomness");
+	randomness_input->value = std::make_shared<FloatSocketValue>(1.0f, 0.0f, 1.0f);
 
-	sockets.push_back(coloring_input);
+	sockets.push_back(dimensions_input);
+	sockets.push_back(metric_input);
+	sockets.push_back(feature_input);
 	sockets.push_back(vector_input);
+	sockets.push_back(w_input);
 	sockets.push_back(scale_input);
+	sockets.push_back(smoothness_input);
+	sockets.push_back(randomness_input);
+
+	content_width += 12.0f;
 }
 
 cse::MusgraveTextureNode::MusgraveTextureNode(const Float2 position) : EditableNode(NodeCategory::TEXTURE, CyclesNodeType::MusgraveTex, "Musgrave Texture")
