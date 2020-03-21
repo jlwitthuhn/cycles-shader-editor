@@ -54,5 +54,7 @@ static constexpr float UI_NODE_SOCKET_ROW_HEIGHT = 22.0f;
 static constexpr float UI_NODE_SOCKET_RADIUS = 5.5f;
 static constexpr float UI_NODE_BOTTOM_PADDING = 6.0f;
 
-static constexpr float UI_CHECKBOX_RADIUS = 6.0f;
+static constexpr float UI_CHECKBOX_RADIUS = 5.0f;
 static constexpr float UI_CHECKBOX_SPACING = 4.0f;
+
+static constexpr float UI_WIDGET_RADIO_LIST_ROW_HEIGHT = 16.0f;

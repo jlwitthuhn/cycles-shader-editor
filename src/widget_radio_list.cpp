@@ -95,7 +95,7 @@ float cse::RadioListWidget::draw(NVGcontext* const draw_context)
 			}
 
 			float circle_pos_x = width / 2.0f - max_draw_width / 2 + UI_CHECKBOX_RADIUS;
-			float circle_pos_y = height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT * 0.5f;
+			float circle_pos_y = height_drawn + UI_WIDGET_RADIO_LIST_ROW_HEIGHT * 0.5f;
 			nvgBeginPath(draw_context);
 			nvgCircle(draw_context, circle_pos_x, circle_pos_y, UI_CHECKBOX_RADIUS);
 			nvgFillColor(draw_context, nvgRGBAf(0.1f, 0.1f, 0.1f, 1.0f));
@@ -108,17 +108,17 @@ float cse::RadioListWidget::draw(NVGcontext* const draw_context)
 			}
 
 			float text_pos_x = width / 2.0f - max_draw_width / 2 + UI_CHECKBOX_SPACING + UI_CHECKBOX_RADIUS * 2;
-			float text_pos_y = height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT * 0.7f;
+			float text_pos_y = height_drawn + UI_WIDGET_RADIO_LIST_ROW_HEIGHT * 0.8f;
 			nvgFillColor(draw_context, nvgRGBA(0, 0, 0, 255));
 			nvgText(draw_context, text_pos_x, text_pos_y, this_enum_value.display_value.c_str(), nullptr);
 
 			Float2 click_area_begin(0.0f, height_drawn);
-			Float2 click_area_end(width, height_drawn + UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT);
+			Float2 click_area_end(width, height_drawn + UI_WIDGET_RADIO_LIST_ROW_HEIGHT);
 			HolderArea<std::string> click_area(click_area_begin, click_area_end, this_enum_value.internal_value);
 
 			click_areas.push_back(click_area);
 
-			height_drawn += UI_SUBWIN_PARAM_EDIT_LAYOUT_ROW_HEIGHT;
+			height_drawn += UI_WIDGET_RADIO_LIST_ROW_HEIGHT;
 		}
 	}
 
