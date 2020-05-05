@@ -139,3 +139,8 @@ bool cse::EditMultiInputPanel::should_push_undo_state()
 	result = input_widget.should_push_undo_state() || result;
 	return result;
 }
+
+void cse::EditMultiInputPanel::tab()
+{
+	input_widget.tab();
+}

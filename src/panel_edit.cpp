@@ -81,6 +81,11 @@ bool cse::EditParamPanel::should_push_undo_state()
 	return result;
 }
 
+void cse::EditParamPanel::tab()
+{
+	// Stub
+}
+
 void cse::EditParamPanel::reset()
 {
 	// Stub

@@ -42,8 +42,11 @@ namespace cse {
 
 		virtual bool should_push_undo_state() override;
 
+		virtual void tab() override;
+
 	private:
 		void update_preview();
+		bool something_is_selected() const;
 
 		// Everything needed to support one row in the UI
 		class ColorRampRow {

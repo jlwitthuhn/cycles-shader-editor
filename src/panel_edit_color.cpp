@@ -260,6 +260,11 @@ bool cse::EditColorPanel::should_push_undo_state()
 	return result;
 }
 
+void cse::EditColorPanel::tab()
+{
+	input_widget.tab();
+}
+
 cse::Float3 cse::EditColorPanel::get_hsv()
 {
 	Float3 rgb;

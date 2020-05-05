@@ -423,12 +423,78 @@ void cse::EditColorRampPanel::deselect_input_box()
 	}
 }
 
+cse::EditColorRampPanel::ColorRampRow::ColorRampRow(const cse::ColorRampPoint point) :
+	box_pos(UI_SUBWIN_PARAM_EDIT_COLOR_RAMP_TEXT_INPUT_WIDTH, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT),
+	box_alpha(UI_SUBWIN_PARAM_EDIT_COLOR_RAMP_TEXT_INPUT_WIDTH, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT),
+	color_target(Float2(0.0f, 0.0f), Float2(0.0f, 0.0f)),
+	delete_target(Float2(0.0f, 0.0f), Float2(0.0f, 0.0f)),
+	value_pos(std::make_shared<FloatSocketValue>(point.position, 0.0f, 1.0f)),
+	value_alpha(std::make_shared<FloatSocketValue>(point.alpha, 0.0f, 1.0f)),
+	value_color(std::make_shared<ColorSocketValue>(point.color.x, point.color.y, point.color.z))
+{
+	box_pos.attach_float_value(value_pos);
+	box_alpha.attach_float_value(value_alpha);
+}
+
+bool cse::EditColorRampPanel::ColorRampRow::has_input_focus() const
+{
+	bool result = false;
+	result = box_pos.has_input_focus() || result;
+	result = box_alpha.has_input_focus() || result;
+	return result;
+}
+
+void cse::EditColorRampPanel::ColorRampRow::handle_character(const unsigned int codepoint)
+{
+	if (box_pos.has_input_focus()) {
+		box_pos.handle_character(codepoint);
+	}
+	if (box_alpha.has_input_focus()) {
+		box_alpha.handle_character(codepoint);
+	}
+}
+
 bool cse::EditColorRampPanel::should_push_undo_state()
 {
 	bool result = false;
 	result = EditParamPanel::should_push_undo_state() || result;
 	result = edit_color_panel->should_push_undo_state() || result;
 	return result;
+}
+
+void cse::EditColorRampPanel::tab()
+{
+	if (something_is_selected()) {
+		bool select_next{ false };
+		for (ColorRampRow& this_row : ramp_rows) {
+			if (select_next) {
+				this_row.box_pos.begin_edit();
+				break;
+			}
+			if (this_row.box_pos.has_input_focus()) {
+				this_row.box_pos.complete_edit();
+				this_row.color_selected = true;
+			}
+			else if (this_row.color_selected) {
+				edit_color_panel->tab();
+				if (edit_color_panel->has_input_focus() == false) {
+					// We have tabbed past color
+					this_row.color_selected = false;
+					this_row.box_alpha.begin_edit();
+				}
+			}
+			else if (this_row.box_alpha.has_input_focus()) {
+				this_row.box_alpha.complete_edit();
+				select_next = true;
+			}
+		}
+	}
+	else {
+		for (ColorRampRow& this_row : ramp_rows) {
+			this_row.box_pos.begin_edit();
+			break;
+		}
+	}
 }
 
 void cse::EditColorRampPanel::update_preview()
@@ -466,33 +532,13 @@ void cse::EditColorRampPanel::update_preview()
 	}
 }
 
-cse::EditColorRampPanel::ColorRampRow::ColorRampRow(const cse::ColorRampPoint point) :
-	box_pos(UI_SUBWIN_PARAM_EDIT_COLOR_RAMP_TEXT_INPUT_WIDTH, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT),
-	box_alpha(UI_SUBWIN_PARAM_EDIT_COLOR_RAMP_TEXT_INPUT_WIDTH, UI_SUBWIN_PARAM_EDIT_TEXT_INPUT_HEIGHT),
-	color_target(Float2(0.0f, 0.0f), Float2(0.0f, 0.0f)),
-	delete_target(Float2(0.0f, 0.0f), Float2(0.0f, 0.0f)),
-	value_pos(std::make_shared<FloatSocketValue>(point.position, 0.0f, 1.0f)),
-	value_alpha(std::make_shared<FloatSocketValue>(point.alpha, 0.0f, 1.0f)),
-	value_color(std::make_shared<ColorSocketValue>(point.color.x, point.color.y, point.color.z))
+bool cse::EditColorRampPanel::something_is_selected() const
 {
-	box_pos.attach_float_value(value_pos);
-	box_alpha.attach_float_value(value_alpha);
-}
-
-bool cse::EditColorRampPanel::ColorRampRow::has_input_focus() const
-{
-	bool result = false;
-	result = box_pos.has_input_focus() || result;
-	result = box_alpha.has_input_focus() || result;
+	bool result{ false };
+	for (const ColorRampRow& this_row : ramp_rows) {
+		result = result || this_row.box_pos.has_input_focus();
+		result = result || this_row.color_selected;
+		result = result || this_row.box_alpha.has_input_focus();
+	}
 	return result;
-}
-
-void cse::EditColorRampPanel::ColorRampRow::handle_character(const unsigned int codepoint)
-{
-	if (box_pos.has_input_focus()) {
-		box_pos.handle_character(codepoint);
-	}
-	if (box_alpha.has_input_focus()) {
-		box_alpha.handle_character(codepoint);
-	}
 }

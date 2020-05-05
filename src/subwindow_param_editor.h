@@ -34,6 +34,8 @@ namespace cse {
 		virtual bool needs_undo_push() override;
 		virtual void update_selection(std::weak_ptr<const Selection> selection) override;
 
+		virtual void tab() override;
+
 	protected:
 		virtual void draw_content(NVGcontext* draw_context) override;
 

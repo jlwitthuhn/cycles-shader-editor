@@ -169,7 +169,12 @@ bool cse::NodeEditorSubwindow::needs_undo_push()
 	return false;
 }
 
-void cse::NodeEditorSubwindow::update_selection(std::weak_ptr<const Selection> /*selection*/)
+void cse::NodeEditorSubwindow::update_selection(std::weak_ptr<const Selection>)
 {
-	// Do nothing
+	// Do nothing, this is a virtual function for child classes
+}
+
+void cse::NodeEditorSubwindow::tab()
+{
+	// Do nothing, this is a virtual function for child classes
 }

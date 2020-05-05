@@ -35,6 +35,8 @@ namespace cse {
 
 		virtual bool should_push_undo_state() override;
 
+		virtual void tab() override;
+
 	private:
 		std::weak_ptr<IntSocketValue> attached_int;
 		std::weak_ptr<FloatSocketValue> attached_float;

@@ -19,6 +19,9 @@ namespace cse {
 	public:
 		MultiInputWidget(float width);
 
+		// Returns whether a box is currently selected
+		bool tab();
+
 		bool add_socket_input(std::string label, std::weak_ptr<SocketValue> socket_value);
 		void clear_sockets();
 

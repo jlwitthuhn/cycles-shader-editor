@@ -35,6 +35,8 @@ namespace cse {
 
 		virtual bool should_push_undo_state();
 
+		virtual void tab();
+
 	protected:
 		virtual void reset();
 

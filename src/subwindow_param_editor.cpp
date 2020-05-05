@@ -112,6 +112,16 @@ void cse::ParamEditorSubwindow::handle_character(const unsigned int codepoint)
 	}
 }
 
+bool cse::ParamEditorSubwindow::has_input_focus() const
+{
+	for (const auto& this_panel : panels) {
+		if (this_panel->has_input_focus()) {
+			return true;
+		}
+	}
+	return false;
+}
+
 void cse::ParamEditorSubwindow::deselect_input_box()
 {
 	for (const auto& this_panel : panels) {
@@ -147,14 +157,13 @@ void cse::ParamEditorSubwindow::update_selection(const std::weak_ptr<const Selec
 	}
 }
 
-bool cse::ParamEditorSubwindow::has_input_focus() const
+void cse::ParamEditorSubwindow::tab()
 {
 	for (const auto& this_panel : panels) {
-		if (this_panel->has_input_focus()) {
-			return true;
+		if (this_panel->is_active()) {
+			this_panel->tab();
 		}
 	}
-	return false;
 }
 
 void cse::ParamEditorSubwindow::draw_content(NVGcontext* const draw_context)

@@ -36,6 +36,8 @@ namespace cse {
 
 		virtual bool should_push_undo_state() override;
 
+		virtual void tab() override;
+
 	private:
 		Float3 get_hsv();
 		void set_hsv(Float3 hsv);

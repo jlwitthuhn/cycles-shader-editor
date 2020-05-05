@@ -209,6 +209,13 @@ void cse::EditorMainWindow::handle_key(const int key, const int scancode, const 
 		}
 	}
 
+	// Tab is processed here and never forwarded anywhere else
+	if (key == GLFW_KEY_TAB && action == GLFW_PRESS) {
+		for (const auto& this_subwindow : subwindows) {
+			this_subwindow->tab();
+		}
+	}
+
 	if (forward_key_to_subwindow(key, scancode, action, mods)) {
 		// Subwindow took the input, end here
 		return;

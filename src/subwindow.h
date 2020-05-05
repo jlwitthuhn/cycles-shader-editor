@@ -44,6 +44,8 @@ namespace cse {
 		virtual bool needs_undo_push();
 		virtual void update_selection(std::weak_ptr<const Selection> selection);
 
+		virtual void tab();
+
 		virtual bool is_active() const { return true; }
 
 	protected:

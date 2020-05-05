@@ -30,6 +30,35 @@ cse::MultiInputWidget::MultiInputWidget(const float width) : Widget(width)
 
 }
 
+bool cse::MultiInputWidget::tab()
+{
+	const bool something_selected{ has_input_focus() };
+	if (something_selected) {
+		// Advance to the next box
+		bool select_next{ false };
+		for (const InputRow& socket : sockets) {
+			if (select_next) {
+				socket.input_box->begin_edit();
+				return has_input_focus();
+			}
+			if (socket.input_box->has_input_focus()) {
+				socket.input_box->complete_edit();
+				select_next = true;
+			}
+		}
+		// If we reach this line, this means the selected box was last
+		// In that case, keep nothing selected
+	}
+	else {
+		// Select the first box
+		for (const InputRow& socket : sockets) {
+			socket.input_box->begin_edit();
+			break;
+		}
+	}
+	return has_input_focus();
+}
+
 bool cse::MultiInputWidget::add_socket_input(const std::string label, const std::weak_ptr<SocketValue> socket_value)
 {
 	if (const auto locked = socket_value.lock()) {
