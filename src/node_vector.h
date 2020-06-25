@@ -21,6 +21,11 @@ namespace cse {
 		NormalMapNode(Float2 position);
 	};
 
+	class VectorDisplacementNode : public EditableNode {
+	public:
+		VectorDisplacementNode(Float2 position);
+	};
+
 	class VectorTransformNode : public EditableNode {
 	public:
 		VectorTransformNode(Float2 position);

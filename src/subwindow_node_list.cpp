@@ -192,11 +192,13 @@ cse::NodeListSubwindow::NodeListSubwindow(const std::weak_ptr<NodeCreationHelper
 		auto bump_button = std::make_unique<GenericNodeButton<BumpNode>>();
 		auto displacement_button = std::make_unique<GenericNodeButton<DisplacementNode>>();
 		auto normal_map_button = std::make_unique<GenericNodeButton<NormalMapNode>>();
+		auto vector_displacement_button = std::make_unique<GenericNodeButton<VectorDisplacementNode>>();
 		auto vector_transform_button = std::make_unique<GenericNodeButton<VectorTransformNode>>();
 
 		cat_vector_button->node_buttons.push_back(std::move(bump_button));
 		cat_vector_button->node_buttons.push_back(std::move(displacement_button));
 		cat_vector_button->node_buttons.push_back(std::move(normal_map_button));
+		cat_vector_button->node_buttons.push_back(std::move(vector_displacement_button));
 		cat_vector_button->node_buttons.push_back(std::move(vector_transform_button));
 	}
 

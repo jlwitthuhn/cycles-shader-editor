@@ -14,7 +14,7 @@ cse::MaterialOutputNode::MaterialOutputNode(const Float2 position) : EditableNod
 
 	const auto surface_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::CLOSURE, "Surface", "surface");
 	const auto volume_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::CLOSURE, "Volume", "volume");
-	const auto displacement_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Displacement", "displacement");
+	const auto displacement_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::VECTOR, "Displacement", "displacement");
 
 	sockets.push_back(surface_input);
 	sockets.push_back(volume_input);

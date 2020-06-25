@@ -98,6 +98,7 @@ cse::GeometryNode::GeometryNode(const Float2 position) : EditableNode(NodeCatego
 	const auto parametric_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::VECTOR, "Parametric", "parametric");
 	const auto backfacing_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Backfacing", "backfacing");
 	const auto pointiness_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Pointiness", "pointiness");
+	const auto random_per_island_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Random Per Island", "random_per_island");
 
 	sockets.push_back(position_output);
 	sockets.push_back(normal_output);
@@ -107,6 +108,7 @@ cse::GeometryNode::GeometryNode(const Float2 position) : EditableNode(NodeCatego
 	sockets.push_back(parametric_output);
 	sockets.push_back(backfacing_output);
 	sockets.push_back(pointiness_output);
+	sockets.push_back(random_per_island_output);
 }
 
 cse::LayerWeightNode::LayerWeightNode(const Float2 position) : EditableNode(NodeCategory::INPUT, CyclesNodeType::LayerWeight, "Layer Weight")
@@ -138,9 +140,10 @@ cse::LightPathNode::LightPathNode(const Float2 position) : EditableNode(NodeCate
 	const auto singular_ray_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Is Singular Ray", "is_singular_ray");
 	const auto reflection_ray_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Is Reflection Ray", "is_reflection_ray");
 	const auto transmission_ray_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Is Transmission Ray", "is_transmission_ray");
-	const auto vol_scatter_ray_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Is Volume Scatter Ray", "is_volume_scatter_ray");
 	const auto ray_length_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Ray Length", "ray_length");
 	const auto ray_depth_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Ray Depth", "ray_depth");
+	const auto diffuse_depth_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Diffuse Depth", "diffuse_depth");
+	const auto glossy_depth_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Glossy Depth", "glossy_depth");
 	const auto transparent_depth_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Transparent Depth", "transparent_depth");
 	const auto transmission_depth_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Transmission Depth", "transmission_depth");
 
@@ -151,9 +154,10 @@ cse::LightPathNode::LightPathNode(const Float2 position) : EditableNode(NodeCate
 	sockets.push_back(singular_ray_output);
 	sockets.push_back(reflection_ray_output);
 	sockets.push_back(transmission_ray_output);
-	sockets.push_back(vol_scatter_ray_output);
 	sockets.push_back(ray_length_output);
 	sockets.push_back(ray_depth_output);
+	sockets.push_back(diffuse_depth_output);
+	sockets.push_back(glossy_depth_output);
 	sockets.push_back(transparent_depth_output);
 	sockets.push_back(transmission_depth_output);
 }
@@ -163,11 +167,13 @@ cse::ObjectInfoNode::ObjectInfoNode(const Float2 position) : EditableNode(NodeCa
 	world_pos = position;
 
 	const auto location_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::VECTOR, "Location", "location");
+	const auto color_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::COLOR, "Color", "color");
 	const auto object_index_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Object Index", "object_index");
 	const auto material_index_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Material Index", "material_index");
 	const auto random_output = std::make_shared<NodeSocket>(this, SocketIOType::OUTPUT, SocketType::FLOAT, "Random", "random");
 
 	sockets.push_back(location_output);
+	sockets.push_back(color_output);
 	sockets.push_back(object_index_output);
 	sockets.push_back(material_index_output);
 	sockets.push_back(random_output);

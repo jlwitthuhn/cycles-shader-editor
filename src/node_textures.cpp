@@ -78,17 +78,26 @@ cse::NoiseTextureNode::NoiseTextureNode(const Float2 position) : EditableNode(No
 	sockets.push_back(color_output);
 	sockets.push_back(fac_output);
 
+	const auto dim_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::INT, "Dimensions", "dimensions");
+	dim_input->value = std::make_shared<IntSocketValue>(1, 1, 4);
 	const auto vector_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::VECTOR, "Vector", "vector");
+	const auto w_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "W", "w");
+	w_input->value = std::make_shared<FloatSocketValue>(0.0f, -1000.0f, 1000.0f);
 	const auto scale_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Scale", "scale");
 	scale_input->value = std::make_shared<FloatSocketValue>(0.5f, -1000.0f, 1000.0f);
 	const auto detail_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Detail", "detail");
 	detail_input->value = std::make_shared<FloatSocketValue>(2.0f, 0.0f, 16.0f);
+	const auto roughness_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Roughness", "roughness");
+	roughness_input->value = std::make_shared<FloatSocketValue>(0.5f, 0.0f, 1.0f);
 	const auto distortion_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Distortion", "distortion");
 	distortion_input->value = std::make_shared<FloatSocketValue>(0.0f, -1000.0f, 1000.0f);
 
+	sockets.push_back(dim_input);
 	sockets.push_back(vector_input);
+	sockets.push_back(w_input);
 	sockets.push_back(scale_input);
 	sockets.push_back(detail_input);
+	sockets.push_back(roughness_input);
 	sockets.push_back(distortion_input);
 }
 
@@ -108,10 +117,19 @@ cse::WaveTextureNode::WaveTextureNode(const Float2 position) : EditableNode(Node
 	type_value->enum_values.push_back(StringEnumPair("Rings", "rings"));
 	type_value->set_from_internal_name("bands");
 	type_input->value = type_value;
+	const auto direction_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::STRING_ENUM, "Direction", "direction");
+	const auto direction_value = std::make_shared<StringEnumSocketValue>();
+	direction_value->enum_values.push_back(StringEnumPair("X", "x"));
+	direction_value->enum_values.push_back(StringEnumPair("Y", "y"));
+	direction_value->enum_values.push_back(StringEnumPair("Z", "z"));
+	direction_value->enum_values.push_back(StringEnumPair("Diagonal", "diagonal"));
+	direction_value->set_from_internal_name("x");
+	direction_input->value = direction_value;
 	const auto profile_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::STRING_ENUM, "Profile", "profile");
 	const auto profile_value = std::make_shared<StringEnumSocketValue>();
-	profile_value->enum_values.push_back(StringEnumPair("Saw", "saw"));
 	profile_value->enum_values.push_back(StringEnumPair("Sine", "sine"));
+	profile_value->enum_values.push_back(StringEnumPair("Saw", "saw"));
+	profile_value->enum_values.push_back(StringEnumPair("Triangle", "triangle"));
 	profile_value->set_from_internal_name("sine");
 	profile_input->value = profile_value;
 	const auto vector_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::VECTOR, "Vector", "vector");
@@ -123,14 +141,21 @@ cse::WaveTextureNode::WaveTextureNode(const Float2 position) : EditableNode(Node
 	detail_input->value = std::make_shared<FloatSocketValue>(2.0f, 0.0f, 16.0f);
 	const auto detail_scale_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Detail Scale", "detail_scale");
 	detail_scale_input->value = std::make_shared<FloatSocketValue>(1.0f, -1000.0f, 1000.0f);
+	const auto detail_rough_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Detail Roughness", "detail_roughness");
+	detail_rough_input->value = std::make_shared<FloatSocketValue>(0.5f, 0.0f, 1.0f);
+	const auto detail_phase_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Phase Offset", "phase");
+	detail_phase_input->value = std::make_shared<FloatSocketValue>(0.0f, -1000.0f, 1000.0f);
 
 	sockets.push_back(type_input);
+	sockets.push_back(direction_input);
 	sockets.push_back(profile_input);
 	sockets.push_back(vector_input);
 	sockets.push_back(scale_input);
 	sockets.push_back(distortion_input);
 	sockets.push_back(detail_input);
 	sockets.push_back(detail_scale_input);
+	sockets.push_back(detail_rough_input);
+	sockets.push_back(detail_phase_input);
 }
 
 cse::VoronoiTextureNode::VoronoiTextureNode(const Float2 position) : EditableNode(NodeCategory::TEXTURE, CyclesNodeType::VoronoiTex, "Voronoi Texture")
@@ -200,6 +225,8 @@ cse::MusgraveTextureNode::MusgraveTextureNode(const Float2 position) : EditableN
 	sockets.push_back(color_output);
 	sockets.push_back(fac_output);
 
+	const auto dim_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::INT, "Dimensions", "dimensions");
+	dim_input->value = std::make_shared<IntSocketValue>(1, 1, 4);
 	const auto type_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::STRING_ENUM, "Type", "type");
 	const auto type_value = std::make_shared<StringEnumSocketValue>();
 	type_value->enum_values.push_back(StringEnumPair("fBM", "fBM"));
@@ -210,6 +237,8 @@ cse::MusgraveTextureNode::MusgraveTextureNode(const Float2 position) : EditableN
 	type_value->set_from_internal_name("fBM");
 	type_input->value = type_value;
 	const auto vector_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::VECTOR, "Vector", "vector");
+	const auto w_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "W", "w");
+	w_input->value = std::make_shared<FloatSocketValue>(0.0f, -1000.0f, 1000.0f);
 	const auto scale_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Scale", "scale");
 	scale_input->value = std::make_shared<FloatSocketValue>(0.5f, -1000.0f, 1000.0f);
 	const auto detail_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Detail", "detail");
@@ -223,8 +252,10 @@ cse::MusgraveTextureNode::MusgraveTextureNode(const Float2 position) : EditableN
 	const auto gain_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Gain", "gain");
 	gain_input->value = std::make_shared<FloatSocketValue>(1.0f, 0.0f, 1000.0f);
 
+	sockets.push_back(dim_input);
 	sockets.push_back(type_input);
 	sockets.push_back(vector_input);
+	sockets.push_back(w_input);
 	sockets.push_back(scale_input);
 	sockets.push_back(detail_input);
 	sockets.push_back(dimension_input);

@@ -162,6 +162,9 @@ cse::MathNode::MathNode(const Float2 position) : EditableNode(NodeCategory::CONV
 	type_value->enum_values.push_back(StringEnumPair("Hyperbolic Sine (1)", "sinh"));
 	type_value->enum_values.push_back(StringEnumPair("Hyperbolic Cosine (1)", "cosh"));
 	type_value->enum_values.push_back(StringEnumPair("Hyperbolic Tangent (1)", "tanh"));
+	type_value->enum_values.push_back(StringEnumPair::make_spacer());
+	type_value->enum_values.push_back(StringEnumPair("To Radians (1)", "radians"));
+	type_value->enum_values.push_back(StringEnumPair("To Degrees (1)", "degrees"));
 	type_value->set_from_internal_name("add");
 	type_input->value = type_value;
 	const auto clamp_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::BOOLEAN, "Clamp", "use_clamp");
@@ -230,7 +233,7 @@ cse::SeparateRGBNode::SeparateRGBNode(const Float2 position) : EditableNode(Node
 	sockets.push_back(image_input);
 }
 
-cse::SeparateXYZNode::SeparateXYZNode(const Float2 position) : EditableNode(NodeCategory::CONVERTER, CyclesNodeType::SeparateXYZ, "SeparateXYZ")
+cse::SeparateXYZNode::SeparateXYZNode(const Float2 position) : EditableNode(NodeCategory::CONVERTER, CyclesNodeType::SeparateXYZ, "Separate XYZ")
 {
 	world_pos = position;
 
@@ -276,14 +279,18 @@ cse::VectorMathNode::VectorMathNode(const Float2 position) : EditableNode(NodeCa
 	type_value->enum_values.push_back(StringEnumPair("Scale", "scale"));
 	type_value->enum_values.push_back(StringEnumPair("Normalize", "normalize"));
 	type_value->enum_values.push_back(StringEnumPair::make_spacer());
-	type_value->enum_values.push_back(StringEnumPair("Snap", "snap"));
-	type_value->enum_values.push_back(StringEnumPair("Floor", "floor"));
-	type_value->enum_values.push_back(StringEnumPair("Ceil", "ceil"));
-	type_value->enum_values.push_back(StringEnumPair("Modulo", "modulo"));
-	type_value->enum_values.push_back(StringEnumPair("Fraction", "fraction"));
 	type_value->enum_values.push_back(StringEnumPair("Absolute", "absolute"));
 	type_value->enum_values.push_back(StringEnumPair("Minimum", "minimum"));
 	type_value->enum_values.push_back(StringEnumPair("Maximum", "maximum"));
+	type_value->enum_values.push_back(StringEnumPair("Floor", "floor"));
+	type_value->enum_values.push_back(StringEnumPair("Ceil", "ceil"));
+	type_value->enum_values.push_back(StringEnumPair("Fraction", "fraction"));
+	type_value->enum_values.push_back(StringEnumPair("Modulo", "modulo"));
+	type_value->enum_values.push_back(StringEnumPair("Snap", "snap"));
+	type_value->enum_values.push_back(StringEnumPair::make_spacer());
+	type_value->enum_values.push_back(StringEnumPair("Sine", "sine"));
+	type_value->enum_values.push_back(StringEnumPair("Cosine", "cosine"));
+	type_value->enum_values.push_back(StringEnumPair("Tangent", "tangent"));
 
 	type_value->set_from_internal_name("add");
 	type_input->value = type_value;

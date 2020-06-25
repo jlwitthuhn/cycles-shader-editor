@@ -87,6 +87,34 @@ cse::NormalMapNode::NormalMapNode(const Float2 position) : EditableNode(NodeCate
 	sockets.push_back(color_input);
 }
 
+cse::VectorDisplacementNode::VectorDisplacementNode(const Float2 position) : EditableNode(NodeCategory::VECTOR, CyclesNodeType::VectorDisplacement, "Vector Displacement")
+{
+	world_pos = position;
+
+	const auto displacement_output = std::make_shared <NodeSocket>(this, SocketIOType::OUTPUT, SocketType::VECTOR, "Displacement", "displacement");
+
+	sockets.push_back(displacement_output);
+
+	const auto space_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::STRING_ENUM, "Space", "space");
+	const auto space_value = std::make_shared<StringEnumSocketValue>();
+	space_value->enum_values.push_back(StringEnumPair("Tangent Space", "tangent"));
+	space_value->enum_values.push_back(StringEnumPair("Object Space", "object"));
+	space_value->enum_values.push_back(StringEnumPair("World Space", "world"));
+	space_value->set_from_internal_name("tangent");
+	space_input->value = space_value;
+	const auto vector_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::COLOR, "Vector", "vector");
+	vector_input->value = std::make_shared<ColorSocketValue>(0.0f, 0.0f, 0.0f);
+	const auto midlevel_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Midlevel", "midlevel");
+	midlevel_input->value = std::make_shared<FloatSocketValue>(0.5f, 0.0f, 1000.0f);
+	const auto scale_input = std::make_shared<NodeSocket>(this, SocketIOType::INPUT, SocketType::FLOAT, "Scale", "scale");
+	scale_input->value = std::make_shared<FloatSocketValue>(1.0f, 0.0f, 1000.0f);
+
+	sockets.push_back(space_input);
+	sockets.push_back(vector_input);
+	sockets.push_back(midlevel_input);
+	sockets.push_back(scale_input);
+}
+
 cse::VectorTransformNode::VectorTransformNode(const Float2 position) : EditableNode(NodeCategory::VECTOR, CyclesNodeType::VectorTransform, "Vector Transform")
 {
 	world_pos = position;

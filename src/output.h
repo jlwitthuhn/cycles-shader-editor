@@ -66,6 +66,7 @@ namespace cse {
 		Bump,
 		Displacement,
 		NormalMap,
+		VectorDisplacement,
 		VectorTransform,
 		// Converter
 		Blackbody,
