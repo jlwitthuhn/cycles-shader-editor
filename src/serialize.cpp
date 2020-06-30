@@ -107,6 +107,7 @@ static void initialize_maps()
 	type_to_code[CyclesNodeType::Bump] = std::string("bump");
 	type_to_code[CyclesNodeType::Displacement] = std::string("displacement");
 	type_to_code[CyclesNodeType::NormalMap] = std::string("normal_map");
+	type_to_code[CyclesNodeType::VectorDisplacement] = std::string("vector_displacement");
 	type_to_code[CyclesNodeType::VectorTransform] = std::string("vector_transform");
 
 	type_to_code[CyclesNodeType::Blackbody] = std::string("blackbody");
@@ -579,6 +580,10 @@ static std::shared_ptr<cse::EditableNode> create_node_from_type(cse::CyclesNodeT
 		case CyclesNodeType::NormalMap:
 		{
 			return std::make_shared<NormalMapNode>(pos);
+		}
+		case CyclesNodeType::VectorDisplacement:
+		{
+			return std::make_shared<VectorDisplacementNode>(pos);
 		}
 		case CyclesNodeType::VectorTransform:
 		{
