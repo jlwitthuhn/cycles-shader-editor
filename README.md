@@ -1,3 +1,5 @@
+Notice: This repository is no longer being actively developed or maintained. I have abandoned this version in favor of a ground up rewrite that is available [here](https://github.com/jlwitthuhn/cycles-shader-editor-imgui/).
+
 # Cycles Shader Editor
 
 Cycles Shader Editor is a cross-platform C++ library that provides a graphical editor for creating [Cycles](https://www.cycles-renderer.org/) shader graphs with a simple drag and drop interface. It is intended to be used as part of a plugin that integrates Cycles with a DCC app and was created as part of [my own plugin for 3ds Max](https://cyclesformax.net/).
